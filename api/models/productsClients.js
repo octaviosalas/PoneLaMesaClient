@@ -7,6 +7,7 @@ const productsSchema = new mongoose.Schema({
           articulo: String,
           precioUnitarioAlquiler: Number,
           precioUnitarioReposicion: Number,
+          stock: Number,
         },
       ],
       copas: [
@@ -14,6 +15,7 @@ const productsSchema = new mongoose.Schema({
           articulo: String,
           precioUnitarioAlquiler: Number,
           precioUnitarioReposicion: Number,
+          stock: Number,
         },
       ],
       juegoDeTe: [
@@ -21,6 +23,7 @@ const productsSchema = new mongoose.Schema({
           articulo: String,
           precioUnitarioAlquiler: Number,
           precioUnitarioReposicion: Number,
+          stock: Number,
         },
       ],
       juegoDeCafe: [
@@ -28,6 +31,7 @@ const productsSchema = new mongoose.Schema({
           articulo: String,
           precioUnitarioAlquiler: Number,
           precioUnitarioReposicion: Number,
+          stock: Number,
         },
       ],
       varios: [
@@ -35,6 +39,7 @@ const productsSchema = new mongoose.Schema({
           articulo: String,
           precioUnitarioAlquiler: Number,
           precioUnitarioReposicion: mongoose.Schema.Types.Mixed,
+          stock: Number,
         },
       ],
       manteleria: [
@@ -42,6 +47,7 @@ const productsSchema = new mongoose.Schema({
           articulo: String,
           precioUnitarioAlquiler: Number,
           precioUnitarioReposicion: mongoose.Schema.Types.Mixed,
+          stock: Number,
         },
       ],
       mesasYSillas: [
@@ -49,6 +55,7 @@ const productsSchema = new mongoose.Schema({
           articulo: String,
           precioUnitarioAlquiler: Number,
           precioUnitarioReposicion: mongoose.Schema.Types.Mixed,
+          stock: Number,
         },
       ],
     

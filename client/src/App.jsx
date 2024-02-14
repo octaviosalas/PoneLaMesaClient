@@ -4,7 +4,7 @@ import './App.css'
 import Login from './components/Login/Login'
 import Register from './components/Register/Register'
 import { UserProvider } from './store/userContext'
-import Main from './components/Main/Main'
+import Products from './pages/Products'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,7 +15,7 @@ function App() {
           <Routes>       
             <Route path="/" element={<Login />} />      
             <Route path="/register" element={<Register />} />      
-            <Route path="/main" element={<Main />} />      
+            <Route path="/productos" element={<Products />} />      
           </Routes>
      </UserProvider>
 

@@ -1,14 +1,17 @@
+
+
 import React from 'react'
 import { useContext } from 'react'
-import { UserContext } from '../../store/userContext'
-import NavBarComponent from '../Navbar/Navbar'
+import { UserContext } from '../store/userContext'
+import NavBarComponent from '../components/Navbar/Navbar'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { getProductsClients, getProductsBonusClients } from '../../functions/gralFunctions';
-import TableComponent from '../Table/Table'
+import Loading from '../components/Loading/Loading'
+import { getProductsClients, getProductsBonusClients } from '../functions/gralFunctions';
+import TableComponent from '../components/Table/Table'
 
 
-const Main = () => {
+const Products = () => {
 
      const userCtx = useContext(UserContext)
      const [productsClients, setProductsClients] = useState([])
@@ -52,27 +55,22 @@ const Main = () => {
       }
     }, [productsClients, productsBonusClienets])
 
-     useEffect(() => { 
-      if(allProductsBonusClients.length !== 0 && allProductsClients.length !== 0) { 
-        console.log("Primer estado clientes", allProductsClients)
-        console.log("Primer estado Bonusclientes", allProductsBonusClients)
-      }
-     }, [allProductsBonusClients, allProductsClients])
+
 
     return (
     <div className='flex flex-col'> 
         <NavBarComponent/>
-
           {
           allProductsBonusClients.length !== 0 && allProductsClients.length !== 0 
           ? 
           <TableComponent clientsList={allProductsClients} bonusClientsList={allProductsBonusClients}/>
           :
-          <p>Esperando Datos</p>
+          <Loading/>
           }
     
     </div>
   )
 }
 
-export default Main
+export default Products
+

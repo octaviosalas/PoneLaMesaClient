@@ -18,6 +18,7 @@ app.use('/users', userRoutes);
 app.use("/products", productsRoutes)
 
 
+
 app.get('/', (req, res) => {
     res.send('Bienvenidos a tu Servidor para el cliente poneLaMesa!')
   })

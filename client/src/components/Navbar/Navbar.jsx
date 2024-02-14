@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Input, DropdownItem, DropdownTrigger, Dropdown, DropdownMenu, Avatar, Button} from "@nextui-org/react";
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Input, Dropdown, DropdownMenu, Avatar, DropdownTrigger, DropdownItem, Button} from "@nextui-org/react";
 import {AcmeLogo} from "../../icons/AcmeLogo";
 import {SearchIcon} from "../../icons/SearchIcon";
 import { useNavigate } from 'react-router-dom'
@@ -8,6 +8,8 @@ import { useState } from "react";
 import axios from "axios";
 import logo from "../../images/logo.png"
 import { UserContext } from '../../store/userContext'
+import CreateNewOrder from "../Modals/CreateNewOrder";
+
 
 const NavBarComponent = () =>  {
 
@@ -21,30 +23,54 @@ const NavBarComponent = () =>  {
     userCtx.updateUserRol("")
     navigate("/")
   }
+  
 
   return (
     <div className="fixed z-50 top-0 left-0 right-0 inset-x-0  text-white h-16 w-full" style={{backgroundColor: "#8FD179"}} >
       <Navbar isBordered>
       <NavbarContent justify="start">
-        <NavbarBrand className="mr-4">
-          <p className="font-bold text-black text-sm">Pone La Mesa</p>
-        </NavbarBrand>
-        <NavbarContent className="hidden sm:flex gap-3">
+       
+        <NavbarContent className="hidden md:flex">
+          <div className="flex  gap-6">
           <NavbarItem>
-            <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
-              Pedidos
-            </Link>
+              <Link color="foreground" href="/productos" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Productos
+              </Link>
+          </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground"  className="hover:text-green-600 cursor-pointer hover:font-medium">
+                <Dropdown>
+                        <DropdownTrigger>
+                          <p className="hover:text-green-600 cursor-pointer hover:font-medium">Pedidos</p>
+                        </DropdownTrigger>
+                  <DropdownMenu aria-label="Static Actions">
+                      <DropdownItem isReadOnly key="new"><CreateNewOrder/></DropdownItem>
+                      <DropdownItem key="copy">Ver Pedidos</DropdownItem>                
+                  </DropdownMenu>
+            </Dropdown>
+              </Link>
+          </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Pagos
+              </Link>
+          </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Cobros
+              </Link>
           </NavbarItem>
           <NavbarItem isActive>
-            <Link href="#" aria-current="page" className="hover:text-green-600 cursor-pointer hover:font-medium" color="foreground">
-              Repartos
-            </Link>
+              <Link href="#" aria-current="page" className="hover:text-green-600 cursor-pointer hover:font-medium" color="foreground">
+                Info Mes
+              </Link>
           </NavbarItem>
           <NavbarItem>
-            <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
-              Estadisticas
-            </Link>
+              <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Estadisticas
+              </Link>
           </NavbarItem>
+          </div>         
         </NavbarContent>
       </NavbarContent>
 
