@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const productsSchema = new mongoose.Schema({
-    products: {
+  
       platos: [
         {
           articulo: String,
@@ -51,7 +51,7 @@ const productsSchema = new mongoose.Schema({
           precioUnitarioReposicion: mongoose.Schema.Types.Mixed,
         },
       ],
-    },
+    
   });
   
   const ProductsClients = mongoose.model("ProductsClients", productsSchema);

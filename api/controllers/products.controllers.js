@@ -1,6 +1,8 @@
 import ProductsBonusClients from "../models/productsBonusClients.js";
 import ProductsClients from "../models/productsClients.js"
 
+
+
 export const productsClientsData = async (req, res) => { 
    try {
      const getData = await ProductsClients.find()

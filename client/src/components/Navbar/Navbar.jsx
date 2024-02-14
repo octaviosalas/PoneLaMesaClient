@@ -81,7 +81,7 @@ const NavBarComponent = () =>  {
             </Avatar>
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-          {userCtx.userEmail.length !== 0 ?
+          {userCtx.userEmail === null ?
             <DropdownItem key="profile" className="h-14 gap-2">
               <p className="font-semibold">Sesion Iniciada en:</p>
               <p className="font-semibold">{userCtx.userEmail}</p>
