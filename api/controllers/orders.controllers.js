@@ -10,7 +10,6 @@ export const getOrderById = async (req, res) => {
 
 export const createOrder = async (req, res) => { 
     console.log(req.body)
-  
     try {
       const newOrder = new Orders(req.body);
       const orderSaved = await newOrder.save();
