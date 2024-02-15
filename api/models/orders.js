@@ -5,6 +5,12 @@ const ordersSchema = mongoose.Schema({
     orderCreator: { 
         type: String
     },
+    orderStatus: { 
+       type: String
+    },
+    orderNumber: { 
+        type: Number
+    },
     client: { 
         type: String
     }, 
@@ -25,12 +31,12 @@ const ordersSchema = mongoose.Schema({
     },   
     orderDetail: { 
         type:Array,
-    },    
-    total: { 
-        type: Number
-    },
+    },  
     date: { 
         type: String
+    },  
+    total: { 
+        type: Number
     },
     month: { 
         type: String

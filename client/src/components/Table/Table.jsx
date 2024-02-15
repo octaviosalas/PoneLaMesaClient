@@ -27,7 +27,17 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
                 allowsSorting: true
           }));
 
-            columnObjects.push({
+          const modifiedColumnObjects = columnObjects.map(column => {
+            if (column.key === 'precioUnitarioAlquiler') {
+                return { ...column, label: 'Precio Alquiler' };
+            } else if (column.key === 'precioUnitarioReposicion') {
+                return { ...column, label: 'Precio Reposición' };
+            } else {
+                return column;
+            }
+        });
+
+               modifiedColumnObjects.push({
                   key: 'Eliminar',
                   label: 'Eliminar',
                   cellRenderer: (cell) => { 
@@ -42,7 +52,7 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
                 },
                   }) 
       
-                columnObjects.push({
+                  modifiedColumnObjects.push({
                     key: 'Editar',
                     label: 'Editar',
                     cellRenderer: (cell) => { 
@@ -58,10 +68,10 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
                         );
                     },
                 })              
-                setColumns(columnObjects);
-                console.log(columnObjects)
+                setColumns(modifiedColumnObjects);
+                console.log(modifiedColumnObjects)
                 if (tableRef.current) {
-                    tableRef.current.updateColumns(columnObjects);
+                    tableRef.current.updateColumns(modifiedColumnObjects);
                 }            
               } else { 
                 console.log("VACIO")
@@ -113,21 +123,21 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
           selectionBehavior={selectionBehavior} 
           className="w-full mt-6 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] h-auto text-center shadow-left-right overflow-y-auto max-h-[600px]"
           >
-          <TableHeader columns={columns}>
+          <TableHeader columns={columns} >
                     {(column) => (
                         <TableColumn
                         key={column.key}
-                        className="text-center"             
+                        className="text-left"             
                         >
                         {column.label}
                         </TableColumn>
                     )}
            </TableHeader>
-           <TableBody items={filteredData} className='flex flex-col justify-start'>
+           <TableBody items={filteredData}>
                     {(item) => (
                <TableRow key={item._id}>
                         {columns.map((column) => (
-                  <TableCell key={column.key}>
+                  <TableCell key={column.key} className='text-left'>
                       {column.cellRenderer ? column.cellRenderer({ row: { original: item } }) : item[column.key]}
                   </TableCell>
                   ))}

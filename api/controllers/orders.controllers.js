@@ -1,7 +1,13 @@
 import Orders from "../models/orders.js";
 
 export const getOrders = async (req, res) => { 
-     
+    try {
+      const orders = await Orders.find()
+      res.status(200).json(orders);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener las ordenes' });
+      console.log(error)
+    }
 }
 
 export const getOrderById = async (req, res) => { 

@@ -23,6 +23,8 @@ const NavBarComponent = () =>  {
     userCtx.updateUserRol("")
     navigate("/")
   }
+
+  
   
 
   return (
@@ -38,13 +40,8 @@ const NavBarComponent = () =>  {
               </Link>
           </NavbarItem>
           <NavbarItem>
-              <Link color="foreground"  className="hover:text-green-600 cursor-pointer hover:font-medium">
+              <Link color="foreground"  href="/pedidos"  className="hover:text-green-600 cursor-pointer hover:font-medium">
                 Pedidos
-              </Link>
-          </NavbarItem>
-          <NavbarItem>
-              <Link color="foreground"  className="hover:text-green-600 cursor-pointer hover:font-medium">
-                <CreateNewOrder/>
               </Link>
           </NavbarItem>
           <NavbarItem>

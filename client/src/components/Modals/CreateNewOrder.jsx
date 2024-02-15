@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import { getDate, getMonth, getYear, getDay } from "../../functions/gralFunctions";
 
-const CreateNewOrder = () => {
+const CreateNewOrder = ({updateList}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const userCtx = useContext(UserContext)
@@ -17,6 +17,8 @@ const CreateNewOrder = () => {
   const [secondStep, setSecondStep] = useState(false)
   const [missedData, setMissedData] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
+  const [orderNumber, setOrderNumber] = useState("")
+  const [orderStatus, setOrderStatus] = useState("No entregada")
   const [clientName, setClientName] = useState("")
   const [typeOfClient, setTypeOfClient] = useState("")
   const [placeOfDelivery, setPlaceOfDelivery] = useState("")
@@ -33,176 +35,179 @@ const CreateNewOrder = () => {
   const [productsSelected, setProductsSelected] = useState([]);
 
 
-  const typeOfClients = [
-    {
-      label: "No Bonificado",
-      value: "No Bonificado"
-    },
-    {
-      label: "Bonificado",
-      value: "Bonificado"
-    },
-  ]
+      const typeOfClients = [
+        {
+          label: "No Bonificado",
+          value: "No Bonificado"
+        },
+        {
+          label: "Bonificado",
+          value: "Bonificado"
+        },
+      ]
 
-  const closeModal = () => { 
-    onClose()
-    setProductsSelected([])
-    setSuccesMessage(false)
-    setFirstStep(true)
-    setSecondStep(false)
-    setTypeOfClient("")
-    setClientName("")
-    setReturnDate("")
-    setReturnPlace("")
-    setDateOfDelivery("")
-    setPlaceOfDelivery("")
+      const closeModal = () => { 
+        onClose()
+        setProductsSelected([])
+        setSuccesMessage(false)
+        setFirstStep(true)
+        setSecondStep(false)
+        setTypeOfClient("")
+        setClientName("")
+        setReturnDate("")
+        setReturnPlace("")
+        setDateOfDelivery("")
+        setPlaceOfDelivery("")
 
-  }
-
-  const changeState = (first, second) => { 
-    setSecondStep(first)
-    setFirstStep(second)
-  }
-
-   const getClientsProductsData = () => { 
-    axios.get("http://localhost:4000/products/productsClients")
-          .then((res) => { 
-            console.log(res.data)
-            const data = res.data
-            let nuevoArray = [];
-            for (let propiedad in data[0]) {
-               if (Array.isArray(data[0][propiedad])) {
-                  nuevoArray = nuevoArray.concat(data[0][propiedad]);
-                  }
-               }
-               setAllProducts(nuevoArray);
-          })
-          .catch((err) => { 
-            console.log(err)
-          })
-   }
-
-   const getBonusClientsProductsData = () => { 
-    axios.get("http://localhost:4000/products/productsBonusClients")
-          .then((res) => { 
-            console.log(res.data)
-            const data = res.data
-            let nuevoArray = [];
-            for (let propiedad in data[0]) {
-               if (Array.isArray(data[0][propiedad])) {
-                  nuevoArray = nuevoArray.concat(data[0][propiedad]);
-                  }
-               }
-               setAllProducts(nuevoArray);
-          })
-          .catch((err) => { 
-            console.log(err)
-          })
-   }
-
-   const executeFunctionDependsTypeOfClient = () => { 
-      if(clientName.length === 0 || typeOfClient.length === 0 || placeOfDelivery.length === 0 || dateOfDelivery.length === 0 || returnDate.length === 0) { 
-        setMissedData(true)
-        setTimeout(() => { 
-          setMissedData(false)
-        }, 2000)
-      } else { 
-        changeState(true, false)
-        if(typeOfClient === "Bonificado") { 
-          console.log("bonus")
-          getBonusClientsProductsData()
-        } else if (typeOfClient === "No Bonificado") { 
-          console.log("client")
-          getClientsProductsData()
-        }
       }
 
-   }
+      const changeState = (first, second) => { 
+        setSecondStep(first)
+        setFirstStep(second)
+      }
 
-   const handleInputChange = (e) => { 
-    setChoosenProductName(e);
-    if(e.length === 0) { 
-      setFilteredNames([])
-      setChoosenProductName("")
-      setChoosenProductId("")
-    } else { 
-      const useInputToFindTheProduct = allProducts.filter((prod) => prod.articulo.toLowerCase().includes(e))
-      setFilteredNames(useInputToFindTheProduct)
-      console.log(filteredNames)
+    const getClientsProductsData = () => { 
+      axios.get("http://localhost:4000/products/productsClients")
+            .then((res) => { 
+              console.log(res.data)
+              const data = res.data
+              let nuevoArray = [];
+              for (let propiedad in data[0]) {
+                if (Array.isArray(data[0][propiedad])) {
+                    nuevoArray = nuevoArray.concat(data[0][propiedad]);
+                    }
+                }
+                setAllProducts(nuevoArray);
+            })
+            .catch((err) => { 
+              console.log(err)
+            })
     }
-   }
 
-   const chooseProduct = (name, id, price, replacementPrice) => { 
-    console.log("recibi como id a", id)
-    setChoosenProductName(name)
-    setChoosenProductId(id)
-    setChoosenProductPrice(price)
-    setChoosenProductPriceReplacement(replacementPrice)
-    setFilteredNames("")
-   }
+    const getBonusClientsProductsData = () => { 
+      axios.get("http://localhost:4000/products/productsBonusClients")
+            .then((res) => { 
+              console.log(res.data)
+              const data = res.data
+              let nuevoArray = [];
+              for (let propiedad in data[0]) {
+                if (Array.isArray(data[0][propiedad])) {
+                    nuevoArray = nuevoArray.concat(data[0][propiedad]);
+                    }
+                }
+                setAllProducts(nuevoArray);
+            })
+            .catch((err) => { 
+              console.log(err)
+            })
+    }
 
-   const addProductSelected = (productName, productId, quantity, price, replacementPrice) => {
-    const choosenProductTotalPrice = price * quantity
-    const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
-    setProductsSelected([...productsSelected, newProduct]);
-    setChoosenProductId("")
-    setChoosenProductName("")
-    setChoosenProductQuantity("")
-    setChoosenProductPriceReplacement("")
-    setChoosenProductPrice("")
-  };
-
-  const handleRemoveProduct = (productIdToDelete) => {
-    setProductsSelected((prevProducts) =>
-      prevProducts.filter((prod) => prod.productId !== productIdToDelete)
-    );
-  };
-
-  const cancelOrder = () => { 
-    closeModal()
-    setSecondStep(false)
-    setFirstStep(true)
-    setProductsSelected([])
-    setTypeOfClient("")
-    setClientName("")
-    setPlaceOfDelivery("")
-    setDateOfDelivery("")
-    setReturnDate("")
-  }
-
-  const sendNewOrder = () => { 
-    const orderData = ({ 
-       orderCreator: userCtx.userName,
-       client: clientName,
-       typeOfClient: typeOfClient,
-       placeOfDelivery: placeOfDelivery,
-       dateOfDelivery: dateOfDelivery,
-       returnDate: returnDate,
-       returnPlace: returnPlace,
-       orderDetail: productsSelected,
-       total: productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0),
-       date: actualDate,
-       month:  actualMonth,
-       year: actualYear,
-       day: actualDay
-    })
-    axios.post("http://localhost:4000/orders/create", orderData)
-         .then((res) => { 
-          console.log(res.data)
-          setSuccesMessage(true)
+    const executeFunctionDependsTypeOfClient = () => { 
+        if(orderNumber.length === 0  || clientName.length === 0 || typeOfClient.length === 0 || placeOfDelivery.length === 0 || dateOfDelivery.length === 0 || returnDate.length === 0) { 
+          setMissedData(true)
           setTimeout(() => { 
-            closeModal()
+            setMissedData(false)
           }, 2000)
-         })
-         .catch((err) => { 
-          console.log(err)
-         })
+        } else { 
+          changeState(true, false)
+          if(typeOfClient === "Bonificado") { 
+            console.log("bonus")
+            getBonusClientsProductsData()
+          } else if (typeOfClient === "No Bonificado") { 
+            console.log("client")
+            getClientsProductsData()
+          }
+        }
 
-  }
+    }
+
+    const handleInputChange = (e) => { 
+      setChoosenProductName(e);
+      if(e.length === 0) { 
+        setFilteredNames([])
+        setChoosenProductName("")
+        setChoosenProductId("")
+      } else { 
+        const useInputToFindTheProduct = allProducts.filter((prod) => prod.articulo.toLowerCase().includes(e))
+        setFilteredNames(useInputToFindTheProduct)
+        console.log(filteredNames)
+      }
+    }
+
+    const chooseProduct = (name, id, price, replacementPrice) => { 
+      console.log("recibi como id a", id)
+      setChoosenProductName(name)
+      setChoosenProductId(id)
+      setChoosenProductPrice(price)
+      setChoosenProductPriceReplacement(replacementPrice)
+      setFilteredNames("")
+    }
+
+    const addProductSelected = (productName, productId, quantity, price, replacementPrice) => {
+      const choosenProductTotalPrice = price * quantity
+      const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
+      setProductsSelected([...productsSelected, newProduct]);
+      setChoosenProductId("")
+      setChoosenProductName("")
+      setChoosenProductQuantity("")
+      setChoosenProductPriceReplacement("")
+      setChoosenProductPrice("")
+    };
+
+    const handleRemoveProduct = (productIdToDelete) => {
+      setProductsSelected((prevProducts) =>
+        prevProducts.filter((prod) => prod.productId !== productIdToDelete)
+      );
+    };
+
+    const cancelOrder = () => { 
+      closeModal()
+      setSecondStep(false)
+      setFirstStep(true)
+      setProductsSelected([])
+      setTypeOfClient("")
+      setClientName("")
+      setPlaceOfDelivery("")
+      setDateOfDelivery("")
+      setReturnDate("")
+    }
+
+    const sendNewOrder = () => { 
+      const orderData = ({ 
+        orderCreator: userCtx.userName,
+        orderNumber: orderNumber,
+        orderStatus: orderStatus,
+        client: clientName,
+        typeOfClient: typeOfClient,
+        placeOfDelivery: placeOfDelivery,
+        dateOfDelivery: dateOfDelivery,
+        returnDate: returnDate,
+        returnPlace: returnPlace,
+        orderDetail: productsSelected,
+        total: productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0),
+        date: actualDate,
+        month:  actualMonth,
+        year: actualYear,
+        day: actualDay
+      })
+      axios.post("http://localhost:4000/orders/create", orderData)
+          .then((res) => { 
+            console.log(res.data)
+            updateList()
+            setSuccesMessage(true)
+            setTimeout(() => { 
+              closeModal()
+            }, 2000)
+          })
+          .catch((err) => { 
+            console.log(err)
+          })
+
+    }
 
   return (
     <>
-      <p onClick={onOpen}>Crear Pedido</p>
+      <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={onOpen}>Crear Pedido</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -213,6 +218,7 @@ const CreateNewOrder = () => {
               firstStep ? 
               <div className="flex flex-col items-center justify-center">
                  <div className="flex flex-col items-center justify-center"> 
+                    <Input type="number" variant="bordered" value={orderNumber} label="Numero de Orden" className="mt-2 w-64 2xl:w-72" onChange={(e) => setOrderNumber(e.target.value)}/>
                     <Input type="text" variant="bordered" value={clientName} label="Cliente" className="mt-2 w-64 2xl:w-72" onChange={(e) => setClientName(e.target.value)}/>
                     <Select  variant="bordered" label="Tipo de Cliente" className="max-w-xs mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
                       {typeOfClients.map((client) => (
