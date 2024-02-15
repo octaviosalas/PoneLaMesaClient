@@ -63,8 +63,10 @@ const Products = () => {
           {
           allProductsBonusClients.length !== 0 && allProductsClients.length !== 0 
           ? 
-          <TableComponent clientsList={allProductsClients} bonusClientsList={allProductsBonusClients}/>
-          :
+          <div className='h-screen mt-24 2xl:mt-20'>
+            <TableComponent clientsList={allProductsClients} bonusClientsList={allProductsBonusClients}/>
+          </div>        
+            :
           <Loading/>
           }
     

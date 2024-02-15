@@ -4,6 +4,7 @@ import connectDataBase from "./database/connectDataBase.js"
 import productsRoutes from "./routes/products.routes.js"
 import bodyParser from "body-parser"
 import userRoutes from "./routes/user.routes.js"
+import ordersRoutes from "./routes/orders.routes.js"
 
 const app = express()
 const PORT = 4000
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/users', userRoutes);
 app.use("/products", productsRoutes)
+app.use("/orders", ordersRoutes)
 
 
 

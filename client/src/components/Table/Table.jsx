@@ -15,6 +15,7 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
     const [tableData, setTableData] = useState(clientsList)
     const [inputValue, setInputValue] = useState("")
     const [filteredData, setFilteredData] = useState(clientsList)
+    const [tableChoosen, setTableChoosen] = useState(clientsList)
 
     useEffect(() => {
           if(clientsList.length !== 0) { 
@@ -79,6 +80,11 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
       
     }
 
+    const changeTable = (x) => { 
+      setFilteredData(x)
+      setTableChoosen(x)
+    }
+
 
       return (
         <div className='flex flex-col items-center justify-center'>
@@ -86,13 +92,13 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
          <>
           <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
               <div className='h-12 items-center justify-start w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'  >
-                  <p className='font-medium  text-sm cursor-pointer ml-4'
-                     onClick={() => setFilteredData(clientsList)}
-                     style={{ color: filteredData === clientsList  ? "#060606" : "#C0BEBE" }}
+                  <p className='font-medium   text-sm cursor-pointer ml-4'
+                     onClick={() => changeTable(clientsList)}
+                     style={{ color: tableChoosen === clientsList  ? "#060606" : "#C0BEBE" }} 
                      >
                      Productos Clientes
                   </p>
-                  <p className='font-medium text-sm cursor-pointer' style={{ color: filteredData === bonusClientsList  ? "#060606" : "#C0BEBE" }} onClick={() => setFilteredData(bonusClientsList)}>
+                  <p className='font-medium text-sm cursor-pointer' style={{ color: tableChoosen === bonusClientsList  ? "#060606" : "#C0BEBE" }} onClick={() => changeTable(bonusClientsList)}>
                      Productos Clientes Bonificados
                   </p>
               </div>

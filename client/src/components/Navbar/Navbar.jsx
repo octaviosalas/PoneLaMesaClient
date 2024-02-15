@@ -39,15 +39,12 @@ const NavBarComponent = () =>  {
           </NavbarItem>
           <NavbarItem>
               <Link color="foreground"  className="hover:text-green-600 cursor-pointer hover:font-medium">
-                <Dropdown>
-                        <DropdownTrigger>
-                          <p className="hover:text-green-600 cursor-pointer hover:font-medium">Pedidos</p>
-                        </DropdownTrigger>
-                  <DropdownMenu aria-label="Static Actions">
-                      <DropdownItem isReadOnly key="new"><CreateNewOrder/></DropdownItem>
-                      <DropdownItem key="copy">Ver Pedidos</DropdownItem>                
-                  </DropdownMenu>
-            </Dropdown>
+                Pedidos
+              </Link>
+          </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground"  className="hover:text-green-600 cursor-pointer hover:font-medium">
+                <CreateNewOrder/>
               </Link>
           </NavbarItem>
           <NavbarItem>

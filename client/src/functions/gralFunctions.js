@@ -23,3 +23,38 @@ export const getProductsBonusClients = async () => {
       throw error;
     }
   }
+
+export const getDate = () => {
+    const fecha = new Date();
+    const dia = fecha.getDate();
+    const mes = fecha.getMonth() + 1; 
+    const año = fecha.getFullYear();
+    const diaFormateado = dia < 10 ? `0${dia}` : dia;
+    const mesFormateado = mes < 10 ? `0${mes}` : mes;
+    return `${diaFormateado}/${mesFormateado}/${año}`;
+  }
+ 
+
+export const getMonth = () => { 
+  const meses = [
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+  ]
+  const fechaActual = new Date();
+  const nombreMes = meses[fechaActual.getMonth()];
+  return nombreMes;
+}
+
+
+export const getYear = () => {
+  const fechaActual = new Date();
+  const anioActual = fechaActual.getFullYear();
+  return anioActual;
+}
+
+export const getDay = () => { 
+  const fechaActual = new Date();
+  const diaActual = parseInt(fechaActual.getDate(), 10); 
+  return diaActual;
+ }
+ 
