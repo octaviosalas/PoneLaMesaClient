@@ -57,7 +57,8 @@ const OrdersTable = () => {
           setData(allOrders)
           if(allOrders.length !== 0) { 
               const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-              && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day');
+              && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
+              && propiedad !== 'day' && propiedad !== 'paid');
               const columnObjects = propiedades.map(propiedad => ({
                   key: propiedad,
                   label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -74,13 +75,13 @@ const OrdersTable = () => {
                   }  else if (column.key === 'orderStatus') {
                       return { ...column, label: 'Estado' };
                   } else if (column.key === 'placeOfDelivery') {
-                      return { ...column, label: 'Lugar Entrega' };
+                      return { ...column, label: 'Entrega' };
                   }  else if (column.key === 'Entrega') {
                       return { ...column, label: 'Fecha de Entrega' };
                   } else if (column.key === 'returnDate') {
                       return { ...column, label: 'Fecha Devolucion' };
                   } else if (column.key === 'returnPlace') {
-                      return { ...column, label: 'Lugar Devolucion' };
+                      return { ...column, label: 'Devolucion' };
                   }else if (column.key === 'typeOfClient') {
                       return { ...column, label: 'Tipo de Cliente' };
                   }else if (column.key === 'client') {
@@ -248,8 +249,8 @@ const OrdersTable = () => {
             columnSpacing={10}  
             aria-label="Selection behavior table example with dynamic content"   
             selectionBehavior={selectionBehavior} 
-            className="w-full mt-6 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] h-auto text-center shadow-left-right overflow-y-auto max-h-[600px]"
-          >
+            className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right overflow-y-auto"
+            >
           <TableHeader columns={columns} >
                     {(column) => (
                       <TableColumn key={column.key} className="text-left"> {column.label}  </TableColumn>

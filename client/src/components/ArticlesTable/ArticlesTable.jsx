@@ -131,7 +131,7 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
           columnSpacing={10}  
           aria-label="Selection behavior table example with dynamic content"   
           selectionBehavior={selectionBehavior} 
-          className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] h-auto text-center shadow-left-right overflow-y-auto max-h-[600px]"
+          className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right overflow-y-auto"
           >
           <TableHeader columns={columns} >
                     {(column) => (

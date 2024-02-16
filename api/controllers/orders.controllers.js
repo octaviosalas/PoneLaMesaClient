@@ -66,3 +66,23 @@ export const deleteOrder = async (req, res) => {
   }
 }
 
+export const addPaid = async (req, res) => { 
+  const { orderId } = req.params;
+
+  try {
+    const orderUpdated= await Orders.findByIdAndUpdate(
+        { _id: orderId },
+        { paid: true },
+        { new: true } 
+    );
+
+    if (!orderUpdated) {
+        return res.status(404).json({ error: "No se encontró el pedido" });
+    }
+
+    res.status(200).json(orderUpdated);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    } 
+}
