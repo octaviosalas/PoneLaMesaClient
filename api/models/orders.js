@@ -46,7 +46,20 @@ const ordersSchema = mongoose.Schema({
     },
     day: {
         type: Number
-    }
+    },
+    paid: { 
+        type: Boolean
+    },
+    dayPaid: { 
+        type: String
+    },
+    monthPaid: { 
+        type: String
+    },
+    yearPaid: { 
+        type: String
+    },
+
 })
 
 const Orders = mongoose.model("Orders", ordersSchema)

@@ -50,6 +50,19 @@ export const changeOrderState = async (req, res) => {
     } 
 }
 
-
-
+export const deleteOrder = async (req, res) => { 
+  const {orderId} = req.params
+  console.log(orderId)
+  try {
+    const deletedOrder = await Orders.findByIdAndDelete({_id: orderId});
+    if (deletedOrder) {
+      res.status(200).json({ message: 'Pedido eliminado correctamente', deleted: deletedOrder });
+    } else {
+      res.status(404).json({ message: 'Pedido no encontrado' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar la recomendacion' });
+  }
+}
 

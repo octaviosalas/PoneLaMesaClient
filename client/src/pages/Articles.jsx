@@ -8,10 +8,10 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Loading from '../components/Loading/Loading'
 import { getProductsClients, getProductsBonusClients } from '../functions/gralFunctions';
-import TableComponent from '../components/Table/Table'
+import ArticlesTable from '../components/ArticlesTable/ArticlesTable'
 
 
-const Products = () => {
+const Articles = () => {
 
      const userCtx = useContext(UserContext)
      const [productsClients, setProductsClients] = useState([])
@@ -64,7 +64,7 @@ const Products = () => {
           allProductsBonusClients.length !== 0 && allProductsClients.length !== 0 
           ? 
           <div className='h-screen mt-24 2xl:mt-20'>
-            <TableComponent clientsList={allProductsClients} bonusClientsList={allProductsBonusClients}/>
+            <ArticlesTable clientsList={allProductsClients} bonusClientsList={allProductsBonusClients}/>
           </div>        
             :
           <Loading/>
@@ -74,5 +74,5 @@ const Products = () => {
   )
 }
 
-export default Products
+export default Articles
 

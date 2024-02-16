@@ -5,10 +5,11 @@ import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Inpu
 import Loading from "../Loading/Loading"
 import DeleteOrder from '../Modals/DeleteOrder';
 import EditOrder from '../Modals/EditOrder';
-import OrderDetail from '../Modals/OrderDeatil';
-import CreateNewOrder from '../Modals/CreateNewOrder';
-import FiltersOrdersTable from '../Modals/FiltersOrdersTable';
+import OrderDetail from './OrderDeatil';
+import CreateNewOrder from './CreateNewOrder';
+import FiltersOrdersTable from './FiltersOrdersTable';
 import { formatePrice } from '../../functions/gralFunctions';
+import PostPayment from './PostPayment';
 
 const OrdersTable = () => {
 
@@ -22,13 +23,22 @@ const OrdersTable = () => {
 
 
     const applyFiltersByMonth =  (monthSelected) => {
-        getDataAndCreateTable();
-        setTimeout(() => { 
             const filteringByMonth = filteredData.filter((orders) => orders.month === monthSelected);
             console.log(filteringByMonth);
             setData(filteringByMonth);
-        }, 1500)
       };
+
+    const applyFiltersByTypeOfClient =  (typeSelected) => {
+      const filteringByTypeOfClient = filteredData.filter((orders) => orders.typeOfClient === typeSelected);
+      console.log(filteringByTypeOfClient);
+      setData(filteringByTypeOfClient);
+    };
+
+    const applyFiltersByOrderState =  (state) => {
+      const filteringByTypeOfClient = filteredData.filter((orders) => orders.orderStatus === state);
+      console.log(filteringByTypeOfClient);
+      setData(filteringByTypeOfClient);
+    };
 
     const isFilterApplied = (value) => { 
         setFilterIsOn(value)
@@ -104,7 +114,7 @@ const OrdersTable = () => {
                     client: client
                     };
                     return (
-                       <OrderDetail orderData={item}/>
+                       <OrderDetail  orderData={item}/>
                       );
                 },
                   }) 
@@ -126,7 +136,7 @@ const OrdersTable = () => {
                         month: month
                         };
                         return (
-                          <EditOrder orderData={item} updateList={getDataAndCreateTable}/>
+                          <EditOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                         );
                     },
                   })          
@@ -141,10 +151,39 @@ const OrdersTable = () => {
                     id: id
                     };
                     return (
-                       <DeleteOrder/>
+                       <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                       );
                 },
                   }) 
+
+                  modifiedColumnObjects.push({
+                    key: 'Pago',
+                    label: 'Pago',
+                    cellRenderer: (cell) => { 
+                      const filaActual = cell.row;
+                      const id = filaActual.original._id;
+                      const detail = filaActual.original.orderDetail;
+                      const creator = filaActual.original.orderCreator;
+                      const client = filaActual.original.client;
+                      const day = filaActual.original.day;
+                      const month = filaActual.original.month;
+                      const year = filaActual.original.year;
+                      const total = filaActual.original.total;
+                      const item = {
+                      id: id,
+                      detail: detail,
+                      creator: creator,
+                      day: day,
+                      month: month,
+                      year: year,
+                      total: total,
+                      client: client
+                      };
+                      return (
+                         <PostPayment orderData={item}/>
+                        );
+                  },
+                    }) 
 
                     setColumns(modifiedColumnObjects);
                     console.log(modifiedColumnObjects)
@@ -170,9 +209,6 @@ const OrdersTable = () => {
         );
       });
 
-      useEffect(() => { 
-        console.log(data)
-      }, [data])
 
   return (
     <div>
@@ -182,7 +218,12 @@ const OrdersTable = () => {
           <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
               <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
                   <div className='flex justify-end'>
-                        <FiltersOrdersTable apply={applyFiltersByMonth} isFilterApplied={isFilterApplied}/> 
+                        <FiltersOrdersTable 
+                        getAllDataAgain={getDataAndCreateTable} 
+                        applyMonthFilter={applyFiltersByMonth}
+                        applyClientFilter={applyFiltersByTypeOfClient}
+                        applyOrderStatusFilter={applyFiltersByOrderState}
+                        isFilterApplied={isFilterApplied}/> 
                   </div>
                   <div className='flex justify-start mr-4'>
                       <CreateNewOrder updateList={getDataAndCreateTable}/>
@@ -235,7 +276,11 @@ const OrdersTable = () => {
           </TableBody>
        </Table> 
          </> 
-       : <Loading/>
+       : 
+       <div className='flex flex-col items-center justify-center'>
+          <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>
+          <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => getDataAndCreateTable()}>Deshacer Filtros</p>
+       </div> 
        }
         </div>
     </div>

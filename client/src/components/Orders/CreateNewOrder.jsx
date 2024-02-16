@@ -188,7 +188,8 @@ const CreateNewOrder = ({updateList}) => {
         date: actualDate,
         month:  actualMonth,
         year: actualYear,
-        day: actualDay
+        day: actualDay,
+        paid: false
       })
       axios.post("http://localhost:4000/orders/create", orderData)
           .then((res) => { 

@@ -6,8 +6,10 @@ import axios from "axios"
 import { useRef } from "react";
 import { getProductsClients, getProductsBonusClients } from '../../functions/gralFunctions';
 import { formatePrice } from '../../functions/gralFunctions';
+import DeleteOrder from '../Modals/DeleteOrder';
+import EditOrder from '../Modals/EditOrder';
 
-const TableComponent = ({clientsList, bonusClientsList}) => {
+const ArticlesTable = ({clientsList, bonusClientsList}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -19,24 +21,24 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
     const [tableChoosen, setTableChoosen] = useState(clientsList)
 
     useEffect(() => {
-          if(clientsList.length !== 0) { 
-            console.log(clientsList)
-            const propiedades = Object.keys(clientsList[0]).filter(propiedad =>  propiedad !== '_id');
-            const columnObjects = propiedades.map(propiedad => ({
-                key: propiedad,
-                label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
-                allowsSorting: true
-          }));
+                if(clientsList.length !== 0) { 
+                  console.log(clientsList)
+                  const propiedades = Object.keys(clientsList[0]).filter(propiedad =>  propiedad !== '_id');
+                  const columnObjects = propiedades.map(propiedad => ({
+                      key: propiedad,
+                      label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
+                      allowsSorting: true
+                }));
 
-          const modifiedColumnObjects = columnObjects.map(column => {
-            if (column.key === 'precioUnitarioAlquiler') {
-                return { ...column, label: 'Precio Alquiler' };
-            } else if (column.key === 'precioUnitarioReposicion') {
-                return { ...column, label: 'Precio Reposición' };
-            } else {
-                return column;
-            }
-        });
+                const modifiedColumnObjects = columnObjects.map(column => {
+                  if (column.key === 'precioUnitarioAlquiler') {
+                      return { ...column, label: 'Precio Alquiler' };
+                  } else if (column.key === 'precioUnitarioReposicion') {
+                      return { ...column, label: 'Precio Reposición' };
+                  } else {
+                      return column;
+                  }
+                });
 
                modifiedColumnObjects.push({
                   key: 'Eliminar',
@@ -48,12 +50,12 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
                     id: id
                     };
                     return (
-                       <p>Eliminar</p>
+                       <DeleteOrder type="product"/>
                       );
                 },
-                  }) 
+               }) 
       
-                  modifiedColumnObjects.push({
+                modifiedColumnObjects.push({
                     key: 'Editar',
                     label: 'Editar',
                     cellRenderer: (cell) => { 
@@ -65,18 +67,19 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
                         id: id,
                         };
                         return (
-                          <p>Editar</p>
+                          <EditOrder type="product"/>
                         );
                     },
-                })              
+                })        
+
                 setColumns(modifiedColumnObjects);
                 console.log(modifiedColumnObjects)
                 if (tableRef.current) {
                     tableRef.current.updateColumns(modifiedColumnObjects);
                 }            
-              } else { 
-                console.log("VACIO")
-              }
+                } else { 
+                  console.log("VACIO")
+                }
  
     }, [clientsList, bonusClientsList]);
 
@@ -102,16 +105,22 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
          {columns.length !== 0 ? 
          <>
           <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
-              <div className='h-12 items-center justify-start w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'  >
-                  <p className='font-medium   text-sm cursor-pointer ml-4'
-                     onClick={() => changeTable(clientsList)}
-                     style={{ color: tableChoosen === clientsList  ? "#060606" : "#C0BEBE" }} 
-                     >
-                     Productos Clientes
-                  </p>
-                  <p className='font-medium text-sm cursor-pointer' style={{ color: tableChoosen === bonusClientsList  ? "#060606" : "#C0BEBE" }} onClick={() => changeTable(bonusClientsList)}>
-                     Productos Clientes Bonificados
-                  </p>
+              <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
+                <div className='flex gap-5 items-center '>
+                    <p className='font-medium   text-sm cursor-pointer ml-4'
+                        onClick={() => changeTable(clientsList)}
+                        style={{ color: tableChoosen === bonusClientsList  ? "#C0BEBE" : "#060606" }} 
+                        >
+                        Articulos Clientes
+                      </p>
+                      <p className='font-medium text-sm cursor-pointer' style={{ color: tableChoosen === bonusClientsList  ? "#060606" : "#C0BEBE" }} onClick={() => changeTable(bonusClientsList)}>
+                        Articulos Clientes Bonificados
+                      </p>
+                </div>
+                <div>
+                  <p className='text-sm mr-4 font-medium text-zinc-500'>Crear Articulo</p>
+                </div>
+                
               </div>
               <div className='w-full flex jusitfy-start text-center mt-4 '>
                 <input className="w-[50%] border border-gray-200  focus:border-gray-300 focus:ring-0 h-10 rounded-xl" placeholder="Buscador" onChange={(e) => handleChange(e.target.value)}/>           
@@ -162,4 +171,4 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
       )
 }
 
-export default TableComponent
+export default ArticlesTable

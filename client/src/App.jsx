@@ -4,8 +4,9 @@ import './App.css'
 import Login from './components/Login/Login'
 import Register from './components/Register/Register'
 import { UserProvider } from './store/userContext'
-import Products from './pages/Products'
+import Articles from './pages/Articles'
 import Orders from './pages/Orders'
+import Purchases from './pages/Purchases'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -16,8 +17,10 @@ function App() {
           <Routes>       
             <Route path="/" element={<Login />} />      
             <Route path="/register" element={<Register />} />      
-            <Route path="/productos" element={<Products />} />   
+            <Route path="/articulos" element={<Articles />} />   
             <Route path="/pedidos" element={<Orders />} />   
+            <Route path="/compras" element={<Purchases />} />   
+
           </Routes>
      </UserProvider>
 

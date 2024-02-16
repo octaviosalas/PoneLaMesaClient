@@ -35,7 +35,7 @@ const OrderDetail = ({orderData}) => {
 
   return (
     <>
-      <p onClick={onOpen} className="text-green-700 font-medium text-sm cursor-pointer">Ver Detalle</p>
+      <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
         <ModalContent>
           {(onClose) => (

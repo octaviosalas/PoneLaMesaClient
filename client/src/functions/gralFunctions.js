@@ -62,3 +62,32 @@ export const getDay = () => {
   const priceFormated =   '$' + (price).toLocaleString('es-AR') ;
   return priceFormated
 }
+
+export const months = [
+  { label: 'Enero', value: 'enero' },
+  { label: 'Febrero', value: 'febrero' },
+  { label: 'Marzo', value: 'marzo' },
+  { label: 'Abril', value: 'abril' },
+  { label: 'Mayo', value: 'mayo' },
+  { label: 'Junio', value: 'junio' },
+  { label: 'Julio', value: 'julio' },
+  { label: 'Agosto', value: 'agosto' },
+  { label: 'Septiembre', value: 'septiembre' },
+  { label: 'Octubre', value: 'octubre' },
+  { label: 'Noviembre', value: 'noviembre' },
+  { label: 'Diciembre', value: 'diciembre' },
+];
+
+export const typeOfClientsAvailables = [
+  { label: 'Bonificado', value: 'Bonificado' },
+  { label: 'No Bonificado', value: 'No Bonificado' }
+];
+
+export const diferentOrdersStatus = [
+  { label: 'No Entregado', value: 'No Entregado' },
+  { label: 'Entregado', value: 'Entregado' },
+  { label: 'Devuelto', value: 'Devuelto' },
+  { label: 'Suspendido', value: 'Suspendido' },
+];
+
+

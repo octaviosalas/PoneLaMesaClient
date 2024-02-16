@@ -8,7 +8,6 @@ import { useState } from "react";
 import axios from "axios";
 import logo from "../../images/logo.png"
 import { UserContext } from '../../store/userContext'
-import CreateNewOrder from "../Modals/CreateNewOrder";
 
 
 const NavBarComponent = () =>  {
@@ -35,13 +34,18 @@ const NavBarComponent = () =>  {
         <NavbarContent className="hidden md:flex">
           <div className="flex  gap-6">
           <NavbarItem>
-              <Link color="foreground" href="/productos" className="hover:text-green-600 cursor-pointer hover:font-medium">
-                Productos
+              <Link color="foreground" href="/articulos" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Articulos
               </Link>
           </NavbarItem>
           <NavbarItem>
               <Link color="foreground"  href="/pedidos"  className="hover:text-green-600 cursor-pointer hover:font-medium">
                 Pedidos
+              </Link>
+          </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground" href="/compras" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Compras
               </Link>
           </NavbarItem>
           <NavbarItem>
