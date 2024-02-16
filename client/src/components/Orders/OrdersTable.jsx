@@ -8,6 +8,7 @@ import EditOrder from '../Modals/EditOrder';
 import OrderDetail from '../Modals/OrderDeatil';
 import CreateNewOrder from '../Modals/CreateNewOrder';
 import FiltersOrdersTable from '../Modals/FiltersOrdersTable';
+import { formatePrice } from '../../functions/gralFunctions';
 
 const OrdersTable = () => {
 
@@ -16,6 +17,7 @@ const OrdersTable = () => {
     const [columns, setColumns] = useState([]);
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [inputValue, setInputValue] = useState("")
+    const [filterIsOn, setFilterIsOn] = useState(false)
     const [tableData, setTableData] = useState([])
 
 
@@ -27,6 +29,15 @@ const OrdersTable = () => {
             setData(filteringByMonth);
         }, 1500)
       };
+
+    const isFilterApplied = (value) => { 
+        setFilterIsOn(value)
+    }
+
+    const undoFilter = () => { 
+      setFilterIsOn(false)
+      getDataAndCreateTable()
+    }
 
     const getDataAndCreateTable = () => { 
         axios.get("http://localhost:4000/orders")
@@ -105,12 +116,17 @@ const OrdersTable = () => {
 
                         const filaActual = cell.row;
                         const id = filaActual.original._id;
-                        
+                        const client = filaActual.original.client;
+                        const order = filaActual.original.orderNumber;
+                        const month = filaActual.original.month
                         const item = {
                         id: id,
+                        client: client,
+                        order: order,
+                        month: month
                         };
                         return (
-                          <EditOrder/>
+                          <EditOrder orderData={item} updateList={getDataAndCreateTable}/>
                         );
                     },
                   })          
@@ -154,6 +170,10 @@ const OrdersTable = () => {
         );
       });
 
+      useEffect(() => { 
+        console.log(data)
+      }, [data])
+
   return (
     <div>
          <div className='flex flex-col items-center justify-center'>
@@ -162,56 +182,65 @@ const OrdersTable = () => {
           <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
               <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
                   <div className='flex justify-end'>
-                        <FiltersOrdersTable apply={applyFiltersByMonth}/> 
+                        <FiltersOrdersTable apply={applyFiltersByMonth} isFilterApplied={isFilterApplied}/> 
                   </div>
                   <div className='flex justify-start mr-4'>
                       <CreateNewOrder updateList={getDataAndCreateTable}/>
                   </div>
                            
               </div>
-              <div className='w-full flex jusitfy-start mt-4'>
+              <div className='w-full flex items-center gap-2 jusitfy-start mt-4'>
                 <input 
                     className="w-[50%] border border-gray-200  focus:border-gray-300 focus:ring-0 h-10 rounded-xl"
                     placeholder="Buscador" 
                     onChange={(e) => setInputValue(e.target.value)}
                     value={inputValue} />
+                    {filterIsOn ? 
+                    <p className='text-xs text-zinc-500 font-medium cursor-pointer' onClick={() => undoFilter()}>
+                        Deshacer Filtro
+                    </p>
+                     : null}
               </div>
           </div>
            <Table 
-          columnAutoWidth={true} 
-          columnSpacing={10}  
-          aria-label="Selection behavior table example with dynamic content"   
-          selectionBehavior={selectionBehavior} 
-          className="w-full mt-6 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] h-auto text-center shadow-left-right overflow-y-auto max-h-[600px]"
+            columnAutoWidth={true} 
+            columnSpacing={10}  
+            aria-label="Selection behavior table example with dynamic content"   
+            selectionBehavior={selectionBehavior} 
+            className="w-full mt-6 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] h-auto text-center shadow-left-right overflow-y-auto max-h-[600px]"
           >
           <TableHeader columns={columns} >
                     {(column) => (
-                        <TableColumn
-                        key={column.key}
-                        className="text-left"             
-                        >
-                        {column.label}
-                        </TableColumn>
+                      <TableColumn key={column.key} className="text-left"> {column.label}  </TableColumn>
                     )}
            </TableHeader>
            <TableBody items={filteredData}>
                     {(item) => (
                <TableRow key={item._id}>
                         {columns.map((column) => (
-                  <TableCell key={column.key} className='text-left'>
-                      {column.cellRenderer ? column.cellRenderer({ row: { original: item } }) : item[column.key]}
+                  <TableCell key={column.key}  className='text-left' >
+                       {column.cellRenderer ? (
+                            column.cellRenderer({ row: { original: item } })
+                            ) : (
+                            (column.key === "total") ? (
+                                formatePrice(item[column.key])
+                            ) : (
+                                item[column.key]
+                            )
+                            )}
                   </TableCell>
                   ))}
              </TableRow>
                 )}
           </TableBody>
        </Table> 
-         </>
-          
-       : <Loading/>}
+         </> 
+       : <Loading/>
+       }
         </div>
     </div>
   )
 }
 
 export default OrdersTable
+

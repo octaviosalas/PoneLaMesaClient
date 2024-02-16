@@ -26,3 +26,30 @@ export const createOrder = async (req, res) => {
     }
 }
 
+export const changeOrderState = async (req, res) => { 
+  const { orderId } = req.params;
+  console.log(orderId)
+  const {newStatus} = req.body
+
+
+  try {
+    const orderUpdated= await Orders.findByIdAndUpdate(
+        { _id: orderId },
+        { orderStatus: newStatus },
+        { new: true } 
+    );
+
+    if (!orderUpdated) {
+        return res.status(404).json({ error: "No se encontró el estado" });
+    }
+
+    res.status(200).json(orderUpdated);
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    } 
+}
+
+
+
+

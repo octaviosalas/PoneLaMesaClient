@@ -5,6 +5,7 @@ import { useState } from "react";
 import axios from "axios"
 import { useRef } from "react";
 import { getProductsClients, getProductsBonusClients } from '../../functions/gralFunctions';
+import { formatePrice } from '../../functions/gralFunctions';
 
 const TableComponent = ({clientsList, bonusClientsList}) => {
 
@@ -112,8 +113,8 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
                      Productos Clientes Bonificados
                   </p>
               </div>
-              <div className='w-full flex jusitfy-start mt-4'>
-                <input className="w-[50%] border border-gray-200  focus:border-gray-300 focus:ring-0 h-10 rounded-xl" placeholder="Buscador" onChange={(e) => handleChange(e.target.value)}/>
+              <div className='w-full flex jusitfy-start text-center mt-4 '>
+                <input className="w-[50%] border border-gray-200  focus:border-gray-300 focus:ring-0 h-10 rounded-xl" placeholder="Buscador" onChange={(e) => handleChange(e.target.value)}/>           
               </div>
           </div>
            <Table 
@@ -121,7 +122,7 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
           columnSpacing={10}  
           aria-label="Selection behavior table example with dynamic content"   
           selectionBehavior={selectionBehavior} 
-          className="w-full mt-6 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] h-auto text-center shadow-left-right overflow-y-auto max-h-[600px]"
+          className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] h-auto text-center shadow-left-right overflow-y-auto max-h-[600px]"
           >
           <TableHeader columns={columns} >
                     {(column) => (
@@ -137,9 +138,18 @@ const TableComponent = ({clientsList, bonusClientsList}) => {
                     {(item) => (
                <TableRow key={item._id}>
                         {columns.map((column) => (
-                  <TableCell key={column.key} className='text-left'>
-                      {column.cellRenderer ? column.cellRenderer({ row: { original: item } }) : item[column.key]}
-                  </TableCell>
+                   <TableCell key={column.key} className="text-start items-start">
+                   {column.cellRenderer ? (
+                       column.cellRenderer({ row: { original: item } })
+                     ) : (
+                       (column.key === "precioUnitarioAlquiler" || 
+                        column.key === "precioUnitarioReposicioon" ) ? (
+                           formatePrice(item[column.key])
+                       ) : (
+                         item[column.key]
+                       )
+                     )}
+                   </TableCell>
                   ))}
              </TableRow>
                 )}

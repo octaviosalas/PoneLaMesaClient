@@ -1,6 +1,7 @@
 import React from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
+import { formatePrice } from "../../functions/gralFunctions";
 
 import { useState, useEffect } from "react";
 
@@ -58,9 +59,19 @@ const OrderDetail = ({orderData}) => {
                               {(item) => (
                                 <TableRow key={item.productName}>
                                   {columns.map(column => (
-                                    <TableCell key={column.key} className="text-start items-start">
-                                      {item[column.key]}
-                                    </TableCell>
+                                   <TableCell key={column.key} className="text-start items-start">
+                                   {column.cellRenderer ? (
+                                       column.cellRenderer({ row: { original: item } })
+                                     ) : (
+                                       (column.key === "price" || 
+                                        column.key === "replacementPrice" ||
+                                        column.key === "choosenProductTotalPrice" ) ? (
+                                           formatePrice(item[column.key])
+                                       ) : (
+                                         item[column.key]
+                                       )
+                                     )}
+                                   </TableCell>
                                   ))}
                                 </TableRow>
                               )}
@@ -83,3 +94,16 @@ const OrderDetail = ({orderData}) => {
 }
 
 export default OrderDetail
+
+/*
+<TableCell key={column.key} className="text-start items-start">
+{column.cellRenderer ? (
+    column.cellRenderer({ row: { original: item } })
+  ) : (
+    (column.key === "total" ) ? (
+        formatePrice(item[column.key])
+    ) : (
+      item[column.key]
+    )
+  )}
+</TableCell>*/

@@ -1,9 +1,15 @@
 import React from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 
-const FiltersOrdersTable = ({apply}) => {
+const FiltersOrdersTable = ({apply, isFilterApplied}) => {
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
+
+  const applyFilter = (filterChoosen) => { 
+     apply(filterChoosen)
+     onClose()
+     isFilterApplied(true)
+  }
 
   return (
     <>
@@ -17,8 +23,8 @@ const FiltersOrdersTable = ({apply}) => {
             <>
               <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
               <ModalBody>
-                <p onClick={() => apply("enero")}>Enero</p>
-                <p onClick={() => apply("febrero")}>Febrero</p>
+                <p onClick={() => applyFilter("enero")}>Enero</p>
+                <p onClick={() => applyFilter("febrero")}>Febrero</p>
               </ModalBody>
               <ModalFooter>
                 <Button color="danger" variant="light" onPress={onClose}>
