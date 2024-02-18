@@ -20,6 +20,7 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
     const [filteredData, setFilteredData] = useState(clientsList)
     const [tableChoosen, setTableChoosen] = useState(clientsList)
 
+
     useEffect(() => {
                 if(clientsList.length !== 0) { 
                   console.log(clientsList)
@@ -35,26 +36,14 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
                       return { ...column, label: 'Precio Alquiler' };
                   } else if (column.key === 'precioUnitarioReposicion') {
                       return { ...column, label: 'Precio Reposición' };
-                  } else {
+                  }  else if (column.key === 'precioUnitarioAlquilerBonificados') {
+                    return { ...column, label: 'Precio Bonificados' };
+                } else {
                       return column;
                   }
                 });
 
-               modifiedColumnObjects.push({
-                  key: 'Eliminar',
-                  label: 'Eliminar',
-                  cellRenderer: (cell) => { 
-                    const filaActual = cell.row;
-                    const id = filaActual.original._id;
-                    const item = {
-                    id: id
-                    };
-                    return (
-                       <DeleteOrder type="product"/>
-                      );
-                },
-               }) 
-      
+               
                 modifiedColumnObjects.push({
                     key: 'Editar',
                     label: 'Editar',
@@ -70,7 +59,39 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
                           <EditOrder type="product"/>
                         );
                     },
-                })        
+                })      
+                
+                modifiedColumnObjects.push({
+                  key: 'Eliminar',
+                  label: 'Eliminar',
+                  cellRenderer: (cell) => { 
+                    const filaActual = cell.row;
+                    const id = filaActual.original._id;
+                    const item = {
+                    id: id
+                    };
+                    return (
+                       <DeleteOrder type="product"/>
+                      );
+                },
+               }) 
+
+               modifiedColumnObjects.push({
+                key: 'Historico',
+                label: 'Historico',
+                cellRenderer: (cell) => { 
+                  const filaActual = cell.row;
+                  const id = filaActual.original._id;
+                  const item = {
+                  id: id
+                  };
+                  return (
+                     <p className='text-xs font-medium text-green-700'>Historico</p>
+                    );
+              },
+             }) 
+    
+      
 
                 setColumns(modifiedColumnObjects);
                 console.log(modifiedColumnObjects)
@@ -107,15 +128,9 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
           <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
               <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
                 <div className='flex gap-5 items-center '>
-                    <p className='font-medium   text-sm cursor-pointer ml-4'
-                        onClick={() => changeTable(clientsList)}
-                        style={{ color: tableChoosen === bonusClientsList  ? "#C0BEBE" : "#060606" }} 
-                        >
-                        Articulos Clientes
-                      </p>
-                      <p className='font-medium text-sm cursor-pointer' style={{ color: tableChoosen === bonusClientsList  ? "#060606" : "#C0BEBE" }} onClick={() => changeTable(bonusClientsList)}>
-                        Articulos Clientes Bonificados
-                      </p>
+                     <p className='font-medium text-black    text-md cursor-pointer ml-4' >
+                      Articulos Clientes
+                    </p>
                 </div>
                 <div>
                   <p className='text-sm mr-4 font-medium text-zinc-500'>Crear Articulo</p>
@@ -152,7 +167,7 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
                        column.cellRenderer({ row: { original: item } })
                      ) : (
                        (column.key === "precioUnitarioAlquiler" || 
-                        column.key === "precioUnitarioReposicioon" ) ? (
+                        column.key === "precioUnitarioReposicioon" ||   column.key === "precioUnitarioAlquilerBonificados" ) ? (
                            formatePrice(item[column.key])
                        ) : (
                          item[column.key]

@@ -129,12 +129,20 @@ const OrdersTable = () => {
                         const id = filaActual.original._id;
                         const client = filaActual.original.client;
                         const order = filaActual.original.orderNumber;
-                        const month = filaActual.original.month
+                        const month = filaActual.original.month;
+                        const date = filaActual.original.date;
+                        const dateOfDelivery = filaActual.original.dateOfDelivery;
+                        const returnDate = filaActual.original.returnDate;
+                        const orderDetail = filaActual.original.orderDetail;
                         const item = {
                         id: id,
                         client: client,
                         order: order,
-                        month: month
+                        month: month,
+                        date: date,
+                        dateOfDelivery: dateOfDelivery,
+                        returnDate: returnDate,
+                        orderDetail: orderDetail                  
                         };
                         return (
                           <EditOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>

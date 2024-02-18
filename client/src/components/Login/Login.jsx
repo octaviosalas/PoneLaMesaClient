@@ -59,7 +59,7 @@ const Login = () => {
                     userCtx.updateUserRol(res.data.rol);
                     userCtx.updateUserName(res.data.name);
                     setTimeout(() => {
-                       navigate("/arituclos")
+                       navigate("/articulos")
                     }, 1800);
                 }            
                })

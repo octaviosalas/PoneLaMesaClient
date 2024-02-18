@@ -84,24 +84,6 @@ const CreateNewOrder = ({updateList}) => {
             })
     }
 
-    const getBonusClientsProductsData = () => { 
-      axios.get("http://localhost:4000/products/productsBonusClients")
-            .then((res) => { 
-              console.log(res.data)
-              const data = res.data
-              let nuevoArray = [];
-              for (let propiedad in data[0]) {
-                if (Array.isArray(data[0][propiedad])) {
-                    nuevoArray = nuevoArray.concat(data[0][propiedad]);
-                    }
-                }
-                setAllProducts(nuevoArray);
-            })
-            .catch((err) => { 
-              console.log(err)
-            })
-    }
-
     const executeFunctionDependsTypeOfClient = () => { 
         if(orderNumber.length === 0  || clientName.length === 0 || typeOfClient.length === 0 || placeOfDelivery.length === 0 || dateOfDelivery.length === 0 || returnDate.length === 0) { 
           setMissedData(true)
@@ -110,13 +92,8 @@ const CreateNewOrder = ({updateList}) => {
           }, 2000)
         } else { 
           changeState(true, false)
-          if(typeOfClient === "Bonificado") { 
-            console.log("bonus")
-            getBonusClientsProductsData()
-          } else if (typeOfClient === "No Bonificado") { 
-            console.log("client")
-            getClientsProductsData()
-          }
+          getClientsProductsData()
+     
         }
 
     }
@@ -135,7 +112,7 @@ const CreateNewOrder = ({updateList}) => {
     }
 
     const chooseProduct = (name, id, price, replacementPrice) => { 
-      console.log("recibi como id a", id)
+      console.log("recibi como id a", id, name,)
       setChoosenProductName(name)
       setChoosenProductId(id)
       setChoosenProductPrice(price)
@@ -209,7 +186,7 @@ const CreateNewOrder = ({updateList}) => {
   return (
     <>
       <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={onOpen}>Crear Pedido</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-xl">
         <ModalContent>
           {(onClose) => (
             <>
@@ -246,22 +223,28 @@ const CreateNewOrder = ({updateList}) => {
               {
               secondStep ? 
               <div className="flex flex-col items-center justify-center">
-                <div >
+                <div className="flex flex-col items-center justify-center">
                   <Input value={choosenProductName} type="text" variant="bordered" label="Producto" className="mt-2 w-64 2xl:w-72" onChange={(e) => handleInputChange(e.target.value)}/>
                     <div className="absolute">
-                        {
-                         filteredNames !== "" ? 
-                           <div className=' absolute bg-white shadow-xl rounded-lg mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]'  style={{ backdropFilter: 'brightness(100%)' }}>
-                              {filteredNames.map((prod) => (
-                               <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 " key={prod._id} 
-                                  onClick={() => chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion)}>
-                                  {prod.articulo}
-                               </p>
+                    {
+                        filteredNames !== "" ? 
+                            <div className='absolute bg-white shadow-xl rounded-lg mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
+                                {filteredNames.map((prod) => (
+                                    <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500" key={prod._id} 
+                                        onClick={() => {
+                                            if (typeOfClient === "No Bonificado") {
+                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion);
+                                            } else if (typeOfClient === "Bonificado") {
+                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquilerBonificados, prod.precioUnitarioReposicion);
+                                            }
+                                        }}
+                                    >
+                                        {prod.articulo}
+                                    </p>
                                 ))}
-                             </div>
-                                :
-                               null
-                        }
+                            </div>
+                        : null
+                    }
                     </div>  
                   <Input type="number" value={choosenProductQuantity} variant="bordered" label="Cantidad" className="mt-2 w-64 2xl:w-72" onChange={(e) => setChoosenProductQuantity(e.target.value)}/>
                   <div className="mt-6 flex flex-col ">
@@ -277,12 +260,11 @@ const CreateNewOrder = ({updateList}) => {
                          <div className="flex flex-col">
                           <div className="flex flex-col mt-6">
                               {productsSelected.map((prod) => ( 
-                                <div className="flex justify-between gap-2 items-center mt-1">
+                                <div className="flex justify-between gap-4 items-center mt-1">
                                   <div className="flex gap-2 items-center">
-                                    <p className="text-zinc-500 text-xs">{prod.productName}</p>
-                                    <p className="text-zinc-500 text-xs">{prod.quantity}</p>
-                                    <p className="text-zinc-500 text-xs">{prod.price}</p>
-                                    <p className="text-zinc-500 text-xs">{prod.replacementPrice}</p>
+                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
+                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>
+                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Unitario Alquiler: </b>{prod.price}</p>
                                   </div>
                                   <div>
                                     <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
@@ -301,16 +283,20 @@ const CreateNewOrder = ({updateList}) => {
                   </div>
                 </div>
                 <div>
-                  <ModalFooter className="flex items-center justify-center gap-4 mt-6">
+                  <ModalFooter className="flex items-center justify-center mt-6">
                      {succesMessage !== true ?
-                     <div>
+                     <div className="flex items-center gap-6">
                         <Button className="font-medium text-white"  style={{backgroundColor:"#399319"}} variant="light" onPress={() => sendNewOrder()}>
                           Confirmar Pedido
                         </Button>
                         <Button className="font-medium text-white"  style={{backgroundColor:"#71CB51"}} variant="light" onPress={cancelOrder}>
                           Cancelar Pedido
                         </Button>
-                        <Button className="font-medium text-white" style={{backgroundColor:"#87D56C"}} variant="light" onClick={() => changeState(false, true)}>
+                        <Button className="font-medium text-white" style={{backgroundColor:"#87D56C"}} variant="light"  onClick={() => {
+                            changeState(false, true);
+                            setProductsSelected([]);
+                          }}
+                        >
                           Volver
                         </Button>
                      </div>

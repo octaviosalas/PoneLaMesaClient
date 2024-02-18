@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
 
 import axios from "axios";
@@ -10,6 +10,11 @@ const EditOrder = ({type, updateList, orderData}) => {
   const [status, setStatus] = useState("Selecciona un Estado ↓")
   const [successMessage, setSuccesMessage] = useState(false)
   const [errorMessage, setErrorMessage] = useState(false)
+  const [newOrderDeliveryDate, setNewOrderDeliveryDate] = useState(type === "orders" ? orderData.dateOfDelivery : "")
+  const [newOrderReturnDate, setNewOrderReturnDate] = useState(type === "orders" ? orderData.returnDate : "")
+  const [newOrderClient, setNewOrderClient] = useState(type === "orders" ? orderData.client : "")
+  const [newOrderDetail, setNewOrderDetail] = useState(type === "orders" ? orderData.orderDetail : "")
+
 
 
   const closeModal = () => { 
@@ -70,7 +75,7 @@ const EditOrder = ({type, updateList, orderData}) => {
                 <ModalBody>
                   {step === 0 ?
                   <div className="flex gap-4 items-center justify-center">
-                      <Button className="font-bold text-white text-xs bg-green-600 w-52">Modificar Valores</Button>
+                      <Button className="font-bold text-white text-xs bg-green-600 w-52"  onClick={() => setStep(2)}>Modificar Valores</Button>
                       <Button className="font-bold text-white text-xs bg-green-600 w-52" onClick={() => setStep(1)}>Cambiar Estado</Button>
                       <Button className="font-bold text-white text-xs bg-green-600 w-52">Adjuntar Articulos a Reponer</Button>
                   </div>
@@ -104,6 +109,29 @@ const EditOrder = ({type, updateList, orderData}) => {
                       null} 
                     
                     </div>
+                    : null}
+
+                    {step === 2 ? 
+                      <div className="flex flex-col items-center justify-center">
+                        <Input type="text" variant="faded" label="Fecha de Entrega" value={newOrderDeliveryDate} className="w-56" onChange={(e) => setNewOrderDeliveryDate(e.target.value)}/>
+                        <Input type="text" variant="faded" label="Fecha de Devolucion" value={newOrderReturnDate} className="w-56 mt-2" onChange={(e) => setNewOrderReturnDate(e.target.value)}/>
+                        <Input type="text" variant="faded" label="Cliente" value={newOrderClient} className="w-56 mt-2"  onChange={(e) => setNewOrderClient(e.target.value)}/>
+                        <div className="flex flex-col justify-start items-start  border"> 
+                          {newOrderDetail.map((ord) => ( 
+                            <div className="flex flex-col items-center mt-2 ">
+                              <div className="flex items-center gap-2">
+                                <p>{ord.productName}</p> 
+                                <p>{ord.quantity}</p> 
+                                <p>{ord.choosenProductTotalPrice}</p>
+                              </div> 
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-4 mb-4 flex items-center gap-6">
+                           <Button className="font-bold text-white text-xs bg-green-600 w-40">Cancelar</Button>
+                           <Button className="font-bold text-white text-xs bg-green-600 w-40">Editar</Button>
+                        </div>
+                      </div>
                     : null}
                 </ModalBody>
               

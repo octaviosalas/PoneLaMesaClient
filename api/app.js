@@ -6,6 +6,7 @@ import bodyParser from "body-parser"
 import userRoutes from "./routes/user.routes.js"
 import ordersRoutes from "./routes/orders.routes.js"
 import collectionsRoutes from "./routes/collections.routes.js"
+import purchasesRoutes from "./routes/purchases.routes.js"
 
 const app = express()
 const PORT = 4000
@@ -20,6 +21,7 @@ app.use('/users', userRoutes);
 app.use("/products", productsRoutes)
 app.use("/orders", ordersRoutes)
 app.use("/collections", collectionsRoutes)
+app.use("/purchases", purchasesRoutes)
 
 
 

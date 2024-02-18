@@ -1,4 +1,6 @@
 import Orders from "../models/orders.js";
+import { updateStock } from "./purchases.controllers.js";
+import ProductsClients from "../models/productsClients.js";
 
 export const getOrders = async (req, res) => { 
     try {
@@ -19,6 +21,7 @@ export const createOrder = async (req, res) => {
     try {
       const newOrder = new Orders(req.body);
       const orderSaved = await newOrder.save();
+      await updateStock(req.body.orderDetail, ProductsClients, 'decerement');
       res.status(201).json(orderSaved);
     } catch (error) {
       res.status(500).json({ error: 'Error al crear la orden' });
