@@ -1,5 +1,3 @@
-
-
 import React from 'react'
 import { useContext } from 'react'
 import { UserContext } from '../store/userContext'
@@ -17,22 +15,22 @@ const Articles = () => {
      const [productsClients, setProductsClients] = useState([])
      const [productsBonusClienets, setProductsBonusClients] = useState([])
      const [allProductsClients, setAllProductsClients] = useState([])
-     const [allProductsBonusClients, setAllProductsBonusClients] = useState([])
 
+     const getArticlesData = async () => { 
+        setProductsClients([])
+        console.log("Consulto nuevamente")
+        const productsClientsData = await getProductsClients();
+        setProductsClients(productsClientsData);
+     }
 
      useEffect(() => {
-      const fetchData = async () => {
-        const productsClientsData = await getProductsClients();
-        const productsBonusClientsData = await getProductsBonusClients();
-        setProductsClients(productsClientsData);
-        setProductsBonusClients(productsBonusClientsData);
-      };
-      fetchData();
+      getArticlesData()
      }, []);
 
 
      useEffect(() => { 
-      if(productsBonusClienets.length !== 0 && productsClients.length !== 0) { 
+      if(productsClients.length !== 0) { 
+        console.log("recibi los datos otra vez luego de ejecutarme")
         const platos = productsClients.platos || [];
         const copas = productsClients.copas || [];
         const juegoDeTe = productsClients.juegoDeTe || [];
@@ -42,18 +40,8 @@ const Articles = () => {
         const varios = productsClients.varios || [];
         const todosLosArrays = platos.concat(copas, juegoDeTe, juegoDeCafe, manteleria, mesasYSillas, varios);
         setAllProductsClients(todosLosArrays)
-    
-        const platosBonusClients = productsBonusClienets.platos || [];
-        const copasBonusClients = productsBonusClienets.copas || [];
-        const juegoDeTeBonusClients = productsBonusClienets.juegoDeTe || [];
-        const juegoDeCafeBonusClients = productsBonusClienets.juegoDeCafe || [];
-        const manteleriaBonusClients = productsBonusClienets.manteleria || [];
-        const mesasYSillasBonusClients = productsBonusClienets.mesasYSillas || [];
-        const variosBonusClients = productsBonusClienets.varios || [];
-        const todosLosArraysBonusClients = platosBonusClients.concat(copasBonusClients, juegoDeTeBonusClients, juegoDeCafeBonusClients, manteleriaBonusClients, mesasYSillasBonusClients, variosBonusClients);
-        setAllProductsBonusClients(todosLosArraysBonusClients)
       }
-    }, [productsClients, productsBonusClienets])
+    }, [productsClients])
 
 
 
@@ -61,10 +49,10 @@ const Articles = () => {
     <div className='flex flex-col'> 
         <NavBarComponent/>
           {
-          allProductsBonusClients.length !== 0 && allProductsClients.length !== 0 
+           allProductsClients.length !== 0 
           ? 
           <div className='h-screen mt-24 2xl:mt-20'>
-            <ArticlesTable clientsList={allProductsClients} bonusClientsList={allProductsBonusClients}/>
+            <ArticlesTable clientsList={allProductsClients}  updateList={getArticlesData}/>
           </div>        
             :
           <Loading/>

@@ -9,7 +9,7 @@ import { formatePrice } from '../../functions/gralFunctions';
 import DeleteOrder from '../Modals/DeleteOrder';
 import EditOrder from '../Modals/EditOrder';
 
-const ArticlesTable = ({clientsList, bonusClientsList}) => {
+const ArticlesTable = ({clientsList, updateList}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -22,6 +22,7 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
 
 
     useEffect(() => {
+      console.log("Me ejecuto nuevamente")
                 if(clientsList.length !== 0) { 
                   console.log(clientsList)
                   const propiedades = Object.keys(clientsList[0]).filter(propiedad =>  propiedad !== '_id');
@@ -51,12 +52,19 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
 
                         const filaActual = cell.row;
                         const id = filaActual.original._id;
-                        
+                        const articleName = filaActual.original.articulo;
+                        const clientsValue = filaActual.original.precioUnitarioAlquiler;
+                        const bonusClientsValue = filaActual.original.precioUnitarioAlquilerBonificados;
+                        const replacementValue = filaActual.original.precioUnitarioReposicion;    
                         const item = {
                         id: id,
+                        productName: articleName,
+                        clientsValue: clientsValue,
+                        bonusClientsValue: bonusClientsValue,
+                        replacementValue: replacementValue                
                         };
                         return (
-                          <EditOrder type="product"/>
+                          <EditOrder type="product" articleData={item} updateChanges={updateList}/>
                         );
                     },
                 })      
@@ -102,7 +110,7 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
                   console.log("VACIO")
                 }
  
-    }, [clientsList, bonusClientsList]);
+    }, [clientsList, updateList]);
 
     const handleChange = (e) => { 
       const searchTerm = e.toLowerCase(); 
@@ -132,8 +140,9 @@ const ArticlesTable = ({clientsList, bonusClientsList}) => {
                       Articulos Clientes
                     </p>
                 </div>
-                <div>
+                <div className='flex gap-2'>
                   <p className='text-sm mr-4 font-medium text-zinc-500'>Crear Articulo</p>
+                  <p className='text-sm mr-4 font-medium text-zinc-500'>Aplicar Aumento</p>
                 </div>
                 
               </div>

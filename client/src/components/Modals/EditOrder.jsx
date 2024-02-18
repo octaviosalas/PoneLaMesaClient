@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
-
 import axios from "axios";
+import { getProductsClients } from "../../functions/gralFunctions";
 
-const EditOrder = ({type, updateList, orderData}) => {
+const EditOrder = ({type, updateList, orderData, articleData, updateChanges}) => {
+
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [step, setStep] = useState(0)
   const [status, setStatus] = useState("Selecciona un Estado ↓")
@@ -14,6 +15,11 @@ const EditOrder = ({type, updateList, orderData}) => {
   const [newOrderReturnDate, setNewOrderReturnDate] = useState(type === "orders" ? orderData.returnDate : "")
   const [newOrderClient, setNewOrderClient] = useState(type === "orders" ? orderData.client : "")
   const [newOrderDetail, setNewOrderDetail] = useState(type === "orders" ? orderData.orderDetail : "")
+  const [newProductName, setNewProductName] = useState(type === "product" ? articleData.productName : "")
+  const [newProductClientsValue, setNewProductClientsValue] = useState(type === "product" ? articleData.clientsValue : "")
+  const [newProductBonusClientsValue, setNewProductBonusClientsValue] = useState(type === "product" ? articleData.bonusClientsValue : "")
+  const [newProductReplacementValue, setNewProductReplacementValue] = useState(type === "product" ? articleData.replacementValue : "")
+  const [succesChangesArticle, setSuccesChangesArticle] = useState(false)
 
 
 
@@ -50,6 +56,28 @@ const EditOrder = ({type, updateList, orderData}) => {
 
   const comeBackToFirstStep = () => { 
     setStep(0)
+  }
+
+  const changeProductData = () => { 
+    const newProductData = ({ 
+      articulo: newProductName,
+      precioUnitarioAlquiler: newProductClientsValue,
+      precioUnitarioAlquilerBonificados: newProductBonusClientsValue,
+      precioUnitarioReposicion: newProductReplacementValue
+    })
+    axios.put(`http://localhost:4000/products/changeData/${articleData.id}`, newProductData)
+         .then((res) => { 
+          console.log(res.data)
+          setSuccesChangesArticle(true)
+          updateChanges()
+          setTimeout(() => { 
+            setSuccesChangesArticle(false)
+            onClose()
+          }, 1500)
+         })
+         .catch((err) => { 
+          console.log(err)
+         })
   }
 
 
@@ -133,6 +161,37 @@ const EditOrder = ({type, updateList, orderData}) => {
                         </div>
                       </div>
                     : null}
+                </ModalBody>
+              
+              </>
+            )}
+          </ModalContent>
+          :
+          null
+          }
+      </Modal>
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max min-w-96 bg-white text-black'>
+         {type === "product" ? 
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1 text-zinc-600  text-md">
+                  <p className="font-bold text-md">Editar Producto </p>                 
+                </ModalHeader>
+                <ModalBody className="flex flex-col items-center justify-center">
+                    <Input type="text" className="mt-2 w-60" label="Articulo" value={newProductName} onChange={(e) => setNewProductName(e.target.value)}/>
+                    <Input type="text" className="mt-2 w-60" label="Precio Clientes" value={newProductClientsValue} onChange={(e) => setNewProductClientsValue(e.target.value)}/>
+                    <Input type="text" className="mt-2 w-60" label="Precio Clientes Bonificados" value={newProductBonusClientsValue} onChange={(e) => setNewProductBonusClientsValue(e.target.value)}/>
+                    <Input type="text" className="mt-2 w-60" label="Precio Reposicion" value={newProductReplacementValue} onChange={(e) => setNewProductReplacementValue(e.target.value)}/>
+                    <div className="flex items-center justify-center gap-4 mt-4 mb-4">
+                      <Button className="font-bold text-white bg-green-800 text-sm w-52" onClick={() => changeProductData()}>Confirmar Cambios</Button>
+                      <Button className="font-bold text-white bg-green-600 text-sm w-52" onPress={onClose}>Cancelar</Button>
+                    </div>
+                   {succesChangesArticle ?
+                    <div className="flex items-center justify-center mb-2 mt-2">
+                        <p className="font-bold text-green-800 text-sm">Cambios almacenados con Exito ✔</p>
+                    </div> : null}
                 </ModalBody>
               
               </>
