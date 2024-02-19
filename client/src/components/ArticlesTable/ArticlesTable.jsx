@@ -9,6 +9,7 @@ import { formatePrice } from '../../functions/gralFunctions';
 import DeleteOrder from '../Modals/DeleteOrder';
 import EditOrder from '../Modals/EditOrder';
 import Loading from "../Loading/Loading"
+import HistoricArticles from './HistoricArticles';
 
 const ArticlesTable = ({}) => {
 
@@ -95,11 +96,13 @@ const ArticlesTable = ({}) => {
               cellRenderer: (cell) => { 
                 const filaActual = cell.row;
                 const id = filaActual.original._id;
+                const articleName = filaActual.original.articulo;
                 const item = {
-                id: id
+                id: id,
+                articleName: articleName
                 };
                 return (
-                   <p className='text-xs font-medium text-green-700'>Historico</p>
+                  <HistoricArticles articleData={item}/>
                   );
             },
            })  
