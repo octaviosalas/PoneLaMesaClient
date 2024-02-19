@@ -5,10 +5,11 @@ import { useState, useEffect } from "react";
 import { getMonth, getDate, getDay, getYear } from "../../functions/gralFunctions";
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
+import { getProductsClients } from "../../functions/gralFunctions";
 
-const CreateNewPurchase = () => {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const [allProducts, setAllProducts] = useState("")
+const CreateNewPurchase = ({update}) => {
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
+  const [allProducts, setAllProducts] = useState([])
   const [filteredNames, setFilteredNames] = useState("")
   const [choosenProductName, setChoosenProductName] = useState("")
   const [choosenProductQuantity, setChoosenProductQuantity] = useState("")
@@ -19,22 +20,15 @@ const CreateNewPurchase = () => {
   const [actualMonth, setActualMonth] = useState(getMonth())
   const [actualDay, setActualDay] = useState(getDay())
   const [actualYear, setActualYear] = useState(getYear())
+  const [succesPurchase, setSuccesPurchase] = useState(false)
+
   const userCtx = useContext(UserContext)
-
-
 
   const getClientsProductsData = () => { 
     axios.get("http://localhost:4000/products/productsClients")
           .then((res) => { 
             console.log(res.data)
-            const data = res.data
-            let nuevoArray = [];
-            for (let propiedad in data[0]) {
-              if (Array.isArray(data[0][propiedad])) {
-                  nuevoArray = nuevoArray.concat(data[0][propiedad]);
-                  }
-              }
-              setAllProducts(nuevoArray);
+            setAllProducts(res.data);
           })
           .catch((err) => { 
             console.log(err)
@@ -57,7 +51,6 @@ const CreateNewPurchase = () => {
       console.log(filteredNames)
     }
   }
-
   
   const chooseProduct = (name, id) => { 
     console.log("recibi como id a", id)
@@ -82,9 +75,6 @@ const CreateNewPurchase = () => {
     );
   };
 
-  useEffect(() => { 
-    console.log(productsSelected)
-  }, [productsSelected])
 
   const createNewPurchase = () => { 
     if(productsSelected.length !== 0) {    
@@ -102,6 +92,13 @@ const CreateNewPurchase = () => {
         axios.post("http://localhost:4000/purchases/create", newPurchase)
              .then((res) => { 
                 console.log(res.data)
+                setSuccesPurchase(true)
+                setProductsSelected([])
+                update()
+                setTimeout(() => { 
+                  onClose()
+                  setSuccesPurchase(false)
+                }, 2000)
              })
              .catch((err) => { 
                 console.log(err)
@@ -111,6 +108,7 @@ const CreateNewPurchase = () => {
     }
   }
 
+  
 
   return (
     <>
@@ -181,6 +179,10 @@ const CreateNewPurchase = () => {
                   Confirmar
                 </Button>
               </ModalFooter>
+            {succesPurchase ? 
+              <div className="flex items-center justify-center mt-4 mb-4">
+                <p className="font-medium text-green-600 text-sm">Compra realizada con Exito ✔</p>
+              </div> : null}
             </>
           )}
         </ModalContent>

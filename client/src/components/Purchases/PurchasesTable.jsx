@@ -11,6 +11,7 @@ import EditOrder from '../Modals/EditOrder';
 import FiltersPurchases from './FiltersPurchases';
 import CreateNewPurchase from "./CreateNewPurchase"
 import Loading from '../Loading/Loading';
+import PurchaseDetail from './PurchaseDetail';
 
 const PurchasesTable = () => {
 
@@ -21,10 +22,6 @@ const PurchasesTable = () => {
     const [tableData, setTableData] = useState([])
     const [inputValue, setInputValue] = useState("")
     const [tableChoosen, setTableChoosen] = useState([])
-
-  
-
-
 
     const getPurchasesDataAndCreateTable = () => { 
             axios.get("http://localhost:4000/purchases") 
@@ -64,7 +61,7 @@ const PurchasesTable = () => {
                           id: id,
                           };
                           return (
-                            <EditOrder type="product"/>
+                            <EditOrder type="purchase"/>
                           );
                       },
                   })      
@@ -79,7 +76,7 @@ const PurchasesTable = () => {
                       id: id
                       };
                       return (
-                         <DeleteOrder type="product"/>
+                         <DeleteOrder type="purchase" purchaseData={item}/>
                         );
                   },
                   }) 
@@ -90,13 +87,25 @@ const PurchasesTable = () => {
                   cellRenderer: (cell) => { 
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
-                    const detail = filaActual.original.purchaseDetail
+                    const date = filaActual.original.date;
+                    const day = filaActual.original.day;
+                    const month = filaActual.original.month;
+                    const year = filaActual.original.year;
+                    const detail = filaActual.original.purchaseDetail;
+                    const creator = filaActual.original.creatorPurchase;
+                    const total = filaActual.original.total;
                     const item = {
                     id: id,
-                    detail
+                    detail,
+                    date,
+                    day,
+                    month,
+                    year,
+                    creator,
+                    total           
                     };
                     return (
-                       <p className='text-xs font-medium text-green-700'>Detalle</p>
+                       <PurchaseDetail purchaseData={item}/>
                       );
                 },
                   }) 
@@ -133,7 +142,7 @@ const PurchasesTable = () => {
           <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
               <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
                 <FiltersPurchases/>     
-                <CreateNewPurchase/>                    
+                <CreateNewPurchase update={getPurchasesDataAndCreateTable}/>                    
               </div>
               <div className='w-full flex jusitfy-start text-center mt-4 '>
                <input 

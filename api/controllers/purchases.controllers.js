@@ -1,62 +1,8 @@
 import Purchases from "../models/purchases.js";
 import ProductsClients from "../models/productsClients.js";
+import { incrementarStock, decrementarStock } from "./orders.controllers.js";
 
 
-export const updateStock = async (purchaseDetail, model, operation) => {
-    for (const productoCompra of purchaseDetail) {
-      const { productId, quantity } = productoCompra;
-      console.log("Me llego:", productId, quantity);
-      const updateValue = operation === 'increase' ? parseInt(quantity) : -parseInt(quantity);
-      
-      // Busca el producto dentro de los arrays de productos del modelo
-      const product = await model.findOne({
-        $or: [
-          { 'platos._id': productId },
-          { 'copas._id': productId },
-          { 'juegoDeTe._id': productId },
-          { 'juegoDeCafe._id': productId },
-          { 'varios._id': productId },
-          { 'manteleria._id': productId },
-          { 'mesasYSillas._id': productId }
-        ]
-      });
-  
-      if (product) {
-        console.log("encontre a product", product);
-        console.log(typeof product)
-        let fieldName = '';
-        if (product.platos.find(p => p._id == productId)) {
-          fieldName = 'platos';
-        } else if (product.copas.find(p => p._id == productId)) {
-          fieldName = 'copas';
-        } else if (product.juegoDeTe.find(p => p._id == productId)) {
-          fieldName = 'juegoDeTe';
-        } else if (product.juegoDeCafe.find(p => p._id == productId)) {
-          fieldName = 'juegoDeCafe';
-        } else if (product.varios.find(p => p._id == productId)) {
-          fieldName = 'varios';
-        } else if (product.manteleria.find(p => p._id == productId)) {
-          fieldName = 'manteleria';
-        } else if (product.mesasYSillas.find(p => p._id == productId)) {
-          fieldName = 'mesasYSillas';
-        }
-     
-        // Actualiza el stock del producto encontrado
-        if (fieldName) {
-          console.log(fieldName);
-          console.log(quantity)
-          console.log(productId)
-          await model.updateOne(
-            { _id: product._id },
-            { $inc: { [fieldName + '.$[elem].stock']: updateValue } },
-            { arrayFilters: [{ 'elem._id': productId }] }
-          );
-        } else {  
-          console.log("no encuentro a FIELDDDDDDDDDDDD");
-        }
-      }
-    }
-  };
 
 export const savePurchase = async (req, res) => {
     const { purchaseDetail, date, day, month, year, total, creatorPurchase } = req.body;
@@ -82,7 +28,7 @@ export const savePurchase = async (req, res) => {
         });
   
 
-      await updateStock(purchaseDetail, ProductsClients, 'increase');
+      await incrementarStock(purchaseDetail);
     } catch (error) {
       console.log(error);
     }
@@ -99,7 +45,16 @@ export const getAllPurchases = async (req, res) => {
 }
 
 export const getPurchaseById = async (req, res) => { 
-    
+  const {purchaseId} = req.params
+  try {
+    const purchase = await Purchases.findById({_id: purchaseId});
+    if (!purchase) {
+      return res.status(404).json({ message: 'Compra no encontrada' });
+    }
+    res.status(200).json(purchase);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener compra' });
+  }
 }
 
 export const updateCompra = async (req, res) => { 
@@ -107,9 +62,52 @@ export const updateCompra = async (req, res) => {
 }
 
 export const deletePurchase = async (req, res) => { 
-    
+  const { purchaseId } = req.params;
+
+  try {
+    const deletedCompra = await Purchases.findByIdAndDelete({_id: purchaseId});
+
+    if (deletedCompra) {
+      res.status(200).json({ message: 'Compra eliminada correctamente', deleted: deletedCompra });
+    } else {
+      res.status(404).json({ message: 'Compra no encontrado' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar el producto' });
+  }
 }
 
 export const deleteAndReplenishShares = async (req, res) => { 
+  const { purchaseId } = req.params;
+  try {
+    const compra = await Purchases.findById({_id: purchaseId});
+    if (!compra) {
+      return res.status(404).json({ mensaje: 'Compra no encontrada' });
+    }
+    const productosComprados = compra.purchaseDetail;
+    console.log("ACA MIRA:", productosComprados)
+    await Promise.all(
+      productosComprados.map(async (productoComprado) => {
+        const { productId, quantity } = productoComprado;
+        const cantidad = parseInt(quantity, 10);
     
-}
+        await ProductsClients.findByIdAndUpdate(
+          {_id: productId},
+          { $inc: { stock: -cantidad } },
+          { new: true }
+        );
+      })
+    );
+
+    await Purchases.findByIdAndDelete(purchaseId);
+
+    res.status(200).json({ mensaje: 'Compra eliminada y stock repuesto' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al procesar la solicitud' });
+  }
+};
+
+
+

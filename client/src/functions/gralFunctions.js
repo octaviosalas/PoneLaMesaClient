@@ -3,7 +3,7 @@ import axios from 'axios';
 export const getProductsClients = async () => {
   try {
     const response = await axios.get("http://localhost:4000/products/productsClients");
-    const productsClients = response.data[0];
+    const productsClients = response.data;
     console.log( productsClients);
     return productsClients;
   } catch (error) {

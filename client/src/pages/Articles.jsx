@@ -17,10 +17,8 @@ const Articles = () => {
      const [allProductsClients, setAllProductsClients] = useState([])
 
      const getArticlesData = async () => { 
-        setProductsClients([])
-        console.log("Consulto nuevamente")
         const productsClientsData = await getProductsClients();
-        setProductsClients(productsClientsData);
+        setAllProductsClients(productsClientsData);
      }
 
      useEffect(() => {
@@ -28,22 +26,7 @@ const Articles = () => {
      }, []);
 
 
-     useEffect(() => { 
-      if(productsClients.length !== 0) { 
-        console.log("recibi los datos otra vez luego de ejecutarme")
-        const platos = productsClients.platos || [];
-        const copas = productsClients.copas || [];
-        const juegoDeTe = productsClients.juegoDeTe || [];
-        const juegoDeCafe = productsClients.juegoDeCafe || [];
-        const manteleria = productsClients.manteleria || [];
-        const mesasYSillas = productsClients.mesasYSillas || [];
-        const varios = productsClients.varios || [];
-        const todosLosArrays = platos.concat(copas, juegoDeTe, juegoDeCafe, manteleria, mesasYSillas, varios);
-        setAllProductsClients(todosLosArrays)
-      }
-    }, [productsClients])
-
-
+    
 
     return (
     <div className='flex flex-col'> 
@@ -52,7 +35,7 @@ const Articles = () => {
            allProductsClients.length !== 0 
           ? 
           <div className='h-screen mt-24 2xl:mt-20'>
-            <ArticlesTable clientsList={allProductsClients}  updateList={getArticlesData}/>
+            <ArticlesTable />
           </div>        
             :
           <Loading/>

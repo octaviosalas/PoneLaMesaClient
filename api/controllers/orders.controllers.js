@@ -1,6 +1,41 @@
 import Orders from "../models/orders.js";
-import { updateStock } from "./purchases.controllers.js";
 import ProductsClients from "../models/productsClients.js";
+
+export const incrementarStock = async (productosComprados) => { 
+  try {
+    for (const productoCompra of productosComprados) {
+      const { productId, quantity } = productoCompra;
+      const cantidad = parseInt(quantity, 10); // Convertir a entero
+      console.log("Me llego:", productId, cantidad);
+      await ProductsClients.findByIdAndUpdate(
+        productId,
+        { $inc: { stock: cantidad }},
+        { new: true } // Para obtener el producto actualizado después de la actualización
+      );
+    }
+  } catch (error) {
+    throw new Error(`Error al incrementar el stock: ${error.message}`);
+  }
+};
+
+export const decrementarStock = async (productosComprados) => { 
+  try {
+    for (const productoCompra of productosComprados) {
+      const { productId, quantity } = productoCompra;
+      const cantidad = parseInt(quantity, 10); // Convertir a entero
+      console.log("Me llego:", productId, cantidad);
+      await ProductsClients.findByIdAndUpdate(
+        productId,
+        { $inc: { stock: -cantidad }},
+        { new: true } // Para obtener el producto actualizado después de la actualización
+      );
+    }
+  } catch (error) {
+    throw new Error(`Error al decrementar el stock: ${error.message}`);
+  }
+};
+
+
 
 export const getOrders = async (req, res) => { 
     try {
@@ -21,7 +56,7 @@ export const createOrder = async (req, res) => {
     try {
       const newOrder = new Orders(req.body);
       const orderSaved = await newOrder.save();
-      await updateStock(req.body.orderDetail, ProductsClients, 'decerement');
+      await decrementarStock(req.body.orderDetail);
       res.status(201).json(orderSaved);
     } catch (error) {
       res.status(500).json({ error: 'Error al crear la orden' });

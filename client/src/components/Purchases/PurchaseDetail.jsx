@@ -5,23 +5,32 @@ import { formatePrice } from "../../functions/gralFunctions";
 
 import { useState, useEffect } from "react";
 
-const OrderDetail = ({orderData}) => {
+/* 
+  const item = {
+                    id: id,
+                    detail,
+                    date,
+                    day,
+                    month,
+                    year,
+                    creator     
+*/
+
+const PurchaseDetail = ({purchaseData}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
 
   useEffect(() => {
-    if (orderData && orderData.detail && Array.isArray(orderData.detail) && orderData.detail.length > 0) {
-      const firstDetail = orderData.detail[0];
+    if (purchaseData && purchaseData.detail && Array.isArray(purchaseData.detail) && purchaseData.detail.length > 0) {
+      const firstDetail = purchaseData.detail[0];
       const properties = Object.keys(firstDetail);
       const filteredProperties = properties.filter(property => property !== 'productId');
   
       const columnLabelsMap = {
         productName: 'Articulo',
         quantity: 'Cantidad',
-        price: 'Precio Alquiler',
-        replacementPrice: 'Precio Reposicion',
-        choosenProductTotalPrice: 'Monto Total',
+        value: 'Monto Gastado',
       };
   
       const tableColumns = filteredProperties.map(property => ({
@@ -31,7 +40,7 @@ const OrderDetail = ({orderData}) => {
   
       setColumns(tableColumns);
     }
-  }, [orderData]);
+  }, [purchaseData]);
 
   return (
     <>
@@ -40,12 +49,11 @@ const OrderDetail = ({orderData}) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Detalle del Pedido</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Detalle de la Compra</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col text-start justify-start">
-                    <p className="text-zinc-600 font-medium text-sm">Pedido cargador por: {orderData.creator}</p>
-                    <p className="text-zinc-600 font-medium text-sm">Fecha de creacion: {orderData.day} de {orderData.month} de {orderData.year}</p>
-                    <p className="text-zinc-600 font-medium text-sm">Cliente: {orderData.client}</p>
+                    <p className="text-zinc-600 font-medium text-sm">Pedido cargador por: {purchaseData.creator}</p>
+                    <p className="text-zinc-600 font-medium text-sm">Fecha de creacion: {purchaseData.day} de {purchaseData.month} de {purchaseData.year}</p>
                 </div>
                    <Table aria-label="Example table with dynamic content" className="w-full flex items-center justify-center mt-2">
                               <TableHeader columns={columns}>
@@ -55,7 +63,7 @@ const OrderDetail = ({orderData}) => {
                                   </TableColumn>
                                 )}
                               </TableHeader>
-                              <TableBody items={orderData.detail}>
+                              <TableBody items={purchaseData.detail}>
                               {(item) => (
                                 <TableRow key={item.productName}>
                                   {columns.map(column => (
@@ -78,7 +86,7 @@ const OrderDetail = ({orderData}) => {
                             </TableBody>
                         </Table>    
                         <div className="flex justify-end">
-                          <p className="text-sm text-zinc-600 font-bold">Valor total del Pedido: {orderData.total} $</p>
+                          <p className="text-sm text-zinc-600 font-bold">Monto total de la Compra: {purchaseData.total} $</p>
                         </div>        
               </ModalBody>
               <ModalFooter className="flex items-center justify-center mt-2">
@@ -93,5 +101,5 @@ const OrderDetail = ({orderData}) => {
   );
 }
 
-export default OrderDetail
+export default PurchaseDetail
 

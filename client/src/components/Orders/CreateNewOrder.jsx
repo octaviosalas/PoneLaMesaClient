@@ -18,7 +18,7 @@ const CreateNewOrder = ({updateList}) => {
   const [missedData, setMissedData] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [orderNumber, setOrderNumber] = useState("")
-  const [orderStatus, setOrderStatus] = useState("No entregada")
+  const [orderStatus, setOrderStatus] = useState("No entregado")
   const [clientName, setClientName] = useState("")
   const [typeOfClient, setTypeOfClient] = useState("")
   const [placeOfDelivery, setPlaceOfDelivery] = useState("")
@@ -70,14 +70,7 @@ const CreateNewOrder = ({updateList}) => {
       axios.get("http://localhost:4000/products/productsClients")
             .then((res) => { 
               console.log(res.data)
-              const data = res.data
-              let nuevoArray = [];
-              for (let propiedad in data[0]) {
-                if (Array.isArray(data[0][propiedad])) {
-                    nuevoArray = nuevoArray.concat(data[0][propiedad]);
-                    }
-                }
-                setAllProducts(nuevoArray);
+                setAllProducts(res.data);
             })
             .catch((err) => { 
               console.log(err)
@@ -235,7 +228,7 @@ const CreateNewOrder = ({updateList}) => {
                                             if (typeOfClient === "No Bonificado") {
                                                 chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion);
                                             } else if (typeOfClient === "Bonificado") {
-                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquilerBonificados, prod.precioUnitarioReposicion);
+                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioBonificados, prod.precioUnitarioReposicion);
                                             }
                                         }}
                                     >

@@ -25,46 +25,46 @@ export const productsBonusClientsData = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   const { productId } = req.params;
-  const {
-    articulo,
-    precioUnitarioAlquiler,
-    precioUnitarioAlquilerBonificados,
-    precioUnitarioReposicion
-  } = req.body;
+  const {articulo, precioUnitarioAlquiler, precioUnitarioAlquilerBonificados, precioUnitarioReposicion} = req.body
+
 
   try {
-    const updatedProduct = await ProductsClients.updateOne(
-      { 
-        // Busca el objeto dentro de los arrays utilizando el _id del subdocumento
-        $or: [
-          { 'platos._id': productId },
-          { 'copas._id': productId },
-          { 'juegoDeTe._id': productId },
-          { 'juegoDeCafe._id': productId },
-          { 'varios._id': productId },
-          { 'manteleria._id': productId },
-          { 'mesasYSillas._id': productId }
-        ]
-      },
-      {
-        $set: {
-          "platos.$[plato].articulo": articulo,
-          "platos.$[plato].precioUnitarioAlquiler": precioUnitarioAlquiler,
-          "platos.$[plato].precioUnitarioAlquilerBonificados": precioUnitarioAlquilerBonificados,
-          "platos.$[plato].precioUnitarioReposicion": precioUnitarioReposicion,
-        }
-      },
-      {
-        arrayFilters: [{ "plato._id": productId }]
-      }
-    );
+          ProductsClients.findByIdAndUpdate({ _id: productId }, { 
+          articulo: articulo,
+          precioUnitarioAlquiler: precioUnitarioAlquiler,
+          precioUnitarioAlquilerBonificados: precioUnitarioAlquilerBonificados,
+          precioUnitarioReposicion: precioUnitarioReposicion,
+          })
+          .then((newProduct) => {                                      
+          res.json({message:"Producto actualizado", newProduct})
+          })
+          .catch((err) => { 
+          console.log(err)
+          })
 
-    res.json({
-      message: "El Articulo fue modificado Correctamente",
-      updatedProduct
-    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
+
+
+export const deleteProduct = async (req, res) => {
+  const { productId } = req.params;
+
+  try {
+    const deletedProduct = await ProductsClients.findByIdAndDelete({_id :productId});
+
+    if (deletedProduct) {
+      res.status(200).json({ message: 'Producto eliminado correctamente', deleted: deletedProduct });
+    } else {
+      res.status(404).json({ message: 'Producto no encontrado' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar el producto' });
+  }
+};
+
+
+
