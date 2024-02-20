@@ -23,6 +23,10 @@ const NavBarComponent = () =>  {
     navigate("/")
   }
 
+  const goTo = (ruta) => { 
+    navigate(`/${ruta}`)
+  }
+
   
   
 
@@ -67,6 +71,21 @@ const NavBarComponent = () =>  {
               <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
                 Estadisticas
               </Link>
+          </NavbarItem>
+          <NavbarItem>
+          <Dropdown>
+      <DropdownTrigger>
+               <p variant="bordered" className="hover:text-green-600 cursor-pointer hover:font-medium"> Procesos </p>
+              </DropdownTrigger>
+              <DropdownMenu aria-label="Static Actions">
+                <DropdownItem key="new">Nuevo Pedido</DropdownItem>
+                <DropdownItem key="arm" onClick={() => goTo("Armado")}>Armado</DropdownItem>
+                <DropdownItem key="rep" onClick={() => goTo("Reparto")}>Reparto</DropdownItem>
+                <DropdownItem key="edit">Devolucion</DropdownItem>
+                <DropdownItem key="edit"  onClick={() => goTo("Lavado")}>Lavado</DropdownItem>     
+                <DropdownItem key="edit">Reposiciones</DropdownItem>     
+              </DropdownMenu>
+            </Dropdown>
           </NavbarItem>
           </div>         
         </NavbarContent>

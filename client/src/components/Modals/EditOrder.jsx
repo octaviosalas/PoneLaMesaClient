@@ -22,7 +22,6 @@ const EditOrder = ({type, updateList, orderData, articleData, updateChanges}) =>
   const [succesChangesArticle, setSuccesChangesArticle] = useState(false)
 
 
-
   const closeModal = () => { 
     onClose()
     setStep(0)
@@ -113,10 +112,11 @@ const EditOrder = ({type, updateList, orderData, articleData, updateChanges}) =>
                     <div className="flex flex-col items-center justify-center mb-4">
                       <div>
                         <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">                       
-                            <SelectItem key={"No Entregado"} value={"No Entregado"} onClick={() => setStatus("No Entregado")}>No Entregado</SelectItem>
-                            <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>
-                            <SelectItem key={"Devuelto"} value={"Devueltoo"} onClick={() => setStatus("Devuelto")} >Devuelto</SelectItem>
-                            <SelectItem key={"Suspendido"} value={"Suspendido"} onClick={() => setStatus("Suspendido")} >Suspendido</SelectItem>
+                            <SelectItem key={"Repuesto"} value={"Repuesto"} onClick={() => setStatus("Repuesto")}>Repuesto</SelectItem>
+                            <SelectItem key={"Lavado"} value={"Lavado"} onClick={() => setStatus("Lavado")} >Lavado</SelectItem>
+                            <SelectItem key={"Devolucion"} value={"Devolucion"} onClick={() => setStatus("Devolucion")} >Devolucion</SelectItem>
+                            <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>
+                            <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>
                         </Select>                    
                       </div>
                       <div className="flex gap-6 items-center mt-6">
