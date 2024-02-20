@@ -8,6 +8,7 @@ import { useState } from "react";
 import axios from "axios";
 import logo from "../../images/logo.png"
 import { UserContext } from '../../store/userContext'
+import CreateNewOrder from "../Orders/CreateNewOrder"
 
 
 const NavBarComponent = () =>  {
@@ -23,6 +24,9 @@ const NavBarComponent = () =>  {
     navigate("/")
   }
 
+  const goTo = (ruta) => { 
+    navigate(`/${ruta}`)
+  }
   
   
 
@@ -39,8 +43,36 @@ const NavBarComponent = () =>  {
               </Link>
           </NavbarItem>
           <NavbarItem>
-              <Link color="foreground"  href="/pedidos"  className="hover:text-green-600 cursor-pointer hover:font-medium">
-                Pedidos
+              <Dropdown>
+                      <DropdownTrigger>
+                        <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Pedidos </p>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Static Actions">
+                        <DropdownItem  isReadOnly key="new"><CreateNewOrder/></DropdownItem>
+                        <DropdownItem key="arm" onClick={() => goTo("Pedidos")}>Todos los Pedidos</DropdownItem>
+                        <DropdownItem key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
+                        <DropdownItem key="rep" onClick={() => goTo("Reparto")}>En Reparto</DropdownItem>
+                        <DropdownItem key="rep" onClick={() => goTo("Entregado")}>Entregados</DropdownItem>
+                        <DropdownItem key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem>  
+                        <DropdownItem key="clean"  onClick={() => goTo("Devueltos")}>Devueltos</DropdownItem>              
+                        <DropdownItem key="edit">Reposiciones</DropdownItem>     
+                      </DropdownMenu>
+                </Dropdown>
+          </NavbarItem>
+          <NavbarItem>
+                <Dropdown>
+                      <DropdownTrigger>
+                          <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Logistica </p>
+                      </DropdownTrigger>
+                        <DropdownMenu aria-label="Static Actions">
+                          <DropdownItem key="arm" onClick={() => goTo("Pedidos")}>Entregas</DropdownItem>
+                          <DropdownItem key="arm" onClick={() => goTo("Armado")}>Devoluciones</DropdownItem>                          
+                        </DropdownMenu>
+                </Dropdown>
+          </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground" href="/devoluciones" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Devoluciones
               </Link>
           </NavbarItem>
           <NavbarItem>
@@ -50,24 +82,15 @@ const NavBarComponent = () =>  {
           </NavbarItem>
           <NavbarItem>
               <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
-                Pagos
-              </Link>
-          </NavbarItem>
-          <NavbarItem>
-              <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
                 Cobros
               </Link>
           </NavbarItem>
-          <NavbarItem isActive>
-              <Link href="#" aria-current="page" className="hover:text-green-600 cursor-pointer hover:font-medium" color="foreground">
-                Info Mes
-              </Link>
-          </NavbarItem>
           <NavbarItem>
-              <Link color="foreground" href="#" className="hover:text-green-600 cursor-pointer hover:font-medium">
+              <Link color="foreground" href="/estadisticas" className="hover:text-green-600 cursor-pointer hover:font-medium">
                 Estadisticas
               </Link>
           </NavbarItem>
+         
           </div>         
         </NavbarContent>
       </NavbarContent>

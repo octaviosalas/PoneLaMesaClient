@@ -109,7 +109,7 @@ const HistoricArticles = ({articleData}) => {
                     ) : (
                       ordersProducts.length > 0 ? (
                         <div className="mt-4 flex flex-col  ">
-                          <Table aria-label="Example table with dynamic content" className="w-[480px] 2xl-w-[550px] flex items-center justify-center mt-2 overflow-y-auto max-h-[400px]">
+                          <Table aria-label="Example table with dynamic content" className="w-[480px] 2xl-w-[550px] flex items-center justify-center mt-2 shadow-xl overflow-y-auto max-h-[400px] ">
                             <TableHeader columns={columns}>
                               {(column) => (
                                 <TableColumn key={column.key} className="text-xs gap-6">

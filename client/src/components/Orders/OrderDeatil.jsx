@@ -47,8 +47,8 @@ const OrderDetail = ({orderData}) => {
                     <p className="text-zinc-600 font-medium text-sm">Fecha de creacion: {orderData.day} de {orderData.month} de {orderData.year}</p>
                     <p className="text-zinc-600 font-medium text-sm">Cliente: {orderData.client}</p>
                 </div>
-                   <Table aria-label="Example table with dynamic content" className="w-full flex items-center justify-center mt-2">
-                              <TableHeader columns={columns}>
+                   <Table aria-label="Example table with dynamic content" className="w-full shadow-xl flex items-center justify-center mt-2">
+                              <TableHeader columns={columns} className="">
                                 {(column) => (
                                   <TableColumn key={column.key} className="text-xs gap-6">
                                     {column.label}

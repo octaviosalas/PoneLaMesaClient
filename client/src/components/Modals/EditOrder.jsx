@@ -4,7 +4,7 @@ import {Select, SelectItem} from "@nextui-org/react";
 import axios from "axios";
 import { getProductsClients } from "../../functions/gralFunctions";
 
-const EditOrder = ({type, updateList, orderData, articleData, updateChanges}) => {
+const EditOrder = ({type, statusOrder, updateList, orderData, articleData, updateChanges}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [step, setStep] = useState(0)
@@ -91,6 +91,7 @@ const EditOrder = ({type, updateList, orderData, articleData, updateChanges}) =>
               <>
                 <ModalHeader className="flex flex-col gap-1 text-zinc-600  text-md">
                   <p className="font-bold text-md">Editar Pedido </p>
+                  {statusOrder}
                   {step === 0 ? 
                     <div>
                       <p className="text-xs font-medium mt-2">Pedido numero: {orderData.order}</p>
@@ -112,12 +113,14 @@ const EditOrder = ({type, updateList, orderData, articleData, updateChanges}) =>
                   {step === 1 ? 
                     <div className="flex flex-col items-center justify-center mb-4">
                       <div>
-                        <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">                       
-                            <SelectItem key={"No Entregado"} value={"No Entregado"} onClick={() => setStatus("No Entregado")}>No Entregado</SelectItem>
-                            <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>
-                            <SelectItem key={"Devuelto"} value={"Devueltoo"} onClick={() => setStatus("Devuelto")} >Devuelto</SelectItem>
-                            <SelectItem key={"Suspendido"} value={"Suspendido"} onClick={() => setStatus("Suspendido")} >Suspendido</SelectItem>
-                        </Select>                    
+                      <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">     
+                            <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>          
+                            <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
+                            <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
+                            <SelectItem key={"Devolucion"} value={"Devolucion"} onClick={() => setStatus("Devuelto")} >Devolucion</SelectItem>   
+                            <SelectItem key={"Lavado"} value={"Lavado"} onClick={() => setStatus("Lavado")} >Lavado</SelectItem>     
+                            <SelectItem key={"Repuesto"} value={"Repuesto"} onClick={() => setStatus("Repuesto")}>Repuesto</SelectItem>                                          
+                      </Select>                    
                       </div>
                       <div className="flex gap-6 items-center mt-6">
                         <Button className="font-bold text-white text-xs bg-green-600 w-40" onClick={() => changeOrderState()}>Confirmar</Button>

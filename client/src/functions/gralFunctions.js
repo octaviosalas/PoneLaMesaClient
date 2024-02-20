@@ -90,4 +90,3 @@ export const diferentOrdersStatus = [
   { label: 'Suspendido', value: 'Suspendido' },
 ];
 
-

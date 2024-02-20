@@ -7,6 +7,11 @@ import { UserProvider } from './store/userContext'
 import Articles from './pages/Articles'
 import Orders from './pages/Orders'
 import Purchases from './pages/Purchases'
+import Armed from './components/OrdersProcess/Armed'
+import Cleaning from "./components/OrdersProcess/Cleaning"
+import Repart from './components/OrdersProcess/Repart'
+import Returned from './components/OrdersProcess/Returned'
+import Estadistics from './components/Estadistics/Estadistics'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -20,6 +25,12 @@ function App() {
             <Route path="/articulos" element={<Articles />} />   
             <Route path="/pedidos" element={<Orders />} />   
             <Route path="/compras" element={<Purchases />} />   
+            <Route path="/Armado" element={<Armed />} />   
+            <Route path="/Lavado" element={<Cleaning />} />   
+            <Route path="/Reparto" element={<Repart />} /> 
+            <Route path="/Devueltos" element={<Returned />} /> 
+            <Route path="/Estadisticas" element={<Estadistics />} /> 
+
 
           </Routes>
      </UserProvider>

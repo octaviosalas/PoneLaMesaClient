@@ -179,7 +179,7 @@ const CreateNewOrder = ({updateList}) => {
   return (
     <>
       <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={onOpen}>Crear Pedido</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-xl">
+      <Modal isOpen={isOpen} autoClose={false} isDismissable={false} onOpenChange={onOpenChange} className="max-w-xl">
         <ModalContent>
           {(onClose) => (
             <>
