@@ -3,6 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 import { formatePrice } from "../../functions/gralFunctions";
 import axios from "axios";
+import Loading from "../Loading/Loading"
 
 import { useState, useEffect } from "react";
 
@@ -11,35 +12,146 @@ const HistoricArticles = ({articleData}) => {
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
     const [ordersProducts, setOrdersProducts] = useState([])
+    const [error, setError] = useState(false)
+    const [loadingData, setLoadingData] = useState(true)
 
-    useEffect(() => { 
-      axios.get("http://localhost:4000/orders")
-           .then((res) => { 
-            const data = res.data
-            const getOrdersOfThisProduct = data.map((d) => d.orderDetail.filter((ord) => ord.productId === articleData.id))
-            console.log(`Ordenes de: ${articleData.articleName}`, getOrdersOfThisProduct)
-            setOrdersProducts(getOrdersOfThisProduct)
-            console.log("Todas las ordenes", res.data)
-           })
-           .catch((err) => { 
-            console.log(err)
-           })
-    }, [articleData.id])
+    const handleOpen = async () => { 
+      onOpen();
+      await getProductOrders();
+    }
 
+    const getProductOrders = async () => { 
+      try {
+        const res = await axios.get("http://localhost:4000/orders");
+        const data = res.data;
+        const productOrderDetails = data
+          .map((ord) => {
+            const productOrderDetail = ord.orderDetail.filter((o) => o.productId === articleData.id);
+            return {
+              orderId: ord._id,
+              orderNumber: ord.orderNumber,
+              month: ord.month,
+              year: ord.year,
+              productOrderDetail: productOrderDetail,
+              quantity: productOrderDetail.map((prodOrd) => prodOrd.quantity)[0],
+              total: productOrderDetail.map((prodOrd) => prodOrd.choosenProductTotalPrice)[0]
+              
+            };
+          })
+          .filter((result) => result.productOrderDetail.length > 0);
+        
+        console.log(productOrderDetails);
+    
+        if (productOrderDetails.length !== 0) { 
+          setOrdersProducts(productOrderDetails);
+        } else { 
+          setError(true);
+          console.log(productOrderDetails.length);
+          console.log("No tiene ordenes este producto")
+        }
+        setTimeout(() => { 
+          setLoadingData(false)
+        }, 2000)
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError(true);
+      }
+    };
+
+    useEffect(() => {
+      if (ordersProducts.length > 0) {
+        console.log("me ejecuto")
+        const firstDetail = ordersProducts[0];
+        const properties = Object.keys(firstDetail);
+        const filteredProperties = properties.filter(property => property !== 'productOrderDetail' && property !== 'orderId');
+      
+        const columnLabelsMap = {
+          month: 'Mes',
+          year: 'Año',
+          total: 'Facturacion',
+          orderNumber: 'Orden',
+          quantity: 'Cantidad',
+        };
+      
+        const tableColumns = filteredProperties.map(property => ({
+          key: property,
+          label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+        }));
+      
+        setColumns(tableColumns);
+        console.log(tableColumns);
+      } else { 
+        setError(true)
+      }
+    }, [ordersProducts]);
+
+ 
+
+  
 
 
   return (
     <>
-      <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
+      <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-xl bg-white text-black'>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Detalle del Pedido</ModalHeader>
-              <ModalBody className="flex flex-col">
-             <p>Id:  {articleData.id}   </p> 
-             <b>Cantidad de pedidos: {ordersProducts.length} </b>   
-              <p>{articleData.articleName}</p>
+              <ModalHeader className="flex flex-col gap-1">
+                <p  className="text-zinc-600 font-bold text-md">Historico de Pedidos</p>
+                <p  className="text-zinc-600 font-medium text-sm">Articulo: {articleData.articleName}</p>
+              </ModalHeader>
+              <ModalBody className="flex flex-col justify-center items-center">   
+             {loadingData ? (
+                    <div className="flex flex-col items-center justify-center">
+                      <Loading />
+                    </div>       
+                    ) : (
+                      ordersProducts.length > 0 ? (
+                        <div className="mt-4 flex flex-col  ">
+                          <Table aria-label="Example table with dynamic content" className="w-[480px] 2xl-w-[550px] flex items-center justify-center mt-2 overflow-y-auto max-h-[400px]">
+                            <TableHeader columns={columns}>
+                              {(column) => (
+                                <TableColumn key={column.key} className="text-xs gap-6">
+                                  {column.label}
+                                </TableColumn>
+                              )}
+                            </TableHeader>
+                            <TableBody items={ordersProducts}>
+                              {(item) => (
+                                <TableRow key={item.orderId}>
+                                  {columns.map(column => (
+                                    <TableCell key={column.key} className="text-start items-start">
+                                      {column.cellRenderer ? (
+                                        column.cellRenderer({ row: { original: item } })
+                                      ) : (
+                                        (column.key === "total") ? (
+                                          formatePrice(item[column.key])
+                                        ) : (
+                                          item[column.key]
+                                        )
+                                      )}
+                                    </TableCell>
+                                  ))}
+                                </TableRow>
+                              )}
+                            </TableBody>
+                          </Table>
+                          <div className="flex justify-end mt-4">
+                            <p className="text-zinc-600 font-medium text-xs">Total facturado de "{articleData.articleName}":  {formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-cemnter justify-center">
+                           <p className="font-medium text-zinc-600 text-sm">Al momento no se han registrado pedidos para este producto</p>
+                        </div>
+
+                      )
+                    )}
+          
+              
+
+
               </ModalBody>
               <ModalFooter className="flex items-center justify-center mt-2">
                 <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button>

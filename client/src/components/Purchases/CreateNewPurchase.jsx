@@ -119,7 +119,7 @@ const CreateNewPurchase = ({update}) => {
             <>
               <ModalHeader className="flex flex-col text-md text-zinc-600 font-medium gap-1">Crear Compra</ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">
-                  <Input type="text" value={choosenProductName} className="w-72" variant="bordered" label="Producto" onChange={(e) => handleInputChange(e.target.value)}/>
+                  <Input type="text" value={choosenProductName} className="w-64 2xl:w-72" variant="bordered" label="Producto" onChange={(e) => handleInputChange(e.target.value)}/>
                   <div className="absolute">
                         {
                          filteredNames !== "" ? 
