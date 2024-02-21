@@ -116,7 +116,7 @@ const EditOrder = ({type, statusOrder, updateList, orderData, articleData, updat
                       <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">     
                             <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>          
                             <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
-                            <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
+                            <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
                             <SelectItem key={"Devolucion"} value={"Devolucion"} onClick={() => setStatus("Devuelto")} >Devolucion</SelectItem>   
                             <SelectItem key={"Lavado"} value={"Lavado"} onClick={() => setStatus("Lavado")} >Lavado</SelectItem>     
                             <SelectItem key={"Repuesto"} value={"Repuesto"} onClick={() => setStatus("Repuesto")}>Repuesto</SelectItem>                                          

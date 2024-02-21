@@ -36,8 +36,6 @@ export const decrementarStock = async (productosComprados) => {
   }
 };
 
-
-
 export const getOrders = async (req, res) => { 
     try {
       const orders = await Orders.find()
@@ -107,7 +105,6 @@ export const deleteOrder = async (req, res) => {
 
 export const addPaid = async (req, res) => { 
   const { orderId } = req.params;
-
   try {
     const orderUpdated= await Orders.findByIdAndUpdate(
         { _id: orderId },
@@ -125,3 +122,37 @@ export const addPaid = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     } 
 }
+
+
+export const deleteAndReplenishArticles = async (req, res) => { 
+  const { orderId } = req.params;
+  try {
+    const order = await Orders.findById({_id: orderId});
+    if (!order) {
+      return res.status(404).json({ mensaje: 'Orden no encontrada' });
+    }
+    const rentedProducts = order.orderDetail;
+    console.log("ACA MIRA:", rentedProducts)
+    await Promise.all(
+        rentedProducts.map(async (productRented) => {
+        const { productId, quantity } = productRented;
+        const cantidad = parseInt(quantity, 10);
+    
+        await ProductsClients.findByIdAndUpdate(
+          {_id: productId},
+          { $inc: { stock: +cantidad } },
+          { new: true }
+        );
+      })
+    );
+
+    await Orders.findByIdAndDelete(orderId);
+
+    res.status(200).json({ mensaje: 'Alquiler eliminada y stock repuesto' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ mensaje: 'Error al procesar la solicitud' });
+  }
+} 
+
+

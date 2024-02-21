@@ -68,3 +68,26 @@ export const deleteProduct = async (req, res) => {
 
 
 
+export const priceIncrease = async (req, res) => { 
+
+  try {
+    const { percentage } = req.body;
+
+    if (!percentage || isNaN(percentage)) {
+      return res.status(400).json({ error: 'Porcentaje no válido' });
+    }
+
+    const products = await ProductsClients.find();
+
+    for (const product of products) {
+      product.precioUnitarioAlquiler *= 1 + percentage / 100;
+      product.precioUnitarioBonificados *= 1 + percentage / 100;
+      await product.save();
+    }
+
+    res.json({ success: true, message: `Se aplicó un ${percentage}% de aumento a los precios.` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+}

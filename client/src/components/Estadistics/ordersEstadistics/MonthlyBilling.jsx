@@ -10,6 +10,7 @@ const MonthlyBilling = () => {
 
     const [monthSelected, setMonthSelected] = useState("febrero")
     const [actualMonth, setActualMonth] = useState(getMonth())
+    const [actualYear, setActualYear] = useState(getYear())
     const [selectedMonthOrdersData, setSelectedMonthOrdersData] = useState([])
     const [monthAmountFactured, setMonthAmountFactured] = useState(0)
     const [withOutOrdersMonth, setWithOutOrdersMonth] = useState(false)
@@ -47,8 +48,12 @@ const MonthlyBilling = () => {
   return (
     <div>
          <Card className='shadow-xl shadow-rigth-left w-96'>
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-center justify-center">
-            <p className='font-bold text-sm underline text-zinc-400'>Monto Facturado al mes</p>
+            <CardHeader className="pb-0 pt-2 px-4 flex-col items-center justify-between">
+            <div className='flex flex-col jusitfy-start items-start'>
+                <p className='font-bold text-sm underline text-zinc-400'>Monto Facturado al mes</p>
+                <p className='font-bold text-sm underline text-zinc-400'>Año: {actualYear}</p>
+            </div> 
+           
             </CardHeader>
             <CardBody>
                 <div className='flex flex-col'>

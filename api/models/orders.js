@@ -14,6 +14,9 @@ const ordersSchema = mongoose.Schema({
     client: { 
         type: String
     }, 
+    clientId: { 
+        type: String
+    },
     typeOfClient: { 
         type: String
     },

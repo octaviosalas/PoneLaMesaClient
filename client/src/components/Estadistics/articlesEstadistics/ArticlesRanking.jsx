@@ -10,6 +10,7 @@ const ArticlesRanking = () => {
 
     const [monthSelected, setMonthSelected] = useState("Todos")
     const [allOrders, setAllOrders] = useState([]);
+    const [actualYear, setActualYear] = useState(getYear())
     const [ordersDetails, setOrdersDetails] = useState([])
     const [articlesRanking, setArticlesRanking] = useState([])
     const [everyMonths, setVeryMonths] = useState(everyMonthsOfTheYear)
@@ -85,7 +86,11 @@ const ArticlesRanking = () => {
     <div>
          <Card className='shadow-xl shadow-rigth-left w-96'>
                 <CardHeader className="pb-0 pt-2 px-4 flex justify-between items-center ">
-                   <p className='font-bold text-sm underline text-zinc-400'>Top 5 Articulos: {monthSelected}</p>
+                  <div className='flex flex-col jusitfy-start items-start'>
+                    <p className='font-bold text-sm underline text-zinc-400'>Top 5 Articulos: {monthSelected}</p>
+                    <p className='font-bold text-sm underline text-zinc-400'>Año: {actualYear}</p>
+                  </div>
+
                    <Dropdown>
                         <DropdownTrigger>
                             <p className='text-black cursor-pointer font-bold text-xl'>...</p>

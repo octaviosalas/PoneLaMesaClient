@@ -9,7 +9,7 @@ const Repart = () => {
   return (
     <div>
          <NavBarComponent/>
-         <ProcessTables type="Reparto"/>
+         <ProcessTables orderStatus="Reparto"/>
     </div>
   )
 }

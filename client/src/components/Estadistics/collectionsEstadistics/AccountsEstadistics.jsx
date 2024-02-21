@@ -1,10 +1,9 @@
 import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { accounts, everyMonthsOfTheYear, formatePrice } from '../../../functions/gralFunctions';
+import { accounts, everyMonthsOfTheYear, formatePrice, getYear } from '../../../functions/gralFunctions';
 import { Card, CardBody, CardHeader, Select, SelectItem } from '@nextui-org/react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
-import e from 'cors';
 
 
 const AccountsEstadistics = () => {
@@ -15,6 +14,7 @@ const AccountsEstadistics = () => {
     const [everyAccounts, setEveryAccounts] = useState(accounts)
     const [accountSelected, setAccountSelected] = useState("")
     const [accountSelectedData, setAccountSelectedData] = useState([])
+    const [actualYear, setActualYear] = useState(getYear())
 
  
     const getCollections = () => { 
@@ -47,7 +47,12 @@ const AccountsEstadistics = () => {
     <div>
          <Card className='w-96'>
                <CardHeader className="pb-0 pt-2 px-4 flex justify-between items-center ">
+                 <div className='flex flex-col jusitfy-start items-start'>
                    <p className='font-bold text-sm underline text-zinc-400'>Cobros del Mes: {monthSelected}</p>
+                   <p className='font-bold text-sm underline text-zinc-400'>Año: {actualYear}</p>
+                 </div>
+               
+
                    <Dropdown>
                         <DropdownTrigger>
                             <p className='text-black cursor-pointer font-bold text-xl'>...</p>

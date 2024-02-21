@@ -10,6 +10,7 @@ import DeleteOrder from '../Modals/DeleteOrder';
 import EditOrder from '../Modals/EditOrder';
 import Loading from "../Loading/Loading"
 import HistoricArticles from './HistoricArticles';
+import IncreasePriceWithPercentage from '../Modals/IncreasePriceWithPercentage';
 
 const ArticlesTable = ({}) => {
 
@@ -143,7 +144,7 @@ const ArticlesTable = ({}) => {
               </div>
               <div className='flex gap-2'>
                 <p className='text-sm mr-4 font-medium text-zinc-500'>Crear Articulo</p>
-                <p className='text-sm mr-4 font-medium text-zinc-500'>Aplicar Aumento</p>
+                <p className='text-sm mr-4 font-medium text-zinc-500'><IncreasePriceWithPercentage/></p>
               </div>
               
             </div>
