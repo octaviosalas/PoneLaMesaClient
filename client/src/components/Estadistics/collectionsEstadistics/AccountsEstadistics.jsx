@@ -78,11 +78,17 @@ const AccountsEstadistics = () => {
                     </Select>
                 </div>
                 <div>
-                     {accountSelectedData.length === 0 ? 
-                       <p>Esta cuenta no ha recibido cobros</p>
-                       :
-                       <p className='font-medium text-black text-md'> {formatePrice(accountSelectedData.reduce((acc, el) => acc + el.amount, 0))} </p>
+                  
+                     {accountSelected === "" ? 
+                     null : (
+                      accountSelectedData.length === 0 ? 
+                      <p>Esta cuenta no ha recibido cobros</p> : 
+                      <p className='font-medium text-black text-md'> {formatePrice(accountSelectedData.reduce((acc, el) => acc + el.amount, 0))} </p>
+                     )
+
                      }
+
+                    
                 </div>
            
             </CardBody>

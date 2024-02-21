@@ -57,7 +57,7 @@ const OrdersTable = () => {
           setData(allOrders)
           if(allOrders.length !== 0) { 
               const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-              && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
+              && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'  && propiedad !== 'clientId' && propiedad !== 'month' && propiedad !== 'year'
               && propiedad !== 'day' && propiedad !== 'paid');
               const columnObjects = propiedades.map(propiedad => ({
                   key: propiedad,
@@ -174,6 +174,7 @@ const OrdersTable = () => {
                       const detail = filaActual.original.orderDetail;
                       const creator = filaActual.original.orderCreator;
                       const client = filaActual.original.client;
+                      const clientId = filaActual.original.clientId;
                       const day = filaActual.original.day;
                       const month = filaActual.original.month;
                       const year = filaActual.original.year;
@@ -186,7 +187,8 @@ const OrdersTable = () => {
                       month: month,
                       year: year,
                       total: total,
-                      client: client
+                      client: client,
+                      clientId: clientId
                       };
                       return (
                          <PostPayment orderData={item}/>

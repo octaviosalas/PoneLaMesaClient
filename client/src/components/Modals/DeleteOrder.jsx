@@ -34,7 +34,6 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList}) =
          })
  }
  
-  
   const deleteArticle = () => { 
     axios.delete(`http://localhost:4000/products/delete/${productData.id}`)
          .then((res) => { 
