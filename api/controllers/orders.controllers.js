@@ -23,12 +23,13 @@ export const decrementarStock = async (productosComprados) => {
     for (const productoCompra of productosComprados) {
       const { productId, quantity } = productoCompra;
       const cantidad = parseInt(quantity, 10); // Convertir a entero
-      console.log("Me llego:", productId, cantidad);
+      console.log("Antes de la actualización:", productId, cantidad);
       await ProductsClients.findByIdAndUpdate(
         productId,
         { $inc: { stock: -cantidad }},
-        { new: true } // Para obtener el producto actualizado después de la actualización
+        { new: true }
       );
+      console.log("Después de la actualización:", productId, cantidad);
     }
   } catch (error) {
     throw new Error(`Error al decrementar el stock: ${error.message}`);

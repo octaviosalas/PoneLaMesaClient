@@ -23,6 +23,16 @@ export const getProductsBonusClients = async () => {
       throw error;
     }
   }
+  export const getEveryOrders = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/orders");
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+  
 
 export const getDate = () => {
     const fecha = new Date();
@@ -90,3 +100,23 @@ export const diferentOrdersStatus = [
   { label: 'Suspendido', value: 'Suspendido' },
 ];
 
+export const everyMonthsOfTheYear = [
+  { key: "enero", label: "enero"},
+  { key: "febrero", label: "febrero"},
+  { key: "marzo", label: "marzo"},
+  {key: "abril", label: "abril"},
+  {key: "mayo", label: "mayo"},
+  {key: "junio", label: "junio"},
+  {key: "julio", label: "julio"},
+  {key: "agosto", label: "agosto"},
+  {key: "septiembre", label: "septiembre"},
+  {key: "octubre", label: "octubre"},
+  {key: "noviembre", label: "noviembre"},
+  {key: "diciembre", label: "diciembre"},
+];
+
+export const accounts = [
+  { key: "Cuenta Nacho", label: "Cuenta Nacho"},
+  { key: "Cuenta Felipe", label: "Cuenta Felipe"},
+  { key: "Efectivo", label: "Efectivo"},
+];

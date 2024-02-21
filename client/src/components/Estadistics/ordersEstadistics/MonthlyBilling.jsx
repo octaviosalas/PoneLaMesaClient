@@ -1,34 +1,21 @@
 import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import {Card, CardBody} from "@nextui-org/react";
-import { formatePrice, getMonth, getYear } from '../../functions/gralFunctions';
-import NavBarComponent from '../Navbar/Navbar';
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Input, Dropdown, DropdownMenu, Avatar, DropdownTrigger, DropdownItem, Button} from "@nextui-org/react";
+import { formatePrice, getMonth, getYear, everyMonthsOfTheYear } from '../../../functions/gralFunctions';
+import { Card, CardBody, CardHeader } from '@nextui-org/react';
+import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 
 
-const Estadistics = () => {
+const MonthlyBilling = () => {
 
     const [monthSelected, setMonthSelected] = useState("febrero")
     const [actualMonth, setActualMonth] = useState(getMonth())
     const [selectedMonthOrdersData, setSelectedMonthOrdersData] = useState([])
     const [monthAmountFactured, setMonthAmountFactured] = useState(0)
     const [withOutOrdersMonth, setWithOutOrdersMonth] = useState(false)
+    const [everyMonths, setVeryMonths] = useState(everyMonthsOfTheYear)
     
-      const months = [
-        { key: "enero", label: "enero"},
-        { key: "febrero", label: "febrero"},
-        { key: "marzo", label: "marzo"},
-        {key: "abril", label: "abril"},
-        {key: "mayo", label: "mayo"},
-        {key: "junio", label: "junio"},
-        {key: "julio", label: "julio"},
-        {key: "agosto", label: "agosto"},
-        {key: "septiembre", label: "septiembre"},
-        {key: "octubre", label: "octubre"},
-        {key: "noviembre", label: "noviembre"},
-        {key: "diciembre", label: "diciembre"},
-      ];
+      
 
     const getMonthSelectedData = () => { 
         axios.get("http://localhost:4000/orders")
@@ -59,17 +46,19 @@ const Estadistics = () => {
 
   return (
     <div>
-        <NavBarComponent/>
          <Card className='shadow-xl shadow-rigth-left w-96'>
+            <CardHeader className="pb-0 pt-2 px-4 flex-col items-center justify-center">
+            <p className='font-bold text-sm underline text-zinc-400'>Monto Facturado al mes</p>
+            </CardHeader>
             <CardBody>
                 <div className='flex flex-col'>
                        <div className='flex justify-between'>
                             <p className='font-medium text-sm text-zinc-600'>Ganancias de: <b>{monthSelected}</b></p>
                              <Dropdown>
                                 <DropdownTrigger>
-                                    <p className='text-zinc-500  font-medium text-lg'>...</p>
+                                    <p className='text-black cursor-pointer font-bold text-xl'>...</p>
                                 </DropdownTrigger>
-                                <DropdownMenu aria-label="Dynamic Actions" items={months}>
+                                <DropdownMenu aria-label="Dynamic Actions" items={everyMonths}>
                                     {(item) => (
                                     <DropdownItem key={item.key} onClick={() => setMonthSelected(item.label)}>
                                         {item.label}
@@ -82,7 +71,7 @@ const Estadistics = () => {
                         {withOutOrdersMonth ?
                          <p className='font-medium text-sm text-zinc-600 mt-4'>No hubo pedido en {monthSelected}</p>
                            :
-                        <p className='font-medium text-sm text-zinc-600 mt-4'>El Monto total facturado de {monthSelected} es: {formatePrice(monthAmountFactured)} </p>
+                        <p className='font-medium text-sm text-zinc-600 mt-2'>El Monto total facturado de {monthSelected} es: {formatePrice(monthAmountFactured)} </p>
                         }
                         </div>
                 </div>
@@ -92,4 +81,4 @@ const Estadistics = () => {
   )
 }
 
-export default Estadistics
+export default MonthlyBilling

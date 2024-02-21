@@ -11,7 +11,7 @@ import Armed from './components/OrdersProcess/Armed'
 import Cleaning from "./components/OrdersProcess/Cleaning"
 import Repart from './components/OrdersProcess/Repart'
 import Returned from './components/OrdersProcess/Returned'
-import Estadistics from './components/Estadistics/Estadistics'
+import EstadisticsPage from './pages/EstadisticsPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -29,7 +29,7 @@ function App() {
             <Route path="/Lavado" element={<Cleaning />} />   
             <Route path="/Reparto" element={<Repart />} /> 
             <Route path="/Devueltos" element={<Returned />} /> 
-            <Route path="/Estadisticas" element={<Estadistics />} /> 
+            <Route path="/Estadisticas" element={<EstadisticsPage />} /> 
 
 
           </Routes>

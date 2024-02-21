@@ -16,9 +16,10 @@ const CreateNewOrder = ({updateList}) => {
   const [firstStep, setFirstStep] = useState(true)
   const [secondStep, setSecondStep] = useState(false)
   const [missedData, setMissedData] = useState(false)
+  const [missedProducts, setMissedProducts] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [orderNumber, setOrderNumber] = useState("")
-  const [orderStatus, setOrderStatus] = useState("No entregado")
+  const [orderStatus, setOrderStatus] = useState("Armado")
   const [clientName, setClientName] = useState("")
   const [typeOfClient, setTypeOfClient] = useState("")
   const [placeOfDelivery, setPlaceOfDelivery] = useState("")
@@ -28,9 +29,11 @@ const CreateNewOrder = ({updateList}) => {
   const [allProducts, setAllProducts] = useState("")
   const [filteredNames, setFilteredNames] = useState("")
   const [choosenProductName, setChoosenProductName] = useState("")
-  const [choosenProductQuantity, setChoosenProductQuantity] = useState("")
+  const [choosenProductQuantity, setChoosenProductQuantity] = useState(0)
   const [choosenProductId, setChoosenProductId] = useState("")
   const [choosenProductPrice, setChoosenProductPrice] = useState("")
+  const [insufficientStock, setInsufficientStock] = useState(false)
+  const [choosenProductStock, setChoosenProductStock] = useState(0)
   const [choosenProductPriceReplacement, setChoosenProductPriceReplacement] = useState("")
   const [productsSelected, setProductsSelected] = useState([]);
 
@@ -104,24 +107,36 @@ const CreateNewOrder = ({updateList}) => {
       }
     }
 
-    const chooseProduct = (name, id, price, replacementPrice) => { 
-      console.log("recibi como id a", id, name,)
+    const chooseProduct = (name, id, price, replacementPrice, stock) => { 
+      console.log("recibi", id, name, price, replacementPrice, stock)
       setChoosenProductName(name)
       setChoosenProductId(id)
       setChoosenProductPrice(price)
       setChoosenProductPriceReplacement(replacementPrice)
+      setChoosenProductStock(stock)
       setFilteredNames("")
     }
 
-    const addProductSelected = (productName, productId, quantity, price, replacementPrice) => {
-      const choosenProductTotalPrice = price * quantity
-      const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
-      setProductsSelected([...productsSelected, newProduct]);
-      setChoosenProductId("")
-      setChoosenProductName("")
-      setChoosenProductQuantity("")
-      setChoosenProductPriceReplacement("")
-      setChoosenProductPrice("")
+    const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock) => {
+      console.log("STOCK DEL PRODUCTO", choosenProductStock)
+      console.log("CANTIDAD ELEGIDA", quantity)
+      if(quantity < choosenProductStock) { 
+        const choosenProductTotalPrice = price * quantity
+        const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
+        setProductsSelected([...productsSelected, newProduct]);
+        setChoosenProductId("")
+        setChoosenProductName("")
+        setChoosenProductQuantity("")
+        setChoosenProductPriceReplacement("")
+        setChoosenProductPrice("")
+        setChoosenProductStock(0)
+      } else { 
+        setInsufficientStock(true)
+        setTimeout(() => { 
+          setInsufficientStock(false)
+        }, 1500)
+      }
+     
     };
 
     const handleRemoveProduct = (productIdToDelete) => {
@@ -143,36 +158,44 @@ const CreateNewOrder = ({updateList}) => {
     }
 
     const sendNewOrder = () => { 
-      const orderData = ({ 
-        orderCreator: userCtx.userName,
-        orderNumber: orderNumber,
-        orderStatus: orderStatus,
-        client: clientName,
-        typeOfClient: typeOfClient,
-        placeOfDelivery: placeOfDelivery,
-        dateOfDelivery: dateOfDelivery,
-        returnDate: returnDate,
-        returnPlace: returnPlace,
-        orderDetail: productsSelected,
-        total: productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0),
-        date: actualDate,
-        month:  actualMonth,
-        year: actualYear,
-        day: actualDay,
-        paid: false
-      })
-      axios.post("http://localhost:4000/orders/create", orderData)
-          .then((res) => { 
-            console.log(res.data)
-            updateList()
-            setSuccesMessage(true)
-            setTimeout(() => { 
-              closeModal()
-            }, 2000)
-          })
-          .catch((err) => { 
-            console.log(err)
-          })
+      if(productsSelected.length === 0) { 
+        setMissedProducts(true)
+        setTimeout(() => {
+          setMissedProducts(false)
+        }, 1500);
+      } else { 
+        const orderData = ({ 
+          orderCreator: userCtx.userName,
+          orderNumber: orderNumber,
+          orderStatus: orderStatus,
+          client: clientName,
+          typeOfClient: typeOfClient,
+          placeOfDelivery: placeOfDelivery,
+          dateOfDelivery: dateOfDelivery,
+          returnDate: returnDate,
+          returnPlace: returnPlace,
+          orderDetail: productsSelected,
+          total: productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0),
+          date: actualDate,
+          month:  actualMonth,
+          year: actualYear,
+          day: actualDay,
+          paid: false
+        })
+        axios.post("http://localhost:4000/orders/create", orderData)
+            .then((res) => { 
+              console.log(res.data)
+              updateList()
+              setSuccesMessage(true)
+              setTimeout(() => { 
+                closeModal()
+              }, 2000)
+            })
+            .catch((err) => { 
+              console.log(err)
+            })
+      }
+    
 
     }
 
@@ -226,9 +249,9 @@ const CreateNewOrder = ({updateList}) => {
                                     <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500" key={prod._id} 
                                         onClick={() => {
                                             if (typeOfClient === "No Bonificado") {
-                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion);
+                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion, prod.stock);
                                             } else if (typeOfClient === "Bonificado") {
-                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioBonificados, prod.precioUnitarioReposicion);
+                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioBonificados, prod.precioUnitarioReposicion, prod.stock);
                                             }
                                         }}
                                     >
@@ -239,15 +262,33 @@ const CreateNewOrder = ({updateList}) => {
                         : null
                     }
                     </div>  
-                  <Input type="number" value={choosenProductQuantity} variant="bordered" label="Cantidad" className="mt-2 w-64 2xl:w-72" onChange={(e) => setChoosenProductQuantity(e.target.value)}/>
+                  <Input type="number" value={choosenProductQuantity} variant="bordered" label="Cantidad" className="mt-2 w-64 2xl:w-72"   onChange={(e) => setChoosenProductQuantity(parseInt(e.target.value, 10))}/>
                   <div className="mt-6 flex flex-col ">
                       {
                         choosenProductName.length !== 0 && choosenProductQuantity.length !== 0 ?
                         <Button className="mt-6 font-medium text-white" color="success" 
-                         onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, choosenProductPriceReplacement )}>Añadir</Button> 
+                         onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, choosenProductPriceReplacement, choosenProductStock )}>Añadir</Button> 
                         : 
                         null
                       }
+
+                       {
+                       insufficientStock ?
+                       <div className="flex items-center justify-center mt-4">
+                            <p className="font-medium text-sm text-green-600 underline">Stock Insuficiente</p>
+                       </div>
+                        : 
+                        null
+                      }  
+
+                      {
+                       missedProducts ?
+                       <div className="flex items-center justify-center mt-4">
+                            <p className="font-medium text-sm text-green-600 underline">No hay articulos Agregados</p>
+                       </div>
+                        : 
+                        null
+                      }  
 
                       {productsSelected.length !== 0 ? 
                          <div className="flex flex-col">

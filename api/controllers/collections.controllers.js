@@ -11,3 +11,13 @@ export const addNewCollection = async (req, res) => {
     console.log(error)
   }
 }
+
+export const getAllCollections = async (req, res) => { 
+  try {
+    const allCollections = await Collections.find()
+    res.status(200).json(allCollections);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear el cobro' });
+    console.log(error)
+  }
+}
