@@ -7,7 +7,7 @@ import { useRef } from "react";
 import { getProductsClients, getProductsBonusClients } from '../../functions/gralFunctions';
 import { formatePrice } from '../../functions/gralFunctions';
 import DeleteOrder from '../Modals/DeleteOrder';
-import EditOrder from '../Modals/EditOrder';
+import EditModal from '../Modals/EditModal';
 import Loading from "../Loading/Loading"
 import HistoricArticles from './HistoricArticles';
 import IncreasePriceWithPercentage from '../Modals/IncreasePriceWithPercentage';
@@ -71,7 +71,7 @@ const ArticlesTable = ({}) => {
                       replacementValue: replacementValue                
                       };
                       return (
-                        <EditOrder type="product" articleData={item} updateChanges={getProductsDataAndCreateTable}/>
+                        <EditModal type="product" articleData={item} updateChanges={getProductsDataAndCreateTable}/>
                       );
                   },
               })      

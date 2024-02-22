@@ -155,4 +155,55 @@ export const deleteAndReplenishArticles = async (req, res) => {
   }
 } 
 
+export const updateOrderData = async (req, res) => { 
+  const {orderId} = req.params
+  const {newOrderDeliveryDate, newOrderReturnDate, newOrderClient, newOrderReturnPlace, newOrderDeliveryPlace} = req.body
+  console.log(req.body)
 
+      try {
+        Orders.findByIdAndUpdate({ _id: orderId }, { 
+        client: newOrderClient,
+        dateOfDelivery: newOrderDeliveryDate,
+        placeOfDelivery: newOrderDeliveryPlace,
+        returnDate: newOrderReturnDate,
+        returnPlace: newOrderReturnPlace,
+        })
+        .then((newOrderData) => {                                      
+        res.json({message:"Orden actualizada Correctamente", newOrderData})
+        })
+        .catch((err) => { 
+        console.log(err)
+        })
+
+    } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+    }
+}
+
+export const updateOrderDetail = async (req, res) => {
+  const { orderId } = req.params;
+  const { newOrderDetailData } = req.body;
+
+  try {
+    if (newOrderDetailData && newOrderDetailData.orderDetail && newOrderDetailData.total) {
+      const updatedOrderData = await Orders.findOneAndUpdate(
+        { _id: orderId },
+        {
+          $set: {
+            total: newOrderDetailData.total,
+            orderDetail: newOrderDetailData.orderDetail,
+          },
+        },
+        { new: true }
+      );
+
+      res.json({ message: "Detalles del pedido actualizados correctamente", updatedOrderData });
+    } else {
+      res.status(400).json({ message: 'El objeto newOrderDetailData no tiene la estructura esperada.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};

@@ -55,7 +55,7 @@ const NavBarComponent = () =>  {
                         <DropdownItem key="rep" onClick={() => goTo("Entregado")}>Entregados</DropdownItem>
                         <DropdownItem key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem>  
                         <DropdownItem key="clean"  onClick={() => goTo("Devueltos")}>Devueltos</DropdownItem>              
-                        <DropdownItem key="edit">Reposiciones</DropdownItem>     
+                        <DropdownItem key="edit" onClick={() => goTo("Reposiciones")}>Reposiciones</DropdownItem>     
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>

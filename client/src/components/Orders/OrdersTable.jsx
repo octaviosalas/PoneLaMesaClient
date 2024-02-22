@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Input} from "@nextui-org/react";
 import Loading from "../Loading/Loading"
 import DeleteOrder from '../Modals/DeleteOrder';
-import EditOrder from '../Modals/EditOrder';
+import EditModal from '../Modals/EditModal';
 import OrderDetail from './OrderDeatil';
 import CreateNewOrder from './CreateNewOrder';
 import FiltersOrdersTable from './FiltersOrdersTable';
@@ -132,7 +132,9 @@ const OrdersTable = () => {
                         const month = filaActual.original.month;
                         const date = filaActual.original.date;
                         const dateOfDelivery = filaActual.original.dateOfDelivery;
+                        const placeOfDelivery = filaActual.original.placeOfDelivery;
                         const returnDate = filaActual.original.returnDate;
+                        const returnPlace = filaActual.original.returnPlace;
                         const orderDetail = filaActual.original.orderDetail;
                         const item = {
                         id: id,
@@ -142,10 +144,12 @@ const OrdersTable = () => {
                         date: date,
                         dateOfDelivery: dateOfDelivery,
                         returnDate: returnDate,
-                        orderDetail: orderDetail                  
+                        orderDetail: orderDetail,
+                        returnPlace: returnPlace, 
+                        placeOfDelivery: placeOfDelivery              
                         };
                         return (
-                          <EditOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
+                          <EditModal type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                         );
                     },
                   })          

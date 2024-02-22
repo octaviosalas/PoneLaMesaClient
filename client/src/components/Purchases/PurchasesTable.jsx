@@ -7,7 +7,7 @@ import { useRef } from "react";
 import { getProductsClients, getProductsBonusClients } from '../../functions/gralFunctions';
 import { formatePrice } from '../../functions/gralFunctions';
 import DeleteOrder from '../Modals/DeleteOrder';
-import EditOrder from '../Modals/EditOrder';
+import EditModal from '../Modals/EditModal';
 import FiltersPurchases from './FiltersPurchases';
 import CreateNewPurchase from "./CreateNewPurchase"
 import Loading from '../Loading/Loading';
@@ -61,7 +61,7 @@ const PurchasesTable = () => {
                           id: id,
                           };
                           return (
-                            <EditOrder type="purchase"/>
+                            <EditModal type="purchase"/>
                           );
                       },
                   })      

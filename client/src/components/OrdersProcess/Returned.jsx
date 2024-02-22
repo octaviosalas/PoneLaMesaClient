@@ -13,7 +13,7 @@ const Returned = () => {
              .then((res) => { 
                 console.log(res.data)
                 const data = res.data
-                const filteredOrders = data.filter((d) => d.orderStatus  === "Devuelto")
+                const filteredOrders = data.filter((d) => d.orderStatus  === "Repuesto")
                 setOrdersReturned(filteredOrders)
                 console.log(filteredOrders)
              })
@@ -29,7 +29,7 @@ const Returned = () => {
   return (
     <div>
         <NavBarComponent/>
-        <ProcessTables orderStatus="Devuelto"/>
+        <ProcessTables orderStatus="Repuesto"/>
     </div>
   )
 }
