@@ -1,38 +1,114 @@
 import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { formatePrice, getMonth, getYear, getEveryOrders, everyMonthsOfTheYear } from '../../../functions/gralFunctions';
+import { formatePrice, getMonth, getYear, getEveryOrders, everyMonthsOfTheYear, everyYears } from '../../../functions/gralFunctions';
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 
 
+/* 
+ useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const ordersData = await getEveryOrders();
+            console.log(ordersData)
+            if(monthSelected === "Todos" && yearSelected === "Todos") { 
+              if(ordersData.length !== 0) { 
+                setAllOrders(ordersData);
+                setWithOutOrders(false)
+              } else { 
+                setWithOutOrders(true)
+              }
+      
+
+            } else if (yearSelected !== "Todos" && monthSelected !== "Todos") { 
+              const filterDataByMonthAndYearSelected = ordersData.filter((orders) => orders.month === monthSelected && orders.year === yearSelected)
+              if(filterDataByMonthAndYearSelected.length !== 0) { 
+                  setAllOrders(filterDataByMonthAndYearSelected);
+                  setWithOutOrders(false)
+              } else { 
+                setWithOutOrders(true)
+              }     
+
+            } else if (yearSelected !== "Todos" && monthSelected === "Todos") { 
+              const filterDataByYear = ordersData.filter((orders) => orders.year === yearSelected)
+              if(filterDataByYear.length !== 0) { 
+                setAllOrders(filterDataByYear);
+                setWithOutOrders(false)
+              } else { 
+                setWithOutOrders(true)
+              }      
+
+            } else if (yearSelected === "Todos" && monthSelected !== "Todos") { 
+              const filterDataByMonth = ordersData.filter((orders) => orders.month === monthSelected)
+              if(filterDataByMonth.length !== 0) { 
+                setAllOrders(filterDataByMonth);
+                setWithOutOrders(false)
+              } else { 
+                setWithOutOrders(true)
+              }      
+            }
+
+
+          } catch (error) {
+            console.error("Error fetching orders:", error);
+          }
+        };
+        fetchData();
+      }, [monthSelected, yearSelected]); 
+*/
+
 const ArticlesRanking = () => {
 
     const [monthSelected, setMonthSelected] = useState("Todos")
+    const [yearSelected, setYearSelected] = useState(getYear())
     const [allOrders, setAllOrders] = useState([]);
     const [actualYear, setActualYear] = useState(getYear())
     const [ordersDetails, setOrdersDetails] = useState([])
     const [articlesRanking, setArticlesRanking] = useState([])
     const [everyMonths, setVeryMonths] = useState(everyMonthsOfTheYear)
     const [withOutOrders, setWithOutOrders] = useState(false)
+    const [availableYears, setAvailableYears] = useState(everyYears)
 
-    
+   
     useEffect(() => {
       const fetchData = async () => {
         try {
           const ordersData = await getEveryOrders();
-          if(monthSelected === "Todos") { 
-            setAllOrders(ordersData);
-            setWithOutOrders(false)
-          } else { 
-            const filterDataByMonthSelected = ordersData.filter((orders) => orders.month === monthSelected)
-            if(filterDataByMonthSelected.length !== 0) { 
-                setAllOrders(filterDataByMonthSelected);
-                setWithOutOrders(false)
+          if(monthSelected === "Todos" && yearSelected === "Todos") { 
+            if(ordersData.length !== 0) { 
+              setAllOrders(ordersData);
+              setWithOutOrders(false)
             } else { 
-                setWithOutOrders(true)
-                console.log("cccc")
+              setWithOutOrders(true)
             }
+          
+          }else if (yearSelected !== "Todos" && monthSelected !== "Todos") { 
+            const filterDataByMonthAndYearSelected = ordersData.filter((orders) => orders.month === monthSelected && orders.year === yearSelected)
+            if(filterDataByMonthAndYearSelected.length !== 0) { 
+              setAllOrders(filterDataByMonthAndYearSelected);
+              setWithOutOrders(false)
+          } else { 
+            setWithOutOrders(true)
+          }    
+
+          } else if (yearSelected !== "Todos" && monthSelected === "Todos") { 
+            const filterDataByYear = ordersData.filter((orders) => orders.year === yearSelected)
+            if(filterDataByYear.length !== 0) { 
+              setAllOrders(filterDataByYear);
+              setWithOutOrders(false)
+            } else { 
+              setWithOutOrders(true)
+            }      
+
+          } else if (yearSelected === "Todos" && monthSelected !== "Todos") { 
+            const filterDataByMonth = ordersData.filter((orders) => orders.month === monthSelected)
+            if(filterDataByMonth.length !== 0) { 
+              setAllOrders(filterDataByMonth);
+              setWithOutOrders(false)
+            } else { 
+              setWithOutOrders(true)
+            }      
           }
 
         } catch (error) {
@@ -40,7 +116,7 @@ const ArticlesRanking = () => {
         }
       };
       fetchData();
-    }, [monthSelected]); 
+    }, [monthSelected, yearSelected]); 
 
      const getJustOrderDetails = () => {
         if (allOrders.length > 0) {
@@ -87,22 +163,38 @@ const ArticlesRanking = () => {
          <Card className='shadow-xl shadow-rigth-left w-96'>
                 <CardHeader className="pb-0 pt-2 px-4 flex justify-between items-center ">
                   <div className='flex flex-col jusitfy-start items-start'>
-                    <p className='font-bold text-sm underline text-zinc-400'>Top 5 Articulos: {monthSelected}</p>
-                    <p className='font-bold text-sm underline text-zinc-400'>Año: {actualYear}</p>
+                    <p className='font-bold text-sm underline text-zinc-400'>Top 5 Articulos:</p>
+                    <p className='font-bold text-sm underline text-zinc-400'>Mes: {monthSelected}</p>
+                    <p className='font-bold text-sm underline text-zinc-400'>Año: {yearSelected}</p>
                   </div>
-
-                   <Dropdown>
+                  <div className='flex items-center gap-4'>
+                    <Dropdown>
+                          <DropdownTrigger>
+                              <p className='text-black cursor-pointer font-bold text-xl'>...</p>
+                          </DropdownTrigger>
+                          <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...everyMonths]}>
+                              {(item) => (
+                              <DropdownItem key={item.key} onClick={() => setMonthSelected(item.label)}>
+                                  {item.label}
+                              </DropdownItem>
+                              )}
+                          </DropdownMenu>
+                    </Dropdown>
+                    <Dropdown>
                         <DropdownTrigger>
                             <p className='text-black cursor-pointer font-bold text-xl'>...</p>
                         </DropdownTrigger>
-                        <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...everyMonths]}>
+                        <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...availableYears]}>
                             {(item) => (
-                            <DropdownItem key={item.key} onClick={() => setMonthSelected(item.label)}>
+                            <DropdownItem key={item.key} onClick={() => setYearSelected(item.label)}>
                                 {item.label}
                             </DropdownItem>
                             )}
                         </DropdownMenu>
                   </Dropdown>
+                  </div>
+
+                   
                 </CardHeader>
             {withOutOrders ? 
              <CardBody className='flex flex-col items-center justify-center'>

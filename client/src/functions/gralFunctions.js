@@ -23,6 +23,7 @@ export const getProductsBonusClients = async () => {
       throw error;
     }
   }
+
   export const getEveryOrders = async () => {
     try {
       const response = await axios.get("http://localhost:4000/orders");
@@ -33,6 +34,18 @@ export const getProductsBonusClients = async () => {
     }
   };
   
+
+  export const getEveryPurchases = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/purchases");
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+  
+
 
 export const getDate = () => {
     const fecha = new Date();
@@ -113,6 +126,16 @@ export const everyMonthsOfTheYear = [
   {key: "octubre", label: "octubre"},
   {key: "noviembre", label: "noviembre"},
   {key: "diciembre", label: "diciembre"},
+];
+
+export const everyYears = [
+  { key: 2022, label: 2022},
+  { key: 2023, label: 2023},
+  { key: 2024, label: 2024},
+  {key: 2025, label: 2025},
+  {key: 2026, label: 2026},
+  {key: 2027, label: 2027},
+  {key: 2028, label: 2028},
 ];
 
 export const accounts = [

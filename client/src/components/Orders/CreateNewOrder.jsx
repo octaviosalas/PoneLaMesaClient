@@ -263,12 +263,12 @@ const CreateNewOrder = ({updateList}) => {
               firstStep ? 
               <div className="flex flex-col items-center justify-center">
                  <div className="flex flex-col items-center justify-center"> 
-                    <Input type="number" variant="bordered" value={orderNumber} label="Numero de Orden" className="mt-2 w-64 2xl:w-72" onChange={(e) => setOrderNumber(e.target.value)}/>
-                    <Input type="text" variant="bordered" value={choosenClientName} label="Cliente" className="mt-2 w-64 2xl:w-72" onChange={(e) => handleInputClientsChange(e.target.value)}/>
+                    <Input type="number" variant="underlined" value={orderNumber} label="Numero de Orden" className="mt-2 w-64 2xl:w-72" onChange={(e) => setOrderNumber(e.target.value)}/>
+                    <Input type="text" variant="underlined" value={choosenClientName} label="Cliente" className="mt-2 w-64 2xl:w-72" onChange={(e) => handleInputClientsChange(e.target.value)}/>
                     <div className="">
                         {
                         filteredClientsNames !== "" ? 
-                            <div className='absolute border rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
+                            <div className='absolute  rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
                                 {filteredClientsNames.map((cc) => (
                                     <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 ml-2" key={cc._id} 
                                         onClick={() => chooseClient(cc.name, cc._id)}>
@@ -281,7 +281,10 @@ const CreateNewOrder = ({updateList}) => {
                     </div>  
 
 
-                    <Select  variant="bordered" label="Tipo de Cliente" className="max-w-xs mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
+                    <Select  css={{
+    $$inputBorderRadius: '0', // Elimina los bordes redondeados
+    $$inputBorder: 'none', // Elimina el borde
+  }}  variant="underlined"  label="Tipo de Cliente" className="max-w-xs border border-none mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
                       {typeOfClients.map((client) => (
                         <SelectItem key={client.value} value={client.value}>
                           {client.label}
@@ -290,10 +293,14 @@ const CreateNewOrder = ({updateList}) => {
                   </Select>
 
 
-                    <Input type="text" variant="bordered" value={placeOfDelivery} label="Lugar Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setPlaceOfDelivery(e.target.value)}/>
-                    <Input type="text" variant="bordered" value={returnPlace} label="Lugar Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnPlace(e.target.value)}/>
-                    <Input type="date" variant="bordered" value={dateOfDelivery} label="Fecha Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setDateOfDelivery(e.target.value)}/>
-                    <Input  type="date" variant="bordered" value={returnDate} label="Fecha Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnDate(e.target.value)}/>
+                    <Input type="text" variant="underlined" value={placeOfDelivery} label="Lugar Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setPlaceOfDelivery(e.target.value)}/>
+                    <Input type="text" variant="underlined" value={returnPlace} label="Lugar Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnPlace(e.target.value)}/>
+                    <Input type="date" variant="underlined"  classNames={{
+    label: "-mt-5"
+  }} value={dateOfDelivery} label="Fecha Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setDateOfDelivery(e.target.value)}/>
+                    <Input  type="date" variant="underlined"  classNames={{
+    label: "-mt-5"
+  }} placeholder="" value={returnDate} label="Fecha Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnDate(e.target.value)}/>
 
                  </div> 
                  <div className="flex flex-col items-center justify-center mt-6">

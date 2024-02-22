@@ -31,7 +31,7 @@ const ProcessTables = ({orderStatus}) => {
           setData(filterOrders)
           if(filterOrders.length !== 0) { 
               const propiedades = Object.keys(filterOrders[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-              && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
+              && propiedad !== 'orderDetail'&&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
               && propiedad !== 'day' && propiedad !== 'paid');
               const columnObjects = propiedades.map(propiedad => ({
                   key: propiedad,

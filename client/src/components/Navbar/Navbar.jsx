@@ -91,14 +91,15 @@ const NavBarComponent = () =>  {
                         <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Estadisticas </p>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions">
-                        <DropdownItem key="cc" onClick={() => goTo("Estadisticas/Clientes")}>Clientes</DropdownItem>
-                        <DropdownItem key="aa" onClick={() => goTo("Estadisticas/Articulos")}>Articulos</DropdownItem>
-                        <DropdownItem key="al" onClick={() => goTo("Estadisticas/Alquileres")}>Alquileres</DropdownItem>
-                        <DropdownItem key="cb" onClick={() => goTo("Estadisticas/Cobros")}>Cobros</DropdownItem>    
+                        <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Clientes</DropdownItem>
+                        <DropdownItem key="Articulos" onClick={() => goTo("Estadisticas/Articulos")}>Articulos</DropdownItem>
+                        <DropdownItem key="Alquileres" onClick={() => goTo("Estadisticas/Alquileres")}>Alquileres</DropdownItem>
+                        <DropdownItem key="Cobros" onClick={() => goTo("Estadisticas/Cobros")}>Cobros</DropdownItem>    
+                        <DropdownItem key="Compras" onClick={() => goTo("Estadisticas/Compras")}>Compras</DropdownItem>    
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
-         
+        
           </div>         
         </NavbarContent>
       </NavbarContent>

@@ -15,6 +15,7 @@ import EstadisticsOrders from './pages/EstadisticsOrders'
 import EstadisticsArticles from './pages/EstadisticsArticles'
 import EstadisticsClients from './pages/EstadisticsClients'
 import EstadisticsCollections from './pages/EstadisticsCollections'
+import EstadisticsPurchases from './pages/EstadisticsPurchases'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -36,6 +37,7 @@ function App() {
             <Route path="/Estadisticas/Alquileres" element={<EstadisticsOrders />} /> 
             <Route path="/Estadisticas/Clientes" element={<EstadisticsClients />} /> 
             <Route path="/Estadisticas/Cobros" element={<EstadisticsCollections />} /> 
+            <Route path="/Estadisticas/Compras" element={<EstadisticsPurchases />} /> 
 
 
           </Routes>

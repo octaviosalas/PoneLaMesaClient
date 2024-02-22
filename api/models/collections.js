@@ -21,7 +21,7 @@ const collectionsSchema = mongoose.Schema({
         type: String
     },   
     year: { 
-        type: String
+        type: Number
     },   
     amount: { 
         type: Number
