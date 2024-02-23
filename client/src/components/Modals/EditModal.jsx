@@ -5,8 +5,9 @@ import axios from "axios";
 import { getProductsClients } from "../../functions/gralFunctions";
 import EditArticle from "./EditArticle";
 import EditOrderData from "./EditOrderData";
+import EditPurchase from "./EditPurchase";
 
-const EditModal = ({type, statusOrder, updateList, orderData, articleData, updateChanges}) => {
+const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, articleData, updateChanges}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [step, setStep] = useState(0)
@@ -42,6 +43,26 @@ const EditModal = ({type, statusOrder, updateList, orderData, articleData, updat
                 </ModalHeader>
                 <ModalBody className="flex flex-col items-center justify-center">
                   <EditArticle articleData={articleData} closeModalNow={closeModal} updateChanges={updateChanges}/>
+                </ModalBody>
+              
+              </>
+            )}
+          </ModalContent>
+          :
+          null
+          }
+      </Modal>
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max min-w-96 bg-white text-black'>
+         {type === "purchase" ? 
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1 text-zinc-600  text-md">
+                  <p className="font-bold text-md">Editar Compra </p>                 
+                </ModalHeader>
+                <ModalBody className="flex flex-col items-center justify-center">
+                  <EditPurchase purchaseData={purchaseData} closeModalNow={closeModal} updateChanges={updateChanges}/>
                 </ModalBody>
               
               </>

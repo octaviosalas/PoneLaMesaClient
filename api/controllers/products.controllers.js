@@ -1,5 +1,6 @@
 import ProductsBonusClients from "../models/productsBonusClients.js";
 import ProductsClients from "../models/productsClients.js"
+import { incrementarStock, decrementarStock } from "./orders.controllers.js";
 
 
 
@@ -17,10 +18,24 @@ export const productsBonusClientsData = async (req, res) => {
         const getData = await ProductsBonusClients.find()
         res.status(200).json(getData)
       } catch (error) {
-        res.statis(500).json({error: "Error al obtener productos"})
+        res.status(500).json({error: "Error al obtener productos"})
       }
 }
 
+export const getProductById = async (req, res) => { 
+  const {productId} = req.params
+  try {
+    const getData = await ProductsClients.findById({_id: productId})
+    if (getData) {
+      res.status(200).json(getData);
+    } else {
+      res.status(404).json({ message: 'Producto no encontrado' });
+    }
+    res.status(200).json(getData)
+  } catch (error) {
+    
+  }
+}
 
 
 export const updateProduct = async (req, res) => {
@@ -90,4 +105,10 @@ export const priceIncrease = async (req, res) => {
     console.error(error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
+}
+
+
+export const returnQuantityToStock = async (req, res) => { 
+  const {productId} = req.params
+  await incrementarStock(req.body.productData);
 }

@@ -58,7 +58,27 @@ export const getPurchaseById = async (req, res) => {
 }
 
 export const updateCompra = async (req, res) => { 
-  
+  const {purchaseId} = req.params
+  const {month, year, day} = req.body
+  console.log(req.body)
+
+      try {
+        Purchases.findByIdAndUpdate({ _id: purchaseId }, { 
+          month: month,
+          year: year,
+          day: day,
+        })
+        .then((newPurchaseData) => {                                      
+        res.json({message:"Compra actualizada Correctamente", newPurchaseData})
+        })
+        .catch((err) => { 
+        console.log(err)
+        })
+
+    } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+    }
 }
 
 export const deletePurchase = async (req, res) => { 
@@ -110,4 +130,29 @@ export const deleteAndReplenishShares = async (req, res) => {
 };
 
 
+export const updatePurchaseDetail  = async (req, res) => { 
+  const { purchaseId } = req.params;
+  const { newPurchaseDetailData } = req.body;
+
+  try {
+    if (newPurchaseDetailData && newPurchaseDetailData.purchaseDetail ) {
+      const updatePurchaseData = await Purchases.findOneAndUpdate(
+        { _id: purchaseId },
+        {
+          $set: {
+            purchaseDetail: newPurchaseDetailData.purchaseDetail,
+          },
+        },
+        { new: true }
+      );
+
+      res.json({ message: "Se actualizo correctamente el detalle de la Orden", updatePurchaseData });
+    } else {
+      res.status(400).json({ message: 'El objeto newPurchaseDetailData no tiene la estructura esperada.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+}
 

@@ -109,6 +109,7 @@ const CreateNewPurchase = ({update}) => {
   }
 
   
+  
 
   return (
     <>
@@ -120,22 +121,21 @@ const CreateNewPurchase = ({update}) => {
               <ModalHeader className="flex flex-col text-md text-zinc-600 font-medium gap-1">Crear Compra</ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">
                   <Input type="text" value={choosenProductName} className="w-64 2xl:w-72" variant="bordered" label="Producto" onChange={(e) => handleInputChange(e.target.value)}/>
-                  <div className="absolute">
+                  <div className="">
                         {
-                         filteredNames !== "" ? 
-                           <div className=' absolute bg-white shadow-xl rounded-lg mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]'  style={{ backdropFilter: 'brightness(100%)' }}>
-                              {filteredNames.map((prod) => (
-                               <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 " key={prod._id} 
-                                  onClick={() => chooseProduct(prod.articulo, prod._id)}>
-                                  {prod.articulo}
-                               </p>
+                        filteredNames !== "" ? 
+                            <div className='absolute  rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
+                                {filteredNames.map((prod) => (
+                                    <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 ml-2" key={prod._id} 
+                                        onClick={() => chooseProduct(prod.articulo, prod._id)}>
+                                         {prod.articulo}
+                                    </p>
                                 ))}
-                             </div>
-                                :
-                               null
+                            </div>
+                        : null
                         }
-                    </div>
-                    <Input type="number" value={choosenProductQuantity} variant="bordered" label="Cantidad" className="mt-2 w-64 2xl:w-72" onChange={(e) => setChoosenProductQuantity(e.target.value)}/> 
+                    </div> 
+                    <Input type="number" value={choosenProductQuantity} variant="bordered" label="Cantidad" className=" w-64 2xl:w-72" onChange={(e) => setChoosenProductQuantity(e.target.value)}/> 
                     <Input type="number" value={choosenProductValue} variant="bordered" label="Valor $" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setChoosenProductValue(parseInt(e.target.value, 10))}/> 
                  
                        {

@@ -30,7 +30,7 @@ const PurchasesTable = () => {
                   setData(purchasesData)
                   if(purchasesData.length !== 0) { 
                     const propiedades = Object.keys(purchasesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
-                    propiedad !== '__v'  &&  propiedad !== 'day'  &&  propiedad !== 'month'  &&  
+                    propiedad !== '__v'  &&  propiedad !== 'day'  &&  propiedad !== 'date'  &&  
                     propiedad !== 'year' &&  propiedad !== 'purchaseDetail');
                     const columnObjects = propiedades.map(propiedad => ({
                         key: propiedad,
@@ -41,8 +41,8 @@ const PurchasesTable = () => {
                   const modifiedColumnObjects = columnObjects.map(column => {
                     if (column.key === 'creatorPurchase') {
                         return { ...column, label: 'Creador' };
-                    } else if (column.key === 'date') {
-                        return { ...column, label: 'Fecha' };
+                    } else if (column.key === 'month') {
+                        return { ...column, label: 'Mes' };
                     }  else if (column.key === 'total') {
                       return { ...column, label: 'Total Gastado' };
                   } else {
@@ -53,15 +53,22 @@ const PurchasesTable = () => {
                   modifiedColumnObjects.push({
                       key: 'Editar',
                       label: 'Editar',
-                      cellRenderer: (cell) => { 
-        
+                      cellRenderer: (cell) => {     
                           const filaActual = cell.row;
-                          const id = filaActual.original._id;     
+                          const id = filaActual.original._id;   
+                          const day = filaActual.original.day;      
+                          const month = filaActual.original.month;
+                          const year = filaActual.original.year;
+                          const detail = filaActual.original.purchaseDetail;
                           const item = {
                           id: id,
+                          month,
+                          year,
+                          detail,
+                          day
                           };
                           return (
-                            <EditModal type="purchase"/>
+                            <EditModal type="purchase" updateChanges={getPurchasesDataAndCreateTable} purchaseData={item}/>
                           );
                       },
                   })      
