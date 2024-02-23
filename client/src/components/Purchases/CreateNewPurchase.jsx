@@ -140,7 +140,7 @@ const CreateNewPurchase = ({update}) => {
                  
                        {
                         choosenProductName.length !== 0 && choosenProductQuantity.length !== 0  && choosenProductValue.length !== 0?
-                        <Button className="mt-6 font-medium text-white" color="success" 
+                        <Button className="mt-6 w-72 font-medium text-white" color="success" 
                          onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductValue )}>Añadir</Button> 
                         : 
                         null

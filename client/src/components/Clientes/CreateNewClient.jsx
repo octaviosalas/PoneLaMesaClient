@@ -50,8 +50,16 @@ const CreateNewClient = ({type, updateList}) => {
 
   
   return (
-    <>
-     {type === "creatingOrder" ? <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Crear Cliente</p> : <p>aa</p>}
+    <div>
+     {
+       type === "creatingOrder" ?
+        <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Crear Cliente</p> 
+        :
+        <div className="flex border justify-end items-end">
+         <Button onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Crear Cliente +</Button>
+        </div>
+
+        }
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -91,7 +99,7 @@ const CreateNewClient = ({type, updateList}) => {
           )}
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 }
 

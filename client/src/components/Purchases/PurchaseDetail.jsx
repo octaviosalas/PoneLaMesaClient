@@ -25,7 +25,7 @@ const PurchaseDetail = ({purchaseData}) => {
     if (purchaseData && purchaseData.detail && Array.isArray(purchaseData.detail) && purchaseData.detail.length > 0) {
       const firstDetail = purchaseData.detail[0];
       const properties = Object.keys(firstDetail);
-      const filteredProperties = properties.filter(property => property !== 'productId');
+      const filteredProperties = properties.filter(property => property !== 'productId' &&  property !== "choosenProductTotalPrice");
   
       const columnLabelsMap = {
         productName: 'Articulo',
@@ -55,7 +55,7 @@ const PurchaseDetail = ({purchaseData}) => {
                     <p className="text-zinc-600 font-medium text-sm">Pedido cargador por: {purchaseData.creator}</p>
                     <p className="text-zinc-600 font-medium text-sm">Fecha de creacion: {purchaseData.day} de {purchaseData.month} de {purchaseData.year}</p>
                 </div>
-                   <Table aria-label="Example table with dynamic content" className="w-full flex items-center justify-center mt-2">
+                   <Table aria-label="Example table with dynamic content" className="w-[600px] 2xl:w-[750px] flex items-center justify-center mt-2">
                               <TableHeader columns={columns}>
                                 {(column) => (
                                   <TableColumn key={column.key} className="text-xs gap-6">
@@ -67,19 +67,17 @@ const PurchaseDetail = ({purchaseData}) => {
                               {(item) => (
                                 <TableRow key={item.productName}>
                                   {columns.map(column => (
-                                   <TableCell key={column.key} className="text-start items-start">
-                                   {column.cellRenderer ? (
-                                       column.cellRenderer({ row: { original: item } })
-                                     ) : (
-                                       (column.key === "price" || 
-                                        column.key === "replacementPrice" ||
-                                        column.key === "choosenProductTotalPrice" ) ? (
-                                           formatePrice(item[column.key])
-                                       ) : (
-                                         item[column.key]
-                                       )
-                                     )}
-                                   </TableCell>
+                                  <TableCell key={column.key} className='text-left'>
+                                  {column.cellRenderer ? (
+                                    column.cellRenderer({ row: { original: item } })
+                                  ) : (
+                                    column.key === "total" || column.key === "value" ? (
+                                      formatePrice(item[column.key])
+                                    ) : (
+                                      item[column.key]
+                                    )
+                                  )}
+                                </TableCell>
                                   ))}
                                 </TableRow>
                               )}

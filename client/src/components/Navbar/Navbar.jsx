@@ -99,6 +99,11 @@ const NavBarComponent = () =>  {
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground" href="clientes" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Clientes
+              </Link>
+          </NavbarItem>
         
           </div>         
         </NavbarContent>

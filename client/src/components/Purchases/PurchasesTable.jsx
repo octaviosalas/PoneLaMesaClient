@@ -83,7 +83,7 @@ const PurchasesTable = () => {
                       id: id
                       };
                       return (
-                         <DeleteOrder type="purchase" purchaseData={item}/>
+                         <DeleteOrder type="purchase" purchaseData={item} updatePurchasesList={getPurchasesDataAndCreateTable}/>
                         );
                   },
                   }) 

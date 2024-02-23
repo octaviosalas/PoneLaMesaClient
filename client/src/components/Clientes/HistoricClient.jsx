@@ -7,7 +7,7 @@ import Loading from "../Loading/Loading"
 
 import { useState, useEffect } from "react";
 
-const HistoricArticles = ({articleData}) => {
+const HistoricClient = ({clientData}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
@@ -24,18 +24,18 @@ const HistoricArticles = ({articleData}) => {
       try {
         const res = await axios.get("http://localhost:4000/orders");
         const data = res.data;
-        const productOrderDetails = data
-          .map((ord) => {
-            const productOrderDetail = ord.orderDetail.filter((o) => o.productId === articleData.id);
+        console.log(data)
+        const theClientOrders = data.filter((d) => d.clientId === clientData.id)
+        console.log(theClientOrders)
+        const productOrderDetails = theClientOrders
+           .map((ord) => {
             return {
               orderId: ord._id,
               orderNumber: ord.orderNumber,
               month: ord.month,
               year: ord.year,
-              productOrderDetail: productOrderDetail,
-              quantity: productOrderDetail.map((prodOrd) => prodOrd.quantity)[0],
-              total: productOrderDetail.map((prodOrd) => prodOrd.choosenProductTotalPrice)[0]
-              
+              productOrderDetail: ord.orderDetail,
+              total: ord.total
             };
           })
           .filter((result) => result.productOrderDetail.length > 0);
@@ -63,14 +63,13 @@ const HistoricArticles = ({articleData}) => {
         console.log("me ejecuto")
         const firstDetail = ordersProducts[0];
         const properties = Object.keys(firstDetail);
-        const filteredProperties = properties.filter(property => property !== 'productOrderDetail' && property !== 'orderId');
+        const filteredProperties = properties.filter(property => property !== 'productOrderDetail' && property !== 'orderId'  && property !== 'quantity');
       
         const columnLabelsMap = {
           month: 'Mes',
           year: 'Año',
           total: 'Facturacion',
           orderNumber: 'Orden',
-          quantity: 'Cantidad',
         };
       
         const tableColumns = filteredProperties.map(property => ({
@@ -99,7 +98,14 @@ const HistoricArticles = ({articleData}) => {
             <>
               <ModalHeader className="flex flex-col gap-1">
                 <p  className="text-zinc-600 font-bold text-md">Historico de Pedidos</p>
-                <p  className="text-zinc-600 font-medium text-sm">Articulo: {articleData.articleName}</p>
+                <p  className="text-zinc-600 font-medium text-sm">Cliente: {clientData.name}</p>
+               {loadingData ? null :
+                <div>
+                    <p className="text-zinc-600 font-medium text-xs">Facturacion total:  {formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
+                    <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de Alquileres:  {ordersProducts.length}</p>
+                </div>
+               }
+                          
               </ModalHeader>
               <ModalBody className="flex flex-col justify-center items-center">   
              {loadingData ? (
@@ -137,14 +143,11 @@ const HistoricArticles = ({articleData}) => {
                               )}
                             </TableBody>
                           </Table>
-                          <div className="flex flex-col justify-end items-end  mt-4">
-                            <p className="text-zinc-600 font-medium text-xs">Total facturado de "{articleData.articleName}":  {formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
-                            <p className="text-zinc-600 font-medium text-xs">Cantidad de Pedidos: {ordersProducts.length}</p>
-                          </div>
+                        
                         </div>
                       ) : (
                         <div className="flex flex-col items-cemnter justify-center">
-                           <p className="font-medium text-zinc-600 text-sm">Al momento no se han registrado pedidos para este producto</p>
+                           <p className="font-medium text-zinc-600 text-sm">Al momento no se han registrado pedidos de este Cliente</p>
                         </div>
 
                       )
@@ -166,6 +169,6 @@ const HistoricArticles = ({articleData}) => {
   );
 }
 
-export default HistoricArticles
+export default HistoricClient
 
 

@@ -25,6 +25,7 @@ const ArticlesTable = ({}) => {
         axios.get("http://localhost:4000/products/productsClients")
              .then((res) => { 
               const allProducts = res.data
+              console.log(allProducts.filter((prod) => prod.articulo === "Plato playo"))
               console.log(allProducts)
               setData(allProducts)
               if(allProducts.length !== 0) { 
