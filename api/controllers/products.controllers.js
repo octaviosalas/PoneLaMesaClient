@@ -9,7 +9,7 @@ export const productsClientsData = async (req, res) => {
      const getData = await ProductsClients.find()
      res.status(200).json(getData)
    } catch (error) {
-     res.statis(500).json({error: "Error al obtener productos"})
+     res.status(500).json({error: "Error al obtener productos"})
    }
 }
 
@@ -34,6 +34,21 @@ export const getProductById = async (req, res) => {
     res.status(200).json(getData)
   } catch (error) {
     
+  }
+}
+
+export const createProduct = async (req, res) => { 
+   console.log(req.body)
+
+  try {
+    const newArticleToBeSaved = await ProductsClients.create(req.body)
+    if (newArticleToBeSaved) {
+      res.status(200).json(newArticleToBeSaved);
+    } else {
+      res.status(404).json({ message: 'Producto no almacenado' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 }
 

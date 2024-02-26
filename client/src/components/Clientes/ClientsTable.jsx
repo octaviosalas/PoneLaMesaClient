@@ -58,19 +58,21 @@ const ClientsTable = () => {
                   cellRenderer: (cell) => {     
                       const filaActual = cell.row;
                       const id = filaActual.original._id;   
-                      const day = filaActual.original.day;      
-                      const month = filaActual.original.month;
-                      const year = filaActual.original.year;
-                      const detail = filaActual.original.purchaseDetail;
+                      const name = filaActual.original.name;      
+                      const telephone = filaActual.original.telephone;
+                      const email = filaActual.original.email;
+                      const home = filaActual.original.home;
+                      const typeOfClient = filaActual.original.typeOfClient;
                       const item = {
-                      id: id,
-                      month,
-                      year,
-                      detail,
-                      day
+                      id,
+                      telephone,
+                      email,
+                      typeOfClient,
+                      name,
+                      home
                       };
                       return (
-                        <EditModal type="purchase" updateChanges={getClientsDataAndCreateTable} purchaseData={item}/>
+                        <EditModal type="client" updateClientsChanges={getClientsDataAndCreateTable} clientData={item}/>
                       );
                   },
               })      
@@ -85,7 +87,7 @@ const ClientsTable = () => {
                   id: id
                   };
                   return (
-                     <DeleteOrder type="purchase" purchaseData={item} updatePurchasesList={getClientsDataAndCreateTable}/>
+                     <DeleteOrder type="client" clientData={item} updateClientList={getClientsDataAndCreateTable}/>
                     );
               },
               }) 

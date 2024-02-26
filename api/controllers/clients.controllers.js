@@ -49,3 +49,30 @@ export const deleteClient = async (req, res) => {
       res.status(500).json({ error: 'Error al eliminar el cliente' });
     }
 }
+
+
+export const updateClientData = async (req, res) => { 
+  console.log(req.params)
+  const { clientId } = req.params;
+  const {client, telephone, clientEmail, home, typeOfClient} = req.body
+
+    try {
+        Clients.findByIdAndUpdate({ _id: clientId }, { 
+        name: client,
+        telephone: telephone,
+        email: clientEmail,
+        home: home,
+        typeOfClient: typeOfClient         
+        })
+        .then((newClientData) => {                                      
+        res.json({message:"Cliente Modificado", newClientData})
+        })
+        .catch((err) => { 
+        console.log(err)
+        })
+      } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+      }
+}
+

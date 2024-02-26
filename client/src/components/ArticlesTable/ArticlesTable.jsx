@@ -11,6 +11,7 @@ import EditModal from '../Modals/EditModal';
 import Loading from "../Loading/Loading"
 import HistoricArticles from './HistoricArticles';
 import IncreasePriceWithPercentage from '../Modals/IncreasePriceWithPercentage';
+import CreateNewArticle from './CreateNewArticle';
 
 const ArticlesTable = ({}) => {
 
@@ -87,7 +88,7 @@ const ArticlesTable = ({}) => {
                   id: id
                   };
                   return (
-                     <DeleteOrder type="product" updateList={getProductsDataAndCreateTable} productData={item}/>
+                     <DeleteOrder type="product" updateListArticles={getProductsDataAndCreateTable} productData={item}/>
                     );
               },
              }) 
@@ -139,13 +140,11 @@ const ArticlesTable = ({}) => {
         <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
             <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
               <div className='flex gap-5 items-center '>
-                   <p className='font-medium text-black    text-md cursor-pointer ml-4' >
-                    Articulos Clientes
-                  </p>
+                   <p className='font-medium text-black    text-md cursor-pointer ml-4' > Articulos Clientes </p>
               </div>
-              <div className='flex gap-2'>
-                <p className='text-sm mr-4 font-medium text-zinc-500'>Crear Articulo</p>
-                <p className='text-sm mr-4 font-medium text-zinc-500'><IncreasePriceWithPercentage/></p>
+              <div className='flex gap-6 mr-2'>
+                <CreateNewArticle updateList={getProductsDataAndCreateTable}/>
+                <IncreasePriceWithPercentage/>
               </div>
               
             </div>

@@ -4,8 +4,9 @@ import axios from "axios";
 import DeleteOrderrr from "./DeleteOrderrr";
 import DeleteArticle from "./DeleteArticle";
 import DeletePurchase from "./DeletePurchase";
+import DeleteClient from "./DeleteClient";
 
-const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updatePurchasesList}) => {
+const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [successMessage, setSuccessMessage] = useState(false)
   const [messageSuccesDeleteArticle, setMessageSuccesDeleteArticle] = useState(false)
@@ -41,7 +42,7 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
     axios.delete(`http://localhost:4000/products/delete/${productData.id}`)
          .then((res) => { 
           console.log(res.data)
-          updateList()
+          updateListArticles()
           setMessageSuccesDeleteArticle(true)
           setTimeout(() => { 
             onClose()
@@ -100,9 +101,9 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Pedido</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Producto</ModalHeader>
               <ModalBody>
-                 <DeleteArticle productData={productData} closeModalNow={onClose} updateList={updateList}/>
+                 <DeleteArticle productData={productData} closeModalNow={onClose} updateList={updateListArticles}/>
               </ModalBody>
             </>
           )}
@@ -114,7 +115,7 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Pedido</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Compra</ModalHeader>
               <ModalBody>
                 <DeletePurchase purchaseData={purchaseData} closeModalNow={onClose} updateList={updatePurchasesList}/>
               </ModalBody>
@@ -123,6 +124,20 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
         </ModalContent>
         :
         null}  
+
+    {type === "client" ? 
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Cliente</ModalHeader>
+              <ModalBody>
+                <DeleteClient clientData={clientData} closeModalNow={onClose} updateClientList={updateClientList}/>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+        :
+        null}   
       </Modal>
     </>
   );

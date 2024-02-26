@@ -6,8 +6,9 @@ import { getProductsClients } from "../../functions/gralFunctions";
 import EditArticle from "./EditArticle";
 import EditOrderData from "./EditOrderData";
 import EditPurchase from "./EditPurchase";
+import EditClient from "./EditClient";
 
-const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, articleData, updateChanges}) => {
+const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, articleData, updateChanges, updateClientsChanges, clientData}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [step, setStep] = useState(0)
@@ -63,6 +64,26 @@ const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, arti
                 </ModalHeader>
                 <ModalBody className="flex flex-col items-center justify-center">
                   <EditPurchase purchaseData={purchaseData} closeModalNow={closeModal} updateChanges={updateChanges}/>
+                </ModalBody>
+              
+              </>
+            )}
+          </ModalContent>
+          :
+          null
+          }
+      </Modal>
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max min-w-96 bg-white text-black'>
+         {type === "client" ? 
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1 text-zinc-600  text-md">
+                  <p className="font-bold text-md">Editar Cliente </p>                 
+                </ModalHeader>
+                <ModalBody className="flex flex-col items-center justify-center">
+                  <EditClient clientData={clientData} closeModalNow={closeModal} updateChanges={updateClientsChanges}/>
                 </ModalBody>
               
               </>
