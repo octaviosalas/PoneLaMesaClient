@@ -144,7 +144,7 @@ const ArticlesTable = ({}) => {
               </div>
               <div className='flex gap-6 mr-2'>
                 <CreateNewArticle updateList={getProductsDataAndCreateTable}/>
-                <IncreasePriceWithPercentage/>
+                <IncreasePriceWithPercentage  updateList={getProductsDataAndCreateTable}/>
               </div>
               
             </div>

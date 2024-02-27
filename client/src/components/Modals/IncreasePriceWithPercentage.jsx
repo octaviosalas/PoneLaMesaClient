@@ -1,19 +1,31 @@
 import React, { useState } from 'react'
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
 import axios from 'axios';
+import Loading from '../Loading/Loading';
 
-const IncreasePriceWithPercentage = () => {
+const IncreasePriceWithPercentage = ({updateList}) => {
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     const [percentageValue, setPercentageValue] = useState("")
+    const [inProcess, setInProcess] = useState(false)
+    const [succesMessage, setSuccesMessage] = useState(false)
 
     const applyIncrease = () => { 
+      setInProcess(true)
       const theValue = ({ 
         percentage: percentageValue
       })
-      axios.post("http://localhost:4000/increasePrices", theValue)
+      axios.post("http://localhost:4000/products/increasePrices", theValue)
            .then((res) => { 
             console.log(res.data)
+            console.log("enviando funcion")
+            setInProcess(false)
+            setSuccesMessage(true)
+            updateList()
+            setTimeout(() => { 
+              onClose()
+              setSuccesMessage(false)
+            }, 2500)
            })
            .catch((err) => { 
             console.log(err)
@@ -49,13 +61,27 @@ const IncreasePriceWithPercentage = () => {
 
                   </ModalBody>
                   <ModalFooter className='flex items-center justify-center'>
-                      <Button variant="light" onPress={onClose} className='bg-green-800 text-white font-bold'>
+                      <Button variant="light" onClick={() => applyIncrease()} className='bg-green-800 text-white font-bold'>
                         Confirmar Aumento
                       </Button>
                       <Button  onPress={onClose} className='bg-green-800 text-white font-bold'>
                         Cancelar
                       </Button>
                   </ModalFooter>
+
+                    {inProcess ? 
+                    <div className='mt-4 mb-4 flex items-center justify-center'>
+                      <Loading/>
+                    </div>
+                      : null
+                    }
+
+                    {succesMessage ? 
+                      <div className='mt-4 mb-4 flex items-center justify-center'>
+                        <p className='text-green-700 font-medium text-sm'>Aumento aplicado con Exito ✔</p>
+                      </div>
+                    : null
+                      }
                 </>
               )}
             </ModalContent>

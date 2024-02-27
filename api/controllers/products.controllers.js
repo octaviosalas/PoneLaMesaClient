@@ -100,6 +100,8 @@ export const deleteProduct = async (req, res) => {
 
 export const priceIncrease = async (req, res) => { 
 
+   console.log(req.body)
+
   try {
     const { percentage } = req.body;
 
