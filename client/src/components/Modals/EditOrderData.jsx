@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
 import axios from "axios";
-import { getProductsClients } from "../../functions/gralFunctions";
+import { formatePrice, getProductsClients } from "../../functions/gralFunctions";
 import EditArticle from "./EditArticle";
 
 const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
@@ -154,25 +154,37 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
 
   return (
     <div>
-       <div className="flex flex-col items-center justify-center w-full border">
-            <p className="font-bold text-md">Editar Pedido </p>
+       <div className="flex flex-col">
+              <div className="flex flex-col items-center justify-center">
+                <p className="font-bold text-md">Editar Pedido </p>
+              </div>
+           
                   {orderStatus}
                   {step === 0 ? 
-                    <div>
-                      <p className="text-xs font-medium mt-2">Pedido numero: {orderData.order}</p>
-                      <p className="text-xs font-medium ">Mes: {orderData.month}</p>
-                      <p className="text-xs font-medium ">Cliente: {orderData.client}</p>
+                    <div className="flex flex-col justify-start items-start ml-2">
+                      <p className="text-sm font-medium mt-2">Pedido numero: {orderData.order}</p>
+                      <p className="text-sm font-medium ">Mes: {orderData.month}</p>
+                      <p className="text-sm font-medium ">Cliente: {orderData.client}</p>
                     </div>
                   : null}
                            
-                <div className="mt-4 mb-4">
+                <div className="mt-4 mb-4 w-full">
                   {step === 0 ?
-                  <div className="flex gap-4 items-center justify-center">
-                      <Button className="font-bold text-white text-xs bg-green-600 w-52"  onClick={() => setStep(2)}>Modificar Datos</Button>
-                      <Button className="font-bold text-white text-xs bg-green-600 w-52" onClick={() => setStep(1)}>Cambiar Estado</Button>
-                      <Button className="font-bold text-white text-xs bg-green-600 w-52">Adjuntar Articulos a Reponer</Button>
+                  <div className="flex flex-col items-center justify-center ml-2 mr-2">
+                      <div className="bg-green-800 w-full h-11 flex items-center cursor-pointer"  onClick={() => setStep(2)}>
+                         <p className="font-medium ml-4 text-white text-sm">Modificar Datos</p>
+                      </div>
+                      <div className="bg-green-700 w-full h-11 flex items-center cursor-pointer mt-1" onClick={() => setStep(1)}>
+                         <p className="font-medium ml-4 text-white text-sm">Cambiar Estado</p>
+                      </div>
+                      <div className="bg-green-600 w-full h-11 flex items-center cursor-pointer mt-1">
+                          <p className="font-medium ml-4 text-white text-sm">Adjuntar Articulos a Reponer</p>
+                      </div>                
                   </div>
+                  
                   : null}
+
+
 
                     {step === 1 ? 
                       <div className="flex flex-col items-center justify-center mb-4">
@@ -209,14 +221,17 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                     null}
 
                       {step === 2 && modifyData !== true && modifyOrderDetailData !== true ? (
-                        <>
-                          <div className="h-7 bg-green-600 w-[500px] cursor-pointer" onClick={() => setModifyData(true)}>
-                            <p className="font-bold text-white text-md">Modificar datos del Cliente</p>
+                          <div className="flex flex-col items-center justify-center ml-2 mr-2">
+                          <div className="h-11 bg-green-600 w-full cursor-pointer flex  items-center " onClick={() => setModifyData(true)}>
+                            <p className="font-bold text-white text-sm">Modificar datos del Cliente</p>
                           </div>
-                          <div className="h-7 bg-green-800 w-[500px] cursor-pointer mt-1" onClick={() => setModifyOrderDetailData(true)}>
-                            <p className="font-bold text-white text-md">Modificar detalle de Orden</p>
+                          <div className="h-11 bg-green-800 w-full cursor-pointer flex  items-center  mt-1" onClick={() => setModifyOrderDetailData(true)}>
+                            <p className="font-bold text-white text-sm">Modificar detalle de Orden</p>
                           </div>
-                        </>
+                          <div>
+                            <p className="text-xs font-medium underline cursor-pointer flex  items-center  mt-4 text-zinc-500" onClick={() => setStep(0)}>Volver</p>
+                          </div>
+                        </div>
                       ) : step === 2 && modifyData === true && modifyOrderDetailData !== true ? (
                         <div className="flex flex-col w-full">
                           <div className="flex flex-col items-center justify-center">
@@ -238,7 +253,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                           </div>
                         </div>
                       ) : step === 2 && modifyData !== true && modifyOrderDetailData === true ? 
-                          <div>
+                          <div className="flex flex-col justify-center items-center">
                             {newOrderDetailArray.map((ord, index) => (
                                 <div key={index} className="flex flex-col">
                                   <div className="flex items-center justify-start w-72 gap-4 mt-2">
@@ -247,8 +262,8 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                                   </div>
                                 </div>
                               ))}
-                              <div className="flex items-center justify-center">
-                                <p>Total: {newOrderDetailArray.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)}</p>
+                              <div className="flex items-center justify-center mt-2">
+                                <p className="font-bold text-zinc-600">Total: {formatePrice(newOrderDetailArray.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))}</p>
                               </div>
                             <div className="flex items-center gap-6 mt-6 mb-2">
                                <Button className="bg-green-800 font-bold text-white" onClick={() => changeOrderDetail()}>Confirmar</Button>

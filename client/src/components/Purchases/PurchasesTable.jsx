@@ -12,6 +12,7 @@ import FiltersPurchases from './FiltersPurchases';
 import CreateNewPurchase from "./CreateNewPurchase"
 import Loading from '../Loading/Loading';
 import PurchaseDetail from './PurchaseDetail';
+import getBackendData from '../../Hooks/GetBackendData';
 
 const PurchasesTable = () => {
 
@@ -22,121 +23,120 @@ const PurchasesTable = () => {
     const [tableData, setTableData] = useState([])
     const [inputValue, setInputValue] = useState("")
     const [tableChoosen, setTableChoosen] = useState([])
+    const { queryData } = getBackendData(`purchases`);
+    const [waitingData, setWaitingData] = useState(false)
 
-    const getPurchasesDataAndCreateTable = () => { 
-            axios.get("http://localhost:4000/purchases") 
-                 .then((res) => { 
-                  const purchasesData = res.data
-                  setData(purchasesData)
-                  if(purchasesData.length !== 0) { 
-                    const propiedades = Object.keys(purchasesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
-                    propiedad !== '__v'  &&  propiedad !== 'day'  &&  propiedad !== 'date'  &&  
-                    propiedad !== 'year' &&  propiedad !== 'purchaseDetail');
-                    const columnObjects = propiedades.map(propiedad => ({
-                        key: propiedad,
-                        label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
-                        allowsSorting: true
-                  }));
-        
-                  const modifiedColumnObjects = columnObjects.map(column => {
-                    if (column.key === 'creatorPurchase') {
-                        return { ...column, label: 'Creador' };
-                    } else if (column.key === 'month') {
-                        return { ...column, label: 'Mes' };
-                    }  else if (column.key === 'total') {
-                      return { ...column, label: 'Total Gastado' };
-                  } else {
-                        return column;
-                    }
-                  });
-        
-                  modifiedColumnObjects.push({
-                      key: 'Editar',
-                      label: 'Editar',
-                      cellRenderer: (cell) => {     
-                          const filaActual = cell.row;
-                          const id = filaActual.original._id;   
-                          const day = filaActual.original.day;      
-                          const month = filaActual.original.month;
-                          const year = filaActual.original.year;
-                          const detail = filaActual.original.purchaseDetail;
-                          const item = {
-                          id: id,
-                          month,
-                          year,
-                          detail,
-                          day
-                          };
-                          return (
-                            <EditModal type="purchase" updateChanges={getPurchasesDataAndCreateTable} purchaseData={item}/>
+
+      const getPurchasesDataAndCreateTable = () => { 
+                    setData(queryData)
+                    if(queryData.length !== 0) { 
+                      const propiedades = Object.keys(queryData[0]).filter(propiedad =>  propiedad !== '_id' &&  
+                      propiedad !== '__v'  &&  propiedad !== 'day'  &&  propiedad !== 'date'  &&  
+                      propiedad !== 'year' &&  propiedad !== 'purchaseDetail');
+                      const columnObjects = propiedades.map(propiedad => ({
+                          key: propiedad,
+                          label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
+                          allowsSorting: true
+                    }));
+          
+                    const modifiedColumnObjects = columnObjects.map(column => {
+                      if (column.key === 'creatorPurchase') {
+                          return { ...column, label: 'Creador' };
+                      } else if (column.key === 'month') {
+                          return { ...column, label: 'Mes' };
+                      }  else if (column.key === 'total') {
+                        return { ...column, label: 'Total Gastado' };
+                    } else {
+                          return column;
+                      }
+                    });
+          
+                    modifiedColumnObjects.push({
+                        key: 'Editar',
+                        label: 'Editar',
+                        cellRenderer: (cell) => {     
+                            const filaActual = cell.row;
+                            const id = filaActual.original._id;   
+                            const day = filaActual.original.day;      
+                            const month = filaActual.original.month;
+                            const year = filaActual.original.year;
+                            const detail = filaActual.original.purchaseDetail;
+                            const item = {
+                            id: id,
+                            month,
+                            year,
+                            detail,
+                            day
+                            };
+                            return (
+                              <EditModal type="purchase" updateChanges={getPurchasesDataAndCreateTable} purchaseData={item}/>
+                            );
+                        },
+                    })      
+                    
+                    modifiedColumnObjects.push({
+                      key: 'Eliminar',
+                      label: 'Eliminar',
+                      cellRenderer: (cell) => { 
+                        const filaActual = cell.row;
+                        const id = filaActual.original._id;
+                        const item = {
+                        id: id
+                        };
+                        return (
+                          <DeleteOrder type="purchase" purchaseData={item} updatePurchasesList={getPurchasesDataAndCreateTable}/>
                           );
-                      },
-                  })      
-                  
-                  modifiedColumnObjects.push({
-                    key: 'Eliminar',
-                    label: 'Eliminar',
+                    },
+                    }) 
+          
+                    modifiedColumnObjects.push({
+                    key: 'Detalle',
+                    label: 'Detalle',
                     cellRenderer: (cell) => { 
                       const filaActual = cell.row;
                       const id = filaActual.original._id;
+                      const date = filaActual.original.date;
+                      const day = filaActual.original.day;
+                      const month = filaActual.original.month;
+                      const year = filaActual.original.year;
+                      const detail = filaActual.original.purchaseDetail;
+                      const creator = filaActual.original.creatorPurchase;
+                      const total = filaActual.original.total;
                       const item = {
-                      id: id
+                      id: id,
+                      detail,
+                      date,
+                      day,
+                      month,
+                      year,
+                      creator,
+                      total           
                       };
                       return (
-                         <DeleteOrder type="purchase" purchaseData={item} updatePurchasesList={getPurchasesDataAndCreateTable}/>
+                        <PurchaseDetail purchaseData={item}/>
                         );
                   },
-                  }) 
-        
-                  modifiedColumnObjects.push({
-                  key: 'Detalle',
-                  label: 'Detalle',
-                  cellRenderer: (cell) => { 
-                    const filaActual = cell.row;
-                    const id = filaActual.original._id;
-                    const date = filaActual.original.date;
-                    const day = filaActual.original.day;
-                    const month = filaActual.original.month;
-                    const year = filaActual.original.year;
-                    const detail = filaActual.original.purchaseDetail;
-                    const creator = filaActual.original.creatorPurchase;
-                    const total = filaActual.original.total;
-                    const item = {
-                    id: id,
-                    detail,
-                    date,
-                    day,
-                    month,
-                    year,
-                    creator,
-                    total           
-                    };
-                    return (
-                       <PurchaseDetail purchaseData={item}/>
-                      );
-                },
-                  }) 
-         
-                  setColumns(modifiedColumnObjects);
-                  console.log(modifiedColumnObjects)
-                  if (tableRef.current) {
-                      tableRef.current.updateColumns(modifiedColumnObjects);
-                  }            
-                  } else { 
-                    console.log("VACIO")
-                  }
+                    }) 
+          
+                    setColumns(modifiedColumnObjects);
+                    console.log(modifiedColumnObjects)
+                    if (tableRef.current) {
+                        tableRef.current.updateColumns(modifiedColumnObjects);
+                    }            
+                    } else { 
+                      console.log("VACIO")
+                      setWaitingData(true)
+                    }
 
-                 })
-                 .catch((err) => { 
-                  console.log(err)
-                 })
-    }
+                
+                  
+      }
 
-    useEffect(() => {
-        getPurchasesDataAndCreateTable()
-    }, []);
+      useEffect(() => {
+          getPurchasesDataAndCreateTable()
+      }, [queryData]);
 
-    const filteredData = data.filter((item) => {
+      const filteredData = data.filter((item) => {
         return Object.values(item).some((value) =>
           value.toString().toLowerCase().includes(inputValue.toLowerCase())
         );
@@ -191,9 +191,9 @@ const PurchasesTable = () => {
                 )}
           </TableBody>
        </Table> 
-         </>
-          
-       : <Loading/>}
+         </>   
+       :
+        <Loading/>}
         </div>
       )
 }
