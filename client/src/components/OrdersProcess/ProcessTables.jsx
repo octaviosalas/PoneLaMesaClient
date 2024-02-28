@@ -8,32 +8,44 @@ import OrderDetail from '../Orders/OrderDeatil';
 import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
 import {Link} from "react-router-dom"
+import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const ProcessTables = ({orderStatus}) => {
 
-    console.log(orderStatus)
-
-
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
+    const navigate = useNavigate()
     const [columns, setColumns] = useState([]);
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [inputValue, setInputValue] = useState("")
     const [loadData, setLoadData] = useState(true)
+    const [actualDay, setActualDay] = useState(getDay())
+    const [actualMonth, setActualMonth] = useState(getMonth())
+    const [actualYear, setActualYear] = useState(getYear())
+    const [actualDate, setActualDate] = useState(getDate())
+    const [viewJustToday, setViewJustToday] = useState(false)
+
+    const comeBackBecauseTheAreNoResults = () => { 
+      const formattedOrderStatus = orderStatus.split(' ').join('');
+      navigate(`/${formattedOrderStatus}`);
+      setViewJustToday(false);
+  }
 
     const getDataAndCreateTable = () => { 
         axios.get("http://localhost:4000/orders")
         .then((res) => { 
-          const allOrders = res.data
-          const filterOrders = allOrders.filter((ord) => ord.orderStatus === orderStatus)
-          setData(filterOrders)
-          if(filterOrders.length !== 0) { 
-              const propiedades = Object.keys(filterOrders[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-              && propiedad !== 'orderDetail'&&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
-              && propiedad !== 'day' && propiedad !== 'paid');
-              const columnObjects = propiedades.map(propiedad => ({
+             const allOrders = res.data
+             const filterOrdersByStatus = allOrders.filter((ord) => ord.orderStatus === orderStatus)
+             const filterOrdersByToday = allOrders.filter((ord) => ord.orderStatus === orderStatus && ord.dateOfDelivery === actualDate)
+             {viewJustToday ? setData(filterOrdersByToday) :  setData(filterOrdersByStatus)}
+             if(filterOrdersByStatus.length !== 0) { 
+               const propiedades = Object.keys(filterOrdersByStatus[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
+               && propiedad !== 'orderDetail'&&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
+               && propiedad !== 'day' && propiedad !== 'paid');
+               const columnObjects = propiedades.map(propiedad => ({
                   key: propiedad,
                   label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
                   allowsSorting: true
@@ -149,15 +161,15 @@ const ProcessTables = ({orderStatus}) => {
               }
             })
             .catch((err) => { 
-            console.log(err)
+              console.log(err)
             })
        }
 
        useEffect(() => { 
         getDataAndCreateTable()
-    }, [])
-
-    const filteredData = data.filter((item) => {
+       }, [viewJustToday])
+ 
+      const filteredData = data.filter((item) => {
         return Object.values(item).some((value) =>
           value.toString().toLowerCase().includes(inputValue.toLowerCase())
         );
@@ -169,22 +181,44 @@ const ProcessTables = ({orderStatus}) => {
         }, 2000)
       }, [columns, data])
 
-
-
-  return (
+   return (
         <div>
-      {loadData ? (
-        <Loading />
-          ) : (
-            columns.length > 0 && data.length > 0 ? (
-              <>
-                <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none'>
-                  <div className='h-12 items-center justify-between w-full flex bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
-                    <div className='flex justify-end'>
-                      {orderStatus === "Reparto" && <p className='font-bold ml-4'>Pedidos en Reparto</p>}
-                      {orderStatus === "Lavado" && <p className='font-bold ml-4'>Pedidos en Lavado</p>}
-                      {orderStatus === "Armado" && <p className='font-bold ml-4'>Pedidos en Armado</p>}
-                      {orderStatus === "Devuelto" && <p className='font-bold ml-4'>Pedidos Devueltos</p>}
+       {loadData ? (
+         <Loading />
+           ) : (
+             columns.length > 0 && data.length > 0 ? (
+               <>
+                <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
+                  <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
+                    <div className='flex w-full '>
+                      {orderStatus === "Reparto" &&
+                            <div className='flex items-center w-full justify-between '> 
+                              <p className='font-bold cursor-pointer ml-4'>Pedidos en Reparto</p>
+                              <p className='font-bold cursor-pointer ml-4'>Pedidos pare Retirar</p>
+                              <p className='font-bold cursor-pointer text-md' onClick={() => setViewJustToday(true)}>Ver Reparto del dia</p>
+                            </div>
+                       }
+                      {orderStatus === "Lavado" &&
+                            <div className='flex items-center w-full justify-between '> 
+                              <p className='font-bold ml-4'>Pedidos en Lavado</p>
+                              <p className='font-bold cursor-pointer text-md'>Ver Lavado del dia</p>
+                            </div>
+                       }
+                      {orderStatus === "Armado" &&
+                            <div className='flex items-center w-full justify-between '> 
+                              <p className='font-bold cursor-pointer text-md ml-4' onClick={() => setViewJustToday(false)}>Pedidos en Armado</p>
+                              <p className='font-bold cursor-pointer text-md' onClick={() => setViewJustToday(true)}>Ver Armado del dia</p>
+                            </div>
+                       }
+                        {orderStatus === "Retiro en Local" &&
+                            <div className='flex items-center w-full justify-between '> 
+                              <p className='font-bold cursor-pointer text-md ml-4' onClick={() => setViewJustToday(false)}>Pedidos para Retiro en Local</p>
+                              <p className='font-bold cursor-pointer text-md' onClick={() => setViewJustToday(true)}>Ver Retiros del dia</p>
+                            </div>
+                       }
+                      {orderStatus === "Devuelto" && 
+                      <p className='font-bold ml-4'>Pedidos Devueltos</p>
+                      }
                     </div>
                     <div className='flex justify-start mr-4'></div>
                   </div>
@@ -236,8 +270,19 @@ const ProcessTables = ({orderStatus}) => {
               </>
             ) : (
               <div className='flex flex-col items-center justify-center '>
-                  <p className='text-black font-medium text-md '>En este momento, no hay pedidos en {orderStatus}</p>
-                <Link to="/articulos"><p className='text-sm text-zinc-600 underline cursor-pointer mt-4'>Volver</p></Link>
+                {
+                viewJustToday ? 
+                 <p className='text-black font-medium text-md '>La fecha de hoy no posee pedidos en {orderStatus}</p> 
+                 :
+                 <p className='text-black font-medium text-md '>No hay pedidos en {orderStatus}</p>
+                 }
+
+                 {
+                    viewJustToday ?
+                    <p className='text-sm text-zinc-600 underline cursor-pointer mt-4' onClick={() =>comeBackBecauseTheAreNoResults()}>Volver</p>
+                    :
+                    <Link to="/articulos"><p className='text-sm text-zinc-600 underline cursor-pointer mt-4'>Volver</p></Link>
+                 }
               </div>
         )
       )}

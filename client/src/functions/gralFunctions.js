@@ -54,7 +54,7 @@ export const getDate = () => {
     const año = fecha.getFullYear();
     const diaFormateado = dia < 10 ? `0${dia}` : dia;
     const mesFormateado = mes < 10 ? `0${mes}` : mes;
-    return `${diaFormateado}/${mesFormateado}/${año}`;
+    return `${año}-${mesFormateado}-${diaFormateado}`;
   }
  
 

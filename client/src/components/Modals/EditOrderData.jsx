@@ -155,11 +155,10 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
   return (
     <div>
        <div className="flex flex-col">
-              <div className="flex flex-col items-center justify-center">
-                <p className="font-bold text-md">Editar Pedido </p>
+              <div className="flex flex-col items-start justify-start mt-2 ml-4">
+                <p className="font-bold text-md text-zinc-600">Editar Pedido </p>
               </div>
-           
-                  {orderStatus}
+
                   {step === 0 ? 
                     <div className="flex flex-col justify-start items-start ml-2">
                       <p className="text-sm font-medium mt-2">Pedido numero: {orderData.order}</p>
@@ -189,14 +188,21 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                     {step === 1 ? 
                       <div className="flex flex-col items-center justify-center mb-4">
                         <div>
-                        <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">     
+                         {orderStatus === "Armado" ? 
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">        
+                                  <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
+                                  <SelectItem key={"Entregado"} value={"Retiro en Local"} onClick={() => setStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
+                              </Select> 
+                            : 
+                            <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">     
                               <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>          
                               <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
                               <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
                               <SelectItem key={"Devolucion"} value={"Devolucion"} onClick={() => setStatus("Devuelto")} >Devolucion</SelectItem>   
                               <SelectItem key={"Lavado"} value={"Lavado"} onClick={() => setStatus("Lavado")} >Lavado</SelectItem>     
                               <SelectItem key={"Repuesto"} value={"Repuesto"} onClick={() => setStatus("Repuesto")}>Repuesto</SelectItem>                                          
-                        </Select>                    
+                            </Select>
+                           }               
                         </div>
                         <div className="flex gap-6 items-center mt-6">
                           <Button className="font-bold text-white text-xs bg-green-600 w-40" onClick={() => changeOrderState()}>Confirmar</Button>

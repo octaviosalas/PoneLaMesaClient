@@ -11,6 +11,7 @@ import Armed from './components/OrdersProcess/Armed'
 import Cleaning from "./components/OrdersProcess/Cleaning"
 import Repart from './components/OrdersProcess/Repart'
 import Returned from './components/OrdersProcess/Returned'
+import LocalPickup from './components/OrdersProcess/LocalPickup'
 import EstadisticsOrders from './pages/EstadisticsOrders'
 import EstadisticsArticles from './pages/EstadisticsArticles'
 import EstadisticsClients from './pages/EstadisticsClients'
@@ -34,6 +35,7 @@ function App() {
             <Route path="/Armado" element={<Armed />} />   
             <Route path="/Lavado" element={<Cleaning />} />   
             <Route path="/Reparto" element={<Repart />} /> 
+            <Route path="/RetiroEnLocal" element={<LocalPickup />} /> 
             <Route path="/Reposiciones" element={<Returned />} /> 
             <Route path="/Estadisticas/Articulos" element={<EstadisticsArticles />} /> 
             <Route path="/Estadisticas/Alquileres" element={<EstadisticsOrders />} /> 
