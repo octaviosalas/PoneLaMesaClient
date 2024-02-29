@@ -34,7 +34,7 @@ const ProcessTables = ({orderStatus}) => {
       setViewJustToday(false);
   }
 
-    const getDataAndCreateTable = () => { 
+       const getDataAndCreateTable = () => { 
         axios.get("http://localhost:4000/orders")
         .then((res) => { 
              const allOrders = res.data

@@ -38,6 +38,138 @@ const NavBarComponent = () =>  {
         <NavbarContent className="hidden md:flex">
           <div className="flex  gap-6">
           <NavbarItem>
+              <Link color="foreground" href="/Pedidos" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Pedidos
+              </Link>
+          </NavbarItem>
+          <NavbarItem>
+              <Dropdown>
+                      <DropdownTrigger>
+                        <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Local </p>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Static Actions">
+                        <DropdownItem  isReadOnly key="new"><CreateNewOrder/></DropdownItem>
+                        <DropdownItem key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
+                        <DropdownItem key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem> 
+                        <DropdownItem key="rep" onClick={() => goTo("EntregasLocal")}>Entregas</DropdownItem> 
+                        <DropdownItem key="clean"  onClick={() => goTo("DevolucionesEnLocal")}>Devueltos</DropdownItem>                           
+                      </DropdownMenu>
+                </Dropdown>
+          </NavbarItem>
+          <NavbarItem>
+                <Dropdown>
+                      <DropdownTrigger>
+                          <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Logistica </p>
+                      </DropdownTrigger>
+                        <DropdownMenu aria-label="Static Actions">
+                          <DropdownItem key="arm" onClick={() => goTo("Reparto")}>Para Repartir</DropdownItem>
+                          <DropdownItem key="arm" onClick={() => goTo("Retiros")}>Para Retirar</DropdownItem>                          
+                        </DropdownMenu>
+                </Dropdown>
+          </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground" href="/articulos" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Articulos
+              </Link>
+          </NavbarItem>
+          <NavbarItem>
+                 <Dropdown>
+                      <DropdownTrigger>
+                          <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Proveedores </p>
+                      </DropdownTrigger>
+                        <DropdownMenu aria-label="Static Actions">
+                          <DropdownItem key="arm" onClick={() => goTo("proveedores")}>Ver Proveedores</DropdownItem>
+                          <DropdownItem key="ar" onClick={() => goTo("compras")}>Compras</DropdownItem>                          
+                        </DropdownMenu>
+                </Dropdown>
+          </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground" href="clientes" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Clientes
+              </Link>
+          </NavbarItem>      
+          <NavbarItem>
+          <Dropdown>
+                      <DropdownTrigger>
+                        <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Finanzas </p>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Static Actions">
+                        <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Cobros</DropdownItem>
+                        <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Empleados</DropdownItem>
+                        <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Clientes</DropdownItem>
+                        <DropdownItem key="Articulos" onClick={() => goTo("Estadisticas/Articulos")}>Estadisticas Articulos</DropdownItem>
+                        <DropdownItem key="Alquileres" onClick={() => goTo("Estadisticas/Alquileres")}>Estadisticas Alquileres</DropdownItem>
+                        <DropdownItem key="Cobros" onClick={() => goTo("Estadisticas/Cobros")}>Estadisticas Cobros</DropdownItem>    
+                        <DropdownItem key="Compras" onClick={() => goTo("Estadisticas/Compras")}>Estadisticas Compras</DropdownItem>    
+                      </DropdownMenu>
+                </Dropdown>
+          </NavbarItem>
+        
+        
+          </div>         
+        </NavbarContent>
+      </NavbarContent>
+
+      <NavbarContent as="div" className="items-center" justify="end">
+        <Input
+          classNames={{
+            base: "max-w-full sm:max-w-[10rem] h-10",
+            mainWrapper: "h-full",
+            input: "text-small",
+            inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+          }}
+          placeholder="Type to search..."
+          size="sm"
+          startContent={<SearchIcon size={18} />}
+          type="search"
+        />
+        <Dropdown placement="bottom-end">
+          <DropdownTrigger>
+          <Avatar
+              isBordered
+              as="button"
+              className="transition-transform"
+              size="sm"
+              src={logo}
+              style={{
+                width: '2rem',
+                height: '2rem',
+                backgroundSize: '100% 100%',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                backgroundImage: `url(${logo})`,
+
+              }}>
+            </Avatar>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Profile Actions" variant="flat">
+          {userCtx.userEmail === null ?
+            <DropdownItem key="profile" className="h-14 gap-2">
+              <p className="font-semibold">Sesion Iniciada en:</p>
+              <p className="font-semibold">{userCtx.userEmail}</p>
+            </DropdownItem>
+             : 
+            null
+            }
+            <DropdownItem key="settings" onClick={() => logOutSession()}>Cerrar Sesion</DropdownItem>
+           
+          </DropdownMenu>
+        </Dropdown>
+      </NavbarContent>
+    </Navbar>
+    </div>
+  );
+}
+
+export default NavBarComponent
+
+
+
+
+/* 
+<NavbarContent className="hidden md:flex">
+          <div className="flex  gap-6">
+          <NavbarItem>
               <Link color="foreground" href="/articulos" className="hover:text-green-600 cursor-pointer hover:font-medium">
                 Articulos
               </Link>
@@ -109,56 +241,4 @@ const NavBarComponent = () =>  {
           </div>         
         </NavbarContent>
       </NavbarContent>
-
-      <NavbarContent as="div" className="items-center" justify="end">
-        <Input
-          classNames={{
-            base: "max-w-full sm:max-w-[10rem] h-10",
-            mainWrapper: "h-full",
-            input: "text-small",
-            inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-          }}
-          placeholder="Type to search..."
-          size="sm"
-          startContent={<SearchIcon size={18} />}
-          type="search"
-        />
-        <Dropdown placement="bottom-end">
-          <DropdownTrigger>
-          <Avatar
-              isBordered
-              as="button"
-              className="transition-transform"
-              size="sm"
-              src={logo}
-              style={{
-                width: '2rem',
-                height: '2rem',
-                backgroundSize: '100% 100%',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                backgroundImage: `url(${logo})`,
-
-              }}>
-            </Avatar>
-          </DropdownTrigger>
-          <DropdownMenu aria-label="Profile Actions" variant="flat">
-          {userCtx.userEmail === null ?
-            <DropdownItem key="profile" className="h-14 gap-2">
-              <p className="font-semibold">Sesion Iniciada en:</p>
-              <p className="font-semibold">{userCtx.userEmail}</p>
-            </DropdownItem>
-             : 
-            null
-            }
-            <DropdownItem key="settings" onClick={() => logOutSession()}>Cerrar Sesion</DropdownItem>
-           
-          </DropdownMenu>
-        </Dropdown>
-      </NavbarContent>
-    </Navbar>
-    </div>
-  );
-}
-
-export default NavBarComponent
+*/

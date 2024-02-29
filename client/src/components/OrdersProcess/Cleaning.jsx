@@ -28,7 +28,7 @@ const Cleaning = () => {
 
   return (
     <div>
-        <NavBarComponent/>
+         <NavBarComponent/>
          <ProcessTables orderStatus="Lavado"/>
     </div>
   )

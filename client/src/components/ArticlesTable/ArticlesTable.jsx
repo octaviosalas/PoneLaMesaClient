@@ -13,6 +13,7 @@ import HistoricArticles from './HistoricArticles';
 import IncreasePriceWithPercentage from '../Modals/IncreasePriceWithPercentage';
 import CreateNewArticle from './CreateNewArticle';
 import getBackendData from '../../Hooks/GetBackendData';
+import CreateSublet from './CreateSublet';
 
 const ArticlesTable = ({}) => {
 
@@ -142,6 +143,7 @@ const ArticlesTable = ({}) => {
               <div className='flex gap-6 mr-2'>
                 <CreateNewArticle updateList={getProductsDataAndCreateTable}/>
                 <IncreasePriceWithPercentage  updateList={getProductsDataAndCreateTable}/>
+                <CreateSublet articles={data}/>
               </div>
               
             </div>

@@ -8,6 +8,7 @@ import ordersRoutes from "./routes/orders.routes.js"
 import collectionsRoutes from "./routes/collections.routes.js"
 import purchasesRoutes from "./routes/purchases.routes.js"
 import clientesRoutes from "./routes/clients.routes.js"
+import subletsRoutes from "./routes/sublets.routes.js"
 
 const app = express()
 const PORT = 4000
@@ -24,6 +25,7 @@ app.use("/orders", ordersRoutes)
 app.use("/collections", collectionsRoutes)
 app.use("/purchases", purchasesRoutes)
 app.use("/clients", clientesRoutes)
+app.use("/sublets", subletsRoutes)
 
 
 

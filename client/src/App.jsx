@@ -9,9 +9,11 @@ import Orders from './pages/Orders'
 import Purchases from './pages/Purchases'
 import Armed from './components/OrdersProcess/Armed'
 import Cleaning from "./components/OrdersProcess/Cleaning"
-import Repart from './components/OrdersProcess/Repart'
+import LocalDeliveries from './components/OrdersProcess/LocalDeliveries'
+import LocalReturns from './components/OrdersProcess/LocalReturns'
+import LogisticRepart from './components/OrdersProcess/LogisticRepart'
+import LogisticToRemove from './components/OrdersProcess/LogisticToRemove'
 import Returned from './components/OrdersProcess/Returned'
-import LocalPickup from './components/OrdersProcess/LocalPickup'
 import EstadisticsOrders from './pages/EstadisticsOrders'
 import EstadisticsArticles from './pages/EstadisticsArticles'
 import EstadisticsClients from './pages/EstadisticsClients'
@@ -34,8 +36,10 @@ function App() {
             <Route path="/clientes" element={<Clients />} />  
             <Route path="/Armado" element={<Armed />} />   
             <Route path="/Lavado" element={<Cleaning />} />   
-            <Route path="/Reparto" element={<Repart />} /> 
-            <Route path="/RetiroEnLocal" element={<LocalPickup />} /> 
+            <Route path="/EntregasLocal" element={<LocalDeliveries />} /> 
+            <Route path="/DevolucionesEnLocal" element={<LocalReturns />} /> 
+            <Route path="/Reparto" element={<LogisticRepart />} /> 
+            <Route path="/Retiros" element={<LogisticToRemove />} /> 
             <Route path="/Reposiciones" element={<Returned />} /> 
             <Route path="/Estadisticas/Articulos" element={<EstadisticsArticles />} /> 
             <Route path="/Estadisticas/Alquileres" element={<EstadisticsOrders />} /> 
