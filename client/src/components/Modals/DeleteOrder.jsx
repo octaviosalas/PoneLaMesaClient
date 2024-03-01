@@ -5,8 +5,9 @@ import DeleteOrderrr from "./DeleteOrderrr";
 import DeleteArticle from "./DeleteArticle";
 import DeletePurchase from "./DeletePurchase";
 import DeleteClient from "./DeleteClient";
+import DeleteProvider from "./DeleteProvider"
 
-const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList}) => {
+const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList, providerData, updateProviderList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [successMessage, setSuccessMessage] = useState(false)
   const [messageSuccesDeleteArticle, setMessageSuccesDeleteArticle] = useState(false)
@@ -132,6 +133,20 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Cliente</ModalHeader>
               <ModalBody>
                 <DeleteClient clientData={clientData} closeModalNow={onClose} updateClientList={updateClientList}/>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+        :
+        null}   
+
+      {type === "providers" ? 
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Proveedor</ModalHeader>
+              <ModalBody>
+                <DeleteProvider providerData={providerData} closeModalNow={onClose} updateProviderList={updateProviderList}/>
               </ModalBody>
             </>
           )}

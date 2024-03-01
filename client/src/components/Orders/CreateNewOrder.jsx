@@ -3,7 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
-import { getDate, getMonth, getYear, getDay } from "../../functions/gralFunctions";
+import { getDate, getMonth, getYear, getDay, formatePrice } from "../../functions/gralFunctions";
 import CreateNewClient from "../Clientes/CreateNewClient";
 import getBackendData from '../../Hooks/GetBackendData';
 
@@ -43,23 +43,31 @@ const CreateNewOrder = ({updateList}) => {
   const [productsSelected, setProductsSelected] = useState([]);
 
 
-  useEffect(() => { 
-   console.log("envie a: ", actualMonth)
-   axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
-        .then((res) => { 
-          console.log(res.data)
-          const data = res.data
-          const getLastOrderMonth = data.sort((a, b) => b.orderNumber - a.orderNumber).map((num) => num.orderNumber)[0]
-          const newOrderNumber = getLastOrderMonth + 1
-          setOrderNumber(newOrderNumber)
-        })
-        .catch((err) => console.log(err))
-  }, [])
 
 
+      const knowWichNumerOfOrder = () => { 
+        console.log("envie a: ", actualMonth)
+        axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
+            .then((res) => { 
+              console.log(res.data)
+              const data = res.data
+              const getLastOrderMonth = data.sort((a, b) => b.orderNumber - a.orderNumber).map((num) => num.orderNumber)[0]
+              if(data.length === 0) { 
+                setOrderNumber(1)
+              } else { 
+                const newOrderNumber = getLastOrderMonth + 1
+                console.log(newOrderNumber)
+                setOrderNumber(newOrderNumber)
+              }
+            
+            })
+            .catch((err) => console.log(err))
+      }
+
+      useEffect(() => { 
+        knowWichNumerOfOrder()
+      }, [])
   
-
-
       const typeOfClients = [
         {
           label: "No Bonificado",
@@ -253,6 +261,8 @@ const CreateNewOrder = ({updateList}) => {
                 setSuccesMessage(true)
                 setTimeout(() => { 
                   closeModal()
+                  knowWichNumerOfOrder()
+                  updateList()
                 }, 2000)
               })
               .catch((err) => { 
@@ -393,7 +403,7 @@ const CreateNewOrder = ({updateList}) => {
                                   <div className="flex gap-2 items-center">
                                     <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
                                     <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>
-                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Unitario Alquiler: </b>{prod.price}</p>
+                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Unitario Alquiler: </b>{formatePrice(prod.price)}</p>
                                   </div>
                                   <div>
                                     <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
@@ -403,7 +413,7 @@ const CreateNewOrder = ({updateList}) => {
                               ))}
                           </div>
                           <div className="flex flex-col mt-2">
-                            <p className="text-zinc-500 text-xs"> <b>Total: </b>{productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)} ARS</p> 
+                            <p className="text-zinc-500 text-xs"> <b>Total: </b>{formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))} ARS</p> 
                           </div>
                         </div>  
                         :
@@ -436,7 +446,7 @@ const CreateNewOrder = ({updateList}) => {
                         </Button>
                      </div>
                      : 
-                     <p className="text-md font-bold text-zinc-600 mt-4">Orden creada Con exito ✔</p>
+                     <p className="text-sm font-bold text-green-800 mt-4">Orden creada Con exito ✔</p>
                       }
                   </ModalFooter> 
                 </div>

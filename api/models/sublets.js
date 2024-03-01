@@ -8,10 +8,10 @@ const subletsSchema = mongoose.Schema({
     amount: { 
         type: Number
     }, 
-    orderId: { 
-        type: String
-    },    
     provider: { 
+        type: String
+    },
+    providerId: { 
         type: String
     },
     date: { 

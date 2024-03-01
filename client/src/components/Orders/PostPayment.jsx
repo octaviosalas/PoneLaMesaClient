@@ -43,6 +43,7 @@ const PostPayment = ({orderData}) => {
     if(account.length !== 0 && payImage.length > 0) { 
       const collecctionData = ({ 
         orderId: orderData.id,
+        collectionType:"order",
         client: orderData.client,
         orderDetail: orderData.detail,
         date: actualDate,

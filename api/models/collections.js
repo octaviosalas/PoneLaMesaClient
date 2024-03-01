@@ -5,6 +5,9 @@ const collectionsSchema = mongoose.Schema({
     orderId: { 
         type: String
     }, 
+    collectionType: { 
+        type: String
+    },
     client: { 
         type: String
     }, 

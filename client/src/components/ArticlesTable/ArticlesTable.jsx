@@ -26,109 +26,116 @@ const ArticlesTable = ({}) => {
     const [waitingData, setWaitingData] = useState(false)
 
 
-      const getProductsDataAndCreateTable =  () => { 
-              setData(queryData)
-              if(queryData.length !== 0) { 
-                console.log(data)
-                const propiedades = Object.keys(queryData[0]).filter(propiedad =>  propiedad !== '_id' &&  propiedad !== '__v');
-                const columnObjects = propiedades.map(propiedad => ({
-                    key: propiedad,
-                    label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
-                    allowsSorting: true
-              }));
-      
-              const modifiedColumnObjects = columnObjects.map(column => {
-                if (column.key === 'precioUnitarioAlquiler') {
-                    return { ...column, label: 'Precio Alquiler' };
-                } else if (column.key === 'precioUnitarioReposicion') {
-                    return { ...column, label: 'Precio Reposición' };
-                } else if (column.key === 'precioUnitarioBonificados') {
-                  return { ...column, label: 'Precio Bonificados' };
-              }   
-                else if (column.key === 'precioUnitarioAlquilerBonificados') {
-                  return { ...column, label: 'Precio Bonificados' };
-              } else {
-                    return column;
-                }
-              });
-      
-             
-              modifiedColumnObjects.push({
-                  key: 'Editar',
-                  label: 'Editar',
-                  cellRenderer: (cell) => { 
-      
-                      const filaActual = cell.row;
-                      const id = filaActual.original._id;
-                      const articleName = filaActual.original.articulo;
-                      const clientsValue = filaActual.original.precioUnitarioAlquiler;
-                      const bonusClientsValue = filaActual.original.precioUnitarioBonificados;
-                      const replacementValue = filaActual.original.precioUnitarioReposicion;    
-                      const item = {
-                      id: id,
-                      productName: articleName,
-                      clientsValue: clientsValue,
-                      bonusClientsValue: bonusClientsValue,
-                      replacementValue: replacementValue                
-                      };
-                      return (
-                        <EditModal type="product" articleData={item} updateChanges={getProductsDataAndCreateTable}/>
-                      );
-                  },
-              })      
-              
-              modifiedColumnObjects.push({
-                key: 'Eliminar',
-                label: 'Eliminar',
+    const getProductsDataAndCreateTable =  () => { 
+      axios.get("http://localhost:4000/products/productsClients")
+           .then((res) => { 
+            const allProducts = res.data
+            console.log(allProducts.filter((prod) => prod.articulo === "Plato playo"))
+            console.log(allProducts)
+            setData(allProducts)
+            if(allProducts.length !== 0) { 
+              console.log(data)
+              const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' &&  propiedad !== '__v');
+              const columnObjects = propiedades.map(propiedad => ({
+                  key: propiedad,
+                  label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
+                  allowsSorting: true
+            }));
+    
+            const modifiedColumnObjects = columnObjects.map(column => {
+              if (column.key === 'precioUnitarioAlquiler') {
+                  return { ...column, label: 'Precio Alquiler' };
+              } else if (column.key === 'precioUnitarioReposicion') {
+                  return { ...column, label: 'Precio Reposición' };
+              } else if (column.key === 'precioUnitarioBonificados') {
+                return { ...column, label: 'Precio Bonificados' };
+            }   
+              else if (column.key === 'precioUnitarioAlquilerBonificados') {
+                return { ...column, label: 'Precio Bonificados' };
+            } else {
+                  return column;
+              }
+            });
+    
+           
+            modifiedColumnObjects.push({
+                key: 'Editar',
+                label: 'Editar',
                 cellRenderer: (cell) => { 
-                  const filaActual = cell.row;
-                  const id = filaActual.original._id;
-                  const item = {
-                  id: id
-                  };
-                  return (
-                     <DeleteOrder type="product" updateListArticles={getProductsDataAndCreateTable} productData={item}/>
+    
+                    const filaActual = cell.row;
+                    const id = filaActual.original._id;
+                    const articleName = filaActual.original.articulo;
+                    const clientsValue = filaActual.original.precioUnitarioAlquiler;
+                    const bonusClientsValue = filaActual.original.precioUnitarioBonificados;
+                    const replacementValue = filaActual.original.precioUnitarioReposicion;    
+                    const item = {
+                    id: id,
+                    productName: articleName,
+                    clientsValue: clientsValue,
+                    bonusClientsValue: bonusClientsValue,
+                    replacementValue: replacementValue                
+                    };
+                    return (
+                      <EditModal type="product" articleData={item} updateChanges={getProductsDataAndCreateTable}/>
                     );
-              },
-             }) 
-      
-             modifiedColumnObjects.push({
-              key: 'Historico',
-              label: 'Historico',
+                },
+            })      
+            
+            modifiedColumnObjects.push({
+              key: 'Eliminar',
+              label: 'Eliminar',
               cellRenderer: (cell) => { 
                 const filaActual = cell.row;
                 const id = filaActual.original._id;
-                const articleName = filaActual.original.articulo;
                 const item = {
-                id: id,
-                articleName: articleName
+                id: id
                 };
                 return (
-                  <HistoricArticles articleData={item}/>
+                   <DeleteOrder type="product" updateListArticles={getProductsDataAndCreateTable} productData={item}/>
                   );
             },
-           })  
-              setColumns(modifiedColumnObjects);
-              console.log(modifiedColumnObjects)
-              if (tableRef.current) {
-                  tableRef.current.updateColumns(modifiedColumnObjects);
-              }          
-               } else { 
-                console.log("vacio")
-                setWaitingData(true)
-               }
-            
-      }
+           }) 
+    
+           modifiedColumnObjects.push({
+            key: 'Historico',
+            label: 'Historico',
+            cellRenderer: (cell) => { 
+              const filaActual = cell.row;
+              const id = filaActual.original._id;
+              const articleName = filaActual.original.articulo;
+              const item = {
+              id: id,
+              articleName: articleName
+              };
+              return (
+                <HistoricArticles articleData={item}/>
+                );
+          },
+         })  
+            setColumns(modifiedColumnObjects);
+            console.log(modifiedColumnObjects)
+            if (tableRef.current) {
+                tableRef.current.updateColumns(modifiedColumnObjects);
+            }          
+             } else { 
+              console.log("vacio")
+             }
+           })
+           .catch((err) => { 
+            console.log(err)
+           })
+    }
 
-      useEffect(() => { 
-        getProductsDataAndCreateTable()
-      }, [queryData])
+    useEffect(() => { 
+      getProductsDataAndCreateTable()
+    }, [])
 
-      const filteredData = data.filter((item) => {
-        return Object.values(item).some((value) =>
-          value.toString().toLowerCase().includes(inputValue.toLowerCase())
-        );
-      });
+    const filteredData = data.filter((item) => {
+      return Object.values(item).some((value) =>
+        value.toString().toLowerCase().includes(inputValue.toLowerCase())
+      );
+    });
 
 
     return (

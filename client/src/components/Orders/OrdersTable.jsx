@@ -11,6 +11,7 @@ import FiltersOrdersTable from './FiltersOrdersTable';
 import { formatePrice } from '../../functions/gralFunctions';
 import PostPayment from './PostPayment';
 import getBackendData from '../../Hooks/GetBackendData';
+import CreateSublet from "../ArticlesTable/CreateSublet"
 
 
 const OrdersTable = () => {
@@ -25,7 +26,7 @@ const OrdersTable = () => {
     const { queryData } = getBackendData(`orders`);
     const [waitingData, setWaitingData] = useState(false)
 
-
+    
 
     const applyFiltersByMonth =  (monthSelected) => {
             const filteringByMonth = filteredData.filter((orders) => orders.month === monthSelected);
@@ -55,53 +56,135 @@ const OrdersTable = () => {
     }
 
     const getDataAndCreateTable = () => { 
-      
-          setData(queryData)
-          if(queryData.length !== 0) { 
-              const propiedades = Object.keys(queryData[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-              && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'  && propiedad !== 'clientId' && propiedad !== 'month' && propiedad !== 'year'
-              && propiedad !== 'day' && propiedad !== 'paid');
-              const columnObjects = propiedades.map(propiedad => ({
-                  key: propiedad,
-                  label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
-                  allowsSorting: true
-              }));
+      axios.get("http://localhost:4000/orders")
+      .then((res) => { 
+        const allOrders = res.data
+        console.log(allOrders)
+        setData(allOrders)
+        if(allOrders.length !== 0) { 
+            const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
+            && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'  && propiedad !== 'clientId' && propiedad !== 'month' && propiedad !== 'year'
+            && propiedad !== 'day' && propiedad !== 'paid');
+            const columnObjects = propiedades.map(propiedad => ({
+                key: propiedad,
+                label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
+                allowsSorting: true
+            }));
 
-              const modifiedColumnObjects = columnObjects.map(column => {
-                  if (column.key === 'date') {
-                      return { ...column, label: 'Fecha' };
-                  } else if (column.key === 'dateOfDelivery') {
-                      return { ...column, label: 'Fecha  Entrega' };
-                  } else if (column.key === 'orderNumber') {
-                      return { ...column, label: 'Orden' };
-                  }  else if (column.key === 'orderStatus') {
-                      return { ...column, label: 'Estado' };
-                  } else if (column.key === 'placeOfDelivery') {
-                      return { ...column, label: 'Entrega' };
-                  }  else if (column.key === 'Entrega') {
-                      return { ...column, label: 'Fecha de Entrega' };
-                  } else if (column.key === 'returnDate') {
-                      return { ...column, label: 'Fecha Devolucion' };
-                  } else if (column.key === 'returnPlace') {
-                      return { ...column, label: 'Devolucion' };
-                  }else if (column.key === 'typeOfClient') {
-                      return { ...column, label: 'Tipo de Cliente' };
-                  }else if (column.key === 'client') {
-                      return { ...column, label: 'Cliente' };
-                  }else {
-                      return column;
-                  }
-              });
-           
-                  modifiedColumnObjects.push({
-                  key: 'Detalle',
-                  label: 'Detalle',
+            const modifiedColumnObjects = columnObjects.map(column => {
+                if (column.key === 'date') {
+                    return { ...column, label: 'Fecha' };
+                } else if (column.key === 'dateOfDelivery') {
+                    return { ...column, label: 'Fecha  Entrega' };
+                } else if (column.key === 'orderNumber') {
+                    return { ...column, label: 'Orden' };
+                }  else if (column.key === 'orderStatus') {
+                    return { ...column, label: 'Estado' };
+                } else if (column.key === 'placeOfDelivery') {
+                    return { ...column, label: 'Entrega' };
+                }  else if (column.key === 'Entrega') {
+                    return { ...column, label: 'Fecha de Entrega' };
+                } else if (column.key === 'returnDate') {
+                    return { ...column, label: 'Fecha Devolucion' };
+                } else if (column.key === 'returnPlace') {
+                    return { ...column, label: 'Devolucion' };
+                }else if (column.key === 'typeOfClient') {
+                    return { ...column, label: 'Tipo de Cliente' };
+                }else if (column.key === 'client') {
+                    return { ...column, label: 'Cliente' };
+                }else {
+                    return column;
+                }
+            });
+         
+                modifiedColumnObjects.push({
+                key: 'Detalle',
+                label: 'Detalle',
+                cellRenderer: (cell) => { 
+                  const filaActual = cell.row;
+                  const id = filaActual.original._id;
+                  const detail = filaActual.original.orderDetail;
+                  const creator = filaActual.original.orderCreator;
+                  const client = filaActual.original.client;
+                  const day = filaActual.original.day;
+                  const month = filaActual.original.month;
+                  const year = filaActual.original.year;
+                  const total = filaActual.original.total;
+                  const item = {
+                  id: id,
+                  detail: detail,
+                  creator: creator,
+                  day: day,
+                  month: month,
+                  year: year,
+                  total: total,
+                  client: client
+                  };
+                  return (
+                     <OrderDetail  orderData={item}/>
+                    );
+              },
+                }) 
+
+                modifiedColumnObjects.push({
+                  key: 'Editar',
+                  label: 'Editar',
+                  cellRenderer: (cell) => { 
+
+                      const filaActual = cell.row;
+                      const id = filaActual.original._id;
+                      const client = filaActual.original.client;
+                      const order = filaActual.original.orderNumber;
+                      const month = filaActual.original.month;
+                      const date = filaActual.original.date;
+                      const dateOfDelivery = filaActual.original.dateOfDelivery;
+                      const placeOfDelivery = filaActual.original.placeOfDelivery;
+                      const returnDate = filaActual.original.returnDate;
+                      const returnPlace = filaActual.original.returnPlace;
+                      const orderDetail = filaActual.original.orderDetail;
+                      const item = {
+                      id: id,
+                      client: client,
+                      order: order,
+                      month: month,
+                      date: date,
+                      dateOfDelivery: dateOfDelivery,
+                      returnDate: returnDate,
+                      orderDetail: orderDetail,
+                      returnPlace: returnPlace, 
+                      placeOfDelivery: placeOfDelivery              
+                      };
+                      return (
+                        <EditModal type="orders" orderData={item} updateList={getDataAndCreateTable}/>
+                      );
+                  },
+                })          
+                             
+                modifiedColumnObjects.push({
+                key: 'Eliminar',
+                label: 'Eliminar',
+                cellRenderer: (cell) => { 
+                  const filaActual = cell.row;
+                  const id = filaActual.original._id;
+                  const item = {
+                  id: id
+                  };
+                  return (
+                     <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
+                    );
+              },
+                }) 
+
+                modifiedColumnObjects.push({
+                  key: 'Pago',
+                  label: 'Pago',
                   cellRenderer: (cell) => { 
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
                     const detail = filaActual.original.orderDetail;
                     const creator = filaActual.original.orderCreator;
                     const client = filaActual.original.client;
+                    const clientId = filaActual.original.clientId;
                     const day = filaActual.original.day;
                     const month = filaActual.original.month;
                     const year = filaActual.original.year;
@@ -114,116 +197,38 @@ const OrdersTable = () => {
                     month: month,
                     year: year,
                     total: total,
-                    client: client
+                    client: client,
+                    clientId: clientId
                     };
                     return (
-                       <OrderDetail  orderData={item}/>
+                       <PostPayment orderData={item}/>
                       );
                 },
                   }) 
 
-                  modifiedColumnObjects.push({
-                    key: 'Editar',
-                    label: 'Editar',
-                    cellRenderer: (cell) => { 
-
-                        const filaActual = cell.row;
-                        const id = filaActual.original._id;
-                        const client = filaActual.original.client;
-                        const order = filaActual.original.orderNumber;
-                        const month = filaActual.original.month;
-                        const date = filaActual.original.date;
-                        const dateOfDelivery = filaActual.original.dateOfDelivery;
-                        const placeOfDelivery = filaActual.original.placeOfDelivery;
-                        const returnDate = filaActual.original.returnDate;
-                        const returnPlace = filaActual.original.returnPlace;
-                        const orderDetail = filaActual.original.orderDetail;
-                        const item = {
-                        id: id,
-                        client: client,
-                        order: order,
-                        month: month,
-                        date: date,
-                        dateOfDelivery: dateOfDelivery,
-                        returnDate: returnDate,
-                        orderDetail: orderDetail,
-                        returnPlace: returnPlace, 
-                        placeOfDelivery: placeOfDelivery              
-                        };
-                        return (
-                          <EditModal type="orders" orderData={item} updateList={getDataAndCreateTable}/>
-                        );
-                    },
-                  })          
-                               
-                  modifiedColumnObjects.push({
-                  key: 'Eliminar',
-                  label: 'Eliminar',
-                  cellRenderer: (cell) => { 
-                    const filaActual = cell.row;
-                    const id = filaActual.original._id;
-                    const item = {
-                    id: id
-                    };
-                    return (
-                       <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
-                      );
-                },
-                  }) 
-
-                  modifiedColumnObjects.push({
-                    key: 'Pago',
-                    label: 'Pago',
-                    cellRenderer: (cell) => { 
-                      const filaActual = cell.row;
-                      const id = filaActual.original._id;
-                      const detail = filaActual.original.orderDetail;
-                      const creator = filaActual.original.orderCreator;
-                      const client = filaActual.original.client;
-                      const clientId = filaActual.original.clientId;
-                      const day = filaActual.original.day;
-                      const month = filaActual.original.month;
-                      const year = filaActual.original.year;
-                      const total = filaActual.original.total;
-                      const item = {
-                      id: id,
-                      detail: detail,
-                      creator: creator,
-                      day: day,
-                      month: month,
-                      year: year,
-                      total: total,
-                      client: client,
-                      clientId: clientId
-                      };
-                      return (
-                         <PostPayment orderData={item}/>
-                        );
-                  },
-                    }) 
-
-                    setColumns(modifiedColumnObjects);
-                    console.log(modifiedColumnObjects)
-                    if (tableRef.current) {
-                    tableRef.current.updateColumns(modifiedColumnObjects);
-                    }            
-              }else { 
-                console.log("No hay ordenes")
-                setWaitingData(true)
-              }
-          
-       }
+                  setColumns(modifiedColumnObjects);
+                  console.log(modifiedColumnObjects)
+                  if (tableRef.current) {
+                  tableRef.current.updateColumns(modifiedColumnObjects);
+                  }            
+            }else { 
+              console.log("No hay ordenes")
+            }
+          })
+          .catch((err) => { 
+          console.log(err)
+          })
+     }
 
       useEffect(() => { 
           getDataAndCreateTable()
-      }, [queryData])
+      }, [])
 
       const filteredData = data.filter((item) => {
           return Object.values(item).some((value) =>
             value.toString().toLowerCase().includes(inputValue.toLowerCase())
           );
         });
-
 
   return (
     <div>
@@ -240,8 +245,9 @@ const OrdersTable = () => {
                         applyOrderStatusFilter={applyFiltersByOrderState}
                         isFilterApplied={isFilterApplied}/> 
                   </div>
-                  <div className='flex justify-start mr-4'>
+                  <div className='flex justify-start mr-4 gap-6'>
                       <CreateNewOrder updateList={getDataAndCreateTable}/>
+                      <CreateSublet articles={data}/>
                   </div>
                            
               </div>
