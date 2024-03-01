@@ -50,6 +50,19 @@ export const getOrderById = async (req, res) => {
      
 }
 
+export const getMonthlyOrders = async (req, res) => { 
+  const {month} = req.params
+  console.log(month)
+  console.log("me llego algo")
+  try {
+     const justThisMonthOrders = await Orders.find({month: month})
+     res.status(200).json(justThisMonthOrders);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las ordenes del mes' });
+    console.log(error)
+  }
+}
+
 export const createOrder = async (req, res) => { 
     console.log(req.body)
     try {
@@ -122,7 +135,6 @@ export const addPaid = async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     } 
 }
-
 
 export const deleteAndReplenishArticles = async (req, res) => { 
   const { orderId } = req.params;
@@ -205,5 +217,28 @@ export const updateOrderDetail = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
+
+export const addNewProductsToOrderDetail = async (req, res) => {
+  const { orderId } = req.params;
+  const productsSelected = req.body; 
+
+  try {
+    const existingOrder = await Orders.findById(orderId);
+    if (!existingOrder) {
+      return res.status(404).json({ error: 'Orden no encontrada' });
+    }
+
+    existingOrder.orderDetail.push(...productsSelected);
+    existingOrder.total += productsSelected.reduce((acc, obj) => acc + obj.choosenProductTotalPrice, 0);
+
+    const updatedOrder = await existingOrder.save();
+    await decrementarStock(productsSelected);
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al agregar nuevos productos a la orden' });
   }
 };

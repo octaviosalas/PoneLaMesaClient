@@ -20,8 +20,119 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
     const [theRealDataOfOrderDetail, setTheRealDataOfOrderDetail] = useState(orderData.orderDetail)
     const [modifyData, setModifyData] = useState(false)
     const [modifyOrderDetailData, setModifyOrderDetailData] = useState(false)
+    const [addNewProductToOrder, setAddNewProductToOrder] = useState(false)
+    const [allArticles, setAallArticles] = useState([])
+    const [choosenProductName, setChoosenProductName] = useState("")
+    const [choosenProductId, setChoosenProductId] = useState("")
+    const [choosenProductPrice, setChoosenProductPrice] = useState("")
+    const [choosenProductPriceReplacement, setChoosenProductPriceReplacement] = useState("")
+    const [choosenProductQuantity, setChoosenProductQuantity] = useState("")
+    const [choosenProductStock, setChoosenProductStock] = useState("")
+    const [filteredNames, setFilteredNames] = useState("")
+    const [productsSelected, setProductsSelected] = useState("")
+    const [insufficientStock, setInsufficientStock] = useState("")
+    const [successAddMessage, setSuccessAddMessage] = useState(false)
 
 
+    //Funciones para agregar nuevos articulos a la Orden 
+     const getClientsProductsData = () => { 
+      axios.get("http://localhost:4000/products/productsClients")
+            .then((res) => { 
+              console.log(res.data)
+              setAallArticles(res.data);
+            })
+            .catch((err) => { 
+              console.log(err)
+            })
+      }
+
+      useEffect(() => { 
+        getClientsProductsData()
+      }, [])
+
+      const handleInputChange = (e) => { 
+        setChoosenProductName(e);
+        if(e.length === 0) { 
+          setFilteredNames([])
+          setChoosenProductName("")
+          setChoosenProductId("")
+        } else { 
+          const useInputToFindTheProduct = allArticles.filter((prod) => prod.articulo.toLowerCase().includes(e))
+          setFilteredNames(useInputToFindTheProduct)
+          console.log(filteredNames)
+        }
+      }
+
+      
+      const chooseProduct = (name, id, price, replacementPrice, stock) => { 
+        console.log("recibi", id, name, price, replacementPrice, stock)
+        setChoosenProductName(name)
+        setChoosenProductId(id)
+        setChoosenProductPrice(price)
+        setChoosenProductPriceReplacement(replacementPrice)
+        setChoosenProductStock(stock)
+        setFilteredNames("")
+      }
+
+      const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock) => {
+        console.log("STOCK DEL PRODUCTO", choosenProductStock)
+        console.log("CANTIDAD ELEGIDA", quantity)
+        if(quantity < choosenProductStock) { 
+          const choosenProductTotalPrice = price * quantity
+          const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
+          setProductsSelected([...productsSelected, newProduct]);
+          setChoosenProductId("")
+          setChoosenProductName("")
+          setChoosenProductQuantity("")
+          setChoosenProductPriceReplacement("")
+          setChoosenProductPrice("")
+          setChoosenProductStock(0)
+          setTimeout(() => {
+              console.log(productsSelected)
+          }, 1500)
+        } else { 
+          setInsufficientStock(true)
+          setTimeout(() => { 
+            setInsufficientStock(false)
+          }, 1500)
+        }
+      
+      };
+
+      const handleRemoveProduct = (productIdToDelete) => {
+        setProductsSelected((prevProducts) =>
+          prevProducts.filter((prod) => prod.productId !== productIdToDelete)
+        );
+      };
+
+      const cancelAddProduct = () => { 
+        setAddNewProductToOrder(false)
+        setProductsSelected([])
+        setChoosenProductName("")
+        setChoosenProductPrice("")
+        setChoosenProductId("")
+        setChoosenProductQuantity("")
+      }
+
+      const addNewArticlesToOrder = () => { 
+        axios.put(`http://localhost:4000/orders/addNewOrderDetail/${orderData.id}`, productsSelected)
+             .then((res) => { 
+              console.log(res.data)
+              updateList()
+              setSuccessAddMessage(true)
+              setTimeout(() => { 
+                closeModalNow()
+                setSuccessAddMessage(false)
+              }, 1500)
+             })
+             .catch((err) => { 
+              console.log(err)
+             })
+      }
+ 
+
+
+     //Funciones para editar datos de la orden - Cantidad de cada Producto Elegido
       const changeOrderState = () => { 
         if(status === "Selecciona un Estado ↓") { 
           setErrorMessage(true)
@@ -128,10 +239,6 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                 .catch((err) => console.log(err))
       }
     
-      const comeBackToFirstStep = () => { 
-        setStep(0)
-      }
-
       const handleQuantityChange = (index, newQuantity) => {
         const updatedOrderDetailArray = [...newOrderDetailArray];
         updatedOrderDetailArray[index] = {
@@ -140,16 +247,11 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
           choosenProductTotalPrice: newQuantity * updatedOrderDetailArray[index].price
         };
         setNewOrderDetailArray(updatedOrderDetailArray);
-
-
       };
 
-
-
-      useEffect(() => { 
-        console.log(successMessage)
-       }, [successMessage])
-    
+      const comeBackToFirstStep = () => { 
+        setStep(0)
+      }
 
 
   return (
@@ -269,11 +371,97 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                                 </div>
                               ))}
                               <div className="flex items-center justify-center mt-2">
-                                <p className="font-bold text-zinc-600">Total: {formatePrice(newOrderDetailArray.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))}</p>
+                              {productsSelected.length > 0 ? (
+                                  <p className="font-bold text-zinc-600">       
+                                    Total: {formatePrice(
+                                      newOrderDetailArray.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) +
+                                      productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)
+                                    )}
+                                  </p>
+                                ) : (
+                                  <p>
+                                    Total: {formatePrice(newOrderDetailArray.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))}
+                                  </p>
+                                )}
                               </div>
+
+                              {addNewProductToOrder ? 
+                                <div className="flex flex-col items-center justify-center">
+                                    <Input type="text" label="Articulo" value={choosenProductName} variant="underlined" className="w-52" onChange={(e) => handleInputChange(e.target.value)}/>
+                                    {   filteredNames !== "" ? 
+                                            <div className='absolute z-10  bg-white shadow-xl rounded-lg mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' 
+                                             style={{ backdropFilter: 'brightness(100%)' }}>
+                                                {filteredNames.map((prod) => (
+                                                    <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500" key={prod._id} 
+                                                        onClick={() =>  chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion, prod.stock)} >
+                                                        {prod.articulo}
+                                                    </p>
+                                                ))}
+                                            </div>
+                                        : null
+                                       }
+                                    <Input type="number" label="Cantidad" value={choosenProductQuantity} variant="underlined" className="w-52" onChange={(e) => setChoosenProductQuantity(e.target.value)}/>
+                                    {
+                                        choosenProductName.length !== 0 && choosenProductQuantity.length !== 0 ?
+                                        <Button 
+                                          className="mt-6 w-60 font-medium text-white bg-green-800"  
+                                          onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, choosenProductPriceReplacement, choosenProductStock )}>
+                                              Añadir
+                                          </Button> 
+                                        : 
+                                        null
+                                      }
+
+                                  {productsSelected.length !== 0 ? 
+                                    <div className="flex flex-col">
+                                      <div className="flex flex-col mt-6">
+                                          {productsSelected.map((prod) => ( 
+                                            <div className="flex justify-between gap-4 items-center mt-1" key={prod._id}>
+                                              <div className="flex gap-2 items-center">
+                                                <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
+                                                <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>
+                                                <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Unitario Alquiler: </b>{prod.price}</p>
+                                              </div>
+                                              <div>
+                                                <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
+                                              </div>
+                                              
+                                            </div>
+                                          ))}
+                                      </div>
+                                      <div className="flex flex-col mt-2">
+                                        <p className="text-zinc-500 text-xs"> <b>Total: </b>{productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)} ARS</p> 
+                                      </div>
+                                    </div>  
+                                    :
+                                    null
+                                  } 
+
+                                  {
+                                  insufficientStock ?
+                                  <div className="flex items-center justify-center mt-4">
+                                        <p className="font-medium text-sm text-green-600 underline">Stock Insuficiente</p>
+                                  </div>
+                                    : 
+                                    null
+                                  }  
+                                </div>
+                                :
+                                null
+                              }
+
                             <div className="flex items-center gap-6 mt-6 mb-2">
                                <Button className="bg-green-800 font-bold text-white" onClick={() => changeOrderDetail()}>Confirmar</Button>
-                               <Button className="bg-green-800 font-bold text-white">Cancelar</Button>
+
+                               {addNewProductToOrder ? <Button className="bg-green-800 font-bold text-white" onClick={() => addNewArticlesToOrder()}>Finalizar y Agregar</Button>
+                               : <Button className="bg-green-800 font-bold text-white" onClick={() => setAddNewProductToOrder(true)}>Agregar Nuevo Producto</Button>}
+                               
+                              {addNewProductToOrder ? <Button className="bg-green-800 font-bold text-white" onClick={() => cancelAddProduct()}>Cancelar Agregados</Button> :
+                               <Button className="bg-green-800 font-bold text-white">Cancelar</Button>}
+                            
+                            </div>
+                            <div className="mt-6">
+                                {successAddMessage ? <p className="font-bold mt-6 text-green-800 text-sm">Añadido Correctamente</p> : null}
                             </div>
                           </div>
                        : null}

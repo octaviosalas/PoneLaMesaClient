@@ -5,7 +5,8 @@ import {Select, SelectItem} from "@nextui-org/react";
 import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
-
+import Dropzone from 'react-dropzone';
+import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 
 const PostPayment = ({orderData}) => {
 
@@ -20,6 +21,8 @@ const PostPayment = ({orderData}) => {
   const [succesChangeState, setSuccesChangeState] = useState(false)
   const [succesCollectionSaved, setSuccesCollectionSaved] = useState(false)
   const [succesOperation, setSuccesOperation] = useState(false)
+  const [payImage, setPayImage] = useState("")
+
 
   const availablesAccounts = [
     {
@@ -37,8 +40,7 @@ const PostPayment = ({orderData}) => {
   ]
 
   const addNewCollection = () => { 
-    if(account.length !== 0) { 
-
+    if(account.length !== 0 && payImage.length > 0) { 
       const collecctionData = ({ 
         orderId: orderData.id,
         client: orderData.client,
@@ -50,7 +52,7 @@ const PostPayment = ({orderData}) => {
         amount: orderData.total,
         account: account,
         loadedBy: userCtx.userName,
-
+        voucher: payImage
       })
 
       axios.put(`http://localhost:4000/orders/addPaid/${orderData.id}`)
@@ -83,11 +85,32 @@ const PostPayment = ({orderData}) => {
     }
     }
   
-
   const handleClose = () => { 
     onClose()
     setAccount("")
   }
+
+  const handleDropImage = (files) => {
+    const uploaders = files.map((file) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('tags', `codeinfuse, medium, gist`);
+      formData.append('upload_preset', 'App-Cars');
+      formData.append('api_key', '687985773113572');
+      formData.append('timestamp', Date.now() / 1000 / 0);
+     
+      return axios
+        .post('https://api.cloudinary.com/v1_1/dgheotuij/image/upload', formData, {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+        })
+        .then((res) => {
+          const data = res.data;
+          const fileURL = data.secure_url;
+          console.log(fileURL);
+          setPayImage(fileURL) 
+        });
+    });
+  };
 
   return (
     <>
@@ -114,6 +137,33 @@ const PostPayment = ({orderData}) => {
                           ))}
                         </Select>
                     </div>
+
+                  {account.length > 0?
+                    <div>
+                        <Dropzone onDrop={handleDropImage}>
+                          {({ getRootProps, getInputProps }) => (
+                              <div {...getRootProps({ className: 'dropzone' })}>
+                                   <input {...getInputProps()} />
+                                      <div className="mt-4 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10" style={{ backgroundImage: `url(${payImage})`, backgroundSize: 'cover' }}>
+                                        <div className="text-center">
+                                          <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
+                                         <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                                              <label
+                                                  htmlFor="file-upload"
+                                                  className="relative cursor-pointer rounded-md bg-white font-semibold text-green-800 focus-within:outline-none  "
+                                                  >
+                                                  <span>Upload a file</span>
+                                               <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                                           </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </div> )}
+                         </Dropzone>
+                    </div> 
+                    :
+                    null}
+
                  </ModalHeader>
               <ModalBody>
                

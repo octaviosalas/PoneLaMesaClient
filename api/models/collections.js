@@ -31,7 +31,10 @@ const collectionsSchema = mongoose.Schema({
     },   
     loadedBy: { 
         type: String
-    },   
+    },  
+    voucher: { 
+        type: String
+    } 
 })
 
 const Collections = mongoose.model("Collections", collectionsSchema)

@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import { getDate, getMonth, getYear, getDay } from "../../functions/gralFunctions";
 import CreateNewClient from "../Clientes/CreateNewClient";
+import getBackendData from '../../Hooks/GetBackendData';
 
 const CreateNewOrder = ({updateList}) => {
 
@@ -40,6 +41,23 @@ const CreateNewOrder = ({updateList}) => {
   const [choosenProductStock, setChoosenProductStock] = useState(0)
   const [choosenProductPriceReplacement, setChoosenProductPriceReplacement] = useState("")
   const [productsSelected, setProductsSelected] = useState([]);
+
+
+  useEffect(() => { 
+   console.log("envie a: ", actualMonth)
+   axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
+        .then((res) => { 
+          console.log(res.data)
+          const data = res.data
+          const getLastOrderMonth = data.sort((a, b) => b.orderNumber - a.orderNumber).map((num) => num.orderNumber)[0]
+          const newOrderNumber = getLastOrderMonth + 1
+          setOrderNumber(newOrderNumber)
+        })
+        .catch((err) => console.log(err))
+  }, [])
+
+
+  
 
 
       const typeOfClients = [

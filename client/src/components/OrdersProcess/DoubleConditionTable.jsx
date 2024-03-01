@@ -23,11 +23,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [inputValue, setInputValue] = useState("")
     const [loadData, setLoadData] = useState(true)
-    const [actualDay, setActualDay] = useState(getDay())
-    const [actualMonth, setActualMonth] = useState(getMonth())
-    const [actualYear, setActualYear] = useState(getYear())
-    const [actualDate, setActualDate] = useState(getDate())
-    const [viewJustToday, setViewJustToday] = useState(false)
+
 
     useEffect(() => { 
        setData(tableData)
