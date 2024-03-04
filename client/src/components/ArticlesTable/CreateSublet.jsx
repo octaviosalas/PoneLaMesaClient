@@ -1,12 +1,15 @@
 import React from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem, User} from "@nextui-org/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { formatePrice, getEveryProviders, getProductsClients, getDate, getDay, getMonth, getYear } from "../../functions/gralFunctions";
+import { useContext } from "react";
+import { UserContext } from "../../store/userContext";
 
 const CreateSublet = () => {
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure()
+  const userCtx = useContext(UserContext)
   const [everyArticles, setEveryArticles] = useState([])
   const [productsChoosen, setProductsChoosen] = useState([])
   const [productChoosenName, setProductChoosenName] = useState("")
@@ -21,7 +24,12 @@ const CreateSublet = () => {
   const [actualDay, setActualDay] = useState(getDay())
   const [actualMonth, setActualMonth] = useState(getMonth())
   const [actualYear, setActualYear] = useState(getYear())
+  const [missedData, setMissedData] = useState(false)
+  const [errorText, setErrorText] = useState("")
+  const [succesMessage, setSuccesMessage] = useState(false)
 
+
+    //Funciones para obtener proveedores
     const getProviders = async () => { 
       const data = await getEveryProviders()
       setAllProviders(data)
@@ -46,6 +54,7 @@ const CreateSublet = () => {
       console.log(everyArticles)
     }, [everyArticles])
 
+    //Funciones para Input automatico de productos
     const handleProductChange = (e) => { 
       setProductChoosenName(e)
       if(e.length === 0) { 
@@ -69,8 +78,6 @@ const CreateSublet = () => {
     const addProductSelected = (productName, productId, quantity, price) => {
         const numericPrice = parseFloat(price); 
         const numericQuantity = parseFloat(quantity); 
-        console.log(typeof numericPrice)
-        console.log(typeof numericQuantity)
         const newProduct = { productName, productId, quantity: numericQuantity, price: numericPrice };
         setProductsChoosen([...productsChoosen, newProduct]);
         setProductChoosenId("")
@@ -85,6 +92,7 @@ const CreateSublet = () => {
       );
     };
 
+    //Funcion para creacion de subalquiler y gasto.
     const addNewSublet = () => { 
       const newSubletData = ({ 
         productsDetail: productsChoosen,
@@ -96,12 +104,62 @@ const CreateSublet = () => {
         year: actualYear,
         date: actualDate,
       })
-      axios.post("http://localhost:4000/sublets")
-          .then((res) => { 
-            console.log(res.data)
-          })
-          .catch((err) => console.log(err))  
+
+      const newExpense = ({ 
+        loadedByName: userCtx.userName,
+        loadedById: userCtx.userId,
+        typeOfExpense: "sublet",
+        amount: productsChoosen.reduce((acc, el) => acc + el.price, 0),
+        date: actualDate,
+        day: actualDay,
+        month: actualMonth,
+        year: actualYear,
+        expenseDetail: productsChoosen,
+        providerName: providerChoosen,
+        providerId: providerChoosenId
+      }) 
+
+      if(userCtx.userName === null || userCtx.userEmail === null) { 
+        setMissedData(true)
+        setErrorText("Debes iniciar Sesion para almacenar un SubAlquiler")
+        setTimeout(() => { 
+          setMissedData(false)
+        }, 1500)
+      } else if (providerChoosen === null  || providerChoosenId === null || productsChoosen.reduce((acc, el) => acc + el.price, 0) <= 0  || productsChoosen.length === 0) { 
+        setMissedData(true)
+        setErrorText("Faltan datos para completar el proceso")
+        setTimeout(() => { 
+          setMissedData(false)
+        }, 1500)
+      } else { 
+
+        axios.post("http://localhost:4000/sublets", newSubletData)
+        .then((res) => { 
+          console.log(res.data)
+          setSuccesMessage(true)
+          setTimeout(() => { 
+            setSuccesMessage(false)
+            onClose()
+          }, 1500)
+        })
+        .catch((err) => console.log(err))  
+
+         axios.post("http://localhost:4000/expenses/addNewExpense", newExpense)     
+         .then((res) => { 
+          console.log(res.data)
+         })
+         .catch((err) => { 
+          console.log(err)
+         })
+      }
+
+
+    
     }
+
+    useEffect(() => { 
+      console.log(productsChoosen)
+    }, [productsChoosen])
 
   return (
     <>
@@ -168,14 +226,19 @@ const CreateSublet = () => {
                         null
                       }
               </ModalBody>
-              <ModalFooter className="mt-4 flex items-center justify-center">
-                <Button className="bg-green-800 w-52 text-white font-medium text-sm"   onClick={() => console.log(productsChoosen)}>
-                  Confirmar
-                </Button>
-                <Button className="bg-green-800 w-52 text-white font-medium text-sm"  onPress={onClose}>
-                  Cancelar
-                </Button>
-              </ModalFooter>
+                  <ModalFooter className="mt-4 flex items-center justify-center">
+                    <Button className="bg-green-800 w-52 text-white font-medium text-sm"   onClick={() => addNewSublet()}>
+                      Confirmar
+                    </Button>
+                    <Button className="bg-green-800 w-52 text-white font-medium text-sm"  onPress={onClose}>
+                      Cancelar
+                    </Button>
+                  </ModalFooter>
+                  
+                  <div className="mt-2 mb-4 flex items-center justify-center">
+                     {missedData ? <p className="text-green-800 font-medium text-sm mt-6">{errorText}</p> : null}
+                     {succesMessage ? <p className="text-green-800 font-medium text-sm mt-6"> SubAlquiler Creado con exito</p> : null}
+                  </div>
             </>
           )}
         </ModalContent>

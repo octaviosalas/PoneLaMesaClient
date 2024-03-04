@@ -45,9 +45,29 @@ export const getProductsBonusClients = async () => {
     }
   };
 
+  export const getSublets = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/sublets");
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   export const getEveryProviders = async () => {
     try {
       const response = await axios.get("http://localhost:4000/providers");
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  export const getEveryExpenses = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/expenses");
       return response.data;
     } catch (error) {
       console.error(error);

@@ -1,8 +1,8 @@
 import React from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem} from "@nextui-org/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { getMonth, getDate, getDay, getYear } from "../../functions/gralFunctions";
+import { getMonth, getDate, getDay, getYear, getEveryProviders } from "../../functions/gralFunctions";
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import { getProductsClients } from "../../functions/gralFunctions";
@@ -11,7 +11,10 @@ const CreateNewPurchase = ({update}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [allProducts, setAllProducts] = useState([])
   const [filteredNames, setFilteredNames] = useState("")
+  const [allProviders, setAllProviders] = useState("")
   const [choosenProductName, setChoosenProductName] = useState("")
+  const [choosenProviderName, setChoosenProviderName] = useState("")
+  const [choosenProviderId, setChoosenProviderId] = useState("")
   const [choosenProductQuantity, setChoosenProductQuantity] = useState("")
   const [choosenProductValue, setChoosenProductValue] = useState("")
   const [choosenProductId, setChoosenProductId] = useState("")
@@ -21,9 +24,31 @@ const CreateNewPurchase = ({update}) => {
   const [actualDay, setActualDay] = useState(getDay())
   const [actualYear, setActualYear] = useState(getYear())
   const [succesPurchase, setSuccesPurchase] = useState(false)
-
   const userCtx = useContext(UserContext)
 
+  //Funciones para obtener proveedores
+
+  const getProviders = async () => { 
+    const data = await getEveryProviders()
+    setAllProviders(data)
+  }
+
+  useEffect(() => { 
+    getProviders()
+  }, [])
+
+  const selectProvider = (name, id) => { 
+    setChoosenProviderName(name)
+    setChoosenProviderId(id)
+  }
+
+  useEffect(() => { 
+    console.log(choosenProviderId)
+    console.log(choosenProviderName)
+  }, [choosenProviderId, choosenProviderName])
+
+
+  //Funciones para obtener productos
   const getClientsProductsData = () => { 
     axios.get("http://localhost:4000/products/productsClients")
           .then((res) => { 
@@ -77,7 +102,7 @@ const CreateNewPurchase = ({update}) => {
 
 
   const createNewPurchase = () => { 
-    if(productsSelected.length !== 0) {    
+    if(productsSelected.length !== 0 && userCtx.userId !== null && userCtx.userName !== null && productsSelected.reduce((acc, el) => acc + el.value, 0) > 0) {    
         const newPurchase = ({ 
            date: actualDate,
            day: actualDay,
@@ -88,7 +113,21 @@ const CreateNewPurchase = ({update}) => {
            purchaseDetail: productsSelected
 
         })
-        console.log(newPurchase)
+
+        const newExpense = ({ 
+          loadedByName: userCtx.userName,
+          loadedById: userCtx.userId,
+          typeOfExpense: "purchase",
+          amount: productsSelected.reduce((acc, el) => acc + el.value, 0),
+          date: actualDate,
+          day: actualDay,
+          month: actualMonth,
+          year: actualYear,
+          expenseDetail: productsSelected,
+          providerName: choosenProviderName,
+          providerId: choosenProviderId
+        })
+
         axios.post("http://localhost:4000/purchases/create", newPurchase)
              .then((res) => { 
                 console.log(res.data)
@@ -103,6 +142,14 @@ const CreateNewPurchase = ({update}) => {
              .catch((err) => { 
                 console.log(err)
              })
+
+        axios.post("http://localhost:4000/expenses/addNewExpense", newExpense)     
+            .then((res) => { 
+              console.log(res.data)
+            })
+            .catch((err) => { 
+              console.log(err)
+            })
     } else { 
         console.log("agrega productos")
     }
@@ -120,6 +167,13 @@ const CreateNewPurchase = ({update}) => {
             <>
               <ModalHeader className="flex flex-col text-md text-zinc-600 font-medium gap-1">Crear Compra</ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">
+                  <Select label="Proveedor" className="w-64 2xl:w-72" variant="underlined">
+                        {allProviders.map((prov) => (
+                          <SelectItem key={prov._id} value={prov.name} onClick={() => selectProvider(prov.name, prov._id)}>
+                            {prov.name}
+                          </SelectItem>
+                        ))}
+                  </Select> 
                   <Input type="text" value={choosenProductName} className="w-64 2xl:w-72" variant="bordered" label="Producto" onChange={(e) => handleInputChange(e.target.value)}/>
                   <div className="">
                         {

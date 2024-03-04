@@ -68,9 +68,15 @@ const NavBarComponent = () =>  {
                 </Dropdown>
           </NavbarItem>
           <NavbarItem>
-              <Link color="foreground" href="/articulos" className="hover:text-green-600 cursor-pointer hover:font-medium">
-                Articulos
-              </Link>
+                 <Dropdown>
+                      <DropdownTrigger>
+                          <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Articulos </p>
+                      </DropdownTrigger>
+                        <DropdownMenu aria-label="Static Actions">
+                          <DropdownItem key="arm" onClick={() => goTo("articulos")}>Stock</DropdownItem>
+                          <DropdownItem key="ar" onClick={() => goTo("subalquileres")}>Sub Alquileres</DropdownItem>                          
+                        </DropdownMenu>
+                </Dropdown>
           </NavbarItem>
           <NavbarItem>
                  <Dropdown>

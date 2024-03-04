@@ -26,9 +26,6 @@ const subletsSchema = mongoose.Schema({
     year: { 
         type: Number
     },
-    status: { 
-        type: String
-    } 
 })
 
 const Sublets = mongoose.model("Sublets", subletsSchema)
