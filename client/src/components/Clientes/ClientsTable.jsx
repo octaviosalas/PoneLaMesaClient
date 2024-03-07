@@ -45,6 +45,8 @@ const ClientsTable = () => {
                  return { ...column, label: 'Email' };
                 }   else if (column.key === 'home') {
                     return { ...column, label: 'Direccion' };
+                }   else if (column.key === 'typeOfClient') {
+                  return { ...column, label: 'Cliente' };
                 }  else if (column.key === 'email') {
                     return { ...column, label: 'Email' };
                 }else {

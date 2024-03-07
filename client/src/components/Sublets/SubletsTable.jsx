@@ -6,6 +6,7 @@ import EditModal from '../Modals/EditModal';
 import OrderDetail from '../Orders/OrderDeatil';
 import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
+import UseSubletToOrder from './UseSubletToOrder';
 
 
 const SubletsTable = ({sublets, updateSublestList}) => {
@@ -26,8 +27,7 @@ const SubletsTable = ({sublets, updateSublestList}) => {
 
         const getDataAndCreateTable = () => { 
             if(data.length !== 0) { 
-            const propiedades = Object.keys(sublets[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v'  && propiedad !== 'providerId' 
-                                           &&  propiedad !== 'day' && propiedad !== 'month' && propiedad !== 'year'  && propiedad !== 'productsDetail' );
+            const propiedades = Object.keys(sublets[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v'  && propiedad !== 'providerId' &&  propiedad !== 'day' && propiedad !== 'month' && propiedad !== 'year'  && propiedad !== 'productsDetail' );
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -45,6 +45,28 @@ const SubletsTable = ({sublets, updateSublestList}) => {
                         return column;
                     }
                 });
+
+                modifiedColumnObjects.push({
+                  key: 'Derivar',
+                  label: 'Derivar',
+                  cellRenderer: (cell) => { 
+                      const filaActual = cell.row;
+                      const id = filaActual.original._id;
+                      const productsDetail = filaActual.original.productsDetail;
+                      const amount = filaActual.original.amount;
+                      const provider = filaActual.original.provider;
+                     
+                      const item = {
+                      id: id,
+                      productsDetail: productsDetail,
+                      amount: amount,                     
+                      provider: provider
+                      };
+                      return (
+                       <UseSubletToOrder subletData={item}/>
+                      );
+                  },
+                  }) 
         
                 modifiedColumnObjects.push({
                 key: 'Detalle',
@@ -159,7 +181,7 @@ const SubletsTable = ({sublets, updateSublestList}) => {
                   <>
                    <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
                      <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
-                       <div className='flex w-full items-center ml-4'>                   
+                       <div className='flex justify-between w-full items-center ml-4'>                   
                            <p className='text-sm font-bold text-zinc-600'>Sub Alquileres Realizados</p>
                        </div>
                        <div className='flex justify-start mr-4'></div>

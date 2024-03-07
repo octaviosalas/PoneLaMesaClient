@@ -116,20 +116,7 @@ export const getDay = () => {
   return priceFormated
 }
 
-export const months = [
-  { label: 'Enero', value: 'enero' },
-  { label: 'Febrero', value: 'febrero' },
-  { label: 'Marzo', value: 'marzo' },
-  { label: 'Abril', value: 'abril' },
-  { label: 'Mayo', value: 'mayo' },
-  { label: 'Junio', value: 'junio' },
-  { label: 'Julio', value: 'julio' },
-  { label: 'Agosto', value: 'agosto' },
-  { label: 'Septiembre', value: 'septiembre' },
-  { label: 'Octubre', value: 'octubre' },
-  { label: 'Noviembre', value: 'noviembre' },
-  { label: 'Diciembre', value: 'diciembre' },
-];
+
 
 export const typeOfClientsAvailables = [
   { label: 'Bonificado', value: 'Bonificado' },
@@ -159,13 +146,28 @@ export const everyMonthsOfTheYear = [
 ];
 
 export const everyYears = [
-  { key: 2022, label: 2022},
-  { key: 2023, label: 2023},
-  { key: 2024, label: 2024},
-  {key: 2025, label: 2025},
-  {key: 2026, label: 2026},
-  {key: 2027, label: 2027},
-  {key: 2028, label: 2028},
+  { value: 2022, label: 2022},
+  { value: 2023, label: 2023},
+  { value: 2024, label: 2024},
+  {value: 2025, label: 2025},
+  {value: 2026, label: 2026},
+  {value: 2027, label: 2027},
+  {value: 2028, label: 2028},
+];
+
+export const months = [
+  { label: 'Enero', value: 'enero' },
+  { label: 'Febrero', value: 'febrero' },
+  { label: 'Marzo', value: 'marzo' },
+  { label: 'Abril', value: 'abril' },
+  { label: 'Mayo', value: 'mayo' },
+  { label: 'Junio', value: 'junio' },
+  { label: 'Julio', value: 'julio' },
+  { label: 'Agosto', value: 'agosto' },
+  { label: 'Septiembre', value: 'septiembre' },
+  { label: 'Octubre', value: 'octubre' },
+  { label: 'Noviembre', value: 'noviembre' },
+  { label: 'Diciembre', value: 'diciembre' },
 ];
 
 export const accounts = [
