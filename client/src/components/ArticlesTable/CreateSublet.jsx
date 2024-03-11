@@ -15,6 +15,7 @@ const CreateSublet = () => {
   const [productChoosenName, setProductChoosenName] = useState("")
   const [productChoosenQuantity, setProductChoosenQuantity] = useState("")
   const [productChoosenId, setProductChoosenId] = useState("")
+  const [productChoosenPrice, setProductChoosenPrice] = useState(0)
   const [productChoosenValue, setProductChoosenValue] = useState(null)
   const [providerChoosen, setProviderChoosen] = useState(null)
   const [providerChoosenId, setProviderChoosenId] = useState(null)
@@ -68,22 +69,30 @@ const CreateSublet = () => {
       }
     }
 
-    const chooseArticle = (name, id) => { 
-      console.log("Elegiste", name, id)
+    const chooseArticle = (name, id, price) => { 
+      const roundedPrice = Math.round(parseFloat(price));
+      console.log("Elegiste", name, id, price)
+      console.log(roundedPrice)
       setProductChoosenName(name)
       setProductChoosenId(id)
       setFilteredNames([])
+      setProductChoosenPrice(price)
     }
     
-    const addProductSelected = (productName, productId, quantity, price) => {
-        const numericPrice = parseFloat(price); 
+    const addProductSelected = (productName, productId, quantity, price, value) => {
+        const rentalPrice = Math.round(parseFloat(price));
+        console.log("tipo de dato", typeof rentalPrice)
+        const numericPrice = parseFloat(value); 
         const numericQuantity = parseFloat(quantity); 
-        const newProduct = { productName, productId, quantity: numericQuantity, price: numericPrice };
+        const newProduct = { productName, productId, quantity: numericQuantity, rentalPrice, value: numericPrice };
         setProductsChoosen([...productsChoosen, newProduct]);
         setProductChoosenId("")
         setProductChoosenValue(0)
+        setProductChoosenPrice(0)
         setProductChoosenQuantity("")
         setProductChoosenName("")
+        console.log(productsChoosen)
+
     };
     
     const handleRemoveProduct = (productIdToDelete) => {
@@ -96,7 +105,7 @@ const CreateSublet = () => {
     const addNewSublet = () => { 
       const newSubletData = ({ 
         productsDetail: productsChoosen,
-        amount: productsChoosen.reduce((acc, el) => acc + el.price, 0),
+        amount: productsChoosen.reduce((acc, el) => acc + el.value, 0),
         provider: providerChoosen,
         providerId: providerChoosenId,
         day: actualDay,
@@ -184,7 +193,7 @@ const CreateSublet = () => {
                             <div className='absolute  rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
                                 {filteredNames.map((cc) => (
                                     <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 ml-2" key={cc._id} 
-                                        onClick={() => chooseArticle(cc.articulo, cc._id)}>
+                                        onClick={() => chooseArticle(cc.articulo, cc._id, cc.precioUnitarioAlquiler)}>
                                         {cc.articulo}
                                     </p>
                                 ))}
@@ -197,7 +206,7 @@ const CreateSublet = () => {
                      {
                         productChoosenName.length !== 0 && productChoosenQuantity.length !== 0  && productChoosenValue !== null?
                         <Button className="mt-6 w-52 font-medium text-white" color="success" 
-                         onClick={() => addProductSelected(productChoosenName, productChoosenId, productChoosenQuantity, productChoosenValue )}>Añadir</Button> 
+                         onClick={() => addProductSelected(productChoosenName, productChoosenId, productChoosenQuantity, productChoosenPrice, productChoosenValue )}>Añadir</Button> 
                         : 
                         null
                       }
@@ -209,7 +218,7 @@ const CreateSublet = () => {
                                   <div className="flex gap-2 items-center">
                                     <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
                                     <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>
-                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Total Alquiler: </b>{prod.price}</p>
+                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Total: </b>{prod.value}</p>
                                   </div>
                                   <div>
                                     <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
@@ -219,7 +228,7 @@ const CreateSublet = () => {
                               ))}
                           </div>
                           <div className="flex flex-col mt-2">
-                            <p className="text-zinc-500 text-xs"> <b>Total: </b>{formatePrice(productsChoosen.reduce((acc, el) => acc + el.price, 0))} ARS</p> 
+                            <p className="text-zinc-500 text-xs"> <b>Total: </b>{formatePrice(productsChoosen.reduce((acc, el) => acc + el.value, 0))} ARS</p> 
                           </div>
                         </div>  
                         :

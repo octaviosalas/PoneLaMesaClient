@@ -15,16 +15,19 @@ const UseSubletToOrder = ({subletData}) => {
   const [orderDoesNotExist, setOrderDoesNotExist] = useState(false);
   const [secondStep, setSecondStep] = useState(false);
   const [orderChoosenData, setOrderChoosenData] = useState(false);
-  
+  const [orderChoosenStatus, setOrderChoosenStatus] = useState("");
+
+    useEffect(() => { 
+        console.log(orderChoosenStatus)
+    }, [orderChoosenStatus])
 
 
-
-  const handleOpen = async () => { 
-    onOpen()
-    const data = await getEveryOrders()
-    setOrders(data)
-    console.log(subletData)
-  }
+    const handleOpen = async () => { 
+      onOpen()
+      const data = await getEveryOrders()
+      setOrders(data)
+      console.log(subletData)
+    }
 
     const getOrderData = async () => { 
       console.log(yearSelected)
@@ -42,6 +45,7 @@ const UseSubletToOrder = ({subletData}) => {
           if(filteredOrders.length > 0) { 
             console.log(filteredOrders)
             setOrderChoosenData(filteredOrders)
+            setOrderChoosenStatus(filteredOrders.map((ord) => ord.orderStatus)[0])
             setYearSelected("")
             setMonthSelected("")
             setOrderNumberSelected("")
@@ -59,7 +63,11 @@ const UseSubletToOrder = ({subletData}) => {
           setMissedData(false)
         }, 1900)
         }
-      }
+    }
+
+    const comeBackToFirstStep = () => { 
+      setSecondStep(false)
+    }
 
 
 
@@ -115,7 +123,7 @@ const UseSubletToOrder = ({subletData}) => {
                  null}
 
                  {secondStep ? 
-                   <UseSubletToOrderSecondStep orderData={orderChoosenData} dataSublet={subletData}/>
+                   <UseSubletToOrderSecondStep orderData={orderChoosenData} orderDataStatus={orderChoosenStatus} dataSublet={subletData} comeBack={comeBackToFirstStep}/>
                  : null}
 
                </ModalBody>

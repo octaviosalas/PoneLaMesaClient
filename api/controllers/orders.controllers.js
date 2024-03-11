@@ -63,17 +63,31 @@ export const getMonthlyOrders = async (req, res) => {
   }
 }
 
+
+
 export const createOrder = async (req, res) => { 
-    console.log(req.body)
-    try {
-      const newOrder = new Orders(req.body);
-      const orderSaved = await newOrder.save();
-      await decrementarStock(req.body.orderDetail);
-      res.status(201).json(orderSaved);
-    } catch (error) {
+  console.log(req.body)
+  try {
+      if (req.body.orderStatus === "A Confirmar") {
+          const newOrder = new Orders(req.body);
+          const orderSaved = await newOrder.save();
+          res.status(201).json(orderSaved);
+      } else {
+          const newOrder = new Orders(req.body);
+          const orderSaved = await newOrder.save();
+          await decrementarStock(req.body.orderDetail);
+          res.status(201).json(orderSaved);
+      }
+  } catch (error) {
       res.status(500).json({ error: 'Error al crear la orden' });
-      console.log(error)
-    }
+      console.log(error);
+  }
+}
+
+export const changeOrderToConfirmedAndDiscountStock = async (req, res) => { 
+  console.log(req.body)
+  await decrementarStock(req.body.orderDetail);
+
 }
 
 export const changeOrderState = async (req, res) => { 

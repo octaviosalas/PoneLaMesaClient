@@ -1,10 +1,12 @@
 import Sublets from "../models/sublets.js";
+import { incrementarStock } from "./orders.controllers.js";
 
 export const createSublet = async (req, res) => { 
     console.log(req.body)
    try {
     const newSubletToBeSaved = new Sublets(req.body)
     const newSaved = await newSubletToBeSaved.save()
+    await incrementarStock(req.body.productsDetail);
     res.status(200).json(newSaved)
    } catch (error) {
     res.status(500).json({ error: 'Error al crear subAlquiler' });

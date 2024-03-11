@@ -6,6 +6,7 @@ import { UserContext } from "../../store/userContext";
 import { getDate, getMonth, getYear, getDay, formatePrice } from "../../functions/gralFunctions";
 import CreateNewClient from "../Clientes/CreateNewClient";
 import getBackendData from '../../Hooks/GetBackendData';
+import OrderNeedsSublet from "./OrderNeedsSublet";
 
 const CreateNewOrder = ({updateList}) => {
 
@@ -17,6 +18,7 @@ const CreateNewOrder = ({updateList}) => {
   const [actualDay, setActualDay] = useState(getDay())
   const [firstStep, setFirstStep] = useState(true)
   const [secondStep, setSecondStep] = useState(false)
+  const [thirdStep, setThirdStep] = useState(false)
   const [missedData, setMissedData] = useState(false)
   const [missedProducts, setMissedProducts] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
@@ -215,20 +217,20 @@ const CreateNewOrder = ({updateList}) => {
         );
       };
 
-      const cancelOrder = () => { 
-        closeModal()
-        setSecondStep(false)
-        setFirstStep(true)
-        setProductsSelected([])
-        setTypeOfClient("")
-        setChoosenClientId("")
-        setChoosenClientName("")
-        setPlaceOfDelivery("")
-        setDateOfDelivery("")
-        setReturnDate("")
+      const setOrderToBeConfirmed = () => { 
+         setThirdStep(true)
+         setSecondStep(false)
+         setFirstStep(false)
       }
 
-      const sendNewOrder = () => { 
+      const comeBackToSecondStep = () => { 
+        setSecondStep(true)
+        setThirdStep(false)
+        setFirstStep(false)
+      }
+
+      const sendNewOrder = (statusOfTheOrder) => { 
+        console.log(statusOfTheOrder)
         if(productsSelected.length === 0) { 
           setMissedProducts(true)
           setTimeout(() => {
@@ -238,7 +240,7 @@ const CreateNewOrder = ({updateList}) => {
           const orderData = ({ 
             orderCreator: userCtx.userName,
             orderNumber: orderNumber,
-            orderStatus: orderStatus,
+            orderStatus: statusOfTheOrder,
             client: choosenClientName,
             clientId: choosenClientId,
             typeOfClient: typeOfClient,
@@ -284,7 +286,7 @@ const CreateNewOrder = ({updateList}) => {
             <>
               <ModalHeader className="flex flex-col">
                 Crear Pedido
-                <CreateNewClient updateList={getClientsData} type="creatingOrder"/>
+              {firstStep ?  <CreateNewClient updateList={getClientsData} type="creatingOrder"/> : null}
               </ModalHeader>
               <ModalBody>
               {
@@ -310,9 +312,9 @@ const CreateNewOrder = ({updateList}) => {
 
 
                     <Select  css={{
-    $$inputBorderRadius: '0', // Elimina los bordes redondeados
-    $$inputBorder: 'none', // Elimina el borde
-  }}  variant="underlined"  label="Tipo de Cliente" className="max-w-xs border border-none mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
+                              $$inputBorderRadius: '0', // Elimina los bordes redondeados
+                              $$inputBorder: 'none', // Elimina el borde
+                            }}  variant="underlined"  label="Tipo de Cliente" className="max-w-xs border border-none mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
                       {typeOfClients.map((client) => (
                         <SelectItem key={client.value} value={client.value}>
                           {client.label}
@@ -321,22 +323,17 @@ const CreateNewOrder = ({updateList}) => {
                   </Select>
 
 
-                    <Input type="text" variant="underlined" value={placeOfDelivery} label="Lugar Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setPlaceOfDelivery(e.target.value)}/>
-                    <Input type="text" variant="underlined" value={returnPlace} label="Lugar Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnPlace(e.target.value)}/>
-                    <Input type="date" variant="underlined"  classNames={{
-    label: "-mt-5"
-  }} value={dateOfDelivery} label="Fecha Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setDateOfDelivery(e.target.value)}/>
-                    <Input  type="date" variant="underlined"  classNames={{
-    label: "-mt-5"
-  }} placeholder="" value={returnDate} label="Fecha Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnDate(e.target.value)}/>
+                    <Input type="text" variant="underlined"   value={placeOfDelivery} label="Lugar Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setPlaceOfDelivery(e.target.value)}/>
+                    <Input type="text" variant="underlined"   value={returnPlace} label="Lugar Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnPlace(e.target.value)}/>
+                    <Input type="date" variant="underlined"   classNames={{label: "-mt-5"}} value={dateOfDelivery} label="Fecha Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setDateOfDelivery(e.target.value)}/>
+                    <Input  type="date" variant="underlined"  classNames={{label: "-mt-5"}} placeholder="" value={returnDate} label="Fecha Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnDate(e.target.value)}/>
 
                  </div> 
                  <div className="flex flex-col items-center justify-center mt-6">
                      <Button color="success" className="font-medium text-white" onClick={() => executeFunctionDependsTypeOfClient()}>Armar Pedido</Button>
                      {missedData ? <p className="mt-4 text-sm font-medium text-blacl">Debes completar todos los campos</p> : null}
                  </div>
-              </div>
-        
+              </div>       
                 : null}
               </ModalBody>
 
@@ -425,11 +422,11 @@ const CreateNewOrder = ({updateList}) => {
                   <ModalFooter className="flex items-center justify-center mt-6">
                      {succesMessage !== true ?
                      <div className="flex items-center gap-6">
-                        <Button className="font-medium text-white"  style={{backgroundColor:"#399319"}} variant="light" onPress={() => sendNewOrder()}>
+                        <Button className="font-medium text-white"  style={{backgroundColor:"#399319"}} variant="light" onPress={() => sendNewOrder(orderStatus)}>
                           Confirmar Pedido
                         </Button>
-                        <Button className="font-medium text-white"  style={{backgroundColor:"#71CB51"}} variant="light" onPress={cancelOrder}>
-                          Cancelar Pedido
+                        <Button className="font-medium text-white"  style={{backgroundColor:"#71CB51"}} variant="light" onPress={setOrderToBeConfirmed}>
+                          A Confirmar
                         </Button>
                         <Button className="font-medium text-white" style={{backgroundColor:"#87D56C"}} variant="light"  onClick={() => {
                             changeState(false, true);
@@ -455,6 +452,13 @@ const CreateNewOrder = ({updateList}) => {
               :
               null
               }
+
+              {thirdStep ? 
+              <div className="flex text-center items-center justify-center w-full ">
+                    <OrderNeedsSublet comeBack={comeBackToSecondStep} sendOrderToBeConfirmed={sendNewOrder}/>
+              </div>
+              :
+              null}
             </>
           )}
         </ModalContent>

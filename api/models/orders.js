@@ -35,6 +35,9 @@ const ordersSchema = mongoose.Schema({
     orderDetail: { 
         type:Array,
     },  
+    subletsDetail: { 
+        type:Array,
+    },  
     date: { 
         type: String
     },  

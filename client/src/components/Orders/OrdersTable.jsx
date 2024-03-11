@@ -63,7 +63,7 @@ const OrdersTable = () => {
         setData(allOrders)
         if(allOrders.length !== 0) { 
             const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-            && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'  && propiedad !== 'clientId' && propiedad !== 'month' && propiedad !== 'year'
+            && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail'  && propiedad !== 'clientId' && propiedad !== 'month' && propiedad !== 'year'
             && propiedad !== 'day' && propiedad !== 'paid');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
