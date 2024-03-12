@@ -9,6 +9,8 @@ const OrderDetail = ({orderData}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
+    const [columnsSubletsTable, setColumnsSubletsTable] = useState([]);
+
 
   useEffect(() => {
     if (orderData && orderData.detail && Array.isArray(orderData.detail) && orderData.detail.length > 0) {
@@ -33,6 +35,29 @@ const OrderDetail = ({orderData}) => {
     }
   }, [orderData]);
 
+  
+  useEffect(() => {
+    if (orderData && orderData.subletsDetail && Array.isArray(orderData.subletsDetail) && orderData.subletsDetail.length > 0) {
+      const firstDetail = orderData.subletsDetail[0];
+      const properties = Object.keys(firstDetail);
+      const filteredProperties = properties.filter(property => property !== 'productId');
+  
+      const columnLabelsMap = {
+        productName: 'Articulo',
+        quantity: 'Cantidad',
+        price: 'Precio Alquiler',
+      
+      };
+  
+      const tableColumns = filteredProperties.map(property => ({
+        key: property,
+        label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+      }));
+  
+      setColumns(tableColumns);
+    }
+  }, [orderData.subletsDetail]);
+
   return (
     <>
       <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle</p>
@@ -43,9 +68,23 @@ const OrderDetail = ({orderData}) => {
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Detalle del Pedido</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col text-start justify-start">
-                    <p className="text-zinc-600 font-medium text-sm">Pedido cargador por: {orderData.creator}</p>
-                    <p className="text-zinc-600 font-medium text-sm">Fecha de creacion: {orderData.day} de {orderData.month} de {orderData.year}</p>
-                    <p className="text-zinc-600 font-medium text-sm">Cliente: {orderData.client}</p>
+                    <p className="text-zinc-600 font-medium text-sm"><b>Pedido cargador por:</b> {orderData.creator}</p>
+                    <p className="text-zinc-600 font-medium text-sm"><b>Fecha de creacion:</b> {orderData.day} de {orderData.month} de {orderData.year}</p>
+                    <p className="text-zinc-600 font-medium text-sm"><b>Cliente:</b> {orderData.client}</p>
+                    {orderData.orderSublets.length === 0 ? <p className="text-zinc-600 underline font-medium text-sm">Este pedido no tiene Articulos SubAlquilados</p> : null}
+                    {orderData.orderSublets.length > 0 ?
+                      <div className="mt-2">
+                        <p className="text-green-800 underline font-medium text-sm">Este pedido contiene Articulos SubAlquilados</p>
+                          <div className="mt-2">
+                           {orderData.orderSublets.map((ord) => ( 
+                              <div className="flex items-center gap-2">
+                                <p className="text-sm font-medium"><b>Articulo: </b>{ord.productName}</p>
+                                <p className="text-sm font-medium"><b>Cantidad: </b>{ord.quantity}</p>
+                              </div>
+                           ))}
+                          </div> 
+                      </div>
+                    : null}
                 </div>
                    <Table aria-label="Example table with dynamic content" className="w-full shadow-xl flex items-center justify-center mt-2">
                               <TableHeader columns={columns} className="">
@@ -77,8 +116,9 @@ const OrderDetail = ({orderData}) => {
                               )}
                             </TableBody>
                         </Table>    
-                        <div className="flex justify-end">
-                          <p className="text-sm text-zinc-600 font-bold">Valor total del Pedido: {formatePrice(orderData.total)} </p>
+                        <div className="flex flex-col items-end justify-end">
+                           <p className="text-sm text-zinc-600 font-bold">Valor total del Pedido: {formatePrice(orderData.total)} </p>
+                           {orderData.orderSublets.length > 0 ? <p className="text-xs text-green-800 font-medium"> (La suma total Incluye los SubAlquileres)</p> : null}
                         </div>        
               </ModalBody>
               <ModalFooter className="flex items-center justify-center mt-2">

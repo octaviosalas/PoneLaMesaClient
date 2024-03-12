@@ -88,6 +88,8 @@ export const changeOrderToConfirmedAndDiscountStock = async (req, res) => {
   try {
     const { orderId } = req.params;
     const { detailOrder} = req.body;
+    console.log(detailOrder);
+
 
     const foundOrder = await Orders.findById({_id: orderId});
 
@@ -95,10 +97,10 @@ export const changeOrderToConfirmedAndDiscountStock = async (req, res) => {
       return res.status(404).json({ error: 'No se encontró la orden correspondiente.' });
     }
 
-    foundOrder.subletsDetail.push(detailOrder);
+    foundOrder.subletsDetail = foundOrder.subletsDetail.concat(detailOrder.subletDetail);
     foundOrder.total = detailOrder.newAmount;
     await foundOrder.save();
-    await decrementarStock(detailOrder.orderDetail);
+    await decrementarStock(detailOrder.subletDetail);
 
     res.status(200).json({ message: 'La orden se ha confirmado, el stock se ha descontado, y se han actualizado los detalles correctamente.' });
   } catch (error) {
@@ -106,6 +108,8 @@ export const changeOrderToConfirmedAndDiscountStock = async (req, res) => {
     res.status(500).json({ error: 'Error al procesar la solicitud.' });
   }
 };
+
+
 
 export const changeOrderState = async (req, res) => { 
   const { orderId } = req.params;

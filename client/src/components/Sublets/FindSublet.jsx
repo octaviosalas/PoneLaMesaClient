@@ -6,6 +6,7 @@ import Loading from "../Loading/Loading";
 import axios from "axios";
 import { formatePrice } from "../../functions/gralFunctions";
 import AreYouSure from "../Modals/AreYouSure";
+import CreateSublet from "../ArticlesTable/CreateSublet";
 
 
 
@@ -17,23 +18,24 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
   const [columns, setColumns] = useState([]);
   const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
   const [inputValue, setInputValue] = useState("")
+  const [withOutSubletsAvailables, setWithOutSubletsAvailables] = useState(false)
 
 
-   const handleOpen =  () => { 
-    onOpen()
-   }
+      const handleOpen =  () => { 
+        onOpen()
+      }
 
-   useEffect(() => { 
-     console.log(data)
-     getDataAndCreateTable()
-   }, [])
+      useEffect(() => { 
+        console.log(data)
+        getDataAndCreateTable()
+      }, [])
 
-   const closeModalNow = () => { 
-    onClose()
-   }
+      const closeModalNow = () => { 
+        onClose()
+      }
 
-    const getDataAndCreateTable =  async () => { 
-        console.log("me ejecute")
+     const getDataAndCreateTable =  async () => { 
+      console.log("buscando sublets en false")
         try {
             const response = await axios.get("http://localhost:4000/sublets")
             const allSublets = await response.data
@@ -90,7 +92,8 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
                 tableRef.current.updateColumns(modifiedColumnObjects);
                 }            
             }else { 
-                console.log("No hay ordenes")
+              setWithOutSubletsAvailables(true)
+              setLoad(false)
             }
             } catch (error) {
                 console.log(error)
@@ -113,69 +116,67 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
 
   return (
     <>
-      <p onClick={handleOpen} className="font-medium text-sm text-green-800 cursor-pointer">Anexar SubAlquiler</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-max">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
+   <p onClick={handleOpen} className="font-medium text-sm text-green-800 cursor-pointer">Anexar SubAlquiler</p>
+<Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-max min-w-96">
+ <ModalContent>
+    {(onClose) => (
+      <>
+        <ModalHeader className="flex flex-col gap-1">Sub Alquileres Disponibles</ModalHeader>
 
-
-             {load ? 
-              <Loading/> 
-              :
-              <ModalBody>
+        {load ? 
+          <Loading/> 
+          :
+          (withOutSubletsAvailables ? 
+            <div className="flex flex-col items-center justify-center mt-6 mb-6">
+               <p className="font-medium text-green-800 text-md">No hay SubAlquileres Disponibles</p>
+               <div className="mt-6 mb-4">
+                  <CreateSublet usedIn={"withOutSubletsToUse"} updateTable={getDataAndCreateTable} closeBothModals={closeModalNow}/>
+               </div>
+            </div>
+           : 
+            <ModalBody>
               <Table
-                  columnAutoWidth={true}
-                  columnSpacing={10}
-                  aria-label="Selection behavior table example with dynamic content"
-                  selectionBehavior={selectionBehavior}
-                  className="w-full mt-2 lg:w-[500px] xl:w-[700px] 2xl:w-[700px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
-                >
-                  <TableHeader columns={columns}>
-                    {(column) => (
-                      <TableColumn key={column.key} className="text-left">
-                        {column.label}
-                      </TableColumn>
-                    )}
-                  </TableHeader>
+                columnAutoWidth={true}
+                columnSpacing={10}
+                aria-label="Selection behavior table example with dynamic content"
+                selectionBehavior={selectionBehavior}
+                className="w-full mt-2 lg:w-[500px] xl:w-[700px] 2xl:w-[700px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+              >
+                <TableHeader columns={columns}>
+                 {(column) => (
+                    <TableColumn key={column.key} className="text-left">
+                      {column.label}
+                    </TableColumn>
+                 )}
+                </TableHeader>
 
-                  <TableBody items={filteredData}>
-                    {(item) => (
-                      <TableRow key={item._id}>
-                        {columns.map((column) => (
-                          <TableCell key={column.key} className='text-left'>
-                            {column.cellRenderer ? (
-                              column.cellRenderer({ row: { original: item } })
+                <TableBody items={filteredData}>
+                 {(item) => (
+                    <TableRow key={item._id}>
+                      {columns.map((column) => (
+                        <TableCell key={column.key} className='text-left'>
+                          {column.cellRenderer ? (
+                            column.cellRenderer({ row: { original: item } })
+                          ) : (
+                            column.key === "amount" ? (
+                              formatePrice(item[column.key])
                             ) : (
-                              column.key === "amount" ? (
-                                formatePrice(item[column.key])
-                              ) : (
-                                item[column.key]
-                              )
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </ModalBody>
-              } 
-
-
-              <ModalFooter>
-                <Button color="danger" variant="light" onPress={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onPress={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+                              item[column.key]
+                            )
+                          )}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                 )}
+                </TableBody>
+              </Table>
+            </ModalBody>
+          )
+        }
+      </>
+    )}
+ </ModalContent>
+</Modal>
     </>
   );
 }

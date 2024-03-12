@@ -131,11 +131,13 @@ const SubletsTable = ({sublets, updateSublestList}) => {
                 cellRenderer: (cell) => { 
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
+                    const subletProductsDetail = filaActual.original.productsDetail
                     const item = {
-                    id: id
+                    id: id,
+                    subletProductsDetail: subletProductsDetail
                     };
                     return (
-                    <DeleteOrder type="sublets" subletData={item} updateSubletList={updateSublestList}/>
+                    <DeleteOrder type="sublets" subletData={item} updateSubletList={getDataAndCreateTable}/>
                     );
                 },
                 }) 

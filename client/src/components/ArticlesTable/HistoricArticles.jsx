@@ -93,7 +93,7 @@ const HistoricArticles = ({articleData}) => {
   return (
     <>
       <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-xl bg-white text-black'>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
         <ModalContent>
           {(onClose) => (
             <>
@@ -109,7 +109,7 @@ const HistoricArticles = ({articleData}) => {
                     ) : (
                       ordersProducts.length > 0 ? (
                         <div className="mt-4 flex flex-col  ">
-                          <Table aria-label="Example table with dynamic content" className="w-[480px] 2xl-w-[550px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto max-h-[400px] ">
+                          <Table aria-label="Example table with dynamic content" className="w-[480px] 2xl-w-[950px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto max-h-[200px] ">
                             <TableHeader columns={columns} >
                               {(column) => (
                                 <TableColumn key={column.key} className="text-xs gap-6">

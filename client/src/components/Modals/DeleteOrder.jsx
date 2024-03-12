@@ -6,8 +6,9 @@ import DeleteArticle from "./DeleteArticle";
 import DeletePurchase from "./DeletePurchase";
 import DeleteClient from "./DeleteClient";
 import DeleteProvider from "./DeleteProvider"
+import DeleteSublet from "./DeleteSublet";
 
-const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList, providerData, updateProviderList}) => {
+const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList, providerData, updateProviderList, subletData, updateSubletList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [successMessage, setSuccessMessage] = useState(false)
   const [messageSuccesDeleteArticle, setMessageSuccesDeleteArticle] = useState(false)
@@ -126,7 +127,7 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
         :
         null}  
 
-    {type === "client" ? 
+       {type === "client" ? 
         <ModalContent>
           {(onClose) => (
             <>
@@ -140,13 +141,27 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
         :
         null}   
 
-      {type === "providers" ? 
+       {type === "providers" ? 
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Proveedor</ModalHeader>
               <ModalBody>
                 <DeleteProvider providerData={providerData} closeModalNow={onClose} updateProviderList={updateProviderList}/>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+        :
+        null}   
+
+      {type === "sublets" ? 
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar SubAlquiler</ModalHeader>
+              <ModalBody>
+                <DeleteSublet subletData={subletData} closeModalNow={onClose} updateSubletList={updateSubletList}/>
               </ModalBody>
             </>
           )}

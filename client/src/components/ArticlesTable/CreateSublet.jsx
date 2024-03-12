@@ -1,12 +1,12 @@
 import React from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem, User} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem, User, Textarea} from "@nextui-org/react";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { formatePrice, getEveryProviders, getProductsClients, getDate, getDay, getMonth, getYear } from "../../functions/gralFunctions";
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 
-const CreateSublet = () => {
+const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure()
   const userCtx = useContext(UserContext)
@@ -28,6 +28,8 @@ const CreateSublet = () => {
   const [missedData, setMissedData] = useState(false)
   const [errorText, setErrorText] = useState("")
   const [succesMessage, setSuccesMessage] = useState(false)
+  const [showObservation, setShowObservation] = useState(false)
+  const [observation, setObservation] = useState(false)
 
 
     //Funciones para obtener proveedores
@@ -87,7 +89,7 @@ const CreateSublet = () => {
         const newProduct = { productName, productId, quantity: numericQuantity, rentalPrice, value: numericPrice };
         setProductsChoosen([...productsChoosen, newProduct]);
         setProductChoosenId("")
-        setProductChoosenValue(0)
+        setProductChoosenValue("")
         setProductChoosenPrice(0)
         setProductChoosenQuantity("")
         setProductChoosenName("")
@@ -102,7 +104,7 @@ const CreateSublet = () => {
     };
 
     //Funcion para creacion de subalquiler y gasto.
-    const addNewSublet = () => { 
+    const addNewSublet = async () => { 
       const newSubletData = ({ 
         productsDetail: productsChoosen,
         amount: productsChoosen.reduce((acc, el) => acc + el.value, 0),
@@ -112,6 +114,8 @@ const CreateSublet = () => {
         month: actualMonth,
         year: actualYear,
         date: actualDate,
+        used: false,
+        observation: observation
       })
 
       const newExpense = ({ 
@@ -146,6 +150,10 @@ const CreateSublet = () => {
         .then((res) => { 
           console.log(res.data)
           setSuccesMessage(true)
+          if(usedIn === "withOutSubletsToUse") { 
+            closeBothModals()
+            updateTable()
+          }
           setTimeout(() => { 
             setSuccesMessage(false)
             onClose()
@@ -173,7 +181,7 @@ const CreateSublet = () => {
   return (
     <>
       <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={handleOpen}>Sub Alquilar Articulos</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-max">
         <ModalContent>
           {(onClose) => (
             <>
@@ -211,7 +219,7 @@ const CreateSublet = () => {
                         null
                       }
                       {productsChoosen.length !== 0 ? 
-                         <div className="flex flex-col">
+                         <div className="flex flex-col w-full">
                           <div className="flex flex-col mt-6">
                               {productsChoosen.map((prod) => ( 
                                 <div className="flex justify-between gap-4 items-center mt-1" key={prod._id}>
@@ -222,20 +230,35 @@ const CreateSublet = () => {
                                   </div>
                                   <div>
                                     <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
-                                  </div>
-                                  
+                                  </div>                               
                                 </div>
                               ))}
                           </div>
-                          <div className="flex flex-col mt-2">
-                            <p className="text-zinc-500 text-xs"> <b>Total: </b>{formatePrice(productsChoosen.reduce((acc, el) => acc + el.value, 0))} ARS</p> 
-                          </div>
+                            <div className="flex flex-col mt-2">
+                              <p className="text-zinc-500 text-xs"> <b>Total: </b>{formatePrice(productsChoosen.reduce((acc, el) => acc + el.value, 0))} ARS</p> 
+                               {showObservation ? 
+                                <p className="mt-2 font-medium text-green-800 cursor-pointer text-sm underline" onClick={() => setShowObservation(false)}>
+                                 Cancelar Observaciones
+                                </p>
+                                 : 
+                                 <p className="mt-2 font-medium text-green-800 cursor-pointer text-sm underline" onClick={() => setShowObservation(true)}>Asentar Observacion</p>}
+                            </div>
+                          {showObservation ?
+                            <div>
+                                  <Textarea
+                                    isRequired
+                                    label="Observacion"
+                                    labelPlacement="outside"
+                                    variant="bordered"
+                                    className="max-w-full"
+                                  />
+                            </div> : null}
                         </div>  
                         :
                         null
                       }
               </ModalBody>
-                  <ModalFooter className="mt-4 flex items-center justify-center">
+                  <ModalFooter className="mt-2 flex items-center justify-center">
                     <Button className="bg-green-800 w-52 text-white font-medium text-sm"   onClick={() => addNewSublet()}>
                       Confirmar
                     </Button>

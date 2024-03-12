@@ -28,6 +28,9 @@ const subletsSchema = mongoose.Schema({
     },
     used: { 
         type: Boolean
+    }, 
+    observation: { 
+        type: String
     },
 })
 

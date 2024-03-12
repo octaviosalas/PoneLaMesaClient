@@ -15,6 +15,7 @@ const UseSubletToOrderSecondStep = ({orderData, orderDataStatus, dataSublet, com
 
   useEffect(() => { 
     getTotalToAdd(dataSublet)
+    console.log(dataSublet)
     setOrderId(orderData.map((ord) => ord._id)[0])
     setOrderDetail(orderData.map((ord) => ord.orderDetail)[0])
     console.log(orderData)
@@ -42,6 +43,7 @@ const UseSubletToOrderSecondStep = ({orderData, orderDataStatus, dataSublet, com
       if (statusUpdateResponse.status === 200) {
         const detailOrder = {
           orderDetail: orderDetail,
+          subletDetail: dataSublet.productsDetail,
           newAmount: orderData.reduce((total, ord) => total + ord.total, 0) + totalToAdd
         };
         console.log(detailOrder);

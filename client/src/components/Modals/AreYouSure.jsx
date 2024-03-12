@@ -9,7 +9,8 @@ const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, upd
 
   const handleOpen = () => { 
     onOpen()
-    console.log(subletData)
+    console.log("subletData", subletData)
+    console.log("dataOrder", dataOrder)
   }
 
   const addSubletToTheOrder = async () => {
@@ -21,7 +22,7 @@ const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, upd
   
       if (statusUpdateResponse.status === 200) {
         const detailOrder = {
-          orderDetail: subletData.subletProductsDetail,
+          subletDetail: subletData.subletProductsDetail,
           newAmount: dataOrder.total + subletData.amountToBeAdded
         };
         console.log(detailOrder);

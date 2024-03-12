@@ -104,6 +104,7 @@ const OrdersTable = () => {
                   const filaActual = cell.row;
                   const id = filaActual.original._id;
                   const detail = filaActual.original.orderDetail;
+                  const orderSublets = filaActual.original.subletsDetail;
                   const creator = filaActual.original.orderCreator;
                   const client = filaActual.original.client;
                   const day = filaActual.original.day;
@@ -114,6 +115,7 @@ const OrdersTable = () => {
                   id: id,
                   detail: detail,
                   creator: creator,
+                  orderSublets: orderSublets,
                   day: day,
                   month: month,
                   year: year,
