@@ -27,7 +27,7 @@ const SubletsTable = ({sublets, updateSublestList}) => {
 
         const getDataAndCreateTable = () => { 
             if(data.length !== 0) { 
-            const propiedades = Object.keys(sublets[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v'  && propiedad !== 'providerId' &&  propiedad !== 'day' && propiedad !== 'month' && propiedad !== 'year'  && propiedad !== 'productsDetail' );
+            const propiedades = Object.keys(sublets[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'used'  && propiedad !== 'providerId' &&  propiedad !== 'day' && propiedad !== 'month' && propiedad !== 'year'  && propiedad !== 'productsDetail' );
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -55,12 +55,14 @@ const SubletsTable = ({sublets, updateSublestList}) => {
                       const productsDetail = filaActual.original.productsDetail;
                       const amount = filaActual.original.amount;
                       const provider = filaActual.original.provider;
-                     
+                      const used = filaActual.original.used;
+
                       const item = {
                       id: id,
                       productsDetail: productsDetail,
                       amount: amount,                     
-                      provider: provider
+                      provider: provider,
+                      used: used
                       };
                       return (
                        <UseSubletToOrder subletData={item}/>

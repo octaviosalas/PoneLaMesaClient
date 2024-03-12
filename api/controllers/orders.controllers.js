@@ -76,7 +76,7 @@ export const createOrder = async (req, res) => {
           const newOrder = new Orders(req.body);
           const orderSaved = await newOrder.save();
           await decrementarStock(req.body.orderDetail);
-          res.status(201).json(orderSaved);
+          res.status(200).json(orderSaved);
       }
   } catch (error) {
       res.status(500).json({ error: 'Error al crear la orden' });
@@ -85,10 +85,27 @@ export const createOrder = async (req, res) => {
 }
 
 export const changeOrderToConfirmedAndDiscountStock = async (req, res) => { 
-  console.log(req.body)
-  await decrementarStock(req.body.orderDetail);
+  try {
+    const { orderId } = req.params;
+    const { detailOrder} = req.body;
 
-}
+    const foundOrder = await Orders.findById({_id: orderId});
+
+    if (!foundOrder) {
+      return res.status(404).json({ error: 'No se encontró la orden correspondiente.' });
+    }
+
+    foundOrder.subletsDetail.push(detailOrder);
+    foundOrder.total = detailOrder.newAmount;
+    await foundOrder.save();
+    await decrementarStock(detailOrder.orderDetail);
+
+    res.status(200).json({ message: 'La orden se ha confirmado, el stock se ha descontado, y se han actualizado los detalles correctamente.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al procesar la solicitud.' });
+  }
+};
 
 export const changeOrderState = async (req, res) => { 
   const { orderId } = req.params;

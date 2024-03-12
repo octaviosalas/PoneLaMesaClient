@@ -78,7 +78,7 @@ const OrderDetail = ({orderData}) => {
                             </TableBody>
                         </Table>    
                         <div className="flex justify-end">
-                          <p className="text-sm text-zinc-600 font-bold">Valor total del Pedido: {orderData.total} $</p>
+                          <p className="text-sm text-zinc-600 font-bold">Valor total del Pedido: {formatePrice(orderData.total)} </p>
                         </div>        
               </ModalBody>
               <ModalFooter className="flex items-center justify-center mt-2">

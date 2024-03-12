@@ -4,7 +4,7 @@ import { getEveryOrders, everyYears, months } from "../../functions/gralFunction
 import UseSubletToOrderSecondStep from "./UseSubletToOrderSecondStep";
 
 const UseSubletToOrder = ({subletData}) => {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [orders, setOrders] = useState([])
   const [years, setYears] = useState(everyYears)
   const [everyMonths, setEveryMonths] = useState(months)
@@ -80,7 +80,13 @@ const UseSubletToOrder = ({subletData}) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">Utilizar SubAlquiler</ModalHeader>
-              <ModalBody className="flex flex-col items-center justify-center">
+              {subletData.used === true ? 
+                <div className="flex flex-col items-center justify-center m-4">
+                    <p className="font-medium text-green-800 text-sm">Este SubAlquiler ya fue utilizado en una orden</p>
+                    <Button className="w-50 mt-4 bg-green-800 text-white font-medium" onPress={onClose}>Volver</Button>
+                </div>
+                :
+               <ModalBody className="flex flex-col items-center justify-center">
                 {secondStep === false ?
                    <>            
                       <Select variant={"faded"} label="Selecciona un año" className="w-72" value={yearSelected}>          
@@ -123,10 +129,10 @@ const UseSubletToOrder = ({subletData}) => {
                  null}
 
                  {secondStep ? 
-                   <UseSubletToOrderSecondStep orderData={orderChoosenData} orderDataStatus={orderChoosenStatus} dataSublet={subletData} comeBack={comeBackToFirstStep}/>
+                   <UseSubletToOrderSecondStep orderData={orderChoosenData} orderDataStatus={orderChoosenStatus} dataSublet={subletData} comeBack={comeBackToFirstStep} closeModalNow={onClose}/>
                  : null}
 
-               </ModalBody>
+               </ModalBody>}
                
             
               

@@ -10,6 +10,8 @@ import Loading from '../Loading/Loading';
 import {Link} from "react-router-dom"
 import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
 import { useNavigate } from 'react-router-dom';
+import CreateSublet from '../ArticlesTable/CreateSublet';
+import FindSublet from '../Sublets/FindSublet';
 
 
 
@@ -43,7 +45,7 @@ const ProcessTables = ({orderStatus}) => {
              {viewJustToday ? setData(filterOrdersByToday) :  setData(filterOrdersByStatus)}
              if(filterOrdersByStatus.length !== 0) { 
                const propiedades = Object.keys(filterOrdersByStatus[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-               && propiedad !== 'orderDetail'&&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
+               && propiedad !== 'orderDetail'  && propiedad !== 'subletsDetail' &&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
                && propiedad !== 'day' && propiedad !== 'paid');
                const columnObjects = propiedades.map(propiedad => ({
                   key: propiedad,
@@ -76,6 +78,23 @@ const ProcessTables = ({orderStatus}) => {
                         return column;
                     }
                   });
+
+                 {orderStatus ===  "A Confirmar" ? modifiedColumnObjects.push({
+                    key: 'Anexar SuAlquiler',
+                    label: 'Anexar SuAlquiler',
+                    cellRenderer: (cell) => { 
+                      const filaActual = cell.row; 
+                      const id = filaActual.original._id;    
+                      const total = filaActual.original.total; 
+                      const item = { 
+                        id: id,
+                        total: total
+                      }             
+                      return (
+                         <FindSublet orderData={item} updateListOfToBeConfirmedOrders={getDataAndCreateTable}/>
+                        );
+                     },
+                    }) : null}
            
                   modifiedColumnObjects.push({
                   key: 'Detalle',
@@ -105,6 +124,8 @@ const ProcessTables = ({orderStatus}) => {
                       );
                 },
                   }) 
+
+                 
 
                   modifiedColumnObjects.push({
                     key: 'Editar',
@@ -191,6 +212,12 @@ const ProcessTables = ({orderStatus}) => {
                 <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
                   <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
                     <div className='flex w-full '>
+                     {orderStatus === "A Confirmar" &&
+                            <div className='flex items-center w-full justify-between'> 
+                              <p className='font-bold cursor-pointer ml-4'>Pedidos {orderStatus}</p>
+                              <CreateSublet/>
+                            </div>
+                       }
                       {orderStatus === "Reparto" &&
                             <div className='flex items-center w-full justify-between '> 
                               <p className='font-bold cursor-pointer ml-4'>Pedidos en Reparto</p>

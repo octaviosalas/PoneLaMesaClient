@@ -37,8 +37,28 @@ export const getSubletById = async (req, res) => {
 }
 
 export const updateSubletData = async (req, res) => { 
-
+  
 }
+
+export const updateSubletState = async (req, res) => { 
+  const { subletId } = req.params;
+  console.log(subletId)
+  try {
+    const subletUpdated = await Sublets.findByIdAndUpdate(
+      { _id: subletId },
+      { used: true },
+      { new: true } 
+  );
+   if (!subletUpdated) {
+    return res.status(404).json({ error: "No se encontró el Sub Alquiler" });
+   }
+   res.status(200).json(subletUpdated);  
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: "Error interno del servidor" });   
+  }
+}
+
 
 export const deleteSublet = async (req, res) => { 
     const {subletId} = req.params

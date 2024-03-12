@@ -8,6 +8,7 @@ import Articles from './pages/Articles'
 import Orders from './pages/Orders'
 import Purchases from './pages/Purchases'
 import Armed from './components/OrdersProcess/Armed'
+import ToBeConfirmed from './components/OrdersProcess/ToBeConfirmed'
 import Cleaning from "./components/OrdersProcess/Cleaning"
 import LocalDeliveries from './components/OrdersProcess/LocalDeliveries'
 import LocalReturns from './components/OrdersProcess/LocalReturns'
@@ -40,6 +41,7 @@ function App() {
             <Route path="/Cobros" element={<Collections />} />   
             <Route path="/clientes" element={<Clients />} />  
             <Route path="/Armado" element={<Armed />} />   
+            <Route path="/AConfirmar" element={<ToBeConfirmed />} />   
             <Route path="/Lavado" element={<Cleaning />} />   
             <Route path="/Proveedores" element={<Providers />} />   
             <Route path="/EntregasLocal" element={<LocalDeliveries />} /> 

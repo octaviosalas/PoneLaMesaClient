@@ -48,11 +48,12 @@ const NavBarComponent = () =>  {
                         <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Local </p>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions">
-                        <DropdownItem  isReadOnly key="new"><CreateNewOrder/></DropdownItem>
-                        <DropdownItem key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
-                        <DropdownItem key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem> 
-                        <DropdownItem key="rep" onClick={() => goTo("EntregasLocal")}>Entregas</DropdownItem> 
-                        <DropdownItem key="clean"  onClick={() => goTo("DevolucionesEnLocal")}>Devueltos</DropdownItem>                           
+                        <DropdownItem textValue="Create New Order"  isReadOnly key="new"><CreateNewOrder/></DropdownItem>
+                        <DropdownItem textValue="Create New Order" key="confirmed" onClick={() => goTo("AConfirmar")}>A Confirmar</DropdownItem>
+                        <DropdownItem textValue="Create New Order" key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
+                        <DropdownItem textValue="Create New Order" key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem> 
+                        <DropdownItem textValue="Create New Order" key="rep" onClick={() => goTo("EntregasLocal")}>Entregas</DropdownItem> 
+                        <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("DevolucionesEnLocal")}>Devueltos</DropdownItem>                           
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>

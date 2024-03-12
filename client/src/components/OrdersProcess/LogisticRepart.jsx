@@ -13,6 +13,8 @@ const LogisticRepart = () => {
   const actualDate = getDate()
   const [logisticDeliveryOrders, setLogisticDeliveryOrders] = useState([])
 
+  console.log(getDate())
+
   const getOrdersToDeliverTodayInLocal = async () => { 
      try {
        const response = await axios.get("http://localhost:4000/orders")
