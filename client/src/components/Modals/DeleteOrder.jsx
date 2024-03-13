@@ -8,7 +8,7 @@ import DeleteClient from "./DeleteClient";
 import DeleteProvider from "./DeleteProvider"
 import DeleteSublet from "./DeleteSublet";
 
-const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList, providerData, updateProviderList, subletData, updateSubletList}) => {
+const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList, providerData, updateProviderList, subletData, updateSubletsList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [successMessage, setSuccessMessage] = useState(false)
   const [messageSuccesDeleteArticle, setMessageSuccesDeleteArticle] = useState(false)
@@ -161,7 +161,7 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
             <>
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar SubAlquiler</ModalHeader>
               <ModalBody>
-                <DeleteSublet subletData={subletData} closeModalNow={onClose} updateSubletList={updateSubletList}/>
+                <DeleteSublet subletData={subletData} closeModalNow={onClose} updateSubletList={updateSubletsList}/>
               </ModalBody>
             </>
           )}

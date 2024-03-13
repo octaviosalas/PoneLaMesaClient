@@ -156,9 +156,9 @@ const ArticlesTable = ({}) => {
             </div>
             <div className='w-full flex jusitfy-start text-center mt-4 '>
               <input className="w-[50%] border border-gray-200  focus:border-gray-300 focus:ring-0 h-10 rounded-xl" 
-              placeholder="Buscador"
-              onChange={(e) => setInputValue(e.target.value)}
-              value={inputValue} />        
+                placeholder="Buscador"
+                onChange={(e) => setInputValue(e.target.value)}
+                value={inputValue} />        
             </div>
         </div>
          <Table 

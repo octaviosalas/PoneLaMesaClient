@@ -3,7 +3,6 @@ import ProductsClients from "../models/productsClients.js"
 import { incrementarStock, decrementarStock } from "./orders.controllers.js";
 
 
-
 export const productsClientsData = async (req, res) => { 
    try {
      const getData = await ProductsClients.find()

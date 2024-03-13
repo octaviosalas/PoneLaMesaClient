@@ -1,5 +1,5 @@
 import Sublets from "../models/sublets.js";
-import { incrementarStock } from "./orders.controllers.js";
+import { incrementarStock, decrementarStock } from "./orders.controllers.js";
 
 export const createSublet = async (req, res) => { 
     console.log(req.body)
@@ -62,10 +62,11 @@ export const updateSubletState = async (req, res) => {
 
 export const deleteSublet = async (req, res) => { 
     const {subletId} = req.params
-    console.log(subletId)
+    console.log(req.body.subletProductsDetail)
     try {
       const deletedSublet = await Sublets.findByIdAndDelete({_id: subletId});
       if (deletedSublet) {
+        await decrementarStock(req.body.subletProductsDetail); 
         res.status(200).json({ message: 'SubAlquiler eliminado correctamente', deleted: deletedSublet });
       } else {
         res.status(404).json({ message: 'SubAlquiler no encontrado' });

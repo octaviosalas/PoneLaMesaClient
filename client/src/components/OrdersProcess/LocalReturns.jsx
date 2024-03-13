@@ -4,19 +4,30 @@ import { useState, useEffect } from 'react'
 import NavBarComponent from '../Navbar/Navbar'
 import { getDate, getDay, getMonth, getYear } from '../../functions/gralFunctions'
 import DoubleConditionTable from './DoubleConditionTable'
+import ReturnsTable from './ReturnsTable'
+
+//  Devoluciones del dia =   const filterOrders = orders.filter((ord) => ord.returnDate === actualDate && ord.returnPlace === "Local") 
+//  El segundo item de la tabla sera "Pendientes".  Esta tabla tendra a las ordenes con estado "Entregado".
+//  Todas las devoluciones = todas las ordenes con devuelto - lavado - repuesto 
 
 const LocalReturns = () => {
 
   const actualDate = getDate()
-  const [localReturnsOrders, setLocalReturnsOrders] = useState([])
+
+  const [todaysReturns, setTodaysReturns] = useState([])
+  const [pendingReturns, setPendingReturns] = useState([])
+  const [everyReturns, setEveryReturns] = useState([])
 
   const getOrdersToDeliverTodayInLocal = async () => { 
      try {
        const response = await axios.get("http://localhost:4000/orders")
-       const orders = response.data
-       const filterOrders = orders.filter((ord) => ord.returnDate === actualDate && ord.returnPlace === "Local") 
-       setLocalReturnsOrders(filterOrders)
-       console.log("Ordenes filtradas: ", filterOrders)
+       const orders = await response.data
+       const getTodaysReturns = orders.filter((ord) => ord.returnDate === actualDate && ord.returnPlace === "Local") 
+       const getOrdersDelivered = orders.filter((ord) => ord.orderStatus === "Entregado") 
+       const getHistoricEveryReturns = orders.filter((ord) => ord.orderStatus === "Lavado" || ord.orderStatus === "Devuelto" || ord.orderStatus === "Repuesto") 
+       setTodaysReturns(getTodaysReturns)
+       setPendingReturns(getOrdersDelivered)
+       setEveryReturns(getHistoricEveryReturns)
      } catch (error) {
        console.log(error)
      }
@@ -29,7 +40,7 @@ const LocalReturns = () => {
   return (
     <div>
          <NavBarComponent/>
-         <DoubleConditionTable tableData={localReturnsOrders}  typeOfOrders={"DevolucionesLocal"}/> 
+         <ReturnsTable todaysReturns={todaysReturns} pendingReturns={pendingReturns} everyReturns={everyReturns}/>
     </div>
   )
 }

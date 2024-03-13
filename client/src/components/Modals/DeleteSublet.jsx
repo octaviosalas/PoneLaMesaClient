@@ -6,14 +6,20 @@ import { Button } from '@nextui-org/react'
 const DeleteSublet = ({subletData, closeModalNow, updateSubletList}) => {
 
     const [messageSuccesDeleteSublet, setMessageSuccesDeleteSublet] = useState(false)
+    const [theData, setTheData] = useState(false)
 
     useEffect(() => { 
         console.log(subletData)
+        setTheData(subletData)
     }, [])
+
+    useEffect(() => { 
+      console.log(theData)
+    }, [theData])
 
 
     const deleteSublet = () => { 
-        axios.delete(`http://localhost:4000/sublets/${subletData.id}`)
+        axios.delete(`http://localhost:4000/sublets/${subletData.id}`, { data: subletData })
              .then((res) => { 
               console.log(res.data)
               updateSubletList()
@@ -42,7 +48,7 @@ const DeleteSublet = ({subletData, closeModalNow, updateSubletList}) => {
                   </div>
                  {messageSuccesDeleteSublet ?
                   <div className="flex items-center mt-4 mb-2">
-                     <p className="text-green-600 text-md font-medium">Sub Alquiler Eliminado Correctamente ✔</p>
+                     <p className="text-green-800 text-sm font-medium">Sub Alquiler Eliminado Correctamente ✔</p>
                   </div>
                   : null}
                </div>

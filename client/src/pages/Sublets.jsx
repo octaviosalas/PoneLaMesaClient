@@ -27,7 +27,7 @@ const Sublets = () => {
   return (
     <div>
       <NavBarComponent/>
-      <SubletsTable sublets={subletsData} updateSublestList={getSublets}/>
+      <SubletsTable sublets={subletsData} update={getSublets}/>
     </div>
   )
 }

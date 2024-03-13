@@ -1,15 +1,12 @@
 import React from 'react'
 import { useEffect, useState, useRef } from 'react'
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Input} from "@nextui-org/react";
-import DeleteOrder from '../Modals/DeleteOrder';
-import EditModal from '../Modals/EditModal';
-import OrderDetail from '../Orders/OrderDeatil';
 import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
-import UseSubletToOrder from './UseSubletToOrder';
+import OrderDetail from '../Orders/OrderDeatil';
+import CreateNewReturn from '../Returns/CreateNewReturn';
 
-
-const SubletsTable = ({sublets, update}) => {
+const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -18,16 +15,28 @@ const SubletsTable = ({sublets, update}) => {
     const [loadData, setLoadData] = useState(true)
     const [inputValue, setInputValue] = useState("")
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
+    const [withOutOrders, setWithOutOrders] = React.useState("toggle");
 
-
+    const changeDataValues = (item) => { 
+        setData(item)
+    }
 
     useEffect(() => { 
-        setData(sublets)
-     }, [sublets])
+        changeDataValues(everyReturns)
+     }, [todaysReturns, pendingReturns, everyReturns])
+
+
+     useEffect(() => { 
+        console.log("Devoluciones del dia:", todaysReturns)
+        console.log("Pendientes de devolucion:", pendingReturns)
+        console.log("Todas las devoluciones:", everyReturns)
+     }, [todaysReturns, pendingReturns, everyReturns])
 
         const getDataAndCreateTable = () => { 
             if(data.length !== 0) { 
-            const propiedades = Object.keys(sublets[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'used'  && propiedad !== 'providerId' &&  propiedad !== 'day' && propiedad !== 'month' && propiedad !== 'year'  && propiedad !== 'productsDetail' );
+            const propiedades = Object.keys(everyReturns[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
+            &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
+            && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -35,40 +44,48 @@ const SubletsTable = ({sublets, update}) => {
             }));
 
                 const modifiedColumnObjects = columnObjects.map(column => {
-                    if (column.key === 'date') {
-                        return { ...column, label: 'Fecha' };
-                    } else if (column.key === 'provider') {
-                        return { ...column, label: 'Proveedor' };
-                    } else if (column.key === 'amount') {
-                        return { ...column, label: 'Total' };                
-                    }else {
+                    if (column.key === 'orderStatus') {
+                        return { ...column, label: 'Estado' };
+                    } else if (column.key === 'orderNumber') {
+                        return { ...column, label: 'Orden' };
+                    } else if (column.key === 'client') {
+                        return { ...column, label: 'Cliente' };                
+                    }else if (column.key === 'returnDate') {
+                        return { ...column, label: 'Fecha de Devolucion' };                
+                    } else if (column.key === 'returnPlace') {
+                        return { ...column, label: 'Lugar de Devolucion' };                
+                    } else if (column.key === 'total') {
+                        return { ...column, label: 'Monto' };                
+                    } else if (column.key === 'paid') {
+                        return { ...column, label: 'Abonada' };                
+                    } else {
                         return column;
                     }
                 });
 
-                modifiedColumnObjects.push({
-                  key: 'Derivar',
-                  label: 'Derivar',
-                  cellRenderer: (cell) => { 
-                      const filaActual = cell.row;
-                      const id = filaActual.original._id;
-                      const productsDetail = filaActual.original.productsDetail;
-                      const amount = filaActual.original.amount;
-                      const provider = filaActual.original.provider;
-                      const used = filaActual.original.used;
+            /*  modifiedColumnObjects.push({
+                key: 'Derivar',
+                label: 'Derivar',
+                cellRenderer: (cell) => { 
+                    const filaActual = cell.row;
+                    const id = filaActual.original._id;
+                    const productsDetail = filaActual.original.productsDetail;
+                    const amount = filaActual.original.amount;
+                    const provider = filaActual.original.provider;
+                    const used = filaActual.original.used;
 
-                      const item = {
-                      id: id,
-                      productsDetail: productsDetail,
-                      amount: amount,                     
-                      provider: provider,
-                      used: used
-                      };
-                      return (
-                       <UseSubletToOrder subletData={item}/>
-                      );
-                  },
-                  }) 
+                    const item = {
+                    id: id,
+                    productsDetail: productsDetail,
+                    amount: amount,                     
+                    provider: provider,
+                    used: used
+                    };
+                    return (
+                    <UseSubletToOrder subletData={item}/>
+                    );
+                },
+                }) */
         
                 modifiedColumnObjects.push({
                 key: 'Detalle',
@@ -77,6 +94,7 @@ const SubletsTable = ({sublets, update}) => {
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
                     const detail = filaActual.original.orderDetail;
+                    const subletsDetail = filaActual.original.subletsDetail;
                     const creator = filaActual.original.orderCreator;
                     const client = filaActual.original.client;
                     const day = filaActual.original.day;
@@ -86,6 +104,7 @@ const SubletsTable = ({sublets, update}) => {
                     const item = {
                     id: id,
                     detail: detail,
+                    orderSublets: subletsDetail,
                     creator: creator,
                     day: day,
                     month: month,
@@ -99,7 +118,7 @@ const SubletsTable = ({sublets, update}) => {
                 },
                 }) 
 
-                modifiedColumnObjects.push({
+               /* modifiedColumnObjects.push({
                     key: 'Editar',
                     label: 'Editar',
                     cellRenderer: (cell) => { 
@@ -140,38 +159,38 @@ const SubletsTable = ({sublets, update}) => {
                     <DeleteOrder type="sublets" subletData={item} updateSubletsList={update}/> 
                     );
                 },
-                }) 
+                }) */
 
                 setColumns(modifiedColumnObjects);
-                console.log(modifiedColumnObjects)
                 if (tableRef.current) {
                 tableRef.current.updateColumns(modifiedColumnObjects);
                 }            
-            } 
+            } else { 
+                setWithOutOrders(true)
+            }
         }
 
-            const filteredData = data.filter((item) => {
-                return Object.values(item).some((value) =>
-                value.toString().toLowerCase().includes(inputValue.toLowerCase())
-                );
-            });
-
-            useEffect(() => { 
-                setTimeout(() => { 
-                    setLoadData(false)
-                }, 2000)
-            }, [columns, data])
+        const filteredData = data.filter((item) => {
+            return Object.values(item).some((value) =>
+            value.toString().toLowerCase().includes(inputValue.toLowerCase())
+            );
+        });
 
         useEffect(() => { 
-            if(data.length > 0) { 
-            getDataAndCreateTable()
-            console.log("ejecuto data mas a 0")
-            } else { 
-                setWithOutCollections(true)
-            }
-        }, [data])
+            setTimeout(() => { 
+                setLoadData(false)
+            }, 2000)
+        }, [columns, data])
 
-     return (
+    useEffect(() => { 
+        if(data.length > 0) { 
+        getDataAndCreateTable()
+        } else { 
+            setWithOutOrders(true)        
+        }
+    }, [data])
+
+    return (
         <div>
           {loadData ? (
             <Loading />
@@ -179,9 +198,14 @@ const SubletsTable = ({sublets, update}) => {
                data.length > 0 ? (
                   <>
                    <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
-                     <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
-                       <div className='flex justify-between w-full items-center ml-4'>                   
-                           <p className='text-sm font-bold text-zinc-600'>Sub Alquileres Realizados</p>
+                     <div className='h-12 w-full flex justify-between items-center  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
+                       <div className='flex justify-start w-full items-center ml-4 gap-6'>                   
+                           <p className='text-sm font-bold cursor-pointer text-zinc-600'  onClick={() => changeDataValues(everyReturns)}>Todas las Devoluciones</p>
+                           <p className='text-sm font-bold cursor-pointer text-zinc-600' onClick={() => changeDataValues(pendingReturns)}>Devoluciones Pendientes</p>
+                           <p className='text-sm font-bold cursor-pointer text-zinc-600'  onClick={() => changeDataValues(todaysReturns)}>Devoluciones del Dia</p>
+                       </div>
+                       <div className='flex items-center'>
+                         <CreateNewReturn/>
                        </div>
                        <div className='flex justify-start mr-4'></div>
                      </div>
@@ -218,7 +242,7 @@ const SubletsTable = ({sublets, update}) => {
                                {column.cellRenderer ? (
                                  column.cellRenderer({ row: { original: item } })
                                ) : (
-                                 column.key === "amount" ? (
+                                 column.key === "total" ? (
                                    formatePrice(item[column.key])
                                  ) : (
                                    item[column.key]
@@ -234,8 +258,11 @@ const SubletsTable = ({sublets, update}) => {
                ) : (
                  <div className='flex flex-col items-center justify-center '>
                    {
-                   withOutCollections ? 
-                    <p className='text-black font-medium text-md '>No hay SubAlquileres</p> 
+                   withOutOrders ? 
+                    <div className='flex flex-col items-center justify-center'>
+                       <p className='text-black font-medium text-md'>No hay Devoluciones</p> 
+                       <p className='cursor-pointer text-zinc-600 text-sm mt-2 underline' onClick={() => changeDataValues(everyReturns)}>Volver</p>
+                    </div>
                     :
                     null
                   }               
@@ -246,4 +273,4 @@ const SubletsTable = ({sublets, update}) => {
      )
    }
 
-export default SubletsTable
+export default ReturnsTable

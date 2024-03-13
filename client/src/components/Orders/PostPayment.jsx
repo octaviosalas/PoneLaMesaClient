@@ -8,7 +8,7 @@ import { UserContext } from "../../store/userContext";
 import Dropzone from 'react-dropzone';
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
 
-const PostPayment = ({orderData}) => {
+const PostPayment = ({usedIn, valueToPay, orderData}) => {
 
   const userCtx = useContext(UserContext)
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
@@ -113,9 +113,16 @@ const PostPayment = ({orderData}) => {
     });
   };
 
+  //<Button className="text-white bg-green-800 font-medium text-sm mt-2">Asentar Cobro de {formatePrice(orderData.map((ord) => ord.total))}</Button>
+
+
+
   return (
     <>
-      <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Asentar</p>
+      {usedIn === "CreateNewReturn" ? 
+        <Button onPress={onOpen}  className="text-white bg-green-800 font-medium text-sm mt-2">Asentar Cobro de {valueToPay}</Button>
+        :
+        <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Asentar</p>}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -124,11 +131,18 @@ const PostPayment = ({orderData}) => {
                     <div>
                         <p className="text-zinc-600 font-bold text-md"> Asentar cobro del Pedido</p>
                     </div>
-                    <div className="flex flex-col text-start justify-start  mt-2">
-                       <p className="text-sm font-medium text-black">Cliente: {orderData.client}</p>
-                       <p className="text-sm font-medium text-black">Cargado el {orderData.day} de {orderData.month} de {orderData.year}</p>
-                       <p className="text-sm font-medium text-black">Monto a cobrar: {formatePrice(orderData.total)}</p>
-                    </div>
+                  {usedIn !== "CreateNewReturn" ?
+                     <div className="flex flex-col text-start justify-start  mt-2">
+                        <p className="text-sm font-medium text-black">Cliente: {orderData.client}</p>
+                        <p className="text-sm font-medium text-black">Cargado el {orderData.day} de {orderData.month} de {orderData.year}</p>
+                        <p className="text-sm font-medium text-black">Monto a cobrar: {formatePrice(orderData.total)}</p>
+                      </div>
+                     : 
+                     <div className="flex flex-col text-start justify-start  mt-2">
+                        <p className="text-sm font-medium text-black">Cliente: {orderData.map((ord) => ord.client)}</p>
+                        <p className="text-sm font-medium text-black">Monto a cobrar: {valueToPay}</p>
+                     </div>
+                    }
                     <div className="mt-4 flex items-center justify-center">
                       <Select variant="faded" label="Selecciona la cuenta de Cobro" className="max-w-xs" onChange={(e) => setAccount(e.target.value)}>
                           {availablesAccounts.map((acc) => (

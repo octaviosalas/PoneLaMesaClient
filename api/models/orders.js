@@ -65,6 +65,9 @@ const ordersSchema = mongoose.Schema({
     yearPaid: { 
         type: String
     },
+    missingArticlesData: { 
+        type: Array
+    },
 
 })
 

@@ -53,10 +53,15 @@ const NavBarComponent = () =>  {
                         <DropdownItem textValue="Create New Order" key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
                         <DropdownItem textValue="Create New Order" key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem> 
                         <DropdownItem textValue="Create New Order" key="rep" onClick={() => goTo("EntregasLocal")}>Entregas</DropdownItem> 
-                        <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("DevolucionesEnLocal")}>Devueltos</DropdownItem>                           
+                        <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("DevolucionesEnLocal")}>Devoluciones</DropdownItem>                      
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
+          <NavbarItem>
+              <Link color="foreground" href="deposito" className="hover:text-green-600 cursor-pointer hover:font-medium">
+                Deposito
+              </Link>
+          </NavbarItem>      
           <NavbarItem>
                 <Dropdown>
                       <DropdownTrigger>
@@ -104,11 +109,13 @@ const NavBarComponent = () =>  {
                         <DropdownItem key="Clientes" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
                         <DropdownItem key="Compras" onClick={() => goTo("compras")}>Compras</DropdownItem>
                         <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Empleados</DropdownItem>
+                        <DropdownItem key="Compras" onClick={() => goTo("compras")}>Cierres</DropdownItem>
                         <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Clientes</DropdownItem>
                         <DropdownItem key="Articulos" onClick={() => goTo("Estadisticas/Articulos")}>Estadisticas Articulos</DropdownItem>
                         <DropdownItem key="Alquileres" onClick={() => goTo("Estadisticas/Alquileres")}>Estadisticas Alquileres</DropdownItem>
                         <DropdownItem key="Cobros" onClick={() => goTo("Estadisticas/Cobros")}>Estadisticas Cobros</DropdownItem>    
                         <DropdownItem key="Compras" onClick={() => goTo("Estadisticas/Compras")}>Estadisticas Compras</DropdownItem>    
+                        <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Empleados</DropdownItem>
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
