@@ -30,7 +30,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
   const [errorText, setErrorText] = useState("")
   const [succesMessage, setSuccesMessage] = useState(false)
   const [showObservation, setShowObservation] = useState(false)
-  const [observation, setObservation] = useState(false)
+  const [observation, setObservation] = useState("")
 
 
     //Funciones para obtener proveedores

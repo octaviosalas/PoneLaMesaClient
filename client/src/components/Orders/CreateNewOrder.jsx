@@ -39,6 +39,7 @@ const CreateNewOrder = ({updateList}) => {
   const [choosenProductQuantity, setChoosenProductQuantity] = useState(0)
   const [choosenProductId, setChoosenProductId] = useState("")
   const [choosenProductPrice, setChoosenProductPrice] = useState("")
+  const [choosenProductCategory, setChoosenProductCategory] = useState("")
   const [insufficientStock, setInsufficientStock] = useState(false)
   const [choosenProductStock, setChoosenProductStock] = useState(0)
   const [choosenProductPriceReplacement, setChoosenProductPriceReplacement] = useState("")
@@ -179,28 +180,31 @@ const CreateNewOrder = ({updateList}) => {
         }
       }
 
-      const chooseProduct = (name, id, price, replacementPrice, stock) => { 
-        console.log("recibi", id, name, price, replacementPrice, stock)
+      const chooseProduct = (name, id, price, replacementPrice, stock, category) => { 
+        console.log("recibi", id, name, price, replacementPrice, stock, category)
         setChoosenProductName(name)
         setChoosenProductId(id)
         setChoosenProductPrice(price)
         setChoosenProductPriceReplacement(replacementPrice)
         setChoosenProductStock(stock)
+        setChoosenProductStock(stock)
+        setChoosenProductCategory(category)
         setFilteredNames("")
       }
 
-      const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock) => {
+      const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock, choosenProductCategory) => {
         console.log("STOCK DEL PRODUCTO", choosenProductStock)
         console.log("CANTIDAD ELEGIDA", quantity)
         if(quantity < choosenProductStock) { 
           const choosenProductTotalPrice = price * quantity
-          const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
+          const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice, choosenProductCategory };
           setProductsSelected([...productsSelected, newProduct]);
           setChoosenProductId("")
           setChoosenProductName("")
           setChoosenProductQuantity("")
           setChoosenProductPriceReplacement("")
           setChoosenProductPrice("")
+          setChoosenProductCategory("")
           setChoosenProductStock(0)
         } else { 
           setInsufficientStock(true)
@@ -351,9 +355,9 @@ const CreateNewOrder = ({updateList}) => {
                                     <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500" key={prod._id} 
                                         onClick={() => {
                                             if (typeOfClient === "No Bonificado") {
-                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion, prod.stock);
+                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion, prod.stock, prod.Categoria);
                                             } else if (typeOfClient === "Bonificado") {
-                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioBonificados, prod.precioUnitarioReposicion, prod.stock);
+                                                chooseProduct(prod.articulo, prod._id, prod.precioUnitarioBonificados, prod.precioUnitarioReposicion, prod.stock, prod.Categoria);
                                             }
                                         }}
                                     >
@@ -368,8 +372,12 @@ const CreateNewOrder = ({updateList}) => {
                   <div className="mt-6 flex flex-col ">
                       {
                         choosenProductName.length !== 0 && choosenProductQuantity.length !== 0 ?
-                        <Button className="mt-6 font-medium text-white" color="success" 
-                         onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, choosenProductPriceReplacement, choosenProductStock )}>Añadir</Button> 
+                        <Button 
+                         className="mt-6 font-medium text-white" color="success" 
+                         onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, 
+                                        choosenProductPriceReplacement, choosenProductStock, choosenProductCategory)}>
+                          Añadir
+                        </Button> 
                         : 
                         null
                       }

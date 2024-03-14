@@ -97,9 +97,12 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
              setSuccesCollectionSaved(true)
              setSuccesOperation(true)
              setTimeout(() => { 
-             changeOrderPaid(true)
+              if(usedIn === "CreateNewReturn") { 
+                changeOrderPaid(true)
+              }   
              onClose()
              setAccount("")
+             setSuccesOperation(false)
            }, 1500)
          }
        } 
@@ -214,15 +217,33 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
                         <p className="text-sm font-medium text-black">Monto a cobrar: {valueToPay}</p>
                      </div>
                     }
-                    <div className="mt-4 flex items-center justify-center">
+
+                    {usedIn !== "CreateNewReturn" && orderData.paid === true ? (
+                      <div className="mt-4 flex items-center justify-center">
+                        <p className="text-md text-green-800 font-medium">Esta orden ya fue cobrada</p>
+                      </div>
+                    ) : (
+                      usedIn === "CreateNewReturn" ? 
                       <Select variant="faded" label="Selecciona la cuenta de Cobro" className="max-w-xs" onChange={(e) => setAccount(e.target.value)}>
-                          {availablesAccounts.map((acc) => (
-                            <SelectItem key={acc.value} value={acc.value}>
-                              {acc.label}
-                            </SelectItem>
-                          ))}
-                        </Select>
-                    </div>
+                        {availablesAccounts.map((acc) => (
+                          <SelectItem key={acc.value} value={acc.value}>
+                            {acc.label}
+                          </SelectItem>
+                        ))}
+                      </Select>
+                      : usedIn !== "CreateNewReturn" && orderData.paid === false ? ( 
+                        <div className="flex flex-col items-center justify-center mt-4">
+                            <Select variant="faded" label="Selecciona la cuenta de Cobro" className="max-w-xs" onChange={(e) => setAccount(e.target.value)}>
+                                {availablesAccounts.map((acc) => (
+                                  <SelectItem key={acc.value} value={acc.value}>
+                                    {acc.label}
+                                  </SelectItem>
+                                ))}
+                            </Select>
+                        </div>
+                        
+                      ) : null
+                    )}
 
                   {account.length > 0?
                     <div>
@@ -262,9 +283,10 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
                           </p>
                       :
                       <div className="flex gap-6 items-center justify-center">
+                         {usedIn !== "CreateNewReturn" && orderData.paid === true ? null :
                           <Button  className="font-bold text-white text-sm bg-green-600 w-32"  onPress={usedIn === "CreateNewReturn" ? addNewCollectionUsedInCreateNewReturn : addNewCollection}>
                             Asentar Pago
-                          </Button>
+                          </Button>}
                           <Button  className="font-bold text-white text-sm bg-green-600 w-32" onPress={handleClose}>
                             Cancelar
                           </Button>

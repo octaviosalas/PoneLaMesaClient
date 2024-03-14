@@ -25,6 +25,7 @@ const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack}) => {
         setTotalToPay(getTotalToPay)
         setClientId(getClientId)
         console.log(getTotalToPay)
+        console.log(articlesWithMissing)
         if(getTotalToPay > 0) { 
            setLoad(false)
         }

@@ -3,7 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import { getEveryOrders, everyYears, months } from "../../functions/gralFunctions";
 import UseSubletToOrderSecondStep from "./UseSubletToOrderSecondStep";
 
-const UseSubletToOrder = ({subletData}) => {
+const UseSubletToOrder = ({subletData, update}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [orders, setOrders] = useState([])
   const [years, setYears] = useState(everyYears)
@@ -129,7 +129,7 @@ const UseSubletToOrder = ({subletData}) => {
                  null}
 
                  {secondStep ? 
-                   <UseSubletToOrderSecondStep orderData={orderChoosenData} orderDataStatus={orderChoosenStatus} dataSublet={subletData} comeBack={comeBackToFirstStep} closeModalNow={onClose}/>
+                   <UseSubletToOrderSecondStep orderData={orderChoosenData} orderDataStatus={orderChoosenStatus} dataSublet={subletData} comeBack={comeBackToFirstStep} closeModalNow={onClose} update={update}/>
                  : null}
 
                </ModalBody>}

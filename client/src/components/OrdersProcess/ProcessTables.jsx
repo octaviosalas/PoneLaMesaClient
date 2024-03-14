@@ -12,6 +12,7 @@ import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunction
 import { useNavigate } from 'react-router-dom';
 import CreateSublet from '../ArticlesTable/CreateSublet';
 import FindSublet from '../Sublets/FindSublet';
+import CleaningDetail from '../Modals/CleaningDetail';
 
 
 
@@ -79,23 +80,27 @@ const ProcessTables = ({orderStatus}) => {
                     }
                   });
 
-                 {orderStatus ===  "A Confirmar" ? modifiedColumnObjects.push({
+                 {orderStatus ===  "A Confirmar" ?
+                  modifiedColumnObjects.push({
                     key: 'Anexar SuAlquiler',
                     label: 'Anexar SuAlquiler',
                     cellRenderer: (cell) => { 
                       const filaActual = cell.row; 
                       const id = filaActual.original._id;    
                       const total = filaActual.original.total; 
+                      const orderDetail = filaActual.original.orderDetail;
                       const item = { 
                         id: id,
-                        total: total
+                        orderDetail: orderDetail,
+                        total: total,
                       }             
-                      return (
+                      return ( 
                          <FindSublet orderData={item} updateListOfToBeConfirmedOrders={getDataAndCreateTable}/>
                         );
                      },
                     }) : null}
            
+                 {orderStatus !== "Lavado" ? 
                   modifiedColumnObjects.push({
                   key: 'Detalle',
                   label: 'Detalle',
@@ -103,6 +108,7 @@ const ProcessTables = ({orderStatus}) => {
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
                     const detail = filaActual.original.orderDetail;
+                    const orderSublets = filaActual.original.subletsDetail;
                     const creator = filaActual.original.orderCreator;
                     const client = filaActual.original.client;
                     const day = filaActual.original.day;
@@ -112,6 +118,7 @@ const ProcessTables = ({orderStatus}) => {
                     const item = {
                     id: id,
                     detail: detail,
+                    orderSublets: orderSublets,
                     creator: creator,
                     day: day,
                     month: month,
@@ -123,7 +130,40 @@ const ProcessTables = ({orderStatus}) => {
                        <OrderDetail orderData={item}/>
                       );
                 },
-                  }) 
+                  }) : 
+                  modifiedColumnObjects.push({
+                    key: 'Detalle',
+                    label: 'Detalle',
+                    cellRenderer: (cell) => { 
+                      const filaActual = cell.row;
+                      const id = filaActual.original._id;
+                      const detail = filaActual.original.orderDetail;
+                      const orderSublets = filaActual.original.subletsDetail;
+                      const missedArticles = filaActual.original.missingArticlesData;
+                      const creator = filaActual.original.orderCreator;
+                      const client = filaActual.original.client;
+                      const day = filaActual.original.day;
+                      const month = filaActual.original.month;
+                      const year = filaActual.original.year;
+                      const total = filaActual.original.total;
+                      const item = {
+                      id: id,
+                      detail: detail,
+                      orderSublets: orderSublets,
+                      missedArticles: missedArticles,
+                      creator: creator,
+                      day: day,
+                      month: month,
+                      year: year,
+                      total: total,
+                      client: client
+                      };
+                      return (
+                         <CleaningDetail orderData={item}/>
+                        );
+                  },
+                    }) 
+                  }
 
                  
 

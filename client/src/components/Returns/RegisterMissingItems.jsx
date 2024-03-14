@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { Button, Input } from '@nextui-org/react'
 import RegisterMissingItemsSecondStep from './RegisterMissingItemsSecondStep'
 
-const RegisterMissingItems = ({returnFirstStep, orderData}) => {
+const RegisterMissingItems = ({returnFirstStep, orderData, cancel}) => {
 
     const [allOrderProducts, setAllOrderProducts] = useState([])
     const [newOrderDetailArray, setNewOrderDetailArray] = useState([])
     const [originalOrderDetail, setOriginalOrderDetail] = useState([])
     const [confirmRegisterMissing, setConfirmRegisterMissing] = useState(false)
     const [withOutQuantityModified, setWithOutQuantityModified] = useState(false)
+    const [largerAmount, setLargerAmount] = useState(false)
 
-
-
-    useEffect(() => { 
+     useEffect(() => { 
         console.log(orderData)
         const articles = orderData.map((ord) => ord.orderDetail)[0]
         const subletsArticles = orderData.map((ord) => ord.subletsDetail)[0]
@@ -20,38 +19,40 @@ const RegisterMissingItems = ({returnFirstStep, orderData}) => {
         setAllOrderProducts(concatenatedArray)
         setNewOrderDetailArray(concatenatedArray)
         setOriginalOrderDetail(concatenatedArray)
-    }, [orderData])
-
-    useEffect(() => { 
-        console.log(allOrderProducts)
-    }, [allOrderProducts])
-
-    useEffect(() => { 
-      console.log(newOrderDetailArray)
-  }, [newOrderDetailArray])
-
-  
-  useEffect(() => { 
-    console.log(originalOrderDetail)
-}, [originalOrderDetail])
-
-      const handleQuantityChange = (index, newQuantity) => {
+     }, [orderData])
+    
+     const handleQuantityChange = (index, newQuantity) => {
         const updatedOrderDetailArray = [...newOrderDetailArray];
-        updatedOrderDetailArray[index] = {
+        const updatedOrderDetail = {
           ...updatedOrderDetailArray[index],
           quantity: newQuantity,
-          missing: originalOrderDetail[index].quantity  - newQuantity
+          missing: originalOrderDetail[index].quantity - newQuantity
         };
+        if (updatedOrderDetail.missing === 0) {
+          delete updatedOrderDetail.missing;
+        }
+        updatedOrderDetailArray[index] = updatedOrderDetail;
         setNewOrderDetailArray(updatedOrderDetailArray);
-      };
+        console.log(updatedOrderDetailArray);
+     };
 
       const continueToConfirm = () => { 
         const hasMissingPropperty = newOrderDetailArray.some(obj => 'missing' in obj);
+        const articlesWithMissedPropperty = newOrderDetailArray.filter(obj => 'missing' in obj);
         if(hasMissingPropperty === true) { 
-          console.log("yes")
-          setConfirmRegisterMissing(true)
+          const quantityMissed = articlesWithMissedPropperty.map((miss) => miss.missing)
+          const detectWrongQuantitys = quantityMissed.some((num) => num <= -1)
+          if(detectWrongQuantitys === false && hasMissingPropperty) { 
+            setConfirmRegisterMissing(true)
+          } else { 
+            setLargerAmount(true)
+            setTimeout(() => { 
+              setLargerAmount(false)
+            }, 2200)
+          }
+          console.log(detectWrongQuantitys)
+          console.log(quantityMissed)
         } else { 
-          console.log("no")
           setConfirmRegisterMissing(false)
           setWithOutQuantityModified(true)
           setTimeout(() => { 
@@ -81,10 +82,13 @@ const RegisterMissingItems = ({returnFirstStep, orderData}) => {
               </div>
             ))}
         </div>
-        <div className='mt-4 mb-2 flex flex-col items-center justify-center'>
-            <Button className='text-white font-sm font-medium bg-green-800 w-72' onClick={() => continueToConfirm()}>Continuar</Button>
-            {withOutQuantityModified ? <p className="font-medium text-green-800 text-sm mt-4">No has registrado ningun Faltante</p> : null}
+        <div className='mt-4 mb-2 flex gap-4 items-center justify-center'>
+            <Button className='text-white font-sm font-medium bg-green-800 w-52' onClick={() => continueToConfirm()}>Continuar</Button>
+            <Button className='text-white font-sm font-medium bg-green-800 w-52' onClick={() => cancel()}>Cancelar</Button>
         </div> 
+        {withOutQuantityModified ? <p className="font-medium text-green-800 text-sm mt-4">No has registrado ningun Faltante</p> : null}
+        {largerAmount ? <p className="font-medium text-green-800 text-sm mt-4">Has Ingresado cantidades Mayores a las entregadas</p> : null}
+
        </>
        :
         <RegisterMissingItemsSecondStep dataUpdated={newOrderDetailArray} orderData={orderData} comeBack={comeBack}/>

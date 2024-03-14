@@ -296,11 +296,11 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                                   <SelectItem key={"Entregado"} value={"Retiro en Local"} onClick={() => setStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
                               </Select> 
                             : 
-                            <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">     
+                            <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
+                              <SelectItem key={"confirmar"} value={"A Confirmar"} onClick={() => setStatus("A Confirmar")} >A Confirmar</SelectItem>     
                               <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>          
                               <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
                               <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
-                              <SelectItem key={"Devolucion"} value={"Devolucion"} onClick={() => setStatus("Devuelto")} >Devolucion</SelectItem>   
                               <SelectItem key={"Lavado"} value={"Lavado"} onClick={() => setStatus("Lavado")} >Lavado</SelectItem>     
                               <SelectItem key={"Repuesto"} value={"Repuesto"} onClick={() => setStatus("Repuesto")}>Repuesto</SelectItem>                                          
                             </Select>

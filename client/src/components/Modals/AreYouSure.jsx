@@ -22,6 +22,7 @@ const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, upd
   
       if (statusUpdateResponse.status === 200) {
         const detailOrder = {
+          orderDetail: dataOrder.orderDetail,
           subletDetail: subletData.subletProductsDetail,
           newAmount: dataOrder.total + subletData.amountToBeAdded
         };

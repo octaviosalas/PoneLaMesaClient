@@ -5,7 +5,7 @@ import UseSubletToOrderSecondStep from "../Sublets/UseSubletToOrderSecondStep";
 import CreateNewReturnSecondStep from "./CreateNewReturnSecondStep";
 import arrowLeft from "../../images/arrowLeft.png"
 
-const CreateNewReturn = () => {
+const CreateNewReturn = ({updateList}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [orders, setOrders] = useState([])
@@ -29,6 +29,9 @@ const CreateNewReturn = () => {
 
     const getOrderData = async () => { 
        console.log("ejecutando get order Data")
+       console.log(monthSelected)
+       console.log(yearSelected)
+       console.log(orderNumberSelected)
         if(yearSelected !== null && monthSelected !== null && orderNumberSelected !== null) { 
           const filteredOrders = orders.filter((ord) => ord.month === monthSelected && ord.year === yearSelected && ord.orderNumber === orderNumberSelected)
           if(filteredOrders.length > 0) { 
@@ -60,8 +63,10 @@ const CreateNewReturn = () => {
       setFirstStep(true)
     }
 
-
-
+    const closeModalNow = () => { 
+      onClose()
+      comeBackToFirstStep()
+    }
 
   return (
     <>
@@ -72,7 +77,7 @@ const CreateNewReturn = () => {
             <>
                 <ModalHeader className="flex justify-between items-center gap-1">
                   <p>Asentar Devolucion</p>
-                {<img onClick={() => comeBackToFirstStep()} className="h-6 w-6 mt-4 cursor-pointer" src={arrowLeft}/>}
+                  {<img onClick={() => comeBackToFirstStep()} className="h-6 w-6 mt-4 cursor-pointer" src={arrowLeft}/>}
                 </ModalHeader>              
                <ModalBody className="flex flex-col items-center justify-center">
    
@@ -117,7 +122,7 @@ const CreateNewReturn = () => {
                   
 
                  {secondStep ? 
-                   <CreateNewReturnSecondStep orderData={orderChoosenData} orderDataStatus={orderChoosenStatus}  comeBack={comeBackToFirstStep} closeModalNow={onClose} />
+                   <CreateNewReturnSecondStep updateList={updateList} orderData={orderChoosenData} orderDataStatus={orderChoosenStatus}  comeBack={comeBackToFirstStep} closeModalNow={closeModalNow} />
                  : null}
 
                </ModalBody>

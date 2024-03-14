@@ -4,7 +4,7 @@ import { formatePrice } from '../../functions/gralFunctions'
 import axios from 'axios'
 import Loading from '../Loading/Loading'
 
-const UseSubletToOrderSecondStep = ({orderData, orderDataStatus, dataSublet, comeBack, closeModalNow}) => {
+const UseSubletToOrderSecondStep = ({orderData, orderDataStatus, dataSublet, comeBack, closeModalNow, update}) => {
 
   const [totalToAdd, setTotalToAdd] = useState(0)
   const [orderId, setOrderId] = useState(orderData._id)
@@ -58,6 +58,7 @@ const UseSubletToOrderSecondStep = ({orderData, orderDataStatus, dataSublet, com
           if (newSubletState.status === 200) {
             setSuccesMessage(true);
             setLoad(false);
+            update()
             setTimeout(() => {
               closeModalNow();
               setSuccesMessage(false);

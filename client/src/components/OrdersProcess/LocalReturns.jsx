@@ -40,7 +40,7 @@ const LocalReturns = () => {
   return (
     <div>
          <NavBarComponent/>
-         <ReturnsTable todaysReturns={todaysReturns} pendingReturns={pendingReturns} everyReturns={everyReturns}/>
+         <ReturnsTable todaysReturns={todaysReturns} pendingReturns={pendingReturns} everyReturns={everyReturns} updateList={getOrdersToDeliverTodayInLocal}/>
     </div>
   )
 }

@@ -184,6 +184,7 @@ const OrdersTable = () => {
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
                     const detail = filaActual.original.orderDetail;
+                    const paid = filaActual.original.paid;
                     const creator = filaActual.original.orderCreator;
                     const client = filaActual.original.client;
                     const clientId = filaActual.original.clientId;
@@ -194,6 +195,7 @@ const OrdersTable = () => {
                     const item = {
                     id: id,
                     detail: detail,
+                    paid: paid,
                     creator: creator,
                     day: day,
                     month: month,

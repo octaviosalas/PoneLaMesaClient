@@ -23,6 +23,7 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
 
       const handleOpen =  () => { 
         onOpen()
+        console.log(orderData)
       }
 
       useEffect(() => { 
@@ -73,6 +74,7 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
                   const filaActual = cell.row;
                   const id = filaActual.original._id;       
                   const subletDetail = filaActual.original.productsDetail;
+                  const orderDetail = filaActual.original.orderDetail;
                   const amountToBeAdd = filaActual.original.productsDetail.map((it) => it.rentalPrice * it.quantity).reduce((acc, el) => acc + el, 0)
                   const item = {
                   id: id,              

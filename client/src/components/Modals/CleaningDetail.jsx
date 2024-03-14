@@ -4,41 +4,39 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyV
 import { formatePrice } from "../../functions/gralFunctions";
 import { useState, useEffect } from "react";
 
-const OrderDetail = ({orderData}) => {
+const CleaningDetail = ({orderData}) => {
+
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
 
-
-  useEffect(() => {
-    if (orderData && orderData.detail && Array.isArray(orderData.detail) && orderData.detail.length > 0) {
-      const firstDetail = orderData.detail[0];
-      const properties = Object.keys(firstDetail);
-      const filteredProperties = properties.filter(property => property !== 'productId');
-  
-      const columnLabelsMap = {
-        productName: 'Articulo',
-        quantity: 'Cantidad',
-        price: 'Precio Alquiler',
-        replacementPrice: 'Precio Reposicion',
-        choosenProductTotalPrice: 'Monto Total',
-      };
-  
-      const tableColumns = filteredProperties.map(property => ({
-        key: property,
-        label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
-      }));
-  
-      setColumns(tableColumns);
-    }
-  }, [orderData]);
-
-  
- 
-
+    useEffect(() => {
+        if (orderData && orderData.detail && Array.isArray(orderData.detail) && orderData.detail.length > 0) {
+          const firstDetail = orderData.detail[0];
+          const properties = Object.keys(firstDetail);
+          const filteredProperties = properties.filter(property => property !== 'productId');
+      
+          const columnLabelsMap = {
+            productName: 'Articulo',
+            quantity: 'Cantidad',
+            price: 'Precio Alquiler',
+            replacementPrice: 'Precio Reposicion',
+            choosenProductTotalPrice: 'Monto Total',
+          };
+      
+          const tableColumns = filteredProperties.map(property => ({
+            key: property,
+            label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+          }));
+      
+          setColumns(tableColumns);
+        }
+      }, [orderData]);
+    
   return (
-    <>
-      <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle</p>
+    <div>
+       <>
+      <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Ver Lavado</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
         <ModalContent>
           {(onClose) => (
@@ -108,8 +106,8 @@ const OrderDetail = ({orderData}) => {
         </ModalContent>
       </Modal>
     </>
-  );
+    </div>
+  )
 }
 
-export default OrderDetail
-
+export default CleaningDetail

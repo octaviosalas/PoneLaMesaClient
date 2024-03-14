@@ -6,7 +6,7 @@ import Loading from '../Loading/Loading';
 import OrderDetail from '../Orders/OrderDeatil';
 import CreateNewReturn from '../Returns/CreateNewReturn';
 
-const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns}) => {
+const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -205,7 +205,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns}) => {
                            <p className='text-sm font-bold cursor-pointer text-zinc-600'  onClick={() => changeDataValues(todaysReturns)}>Devoluciones del Dia</p>
                        </div>
                        <div className='flex items-center'>
-                         <CreateNewReturn/>
+                         <CreateNewReturn updateList={updateList}/>
                        </div>
                        <div className='flex justify-start mr-4'></div>
                      </div>

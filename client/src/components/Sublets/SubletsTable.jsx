@@ -65,7 +65,7 @@ const SubletsTable = ({sublets, update}) => {
                       used: used
                       };
                       return (
-                       <UseSubletToOrder subletData={item}/>
+                       <UseSubletToOrder subletData={item} update={update}/>
                       );
                   },
                   }) 

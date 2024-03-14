@@ -3,16 +3,21 @@ import { formatePrice } from '../../functions/gralFunctions'
 import { Button } from '@nextui-org/react'
 import PostPayment from '../Orders/PostPayment'
 import RegisterMissingItems from './RegisterMissingItems'
+import MarkOrderLikeReturnedWithOutMissedArticles from './MarkOrderLikeReturnedWithOutMissedArticles'
 
-const CreateNewReturnSecondStep = ({orderData, orderDataStatus, comeBack, closeModalNow}) => {
+const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, comeBack, closeModalNow}) => {
 
     const [orderHasBrokenArticles, setOrderHasBrokenArticles] = useState(false)
+    const [orderId, setOrderId] = useState(false)
     const [orderPaid, setOrderPaid] = useState(false)
+    const [orderIsReturned, setOrderIsReturned] = useState(false)
+    const [markAsReturnedWithOutProductsMissed, setMarkAsReturnedWithOutProductsMissed] = useState(false)
 
     useEffect(() => { 
         console.log(orderData)
         console.log(orderDataStatus)
         setOrderPaid(orderData.map((ord) => ord.paid)[0])
+        setOrderId(orderData.map((ord) => ord._id)[0])
     },[])
 
     useEffect(() => { 
@@ -27,12 +32,31 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, comeBack, closeM
         setOrderPaid(value)
     }
 
+    const advanceToSecondStep = () => { 
+        if(orderDataStatus === "Devuelto") { 
+            setOrderIsReturned(true)
+            setTimeout(() => { 
+                setOrderIsReturned(false)
+            }, 2300)
+        } else { 
+            setMarkAsReturnedWithOutProductsMissed(true)
+        }
+    }
+
+    const cancelUpdateOrderState = () => { 
+        setMarkAsReturnedWithOutProductsMissed(false)       
+    }
+
+    const cancelarMarkMissedArticles = () => { 
+        setOrderHasBrokenArticles(false)       
+    }
+
   return (
     <div>
   {orderHasBrokenArticles === false ?
   <>
      <div className='flex flex-col justify-start items-start w-full'>
-         <div >
+         <div>
                   <div className='flex items-center gap-2'>
                         <h5 className='font-bold text-green-800 text-sm'>Cliente:</h5>
                         <p className='text-sm font-medium text-zinc-600'>{orderData.map((ord) => ord.client)}</p>
@@ -76,9 +100,9 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, comeBack, closeM
                         <h5 className='font-bold text-green-800'>Monto total del Pedido</h5>
                         <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total))}</p>
                     </div>
-                </div>
      </div>
-     <div className='flex flex-col items-center justify-center mt-2'>
+     </div>
+           <div className='flex flex-col items-center justify-center mt-2'>
                   {orderPaid ? 
                     <p className='text-sm font-medium text-zinc-600 underline'>Este pedido se encuentra Abonado</p>
                     :
@@ -87,14 +111,28 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, comeBack, closeM
                    <PostPayment usedIn="CreateNewReturn" valueToPay={formatePrice(orderData.map((ord) => ord.total))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>
                 </div>
                 }
-      </div>
-      <div className='flex mt-4 gap-4 items-center justify-center'>
-                <Button className="text-white bg-green-700 font-medium text-sm">Asentar Devolucion Sin Faltantes</Button>
+           </div>
+
+          {markAsReturnedWithOutProductsMissed === false ? 
+
+             <div className='flex mt-4 gap-4 items-center justify-center'>
+                <Button className="text-white bg-green-700 font-medium text-sm" onClick={() => advanceToSecondStep()}>Asentar Devolucion Sin Faltantes</Button>
                 <Button className="text-white bg-green-700 font-medium text-sm" onClick={() => setOrderHasBrokenArticles(true)}>Registrar Faltantes</Button>
-      </div>    
+             </div> :
+             <div className='flex text-center items-center justify-center mt-4'>
+                <MarkOrderLikeReturnedWithOutMissedArticles updateList={updateList} cancel={cancelUpdateOrderState} orderId={orderId} closeNow={closeModalNow}/>
+             </div>
+          
+          
+          }
+          
+                {orderIsReturned ?
+                 <div className="flex items-center justify-center mt-4 mb-4">
+                    <p className='text-green-800 font-medium text-sm'>La orden ya fue marcada como Devuelta</p>
+                 </div> : null}
      </>
         :
-        <RegisterMissingItems returnFirstStep={comeBackFirstStep} orderData={orderData}/> 
+        <RegisterMissingItems returnFirstStep={comeBackFirstStep} orderData={orderData} cancel={cancelarMarkMissedArticles}/> 
         }
 
     </div>
