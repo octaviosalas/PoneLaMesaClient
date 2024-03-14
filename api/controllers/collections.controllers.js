@@ -5,7 +5,7 @@ export const addNewCollection = async (req, res) => {
    try {
     const newCollectionToBeSaved = new Collections(req.body);
     const collectionSaved = await newCollectionToBeSaved.save();
-    res.status(201).json(collectionSaved);
+    res.status(200).json(collectionSaved);
   } catch (error) {
     res.status(500).json({ error: 'Error al crear el cobro' });
     console.log(error)

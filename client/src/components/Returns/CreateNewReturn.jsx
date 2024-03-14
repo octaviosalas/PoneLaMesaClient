@@ -3,6 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import { getEveryOrders, everyYears, months } from "../../functions/gralFunctions";
 import UseSubletToOrderSecondStep from "../Sublets/UseSubletToOrderSecondStep";
 import CreateNewReturnSecondStep from "./CreateNewReturnSecondStep";
+import arrowLeft from "../../images/arrowLeft.png"
 
 const CreateNewReturn = () => {
 
@@ -20,11 +21,6 @@ const CreateNewReturn = () => {
   const [orderChoosenData, setOrderChoosenData] = useState(false);
   const [orderChoosenStatus, setOrderChoosenStatus] = useState("");
 
-    useEffect(() => { 
-        console.log(orderChoosenStatus)
-    }, [orderChoosenStatus])
-
-
     const handleOpen = async () => { 
       onOpen()
       const data = await getEveryOrders()
@@ -32,7 +28,7 @@ const CreateNewReturn = () => {
     }
 
     const getOrderData = async () => { 
-    
+       console.log("ejecutando get order Data")
         if(yearSelected !== null && monthSelected !== null && orderNumberSelected !== null) { 
           const filteredOrders = orders.filter((ord) => ord.month === monthSelected && ord.year === yearSelected && ord.orderNumber === orderNumberSelected)
           if(filteredOrders.length > 0) { 
@@ -61,6 +57,7 @@ const CreateNewReturn = () => {
 
     const comeBackToFirstStep = () => { 
       setSecondStep(false)
+      setFirstStep(true)
     }
 
 
@@ -73,7 +70,10 @@ const CreateNewReturn = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Asentar Devolucion</ModalHeader>              
+                <ModalHeader className="flex justify-between items-center gap-1">
+                  <p>Asentar Devolucion</p>
+                {<img onClick={() => comeBackToFirstStep()} className="h-6 w-6 mt-4 cursor-pointer" src={arrowLeft}/>}
+                </ModalHeader>              
                <ModalBody className="flex flex-col items-center justify-center">
    
                   {firstStep ?
@@ -117,7 +117,7 @@ const CreateNewReturn = () => {
                   
 
                  {secondStep ? 
-                   <CreateNewReturnSecondStep orderData={orderChoosenData} orderDataStatus={orderChoosenStatus}  comeBack={comeBackToFirstStep} closeModalNow={onClose}/>
+                   <CreateNewReturnSecondStep orderData={orderChoosenData} orderDataStatus={orderChoosenStatus}  comeBack={comeBackToFirstStep} closeModalNow={onClose} />
                  : null}
 
                </ModalBody>

@@ -36,7 +36,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns}) => {
             if(data.length !== 0) { 
             const propiedades = Object.keys(everyReturns[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
             &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
-            && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day');
+            && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'missingArticlesData');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),

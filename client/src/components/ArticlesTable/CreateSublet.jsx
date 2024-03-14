@@ -13,6 +13,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
   const [everyArticles, setEveryArticles] = useState([])
   const [productsChoosen, setProductsChoosen] = useState([])
   const [productChoosenName, setProductChoosenName] = useState("")
+  const [productChoosenReplacementPrice, setProductChoosenReplacementPrice] = useState("")
   const [productChoosenQuantity, setProductChoosenQuantity] = useState("")
   const [productChoosenId, setProductChoosenId] = useState("")
   const [productChoosenPrice, setProductChoosenPrice] = useState(0)
@@ -71,7 +72,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
       }
     }
 
-    const chooseArticle = (name, id, price) => { 
+    const chooseArticle = (name, id, price, replacementPrice) => { 
       const roundedPrice = Math.round(parseFloat(price));
       console.log("Elegiste", name, id, price)
       console.log(roundedPrice)
@@ -79,20 +80,23 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
       setProductChoosenId(id)
       setFilteredNames([])
       setProductChoosenPrice(price)
+      setProductChoosenReplacementPrice(replacementPrice)
     }
     
-    const addProductSelected = (productName, productId, quantity, price, value) => {
+    const addProductSelected = (productName, productId, quantity, price, value, replacementPrice) => {
         const rentalPrice = Math.round(parseFloat(price));
         console.log("tipo de dato", typeof rentalPrice)
         const numericPrice = parseFloat(value); 
         const numericQuantity = parseFloat(quantity); 
-        const newProduct = { productName, productId, quantity: numericQuantity, rentalPrice, value: numericPrice };
+        const numericReplacement = parseFloat(replacementPrice); 
+        const newProduct = { productName, productId, quantity: numericQuantity, rentalPrice, value: numericPrice, replacementPrice: numericReplacement };
         setProductsChoosen([...productsChoosen, newProduct]);
         setProductChoosenId("")
         setProductChoosenValue("")
         setProductChoosenPrice(0)
         setProductChoosenQuantity("")
         setProductChoosenName("")
+        setProductChoosenReplacementPrice("")
         console.log(productsChoosen)
 
     };
@@ -168,10 +172,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
          .catch((err) => { 
           console.log(err)
          })
-      }
-
-
-    
+      }   
     }
 
     useEffect(() => { 
@@ -201,7 +202,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
                             <div className='absolute  rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
                                 {filteredNames.map((cc) => (
                                     <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 ml-2" key={cc._id} 
-                                        onClick={() => chooseArticle(cc.articulo, cc._id, cc.precioUnitarioAlquiler)}>
+                                        onClick={() => chooseArticle(cc.articulo, cc._id, cc.precioUnitarioAlquiler, cc.precioUnitarioReposicion)}>
                                         {cc.articulo}
                                     </p>
                                 ))}
@@ -214,7 +215,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
                      {
                         productChoosenName.length !== 0 && productChoosenQuantity.length !== 0  && productChoosenValue !== null?
                         <Button className="mt-6 w-52 font-medium text-white" color="success" 
-                         onClick={() => addProductSelected(productChoosenName, productChoosenId, productChoosenQuantity, productChoosenPrice, productChoosenValue )}>Añadir</Button> 
+                         onClick={() => addProductSelected(productChoosenName, productChoosenId, productChoosenQuantity, productChoosenPrice, productChoosenValue, productChoosenReplacementPrice )}>Añadir</Button> 
                         : 
                         null
                       }

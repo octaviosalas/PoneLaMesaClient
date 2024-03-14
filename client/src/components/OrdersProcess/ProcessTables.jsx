@@ -45,7 +45,7 @@ const ProcessTables = ({orderStatus}) => {
              {viewJustToday ? setData(filterOrdersByToday) :  setData(filterOrdersByStatus)}
              if(filterOrdersByStatus.length !== 0) { 
                const propiedades = Object.keys(filterOrdersByStatus[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-               && propiedad !== 'orderDetail'  && propiedad !== 'subletsDetail' &&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
+               && propiedad !== 'orderDetail'  && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' &&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
                && propiedad !== 'day' && propiedad !== 'paid');
                const columnObjects = propiedades.map(propiedad => ({
                   key: propiedad,

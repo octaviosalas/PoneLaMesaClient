@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import { formatePrice, getDate, getDay, getMonth, getYear} from "../../functions/gralFunctions";
 import {Select, SelectItem} from "@nextui-org/react";
@@ -6,9 +6,9 @@ import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import Dropzone from 'react-dropzone';
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import { PhotoIcon } from '@heroicons/react/24/solid'
 
-const PostPayment = ({usedIn, valueToPay, orderData}) => {
+const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
 
   const userCtx = useContext(UserContext)
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
@@ -22,6 +22,35 @@ const PostPayment = ({usedIn, valueToPay, orderData}) => {
   const [succesCollectionSaved, setSuccesCollectionSaved] = useState(false)
   const [succesOperation, setSuccesOperation] = useState(false)
   const [payImage, setPayImage] = useState("")
+  const [orderIdItem, setOrderIdItem] = useState("")
+  const [orderClientItem, setOrderClientItem] = useState("")
+  const [orderDetailItem, setOrderDetailItem] = useState([])
+  const [orderTotalItem, setOrderTotalItem] = useState("")
+
+
+  const getOrderIdToPostPayment = () => { 
+    const id = orderData.map((o) => o._id)[0]
+    const client = orderData.map((o) => o.client)[0]
+    const detail = orderData.map((o) => o.orderDetail)[0]
+    const total = orderData.map((o) => o.total)[0]
+    setOrderIdItem(id)
+    setOrderClientItem(client)
+    setOrderDetailItem(detail)
+    setOrderTotalItem(total)
+  }
+
+  useEffect(() => { 
+     if(usedIn === "CreateNewReturn") { 
+      getOrderIdToPostPayment()
+     }
+  }, [])
+
+  useEffect(() => { 
+    console.log(orderIdItem)
+    console.log(orderClientItem)
+    console.log(orderDetailItem)
+    console.log(orderTotalItem)
+ }, [orderIdItem, orderClientItem, orderDetailItem, orderTotalItem])
 
 
   const availablesAccounts = [
@@ -39,7 +68,7 @@ const PostPayment = ({usedIn, valueToPay, orderData}) => {
     },
   ]
 
-  const addNewCollection = () => { 
+  const addNewCollection = async () => { 
     if(account.length !== 0 && payImage.length > 0) { 
       const collecctionData = ({ 
         orderId: orderData.id,
@@ -56,40 +85,86 @@ const PostPayment = ({usedIn, valueToPay, orderData}) => {
         voucher: payImage
       })
 
-      axios.put(`http://localhost:4000/orders/addPaid/${orderData.id}`)
-      .then((res) => { 
-       console.log(res.data)
-       setSuccesChangeState(true)
-      })
-      .catch((err) => { 
-       console.log(err)
-      })
+      try {
+        const updateOrderLikePaid = await axios.put(`http://localhost:4000/orders/addPaid/${orderData.id}`)
+        console.log(updateOrderLikePaid.data);
 
- axios.post("http://localhost:4000/collections/addNewCollection", collecctionData)    
-      .then((res) => { 
-       console.log(res.data)
-       setSuccesCollectionSaved(true)
-       setSuccesOperation(true)
-       setTimeout(() => { 
-        onClose()
-        setAccount("")
-      }, 1500)
-       })
-      .catch((err) => { 
-       console.log(err)
+        if (updateOrderLikePaid.status === 200) { 
+          const addNewCollection = await axios.post("http://localhost:4000/collections/addNewCollection", collecctionData)   
+          console.log(addNewCollection.data)
+ 
+           if(addNewCollection.status === 200) { 
+             setSuccesCollectionSaved(true)
+             setSuccesOperation(true)
+             setTimeout(() => { 
+             changeOrderPaid(true)
+             onClose()
+             setAccount("")
+           }, 1500)
+         }
+       } 
+       } catch (error) {
+         console.log(err)
+       }
+      } else { 
+        setMissedData(true)
+        setTimeout(() => { 
+          setMissedData(false)
+        }, 1500)
+      }
+      
+  }
+
+  const addNewCollectionUsedInCreateNewReturn = async () => { 
+    if(account.length !== 0 && payImage.length > 0) { 
+      const collecctionData = ({ 
+        orderId: orderIdItem,
+        collectionType:"order",
+        client: orderClientItem,
+        orderDetail: orderDetailItem,
+        date: actualDate,
+        day: day,
+        month: month,
+        year: year,
+        amount: orderTotalItem,
+        account: account,
+        loadedBy: userCtx.userName,
+        voucher: payImage
       })
-    } else { 
-      setMissedData(true)
-      setTimeout(() => { 
-        setMissedData(false)
-      }, 1500)
-    }
-    }
+      try {
+        const updateOrderLikePaid = await axios.put(`http://localhost:4000/orders/addPaid/${orderIdItem}`)
+        console.log(updateOrderLikePaid.data);
+
+        if (updateOrderLikePaid.status === 200) { 
+         const addNewCollection = await axios.post("http://localhost:4000/collections/addNewCollection", collecctionData)   
+         console.log(addNewCollection.data)
+
+          if(addNewCollection.status === 200) { 
+            setSuccesCollectionSaved(true)
+            setSuccesOperation(true)
+            setTimeout(() => { 
+            changeOrderPaid(true)
+            onClose()
+            setAccount("")
+          }, 1500)
+        }
+      } 
+      } catch (error) {
+        console.log(err)
+      }
+  } else { 
+    setMissedData(true)
+    setTimeout(() => { 
+      setMissedData(false)
+    }, 1500)
+  }
+  }
   
+
   const handleClose = () => { 
     onClose()
     setAccount("")
-  }
+   }
 
   const handleDropImage = (files) => {
     const uploaders = files.map((file) => {
@@ -112,10 +187,6 @@ const PostPayment = ({usedIn, valueToPay, orderData}) => {
         });
     });
   };
-
-  //<Button className="text-white bg-green-800 font-medium text-sm mt-2">Asentar Cobro de {formatePrice(orderData.map((ord) => ord.total))}</Button>
-
-
 
   return (
     <>
@@ -185,27 +256,27 @@ const PostPayment = ({usedIn, valueToPay, orderData}) => {
                 
               </ModalBody>
                 <ModalFooter className="flex items-center justify-center">
-                  {succesOperation ? 
-                      <p className="text-green-700 font-medium text-sm">
-                        Cobro almacenado con exito ✔
-                      </p>
-                  :
-                  <div className="flex gap-6 items-center justify-center">
-                      <Button  className="font-bold text-white text-sm bg-green-600 w-32" onPress={addNewCollection}>
-                        Asentar Pago
-                      </Button>
-                      <Button  className="font-bold text-white text-sm bg-green-600 w-32" onPress={handleClose}>
-                        Cancelar
-                      </Button>
-                  </div>
-                 }
+                      {succesOperation ? 
+                          <p className="text-green-700 font-medium text-sm">
+                            Cobro almacenado con exito ✔
+                          </p>
+                      :
+                      <div className="flex gap-6 items-center justify-center">
+                          <Button  className="font-bold text-white text-sm bg-green-600 w-32"  onPress={usedIn === "CreateNewReturn" ? addNewCollectionUsedInCreateNewReturn : addNewCollection}>
+                            Asentar Pago
+                          </Button>
+                          <Button  className="font-bold text-white text-sm bg-green-600 w-32" onPress={handleClose}>
+                            Cancelar
+                          </Button>
+                      </div>
+                    }
                 </ModalFooter>
-               {missedData ?
-                <div className="flex items-center justify-center mt-4 mb-4">
-                  <p className="font-medium text-green-600 text-sm">Debes indicar una cuenta</p>
-                </div>
-                :
-                null}
+                    {missedData ?
+                      <div className="flex items-center justify-center mt-4 mb-4">
+                        <p className="font-medium text-green-800 text-sm">Faltan Datos para Agendar el pago</p>
+                      </div>
+                      :
+                      null}
             </>
           )}
         </ModalContent>

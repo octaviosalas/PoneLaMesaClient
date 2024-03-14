@@ -53,7 +53,7 @@ const NavBarComponent = () =>  {
                         <DropdownItem textValue="Create New Order" key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
                         <DropdownItem textValue="Create New Order" key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem> 
                         <DropdownItem textValue="Create New Order" key="rep" onClick={() => goTo("EntregasLocal")}>Entregas</DropdownItem> 
-                        <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("DevolucionesEnLocal")}>Devoluciones</DropdownItem>                      
+                        <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("Devoluciones")}>Devoluciones</DropdownItem>                      
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>

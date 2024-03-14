@@ -29,7 +29,7 @@ const ClientsTable = () => {
               const purchasesData = res.data
               setData(purchasesData)
               if(purchasesData.length !== 0) { 
-                const propiedades = Object.keys(purchasesData[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' );
+                const propiedades = Object.keys(purchasesData[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== "clientDebt");
                 const columnObjects = propiedades.map(propiedad => ({
                     key: propiedad,
                     label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),

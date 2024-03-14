@@ -7,14 +7,24 @@ import RegisterMissingItems from './RegisterMissingItems'
 const CreateNewReturnSecondStep = ({orderData, orderDataStatus, comeBack, closeModalNow}) => {
 
     const [orderHasBrokenArticles, setOrderHasBrokenArticles] = useState(false)
+    const [orderPaid, setOrderPaid] = useState(false)
 
     useEffect(() => { 
         console.log(orderData)
         console.log(orderDataStatus)
-    })
+        setOrderPaid(orderData.map((ord) => ord.paid)[0])
+    },[])
+
+    useEffect(() => { 
+        console.log(orderPaid)
+    }, [orderPaid])
 
     const comeBackFirstStep = () => { 
         setOrderHasBrokenArticles(true)
+    }
+
+    const changeOrderPaid = (value) => { 
+        setOrderPaid(value)
     }
 
   return (
@@ -69,13 +79,13 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, comeBack, closeM
                 </div>
      </div>
      <div className='flex flex-col items-center justify-center mt-2'>
-                {orderData.map((ord) => ord.paid === false) ? 
-                    <div className='flex flex-col items-center justify-center'>
-                    <p className='text-sm font-medium text-zinc-600 underline'>Este pedido se encuentra pendiente de pago</p>
-                    <PostPayment usedIn="CreateNewReturn" valueToPay={formatePrice(orderData.map((ord) => ord.total))} orderData={orderData}/>
-                    </div>
-                :
+                  {orderPaid ? 
                     <p className='text-sm font-medium text-zinc-600 underline'>Este pedido se encuentra Abonado</p>
+                    :
+                <div className='flex flex-col items-center justify-center'>
+                <p className='text-sm font-medium text-zinc-600 underline'>Este pedido se encuentra pendiente de pago</p>
+                   <PostPayment usedIn="CreateNewReturn" valueToPay={formatePrice(orderData.map((ord) => ord.total))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>
+                </div>
                 }
       </div>
       <div className='flex mt-4 gap-4 items-center justify-center'>
@@ -83,9 +93,9 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, comeBack, closeM
                 <Button className="text-white bg-green-700 font-medium text-sm" onClick={() => setOrderHasBrokenArticles(true)}>Registrar Faltantes</Button>
       </div>    
      </>
-      :
-      <RegisterMissingItems returnFirstStep={comeBackFirstStep} orderData={orderData}/> 
-      }
+        :
+        <RegisterMissingItems returnFirstStep={comeBackFirstStep} orderData={orderData}/> 
+        }
 
     </div>
    

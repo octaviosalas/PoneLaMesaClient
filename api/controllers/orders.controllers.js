@@ -113,9 +113,10 @@ export const changeOrderToConfirmedAndDiscountStock = async (req, res) => {
 
 export const changeOrderState = async (req, res) => { 
   const { orderId } = req.params;
+  console.log("change order state:",  orderId )
   console.log(orderId)
   const {newStatus} = req.body
-
+  console.log("change order state:",  newStatus )
 
   try {
     const orderUpdated= await Orders.findByIdAndUpdate(
@@ -270,6 +271,30 @@ export const addNewProductsToOrderDetail = async (req, res) => {
 
     const updatedOrder = await existingOrder.save();
     await decrementarStock(productsSelected);
+
+    res.status(200).json(updatedOrder);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al agregar nuevos productos a la orden' });
+  }
+};
+
+export const addArticlesMissed = async (req, res) => {
+  const { orderId } = req.params;
+  console.log(req.body)
+
+
+  try {
+    const existingOrder = await Orders.findById(orderId);
+    if (!existingOrder) {
+      return res.status(404).json({ error: 'Orden no encontrada' });
+    }
+
+    existingOrder.missingArticlesData.push(req.body);
+
+
+    const updatedOrder = await existingOrder.save();
+
 
     res.status(200).json(updatedOrder);
   } catch (error) {

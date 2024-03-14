@@ -242,7 +242,7 @@ const CollectionsTable = ({collections}) => {
                                {column.cellRenderer ? (
                                  column.cellRenderer({ row: { original: item } })
                                ) : (
-                                 column.key === "Total" ? (
+                                 column.key === "amount" ? (
                                    formatePrice(item[column.key])
                                  ) : (
                                    item[column.key]

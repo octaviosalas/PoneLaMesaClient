@@ -45,7 +45,7 @@ function App() {
             <Route path="/Lavado" element={<Cleaning />} />   
             <Route path="/Proveedores" element={<Providers />} />   
             <Route path="/EntregasLocal" element={<LocalDeliveries />} /> 
-            <Route path="/DevolucionesEnLocal" element={<LocalReturns />} /> 
+            <Route path="/Devoluciones" element={<LocalReturns />} /> 
             <Route path="/Reparto" element={<LogisticRepart />} /> 
             <Route path="/Retiros" element={<LogisticToRemove />} /> 
             <Route path="/Reposiciones" element={<Returned />} /> 

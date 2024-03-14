@@ -16,6 +16,9 @@ const clientsSchema = mongoose.Schema({
     },   
     home: { 
         type: String
+    },
+    clientDebt: { 
+        type: Array
     }
 })
 
