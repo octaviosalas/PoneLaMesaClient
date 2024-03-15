@@ -137,7 +137,8 @@ const Login = () => {
 
             {errorMessage ? <p className='mt-8 w-72 font-bold text-xs' style={{color:"#73B65D"}} >{textMessage}</p> : null}
 
-            {succesMessagge ? <div className='flex items-center justify-center mt-6'>
+            {succesMessagge ? 
+            <div className='flex items-center justify-center mt-6'>
               <Loading />
             </div> 
             : null}

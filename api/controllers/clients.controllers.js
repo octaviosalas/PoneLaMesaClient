@@ -78,21 +78,21 @@ export const updateClientData = async (req, res) => {
 }
 
 export const createClientDebt = async (req, res) => { 
-  const {clientId} = req.params
-  console.log("REQ.BODY CLIENTE", req.body)
+  const {clientId} = req.params;
+  console.log("REQ.BODY CLIENTE", req.body);
   try {
-    const existingClient = await Clients.findById(clientId);
-
-    if (!existingClient) {
-      return res.status(404).json({ error: 'Cliente no encontrada' });
-    }
-
-    existingClient.clientDebt.push(req.body);
-
-    const updatedClientData = await existingClient.save();
-    res.status(200).json(updatedClientData);
+     const existingClient = await Clients.findById(clientId);
+ 
+     if (!existingClient) {
+       return res.status(404).json({ error: 'Cliente no encontrada' });
+     }
+      const debtDataArray = Object.values(req.body);
+      existingClient.clientDebt.push(...debtDataArray);
+      const updatedClientData = await existingClient.save();
+     res.status(200).json(updatedClientData);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al agregar deuda al cliente' });
+     console.error(error);
+     res.status(500).json({ error: 'Error al agregar deuda al cliente' });
   }
-}
+ }
+

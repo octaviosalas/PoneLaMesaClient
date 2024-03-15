@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import Dropzone from 'react-dropzone';
 import { PhotoIcon } from '@heroicons/react/24/solid'
+import { v4 as uuidv4 } from 'uuid';
 
 const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueToPay, client, clientId, comeBack, closeModalNow }) => {
 
@@ -21,6 +22,11 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
     const [year, setYear] = useState(getYear())
     const userCtx = useContext(UserContext)
     const [payImage, setPayImage] = useState("")
+    const uniqueId = uuidv4();
+
+    useEffect(() => { 
+        console.log(uniqueId)
+    }, [])
 
 
     useEffect(() => { 
@@ -66,7 +72,8 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                     orderCompletedData: orderData,
                     productsMissed: missingArticlesDetail,
                     amountToPay: valueToPay,
-                    paid: false
+                    paid: false,
+                    debtId: uniqueId
                 })
 
                 if(sendArticlesMissed.status === 200) { 
