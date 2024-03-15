@@ -7,6 +7,7 @@ import axios from "axios";
 import { formatePrice } from "../../functions/gralFunctions";
 import AreYouSure from "../Modals/AreYouSure";
 import CreateSublet from "../ArticlesTable/CreateSublet";
+import ViewSubletObservation from "./ViewSubletObservation";
 
 
 
@@ -24,6 +25,7 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
       const handleOpen =  () => { 
         onOpen()
         console.log(orderData)
+        getDataAndCreateTable()()
       }
 
       useEffect(() => { 
@@ -47,7 +49,7 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
             setData(filteredSublets)
             const propiedades = Object.keys(filteredSublets[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v'
             && propiedad !== 'productsDetail'  && propiedad !== 'providerId' &&  propiedad !== 'day' &&
-            propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'used');
+            propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'used'  && propiedad !== 'observation');
 
             const columnObjects = propiedades.map(propiedad => ({
             key: propiedad,
@@ -86,6 +88,21 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
                     );
                  },
                 }) 
+
+                modifiedColumnObjects.push({
+                  key: 'Observation',
+                  label: 'Observation',
+                  cellRenderer: (cell) => { 
+                    const filaActual = cell.row;
+                    const observation = filaActual.original.observation;       
+                    const item = {
+                     observation: observation,              
+                    };
+                    return (
+                        <ViewSubletObservation subletObservation={item}/>
+                      );
+                   },
+                  }) 
         
         
             setColumns(modifiedColumnObjects);
@@ -136,7 +153,7 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
                </div>
             </div>
            : 
-            <ModalBody>
+            <ModalBody className="mb-6">
               <Table
                 columnAutoWidth={true}
                 columnSpacing={10}

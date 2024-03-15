@@ -21,3 +21,18 @@ export const getAllCollections = async (req, res) => {
     console.log(error)
   }
 }
+
+export const getCollectionByOrderId = async (req, res) => { 
+  const {orderId} = req.params
+  console.log(req.params)
+  try {
+    const collectionSearched = await Collections.findOne({orderId: orderId})
+    if (!collectionSearched) {
+      return res.status(404).json({ error: 'No se encontró el cobro de la orden.' });
+    }
+    res.status(200).json(collectionSearched);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear el cobro' });
+    console.log(error)
+  }
+}

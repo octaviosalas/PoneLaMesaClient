@@ -87,6 +87,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
         const rentalPrice = Math.round(parseFloat(price));
         console.log("tipo de dato", typeof rentalPrice)
         const numericPrice = parseFloat(value); 
+        console.log("numeric price", numericPrice)
         const numericQuantity = parseFloat(quantity); 
         const numericReplacement = parseFloat(replacementPrice); 
         const newProduct = { productName, productId, quantity: numericQuantity, rentalPrice, value: numericPrice, replacementPrice: numericReplacement };
@@ -98,7 +99,6 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
         setProductChoosenName("")
         setProductChoosenReplacementPrice("")
         console.log(productsChoosen)
-
     };
     
     const handleRemoveProduct = (productIdToDelete) => {
@@ -126,7 +126,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
         loadedByName: userCtx.userName,
         loadedById: userCtx.userId,
         typeOfExpense: "sublet",
-        amount: productsChoosen.reduce((acc, el) => acc + el.price, 0),
+        amount: productsChoosen.reduce((acc, el) => acc + el.value, 0),
         date: actualDate,
         day: actualDay,
         month: actualMonth,
@@ -149,7 +149,8 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
           setMissedData(false)
         }, 1500)
       } else { 
-
+        console.log("DATO DEL GASTO", newExpense)
+        console.log(newSubletData)
         axios.post("http://localhost:4000/sublets", newSubletData)
         .then((res) => { 
           console.log(res.data)
@@ -252,6 +253,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
                                     labelPlacement="outside"
                                     variant="bordered"
                                     className="max-w-full"
+                                    onChange={(e) => setObservation(e.target.value)}
                                   />
                             </div> : null}
                         </div>  

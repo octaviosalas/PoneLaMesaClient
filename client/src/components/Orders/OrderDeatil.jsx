@@ -14,7 +14,7 @@ const OrderDetail = ({orderData}) => {
     if (orderData && orderData.detail && Array.isArray(orderData.detail) && orderData.detail.length > 0) {
       const firstDetail = orderData.detail[0];
       const properties = Object.keys(firstDetail);
-      const filteredProperties = properties.filter(property => property !== 'productId');
+      const filteredProperties = properties.filter(property => property !== 'productId' &&  property !== 'choosenProductCategory');
   
       const columnLabelsMap = {
         productName: 'Articulo',

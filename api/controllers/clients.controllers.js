@@ -23,8 +23,9 @@ export const getClients = async (req, res) => {
 }
 
 export const getClientData = async (req, res) => { 
+    const {clientId} = req.params
     try {
-        const clientSearched = await Clients.findById(req.params.id);
+        const clientSearched = await Clients.findById({_id: clientId});
         if (!clientSearched) {
           return res.status(404).json({ message: 'cliente no encontrado' });
         }

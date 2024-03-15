@@ -14,10 +14,14 @@ const HistoricClient = ({clientData}) => {
     const [ordersProducts, setOrdersProducts] = useState([])
     const [error, setError] = useState(false)
     const [loadingData, setLoadingData] = useState(true)
+    const [debtorClient, setDebtorClient] = useState(false)
+    const [viewDebt, setViewDebt] = useState(true)
+    const [clientDebtDetail, setClientDebtDetail] = useState([])
 
     const handleOpen = async () => { 
       onOpen();
       await getProductOrders();
+      console.log(clientData)
     }
 
     const getProductOrders = async () => { 
@@ -38,12 +42,20 @@ const HistoricClient = ({clientData}) => {
               total: ord.total
             };
           })
-          .filter((result) => result.productOrderDetail.length > 0);
-        
-        console.log(productOrderDetails);
-    
+          .filter((result) => result.productOrderDetail.length > 0);   
+          console.log(productOrderDetails);   
         if (productOrderDetails.length !== 0) { 
           setOrdersProducts(productOrderDetails);
+          const response = axios.get(`http://localhost:4000/clients/${clientData.id}`)
+          const data = await response
+          const finalClientData = data.data
+          console.log(finalClientData)
+          if(finalClientData.clientDebt.length > 0) { 
+            setDebtorClient(true)
+            setClientDebtDetail(finalClientData.clientDebt)
+          } else { 
+            setDebtorClient(false)
+          }
         } else { 
           setError(true);
           console.log(productOrderDetails.length);
@@ -103,6 +115,10 @@ const HistoricClient = ({clientData}) => {
                 <div>
                     <p className="text-zinc-600 font-medium text-xs">Facturacion total:  {formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
                     <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de Alquileres:  {ordersProducts.length}</p>
+                      {debtorClient ? <p className="text-red-600 font-bold underline text-xs mt-1" onClick={() => setViewDebt()}>Este Cliente posee una deuda</p> 
+                      : 
+                      <p className="text-green-800 font-medium text-xs">Este cliente no posee deudas</p>
+                      }
                 </div>
                }
                           

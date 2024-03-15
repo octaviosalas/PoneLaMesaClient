@@ -28,10 +28,6 @@ const CreateNewReturn = ({updateList}) => {
     }
 
     const getOrderData = async () => { 
-       console.log("ejecutando get order Data")
-       console.log(monthSelected)
-       console.log(yearSelected)
-       console.log(orderNumberSelected)
         if(yearSelected !== null && monthSelected !== null && orderNumberSelected !== null) { 
           const filteredOrders = orders.filter((ord) => ord.month === monthSelected && ord.year === yearSelected && ord.orderNumber === orderNumberSelected)
           if(filteredOrders.length > 0) { 

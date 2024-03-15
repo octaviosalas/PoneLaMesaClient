@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Input } from '@nextui-org/react'
 import RegisterMissingItemsSecondStep from './RegisterMissingItemsSecondStep'
 
-const RegisterMissingItems = ({returnFirstStep, orderData, cancel}) => {
+const RegisterMissingItems = ({closeModalNow, orderData, cancel}) => {
 
     const [allOrderProducts, setAllOrderProducts] = useState([])
     const [newOrderDetailArray, setNewOrderDetailArray] = useState([])
@@ -91,7 +91,7 @@ const RegisterMissingItems = ({returnFirstStep, orderData, cancel}) => {
 
        </>
        :
-        <RegisterMissingItemsSecondStep dataUpdated={newOrderDetailArray} orderData={orderData} comeBack={comeBack}/>
+        <RegisterMissingItemsSecondStep dataUpdated={newOrderDetailArray} orderData={orderData} comeBack={comeBack} closeModalNow={closeModalNow}/>
         }
 
     </div>

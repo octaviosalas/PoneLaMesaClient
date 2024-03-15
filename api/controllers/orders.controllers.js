@@ -131,7 +131,6 @@ export const changeOrderToConfirmedAndDiscountStock = async (req, res) => {
  
      foundOrder.total = detailOrder.newAmount;
  
-     // Modificación aquí: iterar sobre cada objeto en detailOrder.subletDetail y agregarlo individualmente
      detailOrder.subletDetail.forEach(sublet => {
        foundOrder.subletsDetail.push(sublet);
      });

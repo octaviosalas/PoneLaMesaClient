@@ -224,13 +224,15 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
                       </div>
                     ) : (
                       usedIn === "CreateNewReturn" ? 
-                      <Select variant="faded" label="Selecciona la cuenta de Cobro" className="max-w-xs" onChange={(e) => setAccount(e.target.value)}>
-                        {availablesAccounts.map((acc) => (
-                          <SelectItem key={acc.value} value={acc.value}>
-                            {acc.label}
-                          </SelectItem>
-                        ))}
-                      </Select>
+                      <div className="flex flex-col items-center justify-center mt-4">
+                        <Select variant="faded" label="Selecciona la cuenta de Cobro" className="max-w-xs" onChange={(e) => setAccount(e.target.value)}>
+                                {availablesAccounts.map((acc) => (
+                                  <SelectItem key={acc.value} value={acc.value}>
+                                      {acc.label}
+                                  </SelectItem>
+                                ))}
+                          </Select>
+                      </div>
                       : usedIn !== "CreateNewReturn" && orderData.paid === false ? ( 
                         <div className="flex flex-col items-center justify-center mt-4">
                             <Select variant="faded" label="Selecciona la cuenta de Cobro" className="max-w-xs" onChange={(e) => setAccount(e.target.value)}>

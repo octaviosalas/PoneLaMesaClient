@@ -92,7 +92,7 @@ const CollectionsTable = ({collections}) => {
                     client: client
                     };
                     return (
-                    <OrderDetail orderData={item}/>
+                       <OrderDetail orderData={item}/>
                     );
                 },
                 }) 
@@ -109,7 +109,7 @@ const CollectionsTable = ({collections}) => {
                         voucher: voucher,                     
                         };
                         return (
-                        <VaucherModal detail={item}/>
+                        <VaucherModal detail={item} showingOn="table"/>
                         );
                     },
                     }) 

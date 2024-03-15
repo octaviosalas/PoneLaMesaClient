@@ -24,9 +24,18 @@ import Clients from './pages/Clients'
 import Collections from './pages/Collections'
 import Providers from './pages/Providers'
 import Sublets from './pages/Sublets'
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react'
+
 
 function App() {
   const [count, setCount] = useState(0)
+
+  useEffect(() => {
+   
+      document.body.style.backgroundColor = '#F5F7F3';
+    
+  }, [location.pathname]);
 
   return (
     <>

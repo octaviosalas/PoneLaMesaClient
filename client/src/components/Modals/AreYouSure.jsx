@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import axios from "axios";
+import { formatePrice } from "../../functions/gralFunctions";
 
 const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, updateOrderList})  => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -63,16 +64,21 @@ const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, upd
                     <ModalHeader className="flex flex-col gap-1">Confirmacion</ModalHeader>
                     <ModalBody>
                         <div className='flex flex-col items-center justify-center'>
-                                <div>
+                                <div className="flex flex-col items-start justify-start">
                                     <p className="font-medium text-sm text-green-800">¿Estas seguro de utilizar este SubAlquiler para esta orden?</p>
-                                    {subletData.id}
-                                    {dataOrder.id}
-                                    {subletData.amountToBeAdded}
-                                    <div>
-                                    <p>aca:{dataOrder.total} </p> 
+                                    <div className="mt-6">
+                                      <p className="font-medium text-sm text-green-800">Se añadira a tu Orden: </p>
+                                      {subletData.subletProductsDetail.map((sub) => (
+                                        <div className="flex items-center gap-3">
+                                            <p className="font-medium text-zinc-600 text-sm">Articulo: {sub.productName}</p>
+                                            <p className="font-medium text-zinc-600 text-sm">Cantidad: {sub.quantity}</p>
+                                        </div>
+                                      ))}
                                     </div>
-                            
-
+                                    <div className="flex flex-col items-start justify-start mt-4">
+                                         <p className="font-medium text-sm text-green-800">Tu orden tenia un total de: {formatePrice(dataOrder.total)}</p>
+                                         <p className="font-medium text-sm text-green-800">Ahora pasara a tener un total de: {formatePrice(dataOrder.total + subletData.amountToBeAdded)}</p>
+                                    </div>                                                      
                                 </div>
                                 <div className='flex gap-4 items-center justify-center mt-4 mb-4'>
                                     <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => addSubletToTheOrder()}>Confirmar</Button>

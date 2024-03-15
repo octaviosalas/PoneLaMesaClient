@@ -7,7 +7,7 @@ import { UserContext } from "../../store/userContext";
 import Dropzone from 'react-dropzone';
 import { PhotoIcon } from '@heroicons/react/24/solid'
 
-const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueToPay, client, clientId, comeBack }) => {
+const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueToPay, client, clientId, comeBack, closeModalNow }) => {
 
     const [orderId, setOrderId] = useState("")
     const [succesMessage, setSuccesMessage] = useState(false)
@@ -83,6 +83,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                             setSuccesMessage(true)
                             setTimeout(() => { 
                                 comeBack()
+                                closeModalNow()
                             }, 2700)
                         }
                     }
@@ -181,10 +182,11 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
 
   return (
     <div className='flex flex-col items-center justify-center'>
+         <h5 className='font-medium text-zinc-600 text-md'>¿El cliente ya abono los faltantes?</h5>
         <div className='flex flex-col items-start text-start justify-start'>
-            <h5 className='font-medium text-zinc-600 text-md'>¿El cliente ya abono los faltantes?</h5>
             <p className='font-medium mt-2 text-green-800 text-xs'>* Si confirmas el cobro, los faltantes quedaran abonados.</p>
             <p className='font-medium mt-2 text-green-800 text-xs'>* Si confirmas sin el cobro, los faltantes quedaran a deuda del cliente.</p>
+            <p className='font-medium mt-2 text-green-800 text-xs'>* La deuda a pagar del cliente {client} sera de {formatePrice(valueToPay)}</p>
         </div>
         {succesMessage === false ? 
             <div className='flex mt-6 gap-4'>
@@ -203,7 +205,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
 
             {addAccount ? 
             <>
-             <div className="mt-4 mb-6flex items-center justify-center">
+             <div className="mt-4 mb-6f flex flex-col items-center justify-center">
                 <Select variant="faded" label="Selecciona la cuenta de Cobro" className="w-72" onChange={(e) => setAccount(e.target.value)}>
                     {availablesAccounts.map((acc) => (
                     <SelectItem key={acc.value} value={acc.value}>
@@ -211,6 +213,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                     </SelectItem>
                     ))}
                </Select>
+               <Button className='bg-green-800 text-white font-medium text-sm mt-3 mb-2 w-52' onClick={() => setAddAccount(false)}>Cancelar</Button>
            </div>
 
               {account.length > 0 ?

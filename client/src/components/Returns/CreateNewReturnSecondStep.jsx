@@ -4,6 +4,7 @@ import { Button } from '@nextui-org/react'
 import PostPayment from '../Orders/PostPayment'
 import RegisterMissingItems from './RegisterMissingItems'
 import MarkOrderLikeReturnedWithOutMissedArticles from './MarkOrderLikeReturnedWithOutMissedArticles'
+import VaucherModal from '../Collections/VaucherModal'
 
 const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, comeBack, closeModalNow}) => {
 
@@ -104,7 +105,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
      </div>
            <div className='flex flex-col items-center justify-center mt-2'>
                   {orderPaid ? 
-                    <p className='text-sm font-medium text-zinc-600 underline'>Este pedido se encuentra Abonado</p>
+                   <VaucherModal orderId={orderId}/>
                     :
                 <div className='flex flex-col items-center justify-center'>
                 <p className='text-sm font-medium text-zinc-600 underline'>Este pedido se encuentra pendiente de pago</p>
@@ -132,7 +133,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                  </div> : null}
      </>
         :
-        <RegisterMissingItems returnFirstStep={comeBackFirstStep} orderData={orderData} cancel={cancelarMarkMissedArticles}/> 
+         <RegisterMissingItems returnFirstStep={comeBackFirstStep} orderData={orderData} cancel={cancelarMarkMissedArticles} closeModalNow={closeModalNow}/> 
         }
 
     </div>
