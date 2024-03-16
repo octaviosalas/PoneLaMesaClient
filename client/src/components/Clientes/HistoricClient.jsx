@@ -126,15 +126,19 @@ const HistoricClient = ({clientData}) => {
                 <div className="flex flex-col items-start justify-start text-start w-full overflow-y-auto max-h-[200px]">
                   <h5 className="text-md font-medium text-green-800">Detalle de Deuda:</h5>
                    {clientDebtDetail.map((d) => (
-                    <div className="flex flex-col items-start justify-start mt-2">
+                    <div className="flex flex-col items-start justify-start mt-2" key={d.debtId}>
                        <p className="font-medium text-xs text-zinc-600">Tipo de deuda: Reposicion</p>
                        <p className="font-medium text-xs text-zinc-600">Monto a pagar: {formatePrice(d.amountToPay)}</p>
-                       <p className="font-medium text-xs text-zinc-600">Producto Sin devolver: {d.productsMissed.map((prod) => prod.productName)}</p>
-                       <p className="font-medium text-xs text-zinc-600">Cantidad: {d.productsMissed.map((prod) => prod.missing)}</p>
+                       {d.productsMissed.map((prodMissed) => (
+                        <div className="flex items-center gap-3">
+                          <p className="font-medium text-xs text-zinc-600">Producto: {prodMissed.productName}</p>
+                          <p className="font-medium text-xs text-zinc-600">Cantidad: {prodMissed.missing}</p>
+                        </div>                       
+                       ))}
                        <p className="font-medium text-xs text-zinc-600">
                            Correspondiente a la orden: {d.orderCompletedData.map((ord) => ord.orderNumber)} del mes {d.orderCompletedData.map((ord) => ord.month)} del {d.orderCompletedData.map((ord) => ord.year)} 
                        </p>
-                       <MarkDebtAsPaid debtId={d.debtId} completeDebtData={d} clientData={clientData}/>
+                       <MarkDebtAsPaid debtId={d.debtId} debtAmount={d.amountToPay} completeDebtData={d} clientData={clientData}/>
                     </div>
                    ))}
                 </div>

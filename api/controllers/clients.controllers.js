@@ -96,3 +96,33 @@ export const createClientDebt = async (req, res) => {
   }
  }
 
+
+ export const updateDebtStatus = async (req, res) => { 
+  const {clientId} = req.params;
+  console.log("Me llego el ID del cliente: ", clientId);
+  const {data} = req.body;
+
+  try {
+   const clientDebtUpdated = await Clients.findByIdAndUpdate({ _id: clientId });
+
+   if (!clientDebtUpdated) {
+       return res.status(404).json({ error: "No se encontró el estado" });
+   }
+
+   const debtsWithOutPaid = clientDebtUpdated.clientDebt.filter((debts) => debts.paid === false);
+   const updatedDebts = debtsWithOutPaid.map(debt => {
+       if (debt.debtId === data.debtId) {
+           return { ...debt, paid: data.newStatus };
+       }  
+       return debt;
+   });
+
+   const updatedClient = await Clients.findByIdAndUpdate(clientId, { clientDebt: updatedDebts }, { new: true });
+
+   res.status(200).json(updatedClient);
+   } catch (error) {
+       console.error('Error:', error);
+       res.status(500).json({ error: "Error interno del servidor" });
+   } 
+}
+

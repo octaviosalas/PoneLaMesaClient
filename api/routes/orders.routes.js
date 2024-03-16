@@ -12,7 +12,8 @@ import { getOrderById,
          getMonthlyOrders, 
          addNewProductsToOrderDetail,
          changeOrderToConfirmedAndDiscountStock,
-         addArticlesMissed } from '../controllers/orders.controllers.js';
+         addArticlesMissed,
+         updateMissingArticlesLikePaid } from '../controllers/orders.controllers.js';
 
 
 ordersRoutes.get('/', getOrders);
@@ -28,7 +29,7 @@ ordersRoutes.delete('/:orderId', deleteOrder);
 ordersRoutes.delete('/replenishStock/:orderId', deleteAndReplenishArticles);
 ordersRoutes.post('/confirmOrderAndDiscountStock/:orderId', changeOrderToConfirmedAndDiscountStock);
 ordersRoutes.post('/addMissedArticles/:orderId', addArticlesMissed);
-
+ordersRoutes.put('/updateMissedArticlesLikePaid/:orderId', updateMissingArticlesLikePaid);
 
 
 export default ordersRoutes;

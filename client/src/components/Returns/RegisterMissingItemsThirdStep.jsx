@@ -61,7 +61,8 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                 const missedProductsData = ({ 
                     productMissed: data,
                     amount: valueToPay,
-                    paid: false
+                    paid: false,
+                    missedArticlesReferenceId: uniqueId
                 })
 
                 const sendArticlesMissed = await axios.post(`http://localhost:4000/orders/addMissedArticles/${orderId}`, {missedProductsData}) 
@@ -114,7 +115,8 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
             const missedProductsData = ({ 
                 productMissed: data,
                 amount: valueToPay,
-                paid: true
+                paid: true,
+                missedArticlesReferenceId: uniqueId
             })
 
             const sendArticlesMissed = await axios.post(`http://localhost:4000/orders/addMissedArticles/${orderId}`, {missedProductsData}) 

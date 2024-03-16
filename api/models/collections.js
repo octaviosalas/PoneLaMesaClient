@@ -8,6 +8,9 @@ const collectionsSchema = mongoose.Schema({
     collectionType: { 
         type: String
     },
+    paymentReferenceId: { 
+        type: String
+    },
     client: { 
         type: String
     }, 

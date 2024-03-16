@@ -119,8 +119,6 @@ export const changeOrderToConfirmedAndDiscountStock = async (req, res) => {
 
 export const changeOrderState = async (req, res) => { 
   const { orderId } = req.params;
-  console.log("change order state:",  orderId )
-  console.log(orderId)
   const {newStatus} = req.body
   console.log("change order state:",  newStatus )
 
@@ -289,7 +287,6 @@ export const addArticlesMissed = async (req, res) => {
   const { orderId } = req.params;
   console.log(req.body)
 
-
   try {
     const existingOrder = await Orders.findById(orderId);
     if (!existingOrder) {
@@ -297,14 +294,45 @@ export const addArticlesMissed = async (req, res) => {
     }
 
     existingOrder.missingArticlesData.push(req.body);
-
-
     const updatedOrder = await existingOrder.save();
-
-
     res.status(200).json(updatedOrder);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al agregar nuevos productos a la orden' });
   }
 };
+
+
+export const updateMissingArticlesLikePaid = async (req, res) => { 
+  const {orderId} = req.params;
+  const {missedArticlesData} = req.body;
+  
+  try {
+      const existingOrder = await Orders.findById(orderId);
+      if (!existingOrder) {
+        return res.status(404).json({ error: 'Orden no encontrada' });
+      }
+  
+      const orderSearched = existingOrder.missingArticlesData.find(missed => missed.missedProductsData.missedArticlesReferenceId === missedArticlesData.missedArticlesReference);
+      console.log("LA MISSED ARTICLES ENCONTRADA", orderSearched)
+  
+      if (!orderSearched) {
+        return res.status(404).json({ error: 'Artículo perdido no encontrado' });
+      } else { 
+       console.log("LA MISSED ARTICLES ENCONTRADA", orderSearched)
+      }
+  
+      orderSearched.missedProductsData.paid = missedArticlesData.newStatus;
+  
+      // Indica a Mongoose que el campo 'missingArticlesData' ha cambiado
+      existingOrder.markModified('missingArticlesData');
+  
+      const updatedOrder = await existingOrder.save();
+  
+      res.status(200).json(updatedOrder);
+  } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: "Error interno del servidor" });
+  }
+ };
