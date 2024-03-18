@@ -9,7 +9,7 @@ import { PhotoIcon } from '@heroicons/react/24/solid'
 import axios from "axios";
 
 
-const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderDetail, debtAmount, debtId}) => {
+const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderDetail, debtAmount, debtId, updateClientData, closeModal}) => {
 
     const [payImage, setPayImage] = useState("")
     const userCtx = useContext(UserContext)
@@ -18,6 +18,8 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
     const [actualDay, setActualDay] = useState(getDay())
     const [actualMonth, setActualMonth] = useState(getMonth())
     const [actualYear, setActualYear] = useState(getYear())
+    const [succesMessage, setSuccesMessage] = useState(false)
+    const [load, setLoad] = useState(false)
 
 
     const availablesAccounts = [
@@ -58,6 +60,7 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
       };
 
       const updateDebtToPaid = async () => { 
+        setLoad(true)
         try {
            const collecctionData = ({ 
                orderId: orderId,
@@ -96,12 +99,19 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
                 console.log(updateMissedProductsOrdersLikePaid.data)
 
                 if(updateMissedProductsOrdersLikePaid.status === 200) { 
-                    console.log("Salio todo bien")
+                  setSuccesMessage(true)
+                  updateClientData()
+                  setLoad(false)
+                  setTimeout(() => { 
+                    closeModal()
+                    setSuccesMessage(false)
+                  }, 1800)
                 }
             }
            }
         } catch (error) {
-           
+           console.log(error)
+           setLoad(false)
         }
      }
 
@@ -156,6 +166,13 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
                         ) : null
                     )
                     }
+
+                    {succesMessage ? 
+                    <div className="flex items-center justify-center mt-4 mb-4">
+                      <p className="font-medium text-green-800 text-sm">El pago de la deuda fue asentado con Exito ✔</p>
+                    </div>
+                    :
+                    null}
     </div>
   )
 }

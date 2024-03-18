@@ -34,7 +34,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
                 if(data.length !== 0) { 
                 const propiedades = Object.keys(tableData[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
                     && propiedad !== 'orderDetail'&&  propiedad !== 'clientId'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'month' && propiedad !== 'year'
-                    && propiedad !== 'day' && propiedad !== 'paid');
+                    && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== "missingArticlesData");
                 const columnObjects = propiedades.map(propiedad => ({
                     key: propiedad,
                     label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -158,6 +158,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
         });
 
         useEffect(() => { 
+          console.log("LA DATA QUE LLEGA A DOUBLE CONDITION", data)
             setTimeout(() => { 
                 setLoadData(false)
             }, 2000)
@@ -167,6 +168,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
          if(data.length > 0) { 
             getDataAndCreateTable()
          } else { 
+          console.log("la data es 0")
             setWithOutOrders(true)
          }
       }, [data])

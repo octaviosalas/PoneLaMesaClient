@@ -6,7 +6,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import PostPaymentReplacement from "../Returns/PostPaymentReplacement";
 
-const MarkDebtAsPaid = ({debtId, clientData, completeDebtData, debtAmount}) => {
+const MarkDebtAsPaid = ({debtId, clientData, completeDebtData, debtAmount, updateClientData, closeModal}) => {
 
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const userCtx = useContext(UserContext)
@@ -53,7 +53,16 @@ const MarkDebtAsPaid = ({debtId, clientData, completeDebtData, debtAmount}) => {
                   </div>
                   :
                   <div>
-                    <PostPaymentReplacement comeBack={comeBack} orderId={orderId} debtId={debtId} clientId={clientData.id} clientName={clientData.name} orderDetail={completeOrderOfTheDebt} debtAmount={debtAmount}/>
+                    <PostPaymentReplacement 
+                      updateClientData={updateClientData}
+                      comeBack={comeBack} 
+                      orderId={orderId}
+                      debtId={debtId} 
+                      clientId={clientData.id} 
+                      clientName={clientData.name} 
+                      orderDetail={completeOrderOfTheDebt} 
+                      debtAmount={debtAmount}
+                      closeModal={closeModal}/>
                   </div>
                  }
               </ModalBody>           

@@ -8,7 +8,7 @@ import Loading from "../Loading/Loading"
 import { useState, useEffect } from "react";
 import MarkDebtAsPaid from "../Modals/MarkDebtAsPaid";
 
-const HistoricClient = ({clientData}) => {
+const HistoricClient = ({clientData, updateClientData}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [successMessage, setSuccessMessage] = useState(false);
@@ -99,6 +99,11 @@ const HistoricClient = ({clientData}) => {
       }
     }, [ordersProducts]);
 
+    const closeModalWhenMarktTheDebtAsPaid = () => { 
+      onClose()
+      setViewDebt(false)
+    }
+
   return (
     <>
       <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
@@ -138,7 +143,7 @@ const HistoricClient = ({clientData}) => {
                        <p className="font-medium text-xs text-zinc-600">
                            Correspondiente a la orden: {d.orderCompletedData.map((ord) => ord.orderNumber)} del mes {d.orderCompletedData.map((ord) => ord.month)} del {d.orderCompletedData.map((ord) => ord.year)} 
                        </p>
-                       <MarkDebtAsPaid debtId={d.debtId} debtAmount={d.amountToPay} completeDebtData={d} clientData={clientData}/>
+                       <MarkDebtAsPaid debtId={d.debtId} debtAmount={d.amountToPay} completeDebtData={d} clientData={clientData} updateClientData={updateClientData} closeModal={closeModalWhenMarktTheDebtAsPaid}/>
                     </div>
                    ))}
                 </div>

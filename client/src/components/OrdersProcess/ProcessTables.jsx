@@ -129,8 +129,11 @@ const ProcessTables = ({orderStatus}) => {
                     return (
                        <OrderDetail orderData={item}/>
                       );
-                },
-                  }) : 
+                 },
+                  }) 
+
+                  : 
+                  
                   modifiedColumnObjects.push({
                     key: 'Detalle',
                     label: 'Detalle',

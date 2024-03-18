@@ -24,7 +24,7 @@ const ClientsTable = () => {
             const [tableChoosen, setTableChoosen] = useState([])
 
            const getClientsDataAndCreateTable = () => { 
-        axios.get("http://localhost:4000/clients") 
+              axios.get("http://localhost:4000/clients") 
              .then((res) => { 
               const purchasesData = res.data
               setData(purchasesData)
@@ -116,7 +116,7 @@ const ClientsTable = () => {
                    
                 };
                 return (
-                   <HistoricClient clientData={item}/>
+                   <HistoricClient clientData={item} updateClientData={getClientsDataAndCreateTable}/>
                   );
             },
               }) 
