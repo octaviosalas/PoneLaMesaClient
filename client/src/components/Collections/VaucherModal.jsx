@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import Loading from "../Loading/Loading";
 import axios from "axios";
+import { formatePrice } from "../../functions/gralFunctions";
 
 const VaucherModal = ({showingOn, detail, orderId}) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -10,8 +11,7 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
 
   const handleOpen = () => { 
     console.log(orderId)
-    console.log(typeof orderId)
-    console.log(load)
+    console.log("DETALLE", detail)
     onOpen()
     if(showingOn !== "table") { 
       getDataOfCollectionOrder()
@@ -66,10 +66,17 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
                           <div className="flex flex-col items-start justify-start">
                             <p className="font-medium text-sm text-zinc-600">El cobro del pedido fue cargado por {orderData.loadedBy}</p>
                             <p className="font-medium text-sm text-zinc-600">Se cargo el cobro el dia {orderData.day} de {orderData.month} del {orderData.year}</p>
+                            <p className="font-medium text-sm text-zinc-600">La cuenta destino fue: {orderData.account}</p>
+                            <p className="font-medium text-sm text-zinc-600">Monto Cobrado: {formatePrice(orderData.amount)}</p>
                           </div>
+                         {orderData.account !== "Efectivo" ?
                           <div className="mt-4">
                             <img src={orderData.voucher} className="w-72 h-36 rounded-lg"/>
+                          </div> : 
+                          <div className="flex flex-col items-center justify-center">
+                             <p className="font-medium text-sm text-green-800 mt-6 mb-4">El pago se realizo en efectivo</p>
                           </div>
+                          }
                       </div>
                      
                     )

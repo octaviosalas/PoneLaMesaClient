@@ -4,7 +4,7 @@ import { Button } from '@nextui-org/react'
 import Loading from '../Loading/Loading'
 import RegisterMissingItemsThirdStep from './RegisterMissingItemsThirdStep'
 
-const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, closeModalNow}) => {
+const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, closeModalNow, updateList}) => {
 
     const [articlesWithMissedQuantity, setArticlesWithMissedQuantity] = useState([])
     const [client, setClient] = useState("")
@@ -45,15 +45,17 @@ const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, close
                     <div>
                     <div className='w-full flex flex-col items-start justify-start'>
                         <h5 className='text-sm font-medium text-green-800'>Articulos Faltantes</h5>
-                        {articlesWithMissedQuantity.map((art) => ( 
-                        <div className='flex items-start justify-start-start gap-4' key={art.productName}>
-                            <p className='font-medium text-sm '><b>Articulo: </b>{art.productName}</p>
-                            <p className='font-medium text-sm '><b>Cantidad faltante: </b>{art.missing}</p>
+                        <div className='mt-2'>
+                            {articlesWithMissedQuantity.map((art) => ( 
+                            <div className='flex items-start justify-start-start gap-4' key={art.productName}>
+                                <p className='font-medium text-sm '><b>Articulo: </b>{art.productName}</p>
+                                <p className='font-medium text-sm '><b>Cantidad faltante: </b>{art.missing}</p>
+                            </div>
+                            ))}
                         </div>
-                        ))}
                     </div>
                     <div className='mt-6 flex flex-col items-start justify-start'>
-                        <h5 className='text-sm font-medium text-green-800'>Total a pagar por <b>{client}</b> para Reposicion: <b>{formatePrice(totalToPay)}</b></h5>
+                        <h5 className='text-sm font-medium text-zinc-600'>Total a pagar por <b className='text-green-800'>{client}</b> para Reposicion: <b className='text-green-800'>{formatePrice(totalToPay)}</b></h5>
                     </div> 
                     <div className='mt-6 mb-4 flex items-center justify-center gap-4'>
                         <Button className='bg-green-800 text-white font-medium text-sm w-44' onClick={()=> setLastStep(true)}>Confirmar Faltantes</Button>
@@ -63,7 +65,15 @@ const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, close
                )}
             </div> :
             <div>
-                <RegisterMissingItemsThirdStep orderData={orderData} missingArticlesDetail={articlesWithMissedQuantity} valueToPay={totalToPay} client={client} clientId={clientId} comeBack={comeBack} closeModalNow={closeModalNow}/>
+                <RegisterMissingItemsThirdStep 
+                orderData={orderData} 
+                missingArticlesDetail={articlesWithMissedQuantity} 
+                valueToPay={totalToPay} 
+                client={client} 
+                clientId={clientId} 
+                comeBack={comeBack} 
+                closeModalNow={closeModalNow}
+                updateList={updateList}/>
             </div>
             }
         </>

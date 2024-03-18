@@ -291,9 +291,10 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                       <div className="flex flex-col items-center justify-center mb-4">
                         <div>
                          {orderStatus === "Armado" ? 
-                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">        
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">      
+                                  <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>         
                                   <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
-                                  <SelectItem key={"Entregado"} value={"Retiro en Local"} onClick={() => setStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
+                                  <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
                               </Select> 
                             : 
                             <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    

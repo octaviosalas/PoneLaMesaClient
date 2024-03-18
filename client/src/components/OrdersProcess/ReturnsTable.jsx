@@ -5,6 +5,7 @@ import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
 import OrderDetail from '../Orders/OrderDeatil';
 import CreateNewReturn from '../Returns/CreateNewReturn';
+import ReturnToWashing from '../Returns/ReturnToWashing';
 
 const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList}) => {
 
@@ -36,7 +37,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList})
             if(data.length !== 0) { 
             const propiedades = Object.keys(everyReturns[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
             &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
-            && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'missingArticlesData');
+            && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'missingArticlesData');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -63,29 +64,26 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList})
                     }
                 });
 
-            /*  modifiedColumnObjects.push({
-                key: 'Derivar',
-                label: 'Derivar',
-                cellRenderer: (cell) => { 
-                    const filaActual = cell.row;
-                    const id = filaActual.original._id;
-                    const productsDetail = filaActual.original.productsDetail;
-                    const amount = filaActual.original.amount;
-                    const provider = filaActual.original.provider;
-                    const used = filaActual.original.used;
-
-                    const item = {
-                    id: id,
-                    productsDetail: productsDetail,
-                    amount: amount,                     
-                    provider: provider,
-                    used: used
-                    };
-                    return (
-                    <UseSubletToOrder subletData={item}/>
-                    );
-                },
-                }) */
+               if(data === everyReturns) { 
+                  modifiedColumnObjects.push({
+                    key: 'Pasar A Lavado',
+                    label: 'Derivar',
+                    cellRenderer: (cell) => { 
+                        const filaActual = cell.row;
+                        const id = filaActual.original._id;
+                        const orderNumber = filaActual.original.orderNumber;
+                        const month = filaActual.original.month;
+                        const item = {
+                        id: id,
+                        orderNumber: orderNumber,
+                        month: month
+                        };
+                        return (
+                         <ReturnToWashing orderData={item} updateList={updateList}/>
+                        );
+                    },
+                    }) 
+                 }
         
                 modifiedColumnObjects.push({
                 key: 'Detalle',

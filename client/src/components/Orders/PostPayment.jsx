@@ -119,21 +119,21 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
   }
 
   const addNewCollectionUsedInCreateNewReturn = async () => { 
+    const collecctionData = ({ 
+      orderId: orderIdItem,
+      collectionType:"order",
+      client: orderClientItem,
+      orderDetail: orderDetailItem,
+      date: actualDate,
+      day: day,
+      month: month,
+      year: year,
+      amount: orderTotalItem,
+      account: account,
+      loadedBy: userCtx.userName,
+      voucher: payImage
+    })
     if(account.length !== 0 && payImage.length > 0) { 
-      const collecctionData = ({ 
-        orderId: orderIdItem,
-        collectionType:"order",
-        client: orderClientItem,
-        orderDetail: orderDetailItem,
-        date: actualDate,
-        day: day,
-        month: month,
-        year: year,
-        amount: orderTotalItem,
-        account: account,
-        loadedBy: userCtx.userName,
-        voucher: payImage
-      })
       try {
         const updateOrderLikePaid = await axios.put(`http://localhost:4000/orders/addPaid/${orderIdItem}`)
         console.log(updateOrderLikePaid.data);
@@ -155,6 +155,28 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
       } catch (error) {
         console.log(err)
       }
+  } else if (account === "Efectivo") { 
+    try {
+      const updateOrderLikePaid = await axios.put(`http://localhost:4000/orders/addPaid/${orderIdItem}`)
+      console.log(updateOrderLikePaid.data);
+
+      if (updateOrderLikePaid.status === 200) { 
+       const addNewCollection = await axios.post("http://localhost:4000/collections/addNewCollection", collecctionData)   
+       console.log(addNewCollection.data)
+
+        if(addNewCollection.status === 200) { 
+          setSuccesCollectionSaved(true)
+          setSuccesOperation(true)
+          setTimeout(() => { 
+          changeOrderPaid(true)
+          onClose()
+          setAccount("")
+        }, 1500)
+      }
+    } 
+    } catch (error) {
+      console.log(error)
+    }
   } else { 
     setMissedData(true)
     setTimeout(() => { 
@@ -247,7 +269,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
                       ) : null
                     )}
 
-                  {account.length > 0?
+                  {account.length > 0 && account !== "Efectivo"?
                     <div>
                         <Dropzone onDrop={handleDropImage}>
                           {({ getRootProps, getInputProps }) => (
@@ -288,7 +310,8 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
                          {usedIn !== "CreateNewReturn" && orderData.paid === true ? null :
                           <Button  className="font-bold text-white text-sm bg-green-600 w-32"  onPress={usedIn === "CreateNewReturn" ? addNewCollectionUsedInCreateNewReturn : addNewCollection}>
                             Asentar Pago
-                          </Button>}
+                          </Button>
+                          }
                           <Button  className="font-bold text-white text-sm bg-green-600 w-32" onPress={handleClose}>
                             Cancelar
                           </Button>

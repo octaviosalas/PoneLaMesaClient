@@ -102,7 +102,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                         <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total))}</p>
                     </div>
      </div>
-     </div>
+        </div>
            <div className='flex flex-col items-center justify-center mt-2'>
                   {orderPaid ? 
                    <VaucherModal orderId={orderId}/>
@@ -131,9 +131,9 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                  <div className="flex items-center justify-center mt-4 mb-4">
                     <p className='text-green-800 font-medium text-sm'>La orden ya fue marcada como Devuelta</p>
                  </div> : null}
-     </>
+       </>
         :
-         <RegisterMissingItems returnFirstStep={comeBackFirstStep} orderData={orderData} cancel={cancelarMarkMissedArticles} closeModalNow={closeModalNow}/> 
+         <RegisterMissingItems returnFirstStep={comeBackFirstStep} updateList={updateList} orderData={orderData} cancel={cancelarMarkMissedArticles} closeModalNow={closeModalNow}/> 
         }
 
     </div>

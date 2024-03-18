@@ -24,7 +24,7 @@ const LocalReturns = () => {
        const orders = await response.data
        const getTodaysReturns = orders.filter((ord) => ord.returnDate === actualDate && ord.returnPlace === "Local") 
        const getOrdersDelivered = orders.filter((ord) => ord.orderStatus === "Entregado") 
-       const getHistoricEveryReturns = orders.filter((ord) => ord.orderStatus === "Lavado" || ord.orderStatus === "Devuelto" || ord.orderStatus === "Repuesto") 
+       const getHistoricEveryReturns = orders.filter((ord) =>  ord.orderStatus === "Devuelto" ) 
        setTodaysReturns(getTodaysReturns)
        setPendingReturns(getOrdersDelivered)
        setEveryReturns(getHistoricEveryReturns)

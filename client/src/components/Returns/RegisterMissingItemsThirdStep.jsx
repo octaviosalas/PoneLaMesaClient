@@ -8,7 +8,7 @@ import Dropzone from 'react-dropzone';
 import { PhotoIcon } from '@heroicons/react/24/solid'
 import { v4 as uuidv4 } from 'uuid';
 
-const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueToPay, client, clientId, comeBack, closeModalNow }) => {
+const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueToPay, client, clientId, comeBack, closeModalNow, updateList }) => {
 
     const [orderId, setOrderId] = useState("")
     const [succesMessage, setSuccesMessage] = useState(false)
@@ -89,6 +89,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
 
                         if(statusUpdateResponse.status === 200) { 
                             setSuccesMessage(true)
+                            updateList()
                             setTimeout(() => { 
                                 comeBack()
                                 closeModalNow()
@@ -147,6 +148,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                         const createNewCollection = axios.post("http://localhost:4000/collections/addNewCollection", collecctionData)
                         console.log(createNewCollection.data)
                         setSuccesMessageWithPaidReplacement(true)
+                        updateList()
                         setTimeout(() => { 
                             setSuccesMessageWithPaidReplacement(false)
                             comeBack()
@@ -207,8 +209,8 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
              }
             </div> : 
             <div className='flex flex-col items-center justify-center mt-6'>
-                <p className='font-medium text-sm text-green-800'>Los Articulos a Reponer fueron adjuntados al pedido ✔</p>
-                <p className='font-medium text-sm text-green-800 mt-2'>El cliente adjunto una Deuda ✔</p>
+                <p className='font-medium text-xs text-green-800'>Los Articulos a Reponer fueron adjuntados al pedido ✔</p>
+                <p className='font-medium text-xs text-green-800'>El cliente adjunto una Deuda ✔</p>
             </div>
             }    
 

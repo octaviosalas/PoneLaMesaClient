@@ -9,13 +9,6 @@ import { PhotoIcon } from '@heroicons/react/24/solid'
 import axios from "axios";
 
 
-
-/* 
-1- añadir cobro al modelo. ✔
-2- pasar a true la propiedad paid de la deuda del cliente. ✔
-3- pasar a true la propiedad paid en missingArticles en la orden.
-*/
-
 const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderDetail, debtAmount, debtId}) => {
 
     const [payImage, setPayImage] = useState("")

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Input } from '@nextui-org/react'
 import RegisterMissingItemsSecondStep from './RegisterMissingItemsSecondStep'
 
-const RegisterMissingItems = ({closeModalNow, orderData, cancel}) => {
+const RegisterMissingItems = ({closeModalNow, orderData, cancel, updateList}) => {
 
     const [allOrderProducts, setAllOrderProducts] = useState([])
     const [newOrderDetailArray, setNewOrderDetailArray] = useState([])
@@ -75,9 +75,9 @@ const RegisterMissingItems = ({closeModalNow, orderData, cancel}) => {
         <div>
             {allOrderProducts.map((ord, index) => (
               <div key={index} className="flex flex-col">
-                <div className="flex items-center justify-start w-72 gap-4 mt-2">
-                    <p className="font-medium text-zinc-500 text-sm">{ord.productName}</p>
-                    <Input type="number" variant="underlined" label="Cantidad" className="max-w-md min-w-sm"   value={newOrderDetailArray[index].quantity} onChange={(e) => handleQuantityChange(index, e.target.value)} /> 
+                <div className="flex items-center justify-start w-auto gap-4 mt-2">
+                    <p className="font-medium text-zinc-500 text-sm flex-shrink-0">{ord.productName}</p>
+                    <Input type="number" variant="underlined" label="Cantidad" className="max-w-md min-w-sm flex-grow"   value={newOrderDetailArray[index].quantity} onChange={(e) => handleQuantityChange(index, e.target.value)} /> 
                 </div>
               </div>
             ))}
@@ -91,7 +91,7 @@ const RegisterMissingItems = ({closeModalNow, orderData, cancel}) => {
 
        </>
        :
-        <RegisterMissingItemsSecondStep dataUpdated={newOrderDetailArray} orderData={orderData} comeBack={comeBack} closeModalNow={closeModalNow}/>
+        <RegisterMissingItemsSecondStep dataUpdated={newOrderDetailArray} updateList={updateList} orderData={orderData} comeBack={comeBack} closeModalNow={closeModalNow}/>
         }
 
     </div>

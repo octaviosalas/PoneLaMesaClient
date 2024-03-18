@@ -87,8 +87,8 @@ const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, upd
                             </div>
 
                             {succesMessage ? 
-                             <div className="mt-6 mb-4 flex items-center jsutify-center">
-                               <p className="font-medium text-sm text-green-800">Salio bien</p>
+                             <div className="mt-6 mb-4 flex items-center justify-center">
+                               <p className="font-medium text-sm text-green-800">El Sub Alquiler fue añadido a la orden</p>
                             </div> 
                             : null}
                     </ModalBody>
