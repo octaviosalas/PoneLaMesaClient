@@ -1,5 +1,9 @@
 import Orders from "../models/orders.js";
 import ProductsClients from "../models/productsClients.js";
+import PDFDocument from "pdfkit";
+import fs from 'fs';
+import { formatePrice } from "../../client/src/functions/gralFunctions.js";
+
 
 export const incrementarStock = async (productosComprados) => { 
   try {
@@ -336,3 +340,91 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
       res.status(500).json({ error: "Error interno del servidor" });
   }
  };
+
+
+
+ export const createPdf = async (req, res) => {
+  const { tableData } = req.body;
+  const doc = new PDFDocument();
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename=archivo.pdf');
+
+  doc.pipe(res);
+
+  function removeUnwantedProperties(item) {
+      const unwantedProps = [
+          '_id', 'orderCreator', 'orderStatus', 'clientId', 'typeOfClient',
+          'returnDate', 'returnPlace', 'month', 'year', 'day', 'paid',
+          'missingArticlesData', 'date', "__v"
+      ];
+      unwantedProps.forEach(prop => delete item[prop]);
+  }
+
+  function transformKeys(object, newKey, oldKey) {
+      if (Array.isArray(object)) {
+          object.map((item) => {
+              transformKeys(item, newKey, oldKey);
+          });
+      }
+      if (typeof object === 'object' && !Array.isArray(object)) {
+          Object.keys(object).forEach(key => {
+              if (typeof object[key] === 'object') {
+                  transformKeys(object[key], newKey, oldKey);
+              }
+              if (key === oldKey) {
+                  object[newKey] = object[key];
+                  delete object[key];
+              }
+          });
+      }
+  }
+
+  tableData.forEach(item => {
+      removeUnwantedProperties(item);
+      transformKeys(item, 'Cliente', 'client');
+      transformKeys(item, 'Direccion de Envio', 'placeOfDelivery');
+      transformKeys(item, 'Fecha de Entrega', 'dateOfDelivery');
+      transformKeys(item, 'Numero de Orden', 'orderNumber');
+      
+  });
+
+  doc.fontSize(12).text('Lista de datos:', { align: 'center' });
+  tableData.forEach((item, index) => {
+      let formattedItem = '';
+      for (const key in item) {
+          if (item.hasOwnProperty(key)) {
+            if (key === 'orderDetail') {
+              // Ajusta el tamaño de la fuente antes de agregar el título
+              doc.fontSize(12).text('Detalle de la Orden:', 50, 100); // Ajusta el tamaño de la fuente a 12 puntos
+              let yPosition = 120; // Inicia la posición y para los productos
+              item[key].forEach((product, productIndex) => {
+                  // Ajusta el tamaño de la fuente antes de agregar cada producto
+                  // y especifica el espaciado entre líneas con lineGap
+                  doc.fontSize(10).text(`Articulo: ${product.productName} - Cantidad: ${product.quantity}`, 50, yPosition, {
+                      lineGap: 10 // Ajusta este valor para controlar el espaciado entre líneas
+                  });
+                  // Incrementa la posición y para el siguiente producto
+                  yPosition += 20; // Ajusta el incremento según el tamaño de fuente y el espaciado deseado
+              });
+          } else if (key === 'subletsDetail') {
+                if (item[key].length > 0) {
+                    formattedItem += `Sublets Detalle:\n`;
+                    item[key].forEach((sublet, subletIndex) => {
+                        formattedItem += `${subletIndex + 1}. ${sublet.productName} - ${sublet.quantity}`;
+                    });
+                }
+            } else if (key === 'total') {
+                formattedItem += `Total: ${formatePrice(item[key])}\n`;
+            } else {
+                  formattedItem += `${key}: ${item[key]}\n`;
+              }
+          }
+      }
+      doc.fontSize(10).text(`${index + 1}. ${formattedItem}`);
+  });
+
+  // Finaliza el documento PDF
+  doc.end();
+ };
+ 

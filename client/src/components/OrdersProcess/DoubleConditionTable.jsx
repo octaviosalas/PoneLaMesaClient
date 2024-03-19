@@ -25,21 +25,19 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
     const [loadData, setLoadData] = useState(true)
 
 
-    useEffect(() => { 
-       setData(tableData)
-       console.log("table data", tableData)
-    }, [tableData])
+        useEffect(() => { 
+          setData(tableData)
+          console.log("table data", tableData)
+        }, [tableData])
 
-    const changeTypeOfData = (item) => { 
-      setData(item)
-      console.log(item)
-    }
+        const changeTypeOfData = (item) => { 
+          setData(item)
+          console.log(item)
+        }
 
-    useEffect(() => { 
-      console.log(data)
-   }, [data])
-    
-
+        useEffect(() => { 
+            console.log(data)
+        }, [data])
         
         const getDataAndCreateTable = () => { 
                 if(data.length !== 0) { 
@@ -177,14 +175,31 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
             }, 2000)
         }, [columns, data])
 
-      useEffect(() => { 
-         if(data.length > 0) { 
-            getDataAndCreateTable()
-         } else { 
-          console.log("la data es 0")
-            setWithOutOrders(true)
-         }
-      }, [data])
+        useEffect(() => { 
+          if(data.length > 0) { 
+              getDataAndCreateTable()
+          } else { 
+            console.log("la data es 0")
+              setWithOutOrders(true)
+          }
+        }, [data])
+
+        const createNewPdf = async () => { 
+          try {
+              const response = await axios.post("http://localhost:4000/orders/createPdf", {tableData}, {
+                  responseType: 'blob',
+              });
+              const blob = new Blob([response.data], { type: 'application/pdf' });      
+              const link = document.createElement('a');
+              link.href = window.URL.createObjectURL(blob);
+              link.download = 'archivo.pdf';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+          } catch (error) {
+              console.log(error);
+          }
+      };
 
 
   return (
@@ -208,6 +223,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                        <div className='flex items-center gap-6 justify-start text-start'>
                           <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Pedidos para Repartir en el Dia</p>
                           <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyReparts ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyReparts)}>Todos los repartos</p>
+                          {data === tableData ? <p className='text-xs font-bold text-zinc-600 cursor-pointer' onClick={() => createNewPdf()}>Imprimir Listado del Dia</p> : null}
                        </div>
                      
                      : null}
