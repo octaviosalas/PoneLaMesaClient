@@ -44,6 +44,7 @@ const CreateNewOrder = ({updateList}) => {
   const [choosenProductStock, setChoosenProductStock] = useState(0)
   const [choosenProductPriceReplacement, setChoosenProductPriceReplacement] = useState("")
   const [productsSelected, setProductsSelected] = useState([]);
+  const [clientHasDebt, setClientHasDebt] = useState(false);
 
 
 
@@ -127,11 +128,21 @@ const CreateNewOrder = ({updateList}) => {
         }
        }
 
-       const chooseClient = (name, id) => { 
+       const chooseClient = async (name, id) => { 
          console.log("recibi", id, name)
          setChoosenClientId(id)
          setChoosenClientName(name)
          setFilteredClientsNames([])
+         const response = axios.get(`http://localhost:4000/clients/${id}`)
+         const data = await response
+         const finalClientData = data.data
+         const verifyDebt = finalClientData.clientDebt.some((s) => s.paid === false)
+         if(verifyDebt === true) { 
+          setClientHasDebt(true)
+          setTimeout(() => { 
+            setClientHasDebt(false)
+          }, 2300)
+         }
        }
 
 
@@ -279,7 +290,14 @@ const CreateNewOrder = ({updateList}) => {
 
       }
 
-     
+     /* 
+          const response = axios.get(`http://localhost:4000/clients/${clientData.id}`)
+          const data = await response
+          const finalClientData = data.data
+          console.log(finalClientData.clientDebt)
+          const verifyDebt = finalClientData.clientDebt.some((s) => s.paid === false)
+          console.log(verifyDebt)
+     */
 
   return (
     <>
@@ -344,7 +362,8 @@ const CreateNewOrder = ({updateList}) => {
                  </div> 
                  <div className="flex flex-col items-center justify-center mt-6">
                      <Button color="success" className="font-medium text-white" onClick={() => executeFunctionDependsTypeOfClient()}>Armar Pedido</Button>
-                     {missedData ? <p className="mt-4 text-sm font-medium text-blacl">Debes completar todos los campos</p> : null}
+                     {clientHasDebt ? <p className="mt-4 text-sm font-medium text-red-600">Este cliente posee una deuda pendiente de Pago</p> : null}
+                     {missedData ? <p className="mt-4 text-sm font-medium text-green-800">Debes completar todos los campos</p> : null}
                  </div>
               </div>       
                 : null}
@@ -378,11 +397,11 @@ const CreateNewOrder = ({updateList}) => {
                     }
                     </div>  
                   <Input type="number" value={choosenProductQuantity} variant="bordered" label="Cantidad" className="mt-2 w-64 2xl:w-72"   onChange={(e) => setChoosenProductQuantity(parseInt(e.target.value, 10))}/>
-                  <div className="mt-6 flex flex-col ">
+                  <div className="mt-6 flex flex-col items-center justify-center">
                       {
                         choosenProductName.length !== 0 && choosenProductQuantity.length !== 0 ?
                         <Button 
-                         className="mt-6 font-medium text-white" color="success" 
+                         className="mt-6 font-medium text-white w-72" color="success" 
                          onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, 
                                         choosenProductPriceReplacement, choosenProductStock, choosenProductCategory)}>
                           Añadir
@@ -394,7 +413,7 @@ const CreateNewOrder = ({updateList}) => {
                        {
                        insufficientStock ?
                        <div className="flex items-center justify-center mt-4">
-                            <p className="font-medium text-sm text-green-600 underline">Stock Insuficiente</p>
+                            <p className="font-medium text-sm text-green-800 underline">Stock Insuficiente</p>
                        </div>
                         : 
                         null
