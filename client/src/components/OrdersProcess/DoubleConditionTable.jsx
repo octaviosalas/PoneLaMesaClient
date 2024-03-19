@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const DoubleConditionTable = ({tableData, typeOfOrders}) => {
+const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -27,7 +27,18 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
 
     useEffect(() => { 
        setData(tableData)
+       console.log("table data", tableData)
     }, [tableData])
+
+    const changeTypeOfData = (item) => { 
+      setData(item)
+      console.log(item)
+    }
+
+    useEffect(() => { 
+      console.log(data)
+   }, [data])
+    
 
         
         const getDataAndCreateTable = () => { 
@@ -35,11 +46,11 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
                 const propiedades = Object.keys(tableData[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
                     && propiedad !== 'orderDetail'&&  propiedad !== 'clientId'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'month' && propiedad !== 'year'
                     && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== "missingArticlesData");
-                const columnObjects = propiedades.map(propiedad => ({
-                    key: propiedad,
-                    label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
-                    allowsSorting: true
-                }));
+                    const columnObjects = propiedades.map(propiedad => ({
+                        key: propiedad,
+                        label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
+                        allowsSorting: true
+                    }));
 
                     const modifiedColumnObjects = columnObjects.map(column => {
                         if (column.key === 'date') {
@@ -80,8 +91,10 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
                         const month = filaActual.original.month;
                         const year = filaActual.original.year;
                         const total = filaActual.original.total;
+                        const orderSublets = filaActual.original.subletsDetail;
                         const item = {
                         id: id,
+                        orderSublets: orderSublets,
                         detail: detail,
                         creator: creator,
                         day: day,
@@ -184,10 +197,26 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
                 <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
                   <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
                     <div className='flex w-full items-center ml-4'>
-                     {typeOfOrders === "EntregasLocal" ? <p className='text-sm font-bold text-zinc-600'>Entrega del dia en Local</p> : null}
+                     {typeOfOrders === "EntregasLocal" ? 
+                      <div className='flex items-center gap-6 justify-start text-start'>
+                        <p  className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Entrega del dia en Local</p> 
+                        <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyDeliveries ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyDeliveries)}>Todos los pedidos para Entregar</p> 
+                     </div>
+                       : null}
                      {typeOfOrders === "DevolucionesLocal" ? <p className='text-sm font-bold text-zinc-600'>Devoluciones del dia en Local</p> : null}
-                     {typeOfOrders === "Reparto" ? <p className='text-sm font-bold text-zinc-600'>Pedidos para Repartir en el Dia</p> : null}
-                     {typeOfOrders === "Retiros" ? <p className='text-sm font-bold text-zinc-600'>Pedidos para Ir a Buscar en el Dia</p> : null}
+                     {typeOfOrders === "Reparto" ? 
+                       <div className='flex items-center gap-6 justify-start text-start'>
+                          <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Pedidos para Repartir en el Dia</p>
+                          <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyReparts ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyReparts)}>Todos los repartos</p>
+                       </div>
+                     
+                     : null}
+                     {typeOfOrders === "Retiros" ?
+                        <div className='flex items-center gap-6 justify-start text-start'>
+                            <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Retiros del Dia</p> 
+                            <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyRemoves ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyRemoves)}>Todos los Retiros</p> 
+                        </div>
+                      : null}
                     </div>
                     <div className='flex justify-start mr-4'></div>
                   </div>
@@ -241,7 +270,10 @@ const DoubleConditionTable = ({tableData, typeOfOrders}) => {
               <div className='flex flex-col items-center justify-center '>
                 {
                 withOutOrders ? 
-                 <p className='text-black font-medium text-md '>No hay pedidos</p> 
+                <div className='flex flex-col'>
+                  <p className='text-black font-medium text-md '>No hay pedidos</p> 
+                  <p>Volver</p>
+                </div>
                  :
                  null
                }

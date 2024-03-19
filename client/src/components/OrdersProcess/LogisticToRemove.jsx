@@ -11,28 +11,43 @@ import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunction
 const LogisticToRemove = () => {
 
   const actualDate = getDate()
-  const [logisticToRemove, setLogisticToRemove] = useState([])
+  const [logisticToRemoveToday, setLogisticToRemoveToday] = useState([])
+  const [everyLogisticToRemove, setEveryLogisticToRemove] = useState([])
+
 
   const getOrdersToDeliverTodayInLocal = async () => { 
      try {
        const response = await axios.get("http://localhost:4000/orders")
        const orders = response.data
-       const filterOrders = orders.filter((ord) => ord.returnDate === actualDate && ord.returnPlace !== "Local") 
-       setLogisticToRemove(filterOrders)
+       const filterOrders = orders.filter((ord) => ord.returnDate === actualDate && ord.returnPlace !== "Local"  && ord.orderStatus === "Entregado") 
+       setLogisticToRemoveToday(filterOrders)
        console.log("Ordenes filtradas: ", filterOrders)
      } catch (error) {
        console.log(error)
      }
   }
 
+  const getEveryRemoves = async () => { 
+    try {
+      const response = await axios.get("http://localhost:4000/orders")
+      const orders = response.data
+      const filterOrders = orders.filter((ord) => ord.orderStatus === "Entregado" && ord.returnPlace !== "Local") 
+      setEveryLogisticToRemove(filterOrders)
+      console.log("Ordenes filtradas: ", filterOrders)
+    } catch (error) {
+      console.log(error)
+    }
+ }
+
   useEffect(() => { 
     getOrdersToDeliverTodayInLocal()
+    getEveryRemoves()
   }, [])
 
   return (
     <div>
          <NavBarComponent/>
-         <DoubleConditionTable tableData={logisticToRemove} typeOfOrders={"Retiros"}/>
+         <DoubleConditionTable tableData={logisticToRemoveToday} everyRemoves={everyLogisticToRemove} typeOfOrders={"Retiros"}/>
     </div>
   )
 }

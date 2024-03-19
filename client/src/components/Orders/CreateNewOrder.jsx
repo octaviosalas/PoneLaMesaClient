@@ -326,9 +326,18 @@ const CreateNewOrder = ({updateList}) => {
                       ))}
                   </Select>
 
+                    <div className="flex flex-col justify-start text-start  mt-2 ">
+                      <Input type="text" variant="underlined"   value={placeOfDelivery} label="Lugar Entrega" className="w-64 2xl:w-72"  onChange={(e) => setPlaceOfDelivery(e.target.value)}/>
+                      <p className="text-xs underline text-green-800 cursor-pointer ml-1 flex justify-start" onClick={() => setPlaceOfDelivery("Local")}>Si la entrega es en el Local, click aqui</p>
+                    </div>
 
-                    <Input type="text" variant="underlined"   value={placeOfDelivery} label="Lugar Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setPlaceOfDelivery(e.target.value)}/>
-                    <Input type="text" variant="underlined"   value={returnPlace} label="Lugar Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnPlace(e.target.value)}/>
+                    <div className="flex flex-col justify-start text-start  mt-2 ">
+                      <Input type="text" variant="underlined"   value={returnPlace} label="Lugar Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnPlace(e.target.value)}/>
+                      <p className="text-xs underline text-green-800 cursor-pointer ml-1 flex justify-start"  onClick={() => setReturnPlace("Local")}>Si la Devolucion es en el Local, click aqui</p>
+                    </div>
+                  
+
+
                     <Input type="date" variant="underlined"   classNames={{label: "-mt-5"}} value={dateOfDelivery} label="Fecha Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setDateOfDelivery(e.target.value)}/>
                     <Input  type="date" variant="underlined"  classNames={{label: "-mt-5"}} placeholder="" value={returnDate} label="Fecha Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnDate(e.target.value)}/>
 

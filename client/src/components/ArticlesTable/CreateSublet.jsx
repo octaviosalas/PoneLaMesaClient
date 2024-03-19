@@ -125,7 +125,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
       const newExpense = ({ 
         loadedByName: userCtx.userName,
         loadedById: userCtx.userId,
-        typeOfExpense: "sublet",
+        typeOfExpense: "Sub Alquiler",
         amount: productsChoosen.reduce((acc, el) => acc + el.value, 0),
         date: actualDate,
         day: actualDay,

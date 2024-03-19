@@ -107,7 +107,7 @@ const HistoricClient = ({clientData, updateClientData}) => {
   return (
     <>
       <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-xl bg-white text-black'>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
         <ModalContent>
           {(onClose) => (
             <>
@@ -163,7 +163,7 @@ const HistoricClient = ({clientData, updateClientData}) => {
                            columnSpacing={10}  
                            aria-label="Selection behavior table example with dynamic content"   
                            selectionBehavior={selectionBehavior} 
-                           className="w-[480px] 2xl-w-[550px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto max-h-[400px] border rounded-xl">
+                           className="w-[780px] 2xl-w-[550px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto xl:max-h-[200px] 2xl:max-h-[450px] border rounded-xl">
                             <TableHeader columns={columns}>
                               {(column) => (
                                 <TableColumn key={column.key} className="text-xs gap-6">

@@ -12,6 +12,7 @@ const LogisticRepart = () => {
 
   const actualDate = getDate()
   const [logisticDeliveryOrders, setLogisticDeliveryOrders] = useState([])
+  const [everyReparts, setEveryReparts] = useState([])
 
   console.log(getDate())
 
@@ -19,7 +20,7 @@ const LogisticRepart = () => {
      try {
        const response = await axios.get("http://localhost:4000/orders")
        const orders = response.data
-       const filterOrders = orders.filter((ord) => ord.dateOfDelivery === actualDate && ord.placeOfDelivery !== "Local") 
+       const filterOrders = orders.filter((ord) => ord.dateOfDelivery === actualDate && ord.orderStatus === "Armado" && ord.placeOfDelivery !== "Local") 
        setLogisticDeliveryOrders(filterOrders)
        console.log("Ordenes filtradas: ", filterOrders)
      } catch (error) {
@@ -27,14 +28,28 @@ const LogisticRepart = () => {
      }
   }
 
+  
+  const getOrderWithRepartStatus = async () => { 
+    try {
+      const response = await axios.get("http://localhost:4000/orders")
+      const orders = response.data
+      const filterOrders = orders.filter((ord) => ord.orderStatus === "Armado" && ord.placeOfDelivery !== "Local") 
+      setEveryReparts(filterOrders)
+      console.log("Ordenes filtradas: ", filterOrders)
+    } catch (error) {
+      console.log(error)
+    }
+ }
+
   useEffect(() => { 
     getOrdersToDeliverTodayInLocal()
+    getOrderWithRepartStatus()
   }, [])
 
   return (
     <div>
          <NavBarComponent/>
-         <DoubleConditionTable tableData={logisticDeliveryOrders} typeOfOrders={"Reparto"}/>
+         <DoubleConditionTable tableData={logisticDeliveryOrders} everyReparts={everyReparts} typeOfOrders={"Reparto"}/>
     </div>
   )
 }

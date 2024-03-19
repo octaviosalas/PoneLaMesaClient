@@ -117,7 +117,7 @@ const CreateNewPurchase = ({update}) => {
         const newExpense = ({ 
           loadedByName: userCtx.userName,
           loadedById: userCtx.userId,
-          typeOfExpense: "purchase",
+          typeOfExpense: "Compra",
           amount: productsSelected.reduce((acc, el) => acc + el.value, 0),
           date: actualDate,
           day: actualDay,

@@ -53,7 +53,6 @@ const HistoricProviders = ({providerData, updateList}) => {
 
     useEffect(() => {
       if (providerExpenses.length > 0) {
-        console.log("me ejecuto")
         const firstDetail = providerExpenses[0];
         const properties = Object.keys(firstDetail);
         const filteredProperties = properties.filter(property => property !== 'detalle');
@@ -61,9 +60,11 @@ const HistoricProviders = ({providerData, updateList}) => {
         const columnLabelsMap = {
           total: 'Total Gastado',
           mes: 'Mes',
-          razon: 'Razon',
+          razon: 'Motivo',
           año: 'Año',
         };
+
+        
       
         const tableColumns = filteredProperties.map(property => ({
           key: property,
@@ -80,7 +81,7 @@ const HistoricProviders = ({providerData, updateList}) => {
   return (
     <>
       <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-xl bg-white text-black'>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
         <ModalContent>
           {(onClose) => (
             <>
@@ -96,7 +97,7 @@ const HistoricProviders = ({providerData, updateList}) => {
                     ) : (
                       providerExpenses.length > 0 ? (
                         <div className="mt-4 flex flex-col  ">
-                          <Table aria-label="Example table with dynamic content" className="w-[480px] 2xl-w-[550px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto max-h-[400px] ">
+                          <Table aria-label="Example table with dynamic content" className="w-[450px] xl:w-[900px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto">
                             <TableHeader columns={columns} >
                               {(column) => (
                                 <TableColumn key={column.key} className="text-xs gap-6">

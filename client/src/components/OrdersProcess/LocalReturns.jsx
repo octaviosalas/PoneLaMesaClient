@@ -22,7 +22,7 @@ const LocalReturns = () => {
      try {
        const response = await axios.get("http://localhost:4000/orders")
        const orders = await response.data
-       const getTodaysReturns = orders.filter((ord) => ord.returnDate === actualDate && ord.returnPlace === "Local") 
+       const getTodaysReturns = orders.filter((ord) => ord.returnDate === actualDate && ord.returnPlace === "Local" && ord.returnPlace === "Entregado") 
        const getOrdersDelivered = orders.filter((ord) => ord.orderStatus === "Entregado") 
        const getHistoricEveryReturns = orders.filter((ord) =>  ord.orderStatus === "Devuelto" ) 
        setTodaysReturns(getTodaysReturns)
