@@ -424,7 +424,6 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
       doc.fontSize(10).text(`${index + 1}. ${formattedItem}`);
   });
 
-  // Finaliza el documento PDF
   doc.end();
  };
  

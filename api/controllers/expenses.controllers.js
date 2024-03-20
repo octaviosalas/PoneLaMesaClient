@@ -5,7 +5,7 @@ export const createNewExpense = async (req, res) => {
     try {
      const newExpense = new Expenses(req.body);
      const expenseSaved = await newExpense.save();
-     res.status(201).json(expenseSaved);
+     res.status(200).json(expenseSaved );
    } catch (error) {
      res.status(500).json({ error: 'Error al crear el gasto' });
      console.log(error)

@@ -58,7 +58,7 @@ import axios from "axios";
                  <Input label="Precio Alquiler" variant="underlined" className="w-72 mt-2" onChange={(e) => setPrice(e.target.value)}/>      
                  <Input label="Precio Alquiler Bonificados" variant="underlined" className="w-72 mt-2" onChange={(e) => setBonusClientsPrice(e.target.value)}/>
                  <Input label="Precio Reposicion" variant="underlined" className="w-72 mt-2" onChange={(e) => setStock(e.target.value)}/>
-                 <Input label="Stock Actual" variant="underlined" className="w-72 mt-2" onChange={(e) => setReplacementPrice(e.target.value)}/>        
+                 <Input label="Cantidad a Agregar" variant="underlined" className="w-72 mt-2" onChange={(e) => setReplacementPrice(e.target.value)}/>        
                </div>
               </ModalBody>
               <ModalFooter className="flex items-center justify-center gap-6">

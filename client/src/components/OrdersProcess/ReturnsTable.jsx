@@ -188,6 +188,8 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList})
         }
     }, [data])
 
+    //className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === tableData ? 'underline' : ''}`}
+
     return (
         <div>
           {loadData ? (
@@ -198,9 +200,9 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList})
                    <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
                      <div className='h-12 w-full flex justify-between items-center  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
                        <div className='flex justify-start w-full items-center ml-4 gap-6'>                   
-                           <p className='text-sm font-bold cursor-pointer text-zinc-600'  onClick={() => changeDataValues(everyReturns)}>Todas las Devoluciones</p>
-                           <p className='text-sm font-bold cursor-pointer text-zinc-600' onClick={() => changeDataValues(pendingReturns)}>Devoluciones Pendientes</p>
-                           <p className='text-sm font-bold cursor-pointer text-zinc-600'  onClick={() => changeDataValues(todaysReturns)}>Devoluciones del Dia</p>
+                           <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === everyReturns ? 'underline' : ''}`}  onClick={() => changeDataValues(everyReturns)}>Todas las Devoluciones</p>
+                           <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === pendingReturns ? 'underline' : ''}`} onClick={() => changeDataValues(pendingReturns)}>Devoluciones Pendientes</p>
+                           <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === todaysReturns ? 'underline' : ''}`}  onClick={() => changeDataValues(todaysReturns)}>Devoluciones del Dia</p>
                        </div>
                        <div className='flex items-center'>
                          <CreateNewReturn updateList={updateList}/>

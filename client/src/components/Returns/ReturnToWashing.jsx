@@ -41,7 +41,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
               <ModalHeader className="flex flex-col">Modal Title</ModalHeader>
               <ModalBody>
                 <div className="flex items-center justify-center mt-4">
-                  <p className="text-sm font-medium text-green-800">¿Estas seguro de pasar la orden {orderData.orderNumber} de {orderData.month} a Lavado?</p>
+                  <p className="text-sm font-medium text-green-800">¿Estas seguro de pasar la orden {orderData.orderNumber} del mes de {orderData.month} a Lavado?</p>
                 </div>
               </ModalBody>
               <ModalFooter className="mb-2 flex gap-4 items-center justify-center">

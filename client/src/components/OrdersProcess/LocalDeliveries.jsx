@@ -28,7 +28,7 @@ const LocalDeliveries = () => {
     try {
       const response = await axios.get("http://localhost:4000/orders")
       const orders = response.data
-      const filterOrders = orders.filter((ord) => ord.placeOfDelivery === "Local" && ord.orderStatus === "Armado") 
+      const filterOrders = orders.filter((ord) => ord.orderStatus === "Entregado") 
       setEveryDeliveries(filterOrders)
       console.log("Ordenes filtradas: ", filterOrders)
     } catch (error) {

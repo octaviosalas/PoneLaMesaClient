@@ -4,7 +4,7 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyV
 import { formatePrice } from "../../functions/gralFunctions";
 import { useState, useEffect } from "react";
 
-const OrderDetail = ({orderData}) => {
+const OrderDetail = ({orderData, collectionDetail}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
@@ -34,16 +34,15 @@ const OrderDetail = ({orderData}) => {
   }, [orderData]);
 
   
- 
-
   return (
     <>
-      <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle</p>
+      {orderData ? <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle</p> : <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle del Cobro</p>}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Detalle del Pedido</ModalHeader>
+             {orderData ?
               <ModalBody>
                 <div className="flex flex-col text-start justify-start">
                     <p className="text-zinc-600 font-medium text-sm"><b>Pedido cargador por:</b> {orderData.creator}</p>
@@ -98,7 +97,16 @@ const OrderDetail = ({orderData}) => {
                            <p className="text-sm text-zinc-600 font-bold">Valor total del Pedido: {formatePrice(orderData.total)} </p>
                            {orderData.orderSublets.length > 0 ? <p className="text-xs text-green-800 font-medium"> (La suma total Incluye los SubAlquileres)</p> : null}
                         </div>        
-              </ModalBody>
+              </ModalBody> :
+              <div className="flex flex-col items-start justify-start text-start w-[500px] ml-4">
+                  <p className="text-sm font-medium text-zinc-600">*El cobro fue cargado por {collectionDetail.loadedBy} el dia {collectionDetail.day} de {collectionDetail.month} del {collectionDetail.year}</p>
+                  <p className="text-sm font-medium text-zinc-600">*El monto cobrado fue de {formatePrice(collectionDetail.amount)}</p>
+                  {collectionDetail.account === "Efectivo" ? 
+                     <p className="text-sm font-medium text-zinc-600">*El pago del cliente se realizo en {collectionDetail.account}</p> : 
+                     <p className="text-sm font-medium text-zinc-600">*El pago del cliente se realizo a: {collectionDetail.account}</p>
+                   }
+              </div>      
+               }
               <ModalFooter className="flex items-center justify-center mt-2">
                 <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button>
                

@@ -60,7 +60,6 @@ const HistoricArticles = ({articleData}) => {
 
     useEffect(() => {
       if (ordersProducts.length > 0) {
-        console.log("me ejecuto")
         const firstDetail = ordersProducts[0];
         const properties = Object.keys(firstDetail);
         const filteredProperties = properties.filter(property => property !== 'productOrderDetail' && property !== 'orderId');
@@ -138,8 +137,9 @@ const HistoricArticles = ({articleData}) => {
                             </TableBody>
                           </Table>
                           <div className="flex flex-col justify-end items-end  mt-4">
-                            <p className="text-zinc-600 font-medium text-xs">Total facturado de "{articleData.articleName}":  {formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
+                            <p className="text-zinc-600 font-medium text-xs">Total facturado de {articleData.articleName}:  {formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
                             <p className="text-zinc-600 font-medium text-xs">Cantidad de Pedidos: {ordersProducts.length}</p>
+                            <p className="text-zinc-600 font-medium text-xs">Unidades Alquiladas: {ordersProducts.reduce((acc, el) => acc + el.quantity, 0)}</p>
                           </div>
                         </div>
                       ) : (

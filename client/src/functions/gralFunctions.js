@@ -117,6 +117,12 @@ export const getDay = () => {
   return priceFormated;
 }
 
+export const formateInputPrice = (price) => { 
+  const roundedPrice = Math.round(price);
+  const priceFormated = roundedPrice.toLocaleString('es-AR');
+  return priceFormated;
+}
+
 
 export const typeOfClientsAvailables = [
   { label: 'Bonificado', value: 'Bonificado' },

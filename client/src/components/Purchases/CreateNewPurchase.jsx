@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import { getProductsClients } from "../../functions/gralFunctions";
 
-const CreateNewPurchase = ({update}) => {
+const CreateNewPurchase = ({updateList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [allProducts, setAllProducts] = useState([])
   const [filteredNames, setFilteredNames] = useState("")
@@ -133,7 +133,7 @@ const CreateNewPurchase = ({update}) => {
                 console.log(res.data)
                 setSuccesPurchase(true)
                 setProductsSelected([])
-                update()
+                updateList()
                 setTimeout(() => { 
                   onClose()
                   setSuccesPurchase(false)
@@ -153,8 +153,9 @@ const CreateNewPurchase = ({update}) => {
     } else { 
         console.log("agrega productos")
     }
-  }
+  } 
 
+  
   
   
 

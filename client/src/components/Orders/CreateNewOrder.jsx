@@ -36,7 +36,7 @@ const CreateNewOrder = ({updateList}) => {
   const [choosenClientId, setChoosenClientId] = useState("")
   const [filteredClientsNames, setFilteredClientsNames] = useState([])
   const [choosenProductName, setChoosenProductName] = useState("")
-  const [choosenProductQuantity, setChoosenProductQuantity] = useState(0)
+  const [choosenProductQuantity, setChoosenProductQuantity] = useState()
   const [choosenProductId, setChoosenProductId] = useState("")
   const [choosenProductPrice, setChoosenProductPrice] = useState("")
   const [choosenProductCategory, setChoosenProductCategory] = useState("")
@@ -45,6 +45,7 @@ const CreateNewOrder = ({updateList}) => {
   const [choosenProductPriceReplacement, setChoosenProductPriceReplacement] = useState("")
   const [productsSelected, setProductsSelected] = useState([]);
   const [clientHasDebt, setClientHasDebt] = useState(false);
+  const [clientHasntDebt, setClientHasntDebt] = useState(false);
 
 
 
@@ -141,6 +142,11 @@ const CreateNewOrder = ({updateList}) => {
           setClientHasDebt(true)
           setTimeout(() => { 
             setClientHasDebt(false)
+          }, 2300)
+         } else { 
+          setClientHasntDebt(true)
+          setTimeout(() => { 
+            setClientHasntDebt(false)
           }, 2300)
          }
        }
@@ -315,6 +321,7 @@ const CreateNewOrder = ({updateList}) => {
               firstStep ? 
               <div className="flex flex-col items-center justify-center">
                  <div className="flex flex-col items-center justify-center"> 
+              
                     <Input type="number" variant="underlined" value={orderNumber} label="Numero de Orden" className="mt-2 w-64 2xl:w-72" onChange={(e) => setOrderNumber(e.target.value)}/>
                     <Input type="text" variant="underlined" value={choosenClientName} label="Cliente" className="mt-2 w-64 2xl:w-72" onChange={(e) => handleInputClientsChange(e.target.value)}/>
                     <div className="">
@@ -363,6 +370,7 @@ const CreateNewOrder = ({updateList}) => {
                  <div className="flex flex-col items-center justify-center mt-6">
                      <Button color="success" className="font-medium text-white" onClick={() => executeFunctionDependsTypeOfClient()}>Armar Pedido</Button>
                      {clientHasDebt ? <p className="mt-4 text-sm font-medium text-red-600">Este cliente posee una deuda pendiente de Pago</p> : null}
+                     {clientHasntDebt ? <p className="mt-4 text-sm font-medium text-green-600">Este cliente no posee una deuda pendiente de Pago ✔</p> : null}
                      {missedData ? <p className="mt-4 text-sm font-medium text-green-800">Debes completar todos los campos</p> : null}
                  </div>
               </div>       

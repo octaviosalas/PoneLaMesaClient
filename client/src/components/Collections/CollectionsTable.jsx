@@ -74,25 +74,24 @@ const CollectionsTable = ({collections}) => {
                 cellRenderer: (cell) => { 
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
-                    const detail = filaActual.original.orderDetail;
-                    const creator = filaActual.original.orderCreator;
-                    const client = filaActual.original.client;
-                    const day = filaActual.original.day;
-                    const month = filaActual.original.month;
-                    const year = filaActual.original.year;
-                    const total = filaActual.original.total;
+                    const account = filaActual.original.account;
+                    const loadedBy = filaActual.original.loadedBy
+                    const amount = filaActual.original.amount
+                    const day = filaActual.original.day
+                    const month = filaActual.original.month
+                    const year = filaActual.original.year
+                   
                     const item = {
                     id: id,
-                    detail: detail,
-                    creator: creator,
+                    account: account,
+                    loadedBy: loadedBy,
+                    amount: amount,
                     day: day,
                     month: month,
-                    year: year,
-                    total: total,
-                    client: client
+                    year: year                   
                     };
                     return (
-                       <OrderDetail orderData={item}/>
+                       <OrderDetail collectioDetail={item}/>
                     );
                 },
                 }) 

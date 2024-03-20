@@ -10,7 +10,7 @@ import Loading from '../Loading/Loading';
 import {Link} from "react-router-dom"
 import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
 import { useNavigate } from 'react-router-dom';
-
+import impresora from "../../images/impresora.png"
 
 
 const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries}) => {
@@ -215,15 +215,19 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                      {typeOfOrders === "EntregasLocal" ? 
                       <div className='flex items-center gap-6 justify-start text-start'>
                         <p  className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Entrega del dia en Local</p> 
-                        <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyDeliveries ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyDeliveries)}>Todos los pedidos para Entregar</p> 
+                        <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyDeliveries ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyDeliveries)}>Pedidos Entregados</p> 
                      </div>
                        : null}
                      {typeOfOrders === "DevolucionesLocal" ? <p className='text-sm font-bold text-zinc-600'>Devoluciones del dia en Local</p> : null}
                      {typeOfOrders === "Reparto" ? 
-                       <div className='flex items-center gap-6 justify-start text-start'>
-                          <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Pedidos para Repartir en el Dia</p>
-                          <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyReparts ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyReparts)}>Todos los repartos</p>
-                          {data === tableData ? <p className='text-xs font-bold text-zinc-600 cursor-pointer' onClick={() => createNewPdf()}>Imprimir Listado del Dia</p> : null}
+                       <div className='flex items-center gap-6 justify-between w-full'>
+                            <div className='flex items-start gap-6 justify-start'>
+                              <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Pedidos para Repartir en el Dia</p>
+                              <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyReparts ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyReparts)}>Futuros Repartos</p> 
+                            </div>
+                            <div className='flex items-end gap-6 justify-end'>
+                               {data === tableData ? <img className='h-7 w-7 cursor-pointer' title="Imprimir reparto del Dia" onClick={() => createNewPdf()} src={impresora}/> : null}
+                            </div>                                     
                        </div>
                      
                      : null}

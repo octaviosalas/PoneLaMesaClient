@@ -44,7 +44,7 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
   return (
     <>
       {
-      showingOn === "table" ? <p className="font-medium text-green-700 text-xs" onClick={handleOpen}>Ver Comprobante</p>
+      showingOn === "table" ? <p className="font-medium text-green-700 text-xs cursor-pointer" onClick={handleOpen}>Ver Comprobante</p>
        :
       <p className="font-medium text-zinc-600 text-sm underline cursor-pointer"  onClick={handleOpen}>Este pedido se encuentra Abonado</p>
       }

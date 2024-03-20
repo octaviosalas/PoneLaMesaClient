@@ -270,14 +270,13 @@ const ProcessTables = ({orderStatus}) => {
                        }
                       {orderStatus === "Lavado" &&
                             <div className='flex items-center w-full justify-between '> 
-                              <p className='font-bold ml-4'>Pedidos en Lavado</p>
-                              <p className='font-bold cursor-pointer text-md'>Ver Lavado del dia</p>
+                              <p className='font-bold ml-4'>Pedidos en Lavado</p>                      
                             </div>
                        }
                       {orderStatus === "Armado" &&
-                            <div className='flex items-center w-full justify-between '> 
-                              <p className='font-bold cursor-pointer text-md ml-4' onClick={() => setViewJustToday(false)}>Pedidos en Armado</p>
-                              <p className='font-bold cursor-pointer text-md' onClick={() => setViewJustToday(true)}>Ver Armado del dia</p>
+                            <div className='flex items-center w-full justify-start gap-8 '> 
+                              <p className='font-bold cursor-pointer text-sm ml-4' onClick={() => setViewJustToday(false)}>Pedidos en Armado</p>
+                              <p className='font-bold cursor-pointer text-sm' onClick={() => setViewJustToday(true)}>Para entregar Hoy</p>
                             </div>
                        }
                         {orderStatus === "Retiro en Local" &&
@@ -294,7 +293,7 @@ const ProcessTables = ({orderStatus}) => {
                   </div>
                   <div className='w-full flex items-center gap-2 justify-start mt-4'>
                     <input
-                      className="w-[50%] border border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl"
+                      className="w-[50%] border border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl ml-2"
                       placeholder="Buscador"
                       onChange={(e) => setInputValue(e.target.value)}
                       value={inputValue}

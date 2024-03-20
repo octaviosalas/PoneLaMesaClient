@@ -21,7 +21,7 @@ export const savePurchase = async (req, res) => {
   
       newPurchaseToBeSaved.save()
         .then((newPurchase) => {
-          res.json({ message: "Compra guardada", newPurchase });
+          res.status(200).json({ message: "Compra guardada", newPurchase });
         })
         .catch((err) => {
           console.log(err);
