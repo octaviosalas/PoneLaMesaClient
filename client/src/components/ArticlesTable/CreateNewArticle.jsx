@@ -46,7 +46,7 @@ import axios from "axios";
 
   return (
     <>
-      <p onClick={onOpen} className="text-zinc-600 font-medium text-sm 2xl:text-md">Crear Nuevo Articulo</p>
+      <p onClick={onOpen} className="text-zinc-600 font-medium text-sm 2xl:text-md cursor-pointer">Crear Nuevo Articulo</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

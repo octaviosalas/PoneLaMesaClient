@@ -20,6 +20,7 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
     const [actualYear, setActualYear] = useState(getYear())
     const [succesMessage, setSuccesMessage] = useState(false)
     const [load, setLoad] = useState(false)
+    const [missedAccount, setMissedAccount] = useState(false)
 
 
     const availablesAccounts = [
@@ -60,60 +61,68 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
       };
 
       const updateDebtToPaid = async () => { 
-        setLoad(true)
-        try {
-           const collecctionData = ({ 
-               orderId: orderId,
-               collectionType:"replacement",
-               paymentReferenceId: debtId,
-               client: clientName,
-               orderDetail: orderDetail,
-               date: actualDate,
-               day: actualDay,
-               month: actualMonth,
-               year: actualYear,
-               amount: debtAmount,
-               account: account,
-               loadedBy: userCtx.userName,
-               voucher: payImage
-             })
-
-           const addNewCollection = await axios.post("http://localhost:4000/collections/addNewCollection/", collecctionData)
-           console.log(addNewCollection.data);
-
-           if (addNewCollection.status === 200) { 
-            const data = ({ 
-                debtId: debtId,
-                orderId: orderId,
-                newStatus: true
-            })
-            const updateDebtState = await axios.put(`http://localhost:4000/clients/updateDebtStatus/${clientId}`, {data})
-            console.log(updateDebtState.data);
-            
-            if(updateDebtState.status === 200) { 
-                const missedArticlesData = ({ 
-                    missedArticlesReference: debtId,
-                    newStatus: true
-                })
-                const updateMissedProductsOrdersLikePaid = await axios.put(`http://localhost:4000/orders/updateMissedArticlesLikePaid/${orderId}`, {missedArticlesData})
-                console.log(updateMissedProductsOrdersLikePaid.data)
-
-                if(updateMissedProductsOrdersLikePaid.status === 200) { 
-                  console.log("bhfiouasghfodisai")
-                  setSuccesMessage(true)
-                  updateClientData()
-                  setLoad(false)
-                  setTimeout(() => { 
-                    closeModal()
-                    setSuccesMessage(false)
-                  }, 1800)
-                }
-            }
-           }
-        } catch (error) {
-           console.log(error)
-           setLoad(false)
-        }
+        if(account.length > 0) { 
+          setLoad(true)
+          try {
+             const collecctionData = ({ 
+                 orderId: orderId,
+                 collectionType:"Reposicion",
+                 paymentReferenceId: debtId,
+                 client: clientName,
+                 orderDetail: orderDetail,
+                 date: actualDate,
+                 day: actualDay,
+                 month: actualMonth,
+                 year: actualYear,
+                 amount: debtAmount,
+                 account: account,
+                 loadedBy: userCtx.userName,
+                 voucher: payImage
+               })
+  
+             const addNewCollection = await axios.post("http://localhost:4000/collections/addNewCollection/", collecctionData)
+             console.log(addNewCollection.data);
+  
+             if (addNewCollection.status === 200) { 
+              const data = ({ 
+                  debtId: debtId,
+                  orderId: orderId,
+                  newStatus: true
+              })
+              const updateDebtState = await axios.put(`http://localhost:4000/clients/updateDebtStatus/${clientId}`, {data})
+              console.log(updateDebtState.data);
+              
+              if(updateDebtState.status === 200) { 
+                  const missedArticlesData = ({ 
+                      missedArticlesReference: debtId,
+                      newStatus: true
+                  })
+                  const updateMissedProductsOrdersLikePaid = await axios.put(`http://localhost:4000/orders/updateMissedArticlesLikePaid/${orderId}`, {missedArticlesData})
+                  console.log(updateMissedProductsOrdersLikePaid.data)
+  
+                  if(updateMissedProductsOrdersLikePaid.status === 200) { 
+                    console.log("bhfiouasghfodisai")
+                    setSuccesMessage(true)
+                    updateClientData()
+                    setLoad(false)
+                    setTimeout(() => { 
+                      closeModal()
+                      setSuccesMessage(false)
+                    }, 1800)
+                  }
+              }
+             }
+          } catch (error) {
+             console.log(error)
+             setLoad(false)
+          } 
+        } else { 
+          setMissedAccount(true)
+          setTimeout(() => { 
+            setMissedAccount(false)
+          }, 1800)
+       }
+       
      }
 
     return (

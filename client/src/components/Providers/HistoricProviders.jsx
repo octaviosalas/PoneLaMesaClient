@@ -1,5 +1,5 @@
 import React from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 import { formatePrice } from "../../functions/gralFunctions";
 import axios from "axios";
@@ -14,6 +14,7 @@ const HistoricProviders = ({providerData, updateList}) => {
     const [providerExpenses, setProviderExpenses] = useState([]);
     const [withOutExpenses, setWithOutExpenses] = useState(false);
     const [loadingData, setLoadingData] = useState(true)
+    const [inputValue, setInputValue] = useState("")
 
   
     const handleOpen = async () => { 
@@ -78,6 +79,13 @@ const HistoricProviders = ({providerData, updateList}) => {
       }
     }, [providerExpenses]);
 
+
+    const filteredData = providerExpenses.filter((item) => {
+      return Object.values(item).some((value) =>
+        value.toString().toLowerCase().includes(inputValue.toLowerCase())
+      );
+    });
+
   return (
     <>
       <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
@@ -88,6 +96,13 @@ const HistoricProviders = ({providerData, updateList}) => {
               <ModalHeader className="flex flex-col gap-1">
                 <p  className="text-zinc-600 font-bold text-md">Historico de Proveedor</p>
                 <p  className="text-zinc-600 font-medium text-sm">{providerData.name}</p>
+                 {loadingData ? null :
+                  <div className="flex flex-col justify-start items-start">
+                      <p className="text-zinc-600 font-medium text-xs">Total Gastado en <b>{providerData.name}</b>:  {formatePrice(providerExpenses.reduce((acc, el) => acc + el.total, 0))}</p>
+                      <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de <b>Sub Alquileres: </b>{providerExpenses.filter((prov) => prov.razon === "Sub Alquiler").length}</p>
+                      <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de <b>Compras: </b> {providerExpenses.filter((prov) => prov.razon === "Compra").length}</p>
+                      <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de <b>Gastos: </b> {providerExpenses.length}</p>       
+                  </div>}
               </ModalHeader>
               <ModalBody className="flex flex-col justify-center items-center">   
              {loadingData ? (
@@ -97,7 +112,15 @@ const HistoricProviders = ({providerData, updateList}) => {
                     ) : (
                       providerExpenses.length > 0 ? (
                         <div className="mt-4 flex flex-col  ">
-                          <Table aria-label="Example table with dynamic content" className="w-[450px] xl:w-[900px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto">
+                          <div className="flex justify-start items-start ml-2 mb-1">
+                           <input 
+                           type="text" 
+                           placeholder="Buscar.."  
+                           className="w-[35%] ml-2 border border-gray-200 focus:border-gray-300 focus:ring-0 h-7 rounded-xl focus:outline-none  focus:ring-blue-500" 
+                           onChange={(e) => setInputValue(e.target.value)}
+                           value={inputValue} />        
+                          </div>
+                          <Table aria-label="Example table with dynamic content" className="w-[450px] xl:w-[900px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto max-h-[350px]">
                             <TableHeader columns={columns} >
                               {(column) => (
                                 <TableColumn key={column.key} className="text-xs gap-6">
@@ -105,7 +128,7 @@ const HistoricProviders = ({providerData, updateList}) => {
                                 </TableColumn>
                               )}
                             </TableHeader>
-                            <TableBody items={providerExpenses}>
+                            <TableBody items={filteredData}>
                               {(item) => (
                                 <TableRow key={item.total}>
                                   {columns.map(column => (
@@ -126,8 +149,8 @@ const HistoricProviders = ({providerData, updateList}) => {
                             </TableBody>
                           </Table>
                         <div className="flex flex-col justify-end items-end  mt-4">
-                            <p className="text-zinc-600 font-medium text-xs">Total Gastado en "{providerData.name}":  {formatePrice(providerExpenses.reduce((acc, el) => acc + el.total, 0))}</p>
-                            <p className="text-zinc-600 font-medium text-xs">Cantidad de Gastos: {providerExpenses.length}</p>
+                        
+                    
                           </div>
                         </div>
                       ) : (

@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
-import { months, typeOfClientsAvailables, diferentOrdersStatus } from "../../functions/gralFunctions";
+import { months, typeOfClientsAvailables, diferentOrdersStatus, paidOrNotPaid } from "../../functions/gralFunctions";
 
 
-const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain, applyClientFilter, applyOrderStatusFilter}) => {
+const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain, applyClientFilter, applyOrderStatusFilter, applyFiltersByPaidOrNoPaid}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [filterByMonthSetp, setFilterByMonthSetp] = useState(false)
   const [filterByTypeOfClientStep, setFilterByTypeOfClientStep] = useState(false)
   const [filterByOrderStatusStep, setFilterByOrderStatusStep] = useState(false)
+  const [filterByOrderPaid, setFilterByOrderPaid] = useState(false)
   const [monthSelected, setMonthSelected] = useState("")
   const [typeOfClientSelected, setTypeOfClientSelected] = useState("")
   const [statusSelected, setStatusSelected] = useState("")
+  const [paidOrNoPaidSelected, setPaidOrNoPaidSelected] = useState("")
   const [missedFilter, setMissedFilter] = useState(false)
 
 
@@ -45,6 +47,16 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     setStatusSelected("")
   }
 
+  const applyFilterByPaid = () => { 
+    applyFiltersByPaidOrNoPaid(paidOrNoPaidSelected)
+    onClose()
+    isFilterApplied(true)
+    setFilterByMonthSetp(false)
+    setFilterByTypeOfClientStep(false)
+    setFilterByOrderStatusStep(false)
+    setStatusSelected("")
+  }
+
   const handleOpen = () => {
     getAllDataAgain();
     onOpen();
@@ -63,19 +75,31 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     setFilterByMonthSetp(true)
     setFilterByTypeOfClientStep(false)
     setFilterByOrderStatusStep(false)
+    setFilterByOrderPaid(false)
   }
 
   const chooseClientFilters = () => { 
     setFilterByMonthSetp(false)
     setFilterByTypeOfClientStep(true)
     setFilterByOrderStatusStep(false)
+    setFilterByOrderPaid(false)
   }
 
   const chooseOrderStatusFilters = () => { 
     setFilterByMonthSetp(false)
     setFilterByTypeOfClientStep(false)
     setFilterByOrderStatusStep(true)
+    setFilterByOrderPaid(false)
+
   }
+
+  const chooseOrderPaidOrNoPaidFilters = () => { 
+    setFilterByMonthSetp(false)
+    setFilterByTypeOfClientStep(false)
+    setFilterByOrderStatusStep(false)
+    setFilterByOrderPaid(true)
+  }
+
 
   const invalidFilters = () => { 
     setMissedFilter(true)
@@ -108,6 +132,9 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
                    </div>
                    <div className="bg-green-700 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderStatusFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Estado de Pedido</p>
+                   </div>
+                   <div className="bg-green-800 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderPaidOrNoPaidFilters()}>
+                        <p className="font-bold text-white text-sm ml-4">Filtrar Por Abonado o No Abonado</p>
                    </div>
                 </div>
 
@@ -147,6 +174,18 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
                           </Select>
                       </div>
                       : null} 
+
+                    {filterByOrderPaid ? 
+                      <div>
+                          <Select variant={"faded"} label="Selecciona por pago" className="w-72">          
+                            {paidOrNotPaid.map((order) => (
+                              <SelectItem key={order.value} value={order.value} onClick={() => setPaidOrNoPaidSelected(order.value)}>
+                                {order.label}
+                              </SelectItem>
+                            ))}
+                          </Select>
+                      </div>
+                      : null} 
                 </div>
 
 
@@ -154,9 +193,11 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
               <ModalFooter className="flex items-center justify-center mt-2 gap-4">
               <Button
                   className="font-bold text-white bg-green-800"
-                  onClick={() => (monthSelected !== "" ? applyFilterByMonthSelected() : 
+                  onClick={() => (
+                  monthSelected !== "" ? applyFilterByMonthSelected() : 
                   typeOfClientSelected !== "" ? applyFilterByTypeOfClientSelected() : 
                   statusSelected !== "" ? applyFilterByStatusOfTheOrder() : 
+                  paidOrNoPaidSelected !== "" ? applyFilterByPaid() : 
                   invalidFilters())
                   }
                   >

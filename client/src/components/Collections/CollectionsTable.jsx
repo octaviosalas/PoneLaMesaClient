@@ -11,6 +11,7 @@ import {Link} from "react-router-dom"
 import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
 import { useNavigate } from 'react-router-dom';
 import VaucherModal from './VaucherModal';
+import CollectionsFilters from './CollectionsFilters';
 
 
 const CollectionsTable = ({collections}) => {
@@ -22,14 +23,16 @@ const CollectionsTable = ({collections}) => {
     const [loadData, setLoadData] = useState(true)
     const [inputValue, setInputValue] = useState("")
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
-
+    const [filterIsOn, setFilterIsOn] = useState(false)
+    const [accountTotalAmountWithFilters, setAccountTotalAmountWithFilters] = useState("")
 
 
     useEffect(() => { 
         setData(collections)
+        console.log("LOS COLLECTIONS", collections)
      }, [collections])
 
-        const getDataAndCreateTable = () => { 
+      const getDataAndCreateTable = () => { 
             if(data.length !== 0) { 
             const propiedades = Object.keys(collections[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v'  
                 && propiedad !== 'orderDetail' &&  propiedad !== 'clientId' && propiedad !== 'loadedBy' && propiedad !== 'voucher'  && propiedad !== 'orderId' && propiedad !== 'orderCreator' && propiedad !== 'year'
@@ -59,6 +62,8 @@ const CollectionsTable = ({collections}) => {
                         return { ...column, label: 'Fecha Devolucion' };
                     } else if (column.key === 'returnPlace') {
                         return { ...column, label: 'Devolucion' };
+                    } else if (column.key === 'collectionType') {
+                      return { ...column, label: 'Razon' };
                     }else if (column.key === 'amount') {
                         return { ...column, label: 'Total' };
                     }else if (column.key === 'client') {
@@ -91,7 +96,7 @@ const CollectionsTable = ({collections}) => {
                     year: year                   
                     };
                     return (
-                       <OrderDetail collectioDetail={item}/>
+                       <OrderDetail collectionDetail={item}/>
                     );
                 },
                 }) 
@@ -166,33 +171,49 @@ const CollectionsTable = ({collections}) => {
                 tableRef.current.updateColumns(modifiedColumnObjects);
                 }            
             } 
-        }
+      }
 
-            const filteredData = data.filter((item) => {
+      const filteredData = data.filter((item) => {
                 return Object.values(item).some((value) =>
                 value.toString().toLowerCase().includes(inputValue.toLowerCase())
                 );
-            });
+      });
 
-            useEffect(() => { 
+      useEffect(() => { 
                 setTimeout(() => { 
                     setLoadData(false)
                 }, 2000)
-            }, [columns, data])
+      }, [columns, data])
 
-        useEffect(() => { 
+      useEffect(() => { 
             if(data.length > 0) { 
             getDataAndCreateTable()
             console.log("ejecuto data mas a 0")
             } else { 
                 setWithOutCollections(true)
             }
-        }, [data])
+      }, [data])
 
-     useEffect(() => { 
-        console.log(data)
-        console.log(columns)
-     }, [data, columns])
+      const applyFilters =  (year, month, account) => {
+        const filterCollectionsByParams = filteredData.filter((cc) => cc.year === year && cc.month === month && cc.account === account);
+        console.log(filterCollectionsByParams);
+        setData(filterCollectionsByParams);
+        setAccountTotalAmountWithFilters(filterCollectionsByParams.reduce((acc, el) => acc + el.amount, 0))
+      };
+
+      const isFilterApplied = (value) => { 
+        setFilterIsOn(value)
+      }
+
+      const undoFilter = () => { 
+        setFilterIsOn(false)
+        setData(collections)
+      }
+
+      const comeBack = () => { 
+        setData(collections)
+        setFilterIsOn(false)
+      }
 
      return (
         <div>
@@ -203,19 +224,32 @@ const CollectionsTable = ({collections}) => {
                   <>
                    <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
                      <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
-                       <div className='flex w-full items-center ml-4'>                   
-                           <p className='text-sm font-bold text-zinc-600'>Cobros Realizados</p>
+                       <div className='flex w-full justify-start items-center ml-4'>                   
+                           <CollectionsFilters 
+                              applyFilters={applyFilters} 
+                              isFilterApplied={isFilterApplied} />
                        </div>
                        <div className='flex justify-start mr-4'></div>
                      </div>
-                     <div className='w-full flex items-center gap-2 justify-start mt-4'>
-                       <input
-                         className="w-[50%] border border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl"
-                         placeholder="Buscador"
-                         onChange={(e) => setInputValue(e.target.value)}
-                         value={inputValue}
-                       />
+                     <div className='flex justify-between items-center w-full'>
+                      <div className='w-full flex items-center gap-2 justify-start mt-4'>
+                        <input
+                          className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
+                          placeholder="Buscador"
+                          onChange={(e) => setInputValue(e.target.value)}
+                          value={inputValue}/>
+                          {filterIsOn ? 
+                              <p className='text-xs text-zinc-500 font-medium cursor-pointer' onClick={() => undoFilter()}>
+                                  Deshacer Filtro
+                              </p>
+                            : null}                      
+                      </div>
+                       {filterIsOn ?
+                        <div className='flex w-40'>
+                          <p className='text-sm font-medium text-zinc-600 '>Monto total: {formatePrice(accountTotalAmountWithFilters)}</p>
+                        </div> : null}
                      </div>
+                    
                    </div>
    
                    <Table
@@ -258,7 +292,10 @@ const CollectionsTable = ({collections}) => {
                  <div className='flex flex-col items-center justify-center '>
                    {
                    withOutCollections ? 
-                    <p className='text-black font-medium text-md '>No hay Cobros</p> 
+                   <div>
+                      <p className='text-black font-medium text-md '>No hay Cobros</p> 
+                      <p className='text-black cursor-pointer font-medium text-xs underline mt-2'onClick={() => comeBack(collections)}>Volver</p>
+                    </div>
                     :
                     null
                   }               

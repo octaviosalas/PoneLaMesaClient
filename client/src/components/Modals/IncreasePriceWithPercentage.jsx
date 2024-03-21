@@ -48,8 +48,8 @@ const IncreasePriceWithPercentage = ({updateList}) => {
                   <Input
                     type="number"
                     label="Porcentaje"
-                    placeholder="0"
                     labelPlacement="outside"
+                    variant="underlined"
                     value={percentageValue}
                     onChange={(e) => setPercentageValue(e.target.value)}
                     startContent={

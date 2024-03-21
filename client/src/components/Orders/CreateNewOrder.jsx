@@ -48,7 +48,9 @@ const CreateNewOrder = ({updateList}) => {
   const [clientHasntDebt, setClientHasntDebt] = useState(false);
 
 
-
+ useEffect(() => { 
+  console.log(allProducts)
+ }, [allProducts])
 
       const knowWichNumerOfOrder = () => { 
         console.log("envie a: ", actualMonth)
@@ -117,6 +119,7 @@ const CreateNewOrder = ({updateList}) => {
        }
 
        const handleInputClientsChange = (e) => { 
+        console.log(e)
         setChoosenClientName(e);
         if(e.length === 0) { 
           setFilteredClientsNames([])
@@ -440,7 +443,7 @@ const CreateNewOrder = ({updateList}) => {
                          <div className="flex flex-col">
                           <div className="flex flex-col mt-6">
                               {productsSelected.map((prod) => ( 
-                                <div className="flex justify-between gap-4 items-center mt-1">
+                                <div className="flex justify-between gap-4 items-center mt-1" key={prod.productId}>
                                   <div className="flex gap-2 items-center">
                                     <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
                                     <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>

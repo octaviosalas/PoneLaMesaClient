@@ -41,7 +41,11 @@ const OrderDetail = ({orderData, collectionDetail}) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Detalle del Pedido</ModalHeader>
+              {orderData ? 
+               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Detalle del Pedido</ModalHeader>
+               :
+               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Detalle del Cobro</ModalHeader>
+              }
              {orderData ?
               <ModalBody>
                 <div className="flex flex-col text-start justify-start">
@@ -99,11 +103,12 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                         </div>        
               </ModalBody> :
               <div className="flex flex-col items-start justify-start text-start w-[500px] ml-4">
-                  <p className="text-sm font-medium text-zinc-600">*El cobro fue cargado por {collectionDetail.loadedBy} el dia {collectionDetail.day} de {collectionDetail.month} del {collectionDetail.year}</p>
-                  <p className="text-sm font-medium text-zinc-600">*El monto cobrado fue de {formatePrice(collectionDetail.amount)}</p>
+                  <p className="text-sm font-medium text-zinc-600"><b>Cargado por: </b> {collectionDetail.loadedBy}</p>
+                  <p  className="text-sm font-medium text-zinc-600"><b>Fecha de Cobro: </b>{collectionDetail.day} de {collectionDetail.month} del {collectionDetail.year}</p>
+                  <p className="text-sm font-medium text-zinc-600"><b>Monto Cobrado:</b>{formatePrice(collectionDetail.amount)}</p>
                   {collectionDetail.account === "Efectivo" ? 
-                     <p className="text-sm font-medium text-zinc-600">*El pago del cliente se realizo en {collectionDetail.account}</p> : 
-                     <p className="text-sm font-medium text-zinc-600">*El pago del cliente se realizo a: {collectionDetail.account}</p>
+                     <p className="text-sm font-medium text-zinc-600"><b>Pago realizado en : </b> {collectionDetail.account}</p> : 
+                     <p className="text-sm font-medium text-zinc-600"><b>Pago realizado en :  </b> {collectionDetail.account}</p>
                    }
               </div>      
                }

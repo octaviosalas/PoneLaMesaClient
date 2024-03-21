@@ -69,10 +69,10 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
   ]
 
   const addNewCollection = async () => { 
-    if(account.length !== 0 && payImage.length > 0) { 
+    if(account.length !== 0) { 
       const collecctionData = ({ 
         orderId: orderData.id,
-        collectionType:"order",
+        collectionType:"Alquiler",
         client: orderData.client,
         orderDetail: orderData.detail,
         date: actualDate,
@@ -133,7 +133,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
       loadedBy: userCtx.userName,
       voucher: payImage
     })
-    if(account.length !== 0 && payImage.length > 0) { 
+    if(account.length !== 0) { 
       try {
         const updateOrderLikePaid = await axios.put(`http://localhost:4000/orders/addPaid/${orderIdItem}`)
         console.log(updateOrderLikePaid.data);

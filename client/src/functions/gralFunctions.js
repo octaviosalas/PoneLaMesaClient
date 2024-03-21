@@ -136,6 +136,11 @@ export const diferentOrdersStatus = [
   { label: 'Suspendido', value: 'Suspendido' },
 ];
 
+export const paidOrNotPaid = [
+  { label: 'Abonados', value: true },
+  { label: 'No Abonados', value: false },
+];
+
 export const everyMonthsOfTheYear = [
   { key: "enero", label: "enero"},
   { key: "febrero", label: "febrero"},

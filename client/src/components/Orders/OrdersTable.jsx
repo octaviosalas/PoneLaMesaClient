@@ -46,6 +46,12 @@ const OrdersTable = () => {
       setData(filteringByTypeOfClient);
     };
 
+    const applyFiltersByPaidOrNoPaid =  (state) => {
+      const filteringByPaidOrNoPaid = filteredData.filter((orders) => orders.paid === state);
+      console.log(filteringByPaidOrNoPaid);
+      setData(filteringByPaidOrNoPaid);
+    };
+
     const isFilterApplied = (value) => { 
         setFilterIsOn(value)
     }
@@ -235,7 +241,7 @@ const OrdersTable = () => {
          <div className='flex flex-col items-center justify-center'>
          {columns.length !== 0 && data.length !== 0? 
          <>
-          <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
+          <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] rounded-t-lg rounded-b-none ' >
               <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
                   <div className='flex justify-end'>
                         <FiltersOrdersTable 
@@ -243,6 +249,7 @@ const OrdersTable = () => {
                         applyMonthFilter={applyFiltersByMonth}
                         applyClientFilter={applyFiltersByTypeOfClient}
                         applyOrderStatusFilter={applyFiltersByOrderState}
+                        applyFiltersByPaidOrNoPaid={applyFiltersByPaidOrNoPaid}
                         isFilterApplied={isFilterApplied}/> 
                   </div>
                   <div className='flex justify-start mr-4 gap-6'>
@@ -253,7 +260,7 @@ const OrdersTable = () => {
               </div>
               <div className='w-full flex items-center gap-2 jusitfy-start mt-4'>
                 <input 
-                    className="w-[50%] border border-gray-200  focus:border-gray-300 focus:ring-0 h-10 rounded-xl"
+                    className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
                     placeholder="Buscador" 
                     onChange={(e) => setInputValue(e.target.value)}
                     value={inputValue} />

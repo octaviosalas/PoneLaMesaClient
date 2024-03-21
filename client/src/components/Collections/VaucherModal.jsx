@@ -56,7 +56,12 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
                 <ModalBody className="flex items-center jsutify-center">
                 {showingOn === "table" ? (
                     <div className="m-2">
-                      <img src={detail.voucher} className="w-72 h-72 rounded-2xl"/>
+                      {detail.voucher === "" ?
+                       <p className="font-medium text-sm text-zinc-600">No se ha cargado un Comprobante de Pago</p> 
+                       : 
+                       <div className="flex flex-col items-center justify-center w-full ">
+                         <img src={detail.voucher} className="w-72 h-72 rounded-2xl "/>
+                       </div>}
                     </div>
                   ) : ( 
                     load ? (
@@ -64,19 +69,24 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
                     ) : ( 
                       <div className="flex flex-col items-start justify-start">
                           <div className="flex flex-col items-start justify-start">
-                            <p className="font-medium text-sm text-zinc-600">El cobro del pedido fue cargado por {orderData.loadedBy}</p>
-                            <p className="font-medium text-sm text-zinc-600">Se cargo el cobro el dia {orderData.day} de {orderData.month} del {orderData.year}</p>
-                            <p className="font-medium text-sm text-zinc-600">La cuenta destino fue: {orderData.account}</p>
-                            <p className="font-medium text-sm text-zinc-600">Monto Cobrado: {formatePrice(orderData.amount)}</p>
+                            <p className="font-medium text-sm text-zinc-600"><b>Cargado por: </b> {orderData.loadedBy}</p>
+                            <p className="font-medium text-sm text-zinc-600"><b>Fecha de Cobro: </b> {orderData.day} de {orderData.month} del {orderData.year}</p>
+                            <p className="font-medium text-sm text-zinc-600"><b>Cuenta: </b>{orderData.account}</p>
+                            <p className="font-medium text-sm text-zinc-600"><b>Monto: </b>{formatePrice(orderData.amount)}</p>
                           </div>
-                         {orderData.account !== "Efectivo" ?
-                          <div className="mt-4">
-                            <img src={orderData.voucher} className="w-72 h-36 rounded-lg"/>
-                          </div> : 
-                          <div className="flex flex-col items-center justify-center">
-                             <p className="font-medium text-sm text-green-800 mt-6 mb-4">El pago se realizo en efectivo</p>
-                          </div>
-                          }
+                          {orderData.account !== "Efectivo" ? (
+                              <div className="mt-4">
+                                {orderData.voucher === "" ? (
+                                  <p className="font-sm font-medium text-zinc-600">No Subiste un Comprobante</p>
+                                ) : (
+                                  <img src={orderData.voucher} className="w-72 h-36 rounded-lg"/>
+                                )}
+                              </div>
+                            ) : (
+                              <div className="flex flex-col items-center justify-center">
+                                <p className="font-medium text-sm text-green-800 mt-6 mb-4">El pago se realizó en efectivo</p>
+                              </div>
+                            )}
                       </div>
                      
                     )
