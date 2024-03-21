@@ -32,6 +32,6 @@ ordersRoutes.post('/confirmOrderAndDiscountStock/:orderId', changeOrderToConfirm
 ordersRoutes.post('/addMissedArticles/:orderId', addArticlesMissed);
 ordersRoutes.put('/updateMissedArticlesLikePaid/:orderId', updateMissingArticlesLikePaid);
 ordersRoutes.post('/createPdf/', createPdf);
-
+ordersRoutes.post('/addDownPaymentToOrder/', createPdf);
 
 export default ordersRoutes;

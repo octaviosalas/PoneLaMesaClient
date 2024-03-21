@@ -201,6 +201,13 @@ const CollectionsTable = ({collections}) => {
         setAccountTotalAmountWithFilters(filterCollectionsByParams.reduce((acc, el) => acc + el.amount, 0))
       };
 
+      const applyFiltersByType =  (year, month, typeOfCollection) => {
+        const filterCollectionsByParams = filteredData.filter((cc) => cc.year === year && cc.month === month && cc.collectionType === typeOfCollection);
+        console.log(filterCollectionsByParams);
+        setData(filterCollectionsByParams);
+        setAccountTotalAmountWithFilters(filterCollectionsByParams.reduce((acc, el) => acc + el.amount, 0))
+      };
+
       const isFilterApplied = (value) => { 
         setFilterIsOn(value)
       }
@@ -227,6 +234,7 @@ const CollectionsTable = ({collections}) => {
                        <div className='flex w-full justify-start items-center ml-4'>                   
                            <CollectionsFilters 
                               applyFilters={applyFilters} 
+                              applyFiltersByType={applyFiltersByType}
                               isFilterApplied={isFilterApplied} />
                        </div>
                        <div className='flex justify-start mr-4'></div>

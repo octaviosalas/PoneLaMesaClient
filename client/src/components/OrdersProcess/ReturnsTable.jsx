@@ -37,7 +37,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList})
             if(data.length !== 0) { 
             const propiedades = Object.keys(everyReturns[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
             &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
-            && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'missingArticlesData');
+            && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'missingArticlesData'  && propiedad !== 'downPaymentData');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -187,8 +187,6 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList})
             setWithOutOrders(true)        
         }
     }, [data])
-
-    //className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === tableData ? 'underline' : ''}`}
 
     return (
         <div>

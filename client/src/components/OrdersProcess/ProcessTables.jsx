@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import CreateSublet from '../ArticlesTable/CreateSublet';
 import FindSublet from '../Sublets/FindSublet';
 import CleaningDetail from '../Modals/CleaningDetail';
+import CreateDownPayment from '../Orders/CreateDownPayment';
 
 
 
@@ -46,8 +47,7 @@ const ProcessTables = ({orderStatus}) => {
              {viewJustToday ? setData(filterOrdersByToday) :  setData(filterOrdersByStatus)}
              if(filterOrdersByStatus.length !== 0) { 
                const propiedades = Object.keys(filterOrdersByStatus[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-               && propiedad !== 'orderDetail'  && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' &&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year'
-               && propiedad !== 'day' && propiedad !== 'paid');
+               && propiedad !== 'orderDetail'  && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' &&  propiedad !== 'clientId' && propiedad !== 'orderCreator' && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid'   && propiedad !== 'downPaymentData');
                const columnObjects = propiedades.map(propiedad => ({
                   key: propiedad,
                   label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -89,16 +89,33 @@ const ProcessTables = ({orderStatus}) => {
                       const id = filaActual.original._id;    
                       const total = filaActual.original.total; 
                       const orderDetail = filaActual.original.orderDetail;
-                      const item = { 
-                        id: id,
-                        orderDetail: orderDetail,
-                        total: total,
-                      }             
+                      const item = {  id, orderDetail, total }             
                       return ( 
                          <FindSublet orderData={item} updateListOfToBeConfirmedOrders={getDataAndCreateTable}/>
                         );
                      },
                     }) : null}
+
+                    {orderStatus ===  "Armado" ?
+                      modifiedColumnObjects.push({
+                      key: 'Seña',
+                      label: 'Seña',
+                      cellRenderer: (cell) => { 
+                        const filaActual = cell.row; 
+                        const id = filaActual.original._id;    
+                        const total = filaActual.original.total; 
+                        const month = filaActual.original.month; 
+                        const year = filaActual.original.year; 
+                        const orderNumber = filaActual.original.orderNumber; 
+                        const client = filaActual.original.client; 
+                        const clientId = filaActual.original.clientId; 
+                        const detail = filaActual.original.orderDetail; 
+                        const item = {id, total, month, year, orderNumber, client, detail, clientId}             
+                        return ( 
+                           <CreateDownPayment orderData={item} updateList={getDataAndCreateTable}/>
+                          );
+                       },
+                      }) : null}
            
                  {orderStatus !== "Lavado" ? 
                   modifiedColumnObjects.push({
@@ -115,17 +132,7 @@ const ProcessTables = ({orderStatus}) => {
                     const month = filaActual.original.month;
                     const year = filaActual.original.year;
                     const total = filaActual.original.total;
-                    const item = {
-                    id: id,
-                    detail: detail,
-                    orderSublets: orderSublets,
-                    creator: creator,
-                    day: day,
-                    month: month,
-                    year: year,
-                    total: total,
-                    client: client
-                    };
+                    const item = { id, detail,orderSublets, creator, day, month, year,total, client,};
                     return (
                        <OrderDetail orderData={item}/>
                       );
@@ -149,18 +156,7 @@ const ProcessTables = ({orderStatus}) => {
                       const month = filaActual.original.month;
                       const year = filaActual.original.year;
                       const total = filaActual.original.total;
-                      const item = {
-                      id: id,
-                      detail: detail,
-                      orderSublets: orderSublets,
-                      missedArticles: missedArticles,
-                      creator: creator,
-                      day: day,
-                      month: month,
-                      year: year,
-                      total: total,
-                      client: client
-                      };
+                      const item = { id, detail, orderSublets,missedArticles, creator, day, month, year,total, client};
                       return (
                          <CleaningDetail orderData={item}/>
                         );
@@ -184,16 +180,7 @@ const ProcessTables = ({orderStatus}) => {
                         const dateOfDelivery = filaActual.original.dateOfDelivery;
                         const returnDate = filaActual.original.returnDate;
                         const orderDetail = filaActual.original.orderDetail;
-                        const item = {
-                        id: id,
-                        client: client,
-                        order: order,
-                        month: month,
-                        date: date,
-                        dateOfDelivery: dateOfDelivery,
-                        returnDate: returnDate,
-                        orderDetail: orderDetail                  
-                        };
+                        const item = {id, client, order, month, date, dateOfDelivery, returnDate,orderDetail};
                         return (
                           <EditModal type="orders" statusOrder={orderStatus} orderData={item} updateList={getDataAndCreateTable}/>
                         );

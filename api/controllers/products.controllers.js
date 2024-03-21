@@ -113,6 +113,7 @@ export const priceIncrease = async (req, res) => {
     for (const product of products) {
       product.precioUnitarioAlquiler *= 1 + percentage / 100;
       product.precioUnitarioBonificados *= 1 + percentage / 100;
+      product.precioUnitarioReposicion *= 1 + percentage / 100;
       await product.save();
     }
 

@@ -36,7 +36,7 @@ const CreateNewOrder = ({updateList}) => {
   const [choosenClientId, setChoosenClientId] = useState("")
   const [filteredClientsNames, setFilteredClientsNames] = useState([])
   const [choosenProductName, setChoosenProductName] = useState("")
-  const [choosenProductQuantity, setChoosenProductQuantity] = useState()
+  const [choosenProductQuantity, setChoosenProductQuantity] = useState("")
   const [choosenProductId, setChoosenProductId] = useState("")
   const [choosenProductPrice, setChoosenProductPrice] = useState("")
   const [choosenProductCategory, setChoosenProductCategory] = useState("")

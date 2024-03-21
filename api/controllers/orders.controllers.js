@@ -343,6 +343,8 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
 
 
+
+
  export const createPdf = async (req, res) => {
   const { tableData } = req.body;
   const doc = new PDFDocument();

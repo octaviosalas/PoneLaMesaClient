@@ -69,8 +69,7 @@ const OrdersTable = () => {
         setData(allOrders)
         if(allOrders.length !== 0) { 
             const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-            && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' && propiedad !== 'clientId' && propiedad !== 'date' && propiedad !== 'year'
-            && propiedad !== 'day' && propiedad !== 'paid');
+            && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' && propiedad !== 'clientId' && propiedad !== 'date' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid'  && propiedad !== 'downPaymentData');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -117,7 +116,8 @@ const OrdersTable = () => {
                   const month = filaActual.original.month;
                   const year = filaActual.original.year;
                   const total = filaActual.original.total;
-                  const item = { id, detail, creator, orderSublets, day, month, year, total, client, };
+                  const downPaymentData = filaActual.original.downPaymentData
+                  const item = { id, detail, creator, orderSublets, day, month, year, total, client, downPaymentData};
                   return (
                      <OrderDetail  orderData={item}/>
                     );

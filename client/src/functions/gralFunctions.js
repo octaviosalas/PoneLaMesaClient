@@ -186,3 +186,9 @@ export const accounts = [
   { key: "Cuenta Felipe", label: "Cuenta Felipe"},
   { key: "Efectivo", label: "Efectivo"},
 ];
+
+export const typesOfCollections = [
+  { label: "Alquiler", value: "Alquiler"},
+  { label: "Reposicion", value: "Reposicion"},
+  { label: "Seña", value: "Seña"},
+];

@@ -86,8 +86,9 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                             )))}
                         </div>
                     </div>
-                    <div className='mt-2'>
-                      <h5 className='font-bold text-green-800'>SubAlquileres añadidos</h5>
+                    
+                     <div className='mt-2'>
+                       <h5 className='font-bold text-green-800'>SubAlquileres añadidos</h5>
                         <div className='flex flex-col items-start justify-start '>
                             {orderData.map((ord) => ord.subletsDetail.map((c) => ( 
                                 <div className='flex items-center justify-center gap-2' key={c.productId}>
@@ -97,6 +98,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                             )))}
                         </div>
                     </div>
+
                     <div className='flex flex-col items-start justify-start mt-4'>
                         <h5 className='font-bold text-green-800'>Monto total del Pedido</h5>
                         <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total))}</p>

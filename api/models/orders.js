@@ -68,6 +68,9 @@ const ordersSchema = mongoose.Schema({
     missingArticlesData: { 
         type: Array
     },
+    downPaymentData: { 
+        type: Array
+    }
 
 })
 

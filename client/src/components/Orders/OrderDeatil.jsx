@@ -8,7 +8,7 @@ const OrderDetail = ({orderData, collectionDetail}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
-
+    const [viewDownPaymentData, setViewDownPaymentData] = useState(false);
 
   useEffect(() => {
     if (orderData && orderData.detail && Array.isArray(orderData.detail) && orderData.detail.length > 0) {
@@ -52,10 +52,33 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                     <p className="text-zinc-600 font-medium text-sm"><b>Pedido cargador por:</b> {orderData.creator}</p>
                     <p className="text-zinc-600 font-medium text-sm"><b>Fecha de creacion:</b> {orderData.day} de {orderData.month} de {orderData.year}</p>
                     <p className="text-zinc-600 font-medium text-sm"><b>Cliente:</b> {orderData.client}</p>
-                    {orderData.orderSublets.length === 0 ? <p className="text-zinc-600 underline font-medium text-sm">Este pedido no tiene Articulos SubAlquilados</p> : null}
+
+                    {orderData.downPaymentData.length > 0 ? 
+                    <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p> 
+                    : null}
+
+                   {viewDownPaymentData ?
+                    <div className="flex flex-col items-start justify-start text-start">
+                     {orderData.downPaymentData.map((ord) => ( 
+                       <div className="flex flex-col items-start justify-start">
+                         <p className="font-medium text-zinc-600 text-sm"><b>Fecha de la Seña: </b>{ord.date}</p>
+                         <p className="font-medium text-zinc-600 text-sm"><b>Cuenta Destino: </b> {ord.account}</p>
+                         <p className="font-medium text-zinc-600 text-sm"><b>Monto Señado: </b> {formatePrice( ord.amount)}</p>
+                       </div>
+                     ))}
+                    </div>
+                    :
+                    null
+                   }
+
+
+                    {orderData.orderSublets.length === 0 ? 
+                    <p className="text-zinc-600 underline font-medium text-sm mt-2">Este pedido no tiene Articulos Sub Alquilados</p>
+                     : null}
+
                     {orderData.orderSublets.length > 0 ?
                       <div className="mt-2">
-                        <p className="text-green-800 underline font-medium text-sm">Este pedido contiene Articulos SubAlquilados</p>
+                        <p className="text-green-800 underline font-medium text-sm">Este pedido contiene Articulos Sub Alquilados</p>
                           <div className="mt-2">
                            {orderData.orderSublets.map((ord) => ( 
                               <div className="flex items-center gap-2" key={ord.productId}>
