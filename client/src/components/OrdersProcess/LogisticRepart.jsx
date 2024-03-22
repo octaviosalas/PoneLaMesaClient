@@ -16,7 +16,7 @@ const LogisticRepart = () => {
 
   console.log(getDate())
 
-  const getOrdersToDeliverTodayInLocal = async () => { 
+  /*const getOrdersToDeliverTodayInLocall = async () => { 
      try {
        const response = await axios.get("http://localhost:4000/orders")
        const orders = response.data
@@ -39,7 +39,31 @@ const LogisticRepart = () => {
     } catch (error) {
       console.log(error)
     }
+ }*/
+
+ const getOrdersToDeliverTodayInLocal = async () => { 
+  try {
+    const response = await axios.get("http://localhost:4000/orders")
+    const orders = response.data
+    const filterOrders = orders.filter((ord) => ord.dateOfDelivery === actualDate && ord.placeOfDelivery === "Local"  && ord.orderStatus === "Armado") 
+    setLocalDeliveryOrders(filterOrders)
+    console.log("Ordenes filtradas: ", filterOrders)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const getEveryDeliveries = async () => { 
+ try {
+   const response = await axios.get("http://localhost:4000/orders")
+   const orders = response.data
+   const filterOrders = orders.filter((ord) => ord.orderStatus === "Entregado") 
+   setEveryDeliveries(filterOrders)
+   console.log("Ordenes filtradas: ", filterOrders)
+ } catch (error) {
+   console.log(error)
  }
+}
 
   useEffect(() => { 
     getOrdersToDeliverTodayInLocal()
