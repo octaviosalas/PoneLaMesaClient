@@ -14,6 +14,9 @@ const downPaymentSchema = mongoose.Schema({
     orderDetail: { 
         type: Array
     }, 
+    downPaymentId: { 
+        type: String
+    },
     date: { 
         type: String
     },    

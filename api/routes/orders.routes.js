@@ -14,7 +14,8 @@ import { getOrderById,
          changeOrderToConfirmedAndDiscountStock,
          addArticlesMissed,
          updateMissingArticlesLikePaid,
-         createPdf } from '../controllers/orders.controllers.js';
+         createPdf,
+         deleteDownPaymentData } from '../controllers/orders.controllers.js';
 
 
 ordersRoutes.get('/', getOrders);
@@ -33,5 +34,6 @@ ordersRoutes.post('/addMissedArticles/:orderId', addArticlesMissed);
 ordersRoutes.put('/updateMissedArticlesLikePaid/:orderId', updateMissingArticlesLikePaid);
 ordersRoutes.post('/createPdf/', createPdf);
 ordersRoutes.post('/addDownPaymentToOrder/', createPdf);
+ordersRoutes.delete('/deleteDownPayment/:orderId', deleteDownPaymentData);
 
 export default ordersRoutes;

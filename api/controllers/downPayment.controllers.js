@@ -13,7 +13,8 @@ export const createNewDownPayment = async (req, res) => {
              date: req.body.date,
              amount: req.body.amount,
              account: req.body.account,
-             voucher: req.body.voucher
+             voucher: req.body.voucher,
+             downPaymentId: req.body.downPaymentId
            };
    
            await Orders.updateOne(

@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import Dropzone from 'react-dropzone';
 import { PhotoIcon } from '@heroicons/react/24/solid'
+import { v4 as uuidv4 } from 'uuid';
 
 
 // asentar gasto de tipo seña 
@@ -26,11 +27,18 @@ const CreateDownPayment = ({orderData, updateList}) => {
   const [showDropZone, setShowDropZone] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [errorMessage, setErrorMessage] = useState(false)
+  const [deleteDownPaymentSuccesMessage, setDeleteDownPaymentSuccesMessage] = useState(false)
+  const [downPaymentId, setDownPaymentId] = useState("")
+  const uniqueId = uuidv4();
 
 
   const handleOpen = () => { 
    onOpen()
    console.log(orderData)
+   if(orderData.downPaymentData.length > 0) { 
+    const downPaymentReference = orderData.downPaymentData.map((d) => d.downPaymentId)[0]
+    setDownPaymentId(downPaymentReference)
+   }
   }
 
   const availablesAccounts = [
@@ -76,6 +84,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
     const collecctionData = ({ 
         orderId: orderData.id,
         collectionType:"Seña",
+        downPaymentId: uniqueId, 
         client: orderData.client,
         orderDetail: orderData.detail,
         date: actualDate,
@@ -93,6 +102,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
         client: orderData.client,
         clientId: orderData.clientId,
         orderDetail: orderData.detail,
+        downPaymentId: uniqueId,
         date: actualDate,
         day: day,
         month: month,
@@ -113,10 +123,10 @@ const CreateDownPayment = ({orderData, updateList}) => {
             console.log(createCollection.status)
            if(createCollection.status === 200) { 
              setSuccesMessage(true)
-             updateList()
              setTimeout(() => { 
                 setSuccesMessage(false)
                 onClose()
+                updateList()
              }, 2000)
            } else { 
             setErrorMessage(true)
@@ -128,6 +138,25 @@ const CreateDownPayment = ({orderData, updateList}) => {
 
   }
 
+  const deleteDownPayment = async () => { 
+    const downPaymentReference = downPaymentId
+   
+    try {
+      const deleteDownPaymentData = await axios.delete(`http://localhost:4000/orders/deleteDownPayment/${orderData.id}`, { data: { downPaymentReference } })
+      console.log(deleteDownPaymentData.data)
+      console.log(deleteDownPaymentData.status)
+      if(deleteDownPaymentData.status === 200) { 
+        setDeleteDownPaymentSuccesMessage(true)
+        setTimeout(() => { 
+          setDeleteDownPaymentSuccesMessage(false)
+          updateList()
+        }, 2100)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <>
       <p className="text-green-800 text-xs font-medium cursor-pointer" onClick={handleOpen}>Asentar Seña</p>
@@ -136,6 +165,8 @@ const CreateDownPayment = ({orderData, updateList}) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col  text-zinc-60 font-medium">Asentar Seña</ModalHeader>
+
+             {orderData.downPaymentData.length === 0 ?
               <ModalBody className="flex flex-col items-start justify-start">
                  <p className="text-zinc-600 text-sm font-medium"><b>Cliente: </b>{orderData.client}</p>
                  <p className="text-zinc-600 text-sm font-medium"><b>Orden: </b>{orderData.orderNumber}</p>
@@ -169,7 +200,32 @@ const CreateDownPayment = ({orderData, updateList}) => {
                     <p className="text-zinc-600 text-sm font-medium">Valor pendiente de cobro: {formatePrice(orderData.total - downPaymentAmount)}</p>
                     {account !== "Efectivo" ? <p className="text-green-800 text-xs underline font-medium" onClick={() => setShowDropZone(prevState => !prevState)}>Adjuntar Comprobante</p> : null}
                  </div> : null}
+              </ModalBody> : 
+
+              <ModalBody className="flex flex-col items-center justify-center">
+                <div className="flex flex-col items-start justify-start">
+                  <p className="font-medium text-sm text-green-800 underline">Esta orden ya fue señada</p>
+                  {orderData.downPaymentData.map((down) => ( 
+                    <div className="flex flex-col" key={down.amount}>
+                        <p className="text-zinc-600 font-medium text-sm mt-2"><b>Fecha: </b>{down.date}</p>
+                        <p className="text-zinc-600 font-medium text-sm"><b>Monto Señado: </b> {formatePrice(down.amount)}</p>
+                        <p className="text-zinc-600 font-medium text-sm"><b>Forma de Pago: </b> {down.account}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 w-full flex items-center justify-center gap-4">
+                   <Button className="bg-green-800 text-white font-medium text-sm" onClick={() => deleteDownPayment()}>Eliminar Seña</Button>
+                   <Button className="bg-green-800 text-white font-medium text-sm" onPress={onClose}>Cancelar</Button>
+                </div>
+
+                {deleteDownPaymentSuccesMessage ? 
+                <div>
+                   <p className="font-medium text-green-800 text-sm ">La seña fue eliminada correctamente</p>
+                </div> : null}
+
               </ModalBody>
+
+              }
 
                 {showDropZone ? 
                 <div className="flex items-center justify-center">
@@ -196,10 +252,12 @@ const CreateDownPayment = ({orderData, updateList}) => {
                   </div> : null
                  }
 
+             {orderData.downPaymentData.length === 0 ?
               <ModalFooter className="flex justify-center items-center mt-2 mb-2">
                     <Button className="bg-green-800 font-medium text-white text-sm" onClick={() => createNewDownPayment()}> Confirmar Seña </Button>
                     <Button className="bg-green-800 font-medium text-white text-sm"  onPress={onClose}>  Cancelar  </Button>
-              </ModalFooter>
+              </ModalFooter> : null}
+
              {succesMessage?
               <div className="mt-4 mb-4 flex items-center justify-center">
                 <p className="font-medium text-green-800 text-sm">La seña fue asentada a la Orden ✔</p>

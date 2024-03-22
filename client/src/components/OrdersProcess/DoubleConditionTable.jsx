@@ -26,8 +26,11 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
 
 
         useEffect(() => { 
-          setData(tableData)
-          console.log("table data", tableData)
+          if(tableData.length > 0) { 
+           setData(tableData)
+          } else if (tableData.length === 0 && typeOfOrders === "entrega") { 
+            setData(everyDeliveries)
+          } 
         }, [tableData])
 
         const changeTypeOfData = (item) => { 
@@ -94,18 +97,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                         const total = filaActual.original.total;
                         const orderSublets = filaActual.original.subletsDetail;
                         const downPaymentData = filaActual.original.downPaymentData;
-                        const item = {
-                        id: id,
-                        orderSublets: orderSublets,
-                        detail: detail,
-                        creator: creator,
-                        day: day,
-                        month: month,
-                        year: year,
-                        total: total,
-                        client: client,
-                        downPaymentData: downPaymentData
-                        };
+                        const item = { id, orderSublets, detail, creator, day,year, total, client, downPaymentData};
                         return (
                         <OrderDetail orderData={item}/>
                         );
@@ -127,17 +119,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                             const dateOfDelivery = filaActual.original.dateOfDelivery;
                             const returnDate = filaActual.original.returnDate;
                             const orderDetail = filaActual.original.orderDetail;
-                            const item = {
-                            id: id,
-                            client: client,
-                            status: status,
-                            order: order,
-                            month: month,
-                            date: date,
-                            dateOfDelivery: dateOfDelivery,
-                            returnDate: returnDate,
-                            orderDetail: orderDetail                  
-                            };
+                            const item = {id, client, status,order,month,  date, dateOfDelivery,returnDate, orderDetail};
                             return (
                             <EditModal type="orders" statusOrder={status} orderData={item} updateList={getDataAndCreateTable}/>
                             );
@@ -150,9 +132,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                     cellRenderer: (cell) => { 
                         const filaActual = cell.row;
                         const id = filaActual.original._id;
-                        const item = {
-                        id: id
-                        };
+                        const item = {id};
                         return (
                         <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                         );
@@ -184,7 +164,6 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
           if(data.length > 0) { 
               getDataAndCreateTable()
           } else { 
-            console.log("la data es 0")
               setWithOutOrders(true)
           }
         }, [data])
@@ -251,7 +230,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                   </div>
                   <div className='w-full flex items-center gap-2 justify-start mt-4'>
                     <input
-                      className="w-[50%] border border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl"
+                      className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
                       placeholder="Buscador"
                       onChange={(e) => setInputValue(e.target.value)}
                       value={inputValue}

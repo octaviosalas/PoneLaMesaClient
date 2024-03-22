@@ -12,7 +12,6 @@ import ToBeConfirmed from './components/OrdersProcess/ToBeConfirmed'
 import Cleaning from "./components/OrdersProcess/Cleaning"
 import LocalDeliveries from './components/OrdersProcess/LocalDeliveries'
 import LocalReturns from './components/OrdersProcess/LocalReturns'
-import LogisticRepart from './components/OrdersProcess/LogisticRepart'
 import LogisticToRemove from './components/OrdersProcess/LogisticToRemove'
 import Returned from './components/OrdersProcess/Returned'
 import EstadisticsOrders from './pages/EstadisticsOrders'
@@ -55,7 +54,6 @@ function App() {
             <Route path="/Proveedores" element={<Providers />} />   
             <Route path="/EntregasLocal" element={<LocalDeliveries />} /> 
             <Route path="/Devoluciones" element={<LocalReturns />} /> 
-            <Route path="/Reparto" element={<LogisticRepart />} /> 
             <Route path="/Retiros" element={<LogisticToRemove />} /> 
             <Route path="/Reposiciones" element={<Returned />} /> 
             <Route path="/Estadisticas/Articulos" element={<EstadisticsArticles />} /> 

@@ -68,7 +68,6 @@ const NavBarComponent = () =>  {
                           <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Logistica </p>
                       </DropdownTrigger>
                         <DropdownMenu aria-label="Static Actions">
-                          <DropdownItem key="arm" onClick={() => goTo("Reparto")}>Para Repartir</DropdownItem>
                           <DropdownItem key="arm" onClick={() => goTo("Retiros")}>Para Retirar</DropdownItem>                          
                         </DropdownMenu>
                 </Dropdown>

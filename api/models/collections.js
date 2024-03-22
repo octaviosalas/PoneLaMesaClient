@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const collectionsSchema = mongoose.Schema({ 
     orderId: { 
         type: String
@@ -40,9 +39,13 @@ const collectionsSchema = mongoose.Schema({
     },  
     voucher: { 
         type: String
-    } 
-})
+    },
+    downPaymentId: {
+        type: String,
+        required: function() { return this.collectionType === 'seña'; }
+    }
+});
 
-const Collections = mongoose.model("Collections", collectionsSchema)
+const Collections = mongoose.model("Collections", collectionsSchema);
 
 export default Collections;

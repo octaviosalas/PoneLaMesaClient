@@ -1,4 +1,6 @@
 import Orders from "../models/orders.js";
+import DownPayments from "../models/downPayment.js"
+import Collections from "../models/collections.js";
 import ProductsClients from "../models/productsClients.js";
 import PDFDocument from "pdfkit";
 import fs from 'fs';
@@ -329,7 +331,6 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   
       orderSearched.missedProductsData.paid = missedArticlesData.newStatus;
   
-      // Indica a Mongoose que el campo 'missingArticlesData' ha cambiado
       existingOrder.markModified('missingArticlesData');
   
       const updatedOrder = await existingOrder.save();
@@ -340,8 +341,6 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
       res.status(500).json({ error: "Error interno del servidor" });
   }
  };
-
-
 
 
 
@@ -429,3 +428,19 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   doc.end();
  };
  
+
+ export const deleteDownPaymentData = async (req, res) => {
+  const { orderId } = req.params;
+  const { downPaymentReference } = req.body;
+  console.log(downPaymentReference)
+
+  try {
+     await Orders.updateOne({ _id: orderId }, { $set: { downPaymentData: [] } });
+     await DownPayments.deleteOne({ downPaymentId: downPaymentReference });
+     await Collections.deleteOne({ downPaymentId: downPaymentReference });
+ 
+     res.status(200).send({ message: 'Seña eliminado correctamente.' });
+  } catch (error) {
+     res.status(500).send({ message: 'Error al eliminar downPaymentData.', error });
+  }
+ };
