@@ -16,7 +16,7 @@ const LogisticRepart = () => {
 
   console.log(getDate())
 
-  /*const getOrdersToDeliverTodayInLocall = async () => { 
+  const getOrdersToDeliverTodayInLocall = async () => { 
      try {
        const response = await axios.get("http://localhost:4000/orders")
        const orders = response.data
@@ -39,9 +39,9 @@ const LogisticRepart = () => {
     } catch (error) {
       console.log(error)
     }
- }*/
+ }
 
- const getOrdersToDeliverTodayInLocal = async () => { 
+ /*const getOrdersToDeliverTodayInLocal = async () => { 
   try {
     const response = await axios.get("http://localhost:4000/orders")
     const orders = response.data
@@ -63,7 +63,7 @@ const getEveryDeliveries = async () => {
  } catch (error) {
    console.log(error)
  }
-}
+}*/
 
   useEffect(() => { 
     getOrdersToDeliverTodayInLocal()

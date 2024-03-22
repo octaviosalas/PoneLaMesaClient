@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import impresora from "../../images/impresora.png"
 import { useCallback } from 'react';
 
-const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries}) => {
+const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries, ordersToRepartToday, futuresReparts}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -93,6 +93,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                         const year = filaActual.original.year;
                         const total = filaActual.original.total;
                         const orderSublets = filaActual.original.subletsDetail;
+                        const downPaymentData = filaActual.original.downPaymentData;
                         const item = {
                         id: id,
                         orderSublets: orderSublets,
@@ -102,7 +103,8 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                         month: month,
                         year: year,
                         total: total,
-                        client: client
+                        client: client,
+                        downPaymentData: downPaymentData
                         };
                         return (
                         <OrderDetail orderData={item}/>
@@ -188,8 +190,9 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
         }, [data])
 
         const createNewPdf = async () => { 
+          console.log(data)
           try {
-              const response = await axios.post("http://localhost:4000/orders/createPdf", {tableData}, {
+              const response = await axios.post("http://localhost:4000/orders/createPdf", {data}, {
                   responseType: 'blob',
               });
               const blob = new Blob([response.data], { type: 'application/pdf' });      
@@ -213,27 +216,30 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
              columns.length > 0 && data.length > 0 ? (
                <>
                 <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
-                  <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
-                    <div className='flex w-full items-center ml-4'>
-                     {typeOfOrders === "EntregasLocal" ? 
-                      <div className='flex items-center gap-6 justify-start text-start'>
-                        <p  className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Entrega del dia en Local</p> 
-                        <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyDeliveries ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyDeliveries)}>Pedidos Entregados</p> 
-                     </div>
+                  <div className='h-12  flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] '>
+                    <div className='flex w-full justify-between items-center ml-4'>
+                      {typeOfOrders === "entregas" ? 
+
+                        <div className='flex items-center gap-6 justify-start text-start'>
+                              <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Entrega del dia en Local</p> 
+                              <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === ordersToRepartToday ? 'underline' : ''}`} onClick={() => changeTypeOfData(ordersToRepartToday)}> Pedidos para Repartir en el Dia
+                              </p>
+                              <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyDeliveries ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyDeliveries)}>Pedidos Entregados</p> 
+                              <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === futuresReparts ? 'underline' : ''}`} onClick={() => changeTypeOfData(futuresReparts)}>Futuros Repartos</p> 
+                        </div>                       
+                    
                        : null}
-                     {typeOfOrders === "DevolucionesLocal" ? <p className='text-sm font-bold text-zinc-600'>Devoluciones del dia en Local</p> : null}
-                     {typeOfOrders === "Reparto" ? 
-                       <div className='flex items-center gap-6 justify-between w-full'>
-                            <div className='flex items-start gap-6 justify-start'>
-                              <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Pedidos para Repartir en el Dia</p>
-                              <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === everyReparts ? 'underline' : ''}`} onClick={() => changeTypeOfData(everyReparts)}>Futuros Repartos</p> 
-                            </div>
-                            <div className='flex items-end gap-6 justify-end'>
-                               {data === tableData ? <img className='h-7 w-7 cursor-pointer' title="Imprimir reparto del Dia" onClick={() => createNewPdf()} src={impresora}/> : null}
-                            </div>                                     
+
+                       {data === ordersToRepartToday ? 
+                       <div className='flex items-center justify-end'>
+                          <img className='h-7 w-7 cursor-pointer' title="Imprimir reparto del Dia" onClick={() => createNewPdf()} src={impresora}/>
                        </div>
-                     
-                     : null}
+                   
+                        : null}
+
+                     {typeOfOrders === "DevolucionesLocal" ? <p className='text-sm font-bold text-zinc-600'>Devoluciones del dia en Local</p> : null}
+
+                  
                      {typeOfOrders === "Retiros" ?
                         <div className='flex items-center gap-6 justify-start text-start'>
                             <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Retiros del Dia</p> 

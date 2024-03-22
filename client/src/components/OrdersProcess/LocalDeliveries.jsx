@@ -10,7 +10,8 @@ const LocalDeliveries = () => {
   const actualDate = getDate()
   const [localDeliveryOrders, setLocalDeliveryOrders] = useState([])
   const [everyDeliveries, setEveryDeliveries] = useState([])
-
+  const [ordersToRepartToday, setOrdersToRepartToday] = useState([])
+  const [futuresReparts, setFuturesReparts] = useState([])
 
   const getOrdersToDeliverTodayInLocal = async () => { 
      try {
@@ -36,16 +37,43 @@ const LocalDeliveries = () => {
     }
  }
 
+  const getOrdersToRepartToday = async () => { 
+    try {
+      const response = await axios.get("http://localhost:4000/orders")
+      const orders = response.data
+      const filterOrders = orders.filter((ord) => ord.dateOfDelivery === actualDate && ord.orderStatus === "Armado" && ord.placeOfDelivery !== "Local") 
+      setOrdersToRepartToday(filterOrders)
+      console.log("Ordenes filtradas: ", filterOrders)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  const getFuturesOrdersToRepart = async () => { 
+  try {
+    const response = await axios.get("http://localhost:4000/orders")
+    const orders = response.data
+    const filterOrders = orders.filter((ord) => ord.orderStatus === "Armado" && ord.placeOfDelivery !== "Local") 
+    setFuturesReparts(filterOrders)
+    console.log("Ordenes filtradas: ", filterOrders)
+  } catch (error) {
+    console.log(error)
+  }
+  }
+
 
   useEffect(() => { 
     getOrdersToDeliverTodayInLocal()
     getEveryDeliveries()
+    getOrdersToRepartToday()
+    getFuturesOrdersToRepart()
   }, [])
 
   return (
     <div>
          <NavBarComponent/>
-         <DoubleConditionTable tableData={localDeliveryOrders} everyDeliveries={everyDeliveries} typeOfOrders={"EntregasLocal"}/> 
+         <DoubleConditionTable tableData={localDeliveryOrders} everyDeliveries={everyDeliveries} ordersToRepartToday={ordersToRepartToday} futuresReparts={futuresReparts} typeOfOrders={"entregas"}/> 
     </div>
   )
 }

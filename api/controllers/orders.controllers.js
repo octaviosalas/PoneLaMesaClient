@@ -346,7 +346,7 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
 
  export const createPdf = async (req, res) => {
-  const { tableData } = req.body;
+  const { data } = req.body;
   const doc = new PDFDocument();
 
   res.setHeader('Content-Type', 'application/pdf');
@@ -382,7 +382,7 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
       }
   }
 
-  tableData.forEach(item => {
+  data.forEach(item => {
       removeUnwantedProperties(item);
       transformKeys(item, 'Cliente', 'client');
       transformKeys(item, 'Direccion de Envio', 'placeOfDelivery');
@@ -392,7 +392,7 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   });
 
   doc.fontSize(12).text('Lista de datos:', { align: 'center' });
-  tableData.forEach((item, index) => {
+  data.forEach((item, index) => {
       let formattedItem = '';
       for (const key in item) {
           if (item.hasOwnProperty(key)) {
