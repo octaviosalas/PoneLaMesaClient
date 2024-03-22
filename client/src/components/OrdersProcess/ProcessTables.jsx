@@ -133,7 +133,8 @@ const ProcessTables = ({orderStatus}) => {
                     const month = filaActual.original.month;
                     const year = filaActual.original.year;
                     const total = filaActual.original.total;
-                    const item = { id, detail,orderSublets, creator, day, month, year,total, client,};
+                    const downPaymentData = filaActual.original.downPaymentData; 
+                    const item = { id, detail,orderSublets, creator, day, month, year,total, client, downPaymentData};
                     return (
                        <OrderDetail orderData={item}/>
                       );
@@ -157,7 +158,8 @@ const ProcessTables = ({orderStatus}) => {
                       const month = filaActual.original.month;
                       const year = filaActual.original.year;
                       const total = filaActual.original.total;
-                      const item = { id, detail, orderSublets,missedArticles, creator, day, month, year,total, client};
+                      const downPaymentData = filaActual.original.downPaymentData; 
+                      const item = { id, detail, orderSublets,missedArticles, creator, day, month, year,total, client, downPaymentData};
                       return (
                          <CleaningDetail orderData={item}/>
                         );

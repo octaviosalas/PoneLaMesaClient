@@ -96,7 +96,7 @@ const Login = () => {
                   autoComplete="email" 
                   onChange={(e) => setEmail(e.target.value)}
                   required 
-                  className="block w-full text-center rounded-md border-0  sm:text-sm sm:leading-6" 
+                  className="block w-full text-center rounded-md border-0 text-black  sm:text-sm sm:leading-6" 
                  />
               </div>
            </div>
@@ -113,7 +113,7 @@ const Login = () => {
               autoComplete="current-password"          
               variant="bordered" 
               required 
-              className="block w-full text-center rounded-md border-0  sm:text-sm sm:leading-6" 
+              className="block w-full text-center rounded-md border-0 text-black  sm:text-sm sm:leading-6" 
              
               />
           </div>
