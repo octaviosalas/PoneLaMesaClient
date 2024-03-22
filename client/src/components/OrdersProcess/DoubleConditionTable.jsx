@@ -11,7 +11,7 @@ import {Link} from "react-router-dom"
 import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
 import { useNavigate } from 'react-router-dom';
 import impresora from "../../images/impresora.png"
-
+import { useCallback } from 'react';
 
 const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries}) => {
 
@@ -33,7 +33,10 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
         const changeTypeOfData = (item) => { 
           setData(item)
           console.log(item)
+          return data
         }
+
+    
 
         useEffect(() => { 
             console.log(data)

@@ -8,7 +8,7 @@ import { UserContext } from "../../store/userContext";
 import Dropzone from 'react-dropzone';
 import { PhotoIcon } from '@heroicons/react/24/solid'
 
-const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
+const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList, withDownPayment}) => {
 
   const userCtx = useContext(UserContext)
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
@@ -42,15 +42,12 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
   useEffect(() => { 
      if(usedIn === "CreateNewReturn") { 
       getOrderIdToPostPayment()
+      console.log("EL TIPO DE VALUE TO PAY RECIBIDA", typeof valueToPay)
+      console.log("VALUE TO PAY RECIBIDA:", valueToPay[0])
      }
   }, [])
 
-  useEffect(() => { 
-    console.log(orderIdItem)
-    console.log(orderClientItem)
-    console.log(orderDetailItem)
-    console.log(orderTotalItem)
- }, [orderIdItem, orderClientItem, orderDetailItem, orderTotalItem])
+
 
 
   const availablesAccounts = [
@@ -69,7 +66,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
   ]
 
   const addNewCollection = async () => { 
-    if(account.length !== 0) { 
+    if(account.length !== 0 ) { 
       const collecctionData = ({ 
         orderId: orderData.id,
         collectionType:"Alquiler",
@@ -79,13 +76,14 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
         day: day,
         month: month,
         year: year,
-        amount: orderData.total,
+        amount: orderData.downPaymentData.length === 0 ? orderData.total : orderData.total - orderData.downPaymentData.map((down) => down.amount)[0],
         account: account,
         loadedBy: userCtx.userName,
         voucher: payImage
       })
-
-      try {
+   
+      console.log(collecctionData.amount)
+     try {
         const updateOrderLikePaid = await axios.put(`http://localhost:4000/orders/addPaid/${orderData.id}`)
         console.log(updateOrderLikePaid.data);
 
@@ -96,6 +94,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
            if(addNewCollection.status === 200) { 
              setSuccesCollectionSaved(true)
              setSuccesOperation(true)
+             updateList()
              setTimeout(() => { 
               if(usedIn === "CreateNewReturn") { 
                 changeOrderPaid(true)
@@ -121,14 +120,14 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
   const addNewCollectionUsedInCreateNewReturn = async () => { 
     const collecctionData = ({ 
       orderId: orderIdItem,
-      collectionType:"order",
+      collectionType:"Alquiler",
       client: orderClientItem,
       orderDetail: orderDetailItem,
       date: actualDate,
       day: day,
       month: month,
       year: year,
-      amount: orderTotalItem,
+      amount: withDownPayment ? valueToPay[0] : orderTotalItem,
       account: account,
       loadedBy: userCtx.userName,
       voucher: payImage
@@ -231,7 +230,13 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid}) => {
                      <div className="flex flex-col text-start justify-start  mt-2">
                         <p className="text-sm font-medium text-black">Cliente: {orderData.client}</p>
                         <p className="text-sm font-medium text-black">Cargado el {orderData.day} de {orderData.month} de {orderData.year}</p>
-                        <p className="text-sm font-medium text-black">Monto a cobrar: {formatePrice(orderData.total)}</p>
+                        {orderData.downPaymentData.length > 0 ? <p className="text-sm font-medium text-green-800">Esta orden tiene una seña abonada</p> : null}
+                        {orderData.downPaymentData.length === 0 ? 
+                         <p className="text-sm font-medium text-black">Monto a cobrar: {formatePrice(orderData.total)}</p> 
+                         : 
+                         <p className="text-sm font-medium text-black">Monto pendiente de cobro: {formatePrice(orderData.total - orderData.downPaymentData.map((down) => down.amount)[0])}</p>
+                         }
+                       
                       </div>
                      : 
                      <div className="flex flex-col text-start justify-start  mt-2">

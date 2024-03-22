@@ -16,7 +16,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const userCtx = useContext(UserContext)
-  const [downPaymentAmount, setDownPaymentAmount] = useState(0)
+  const [downPaymentAmount, setDownPaymentAmount] = useState("")
   const [day, setDay] = useState(getDay())
   const [month, setMonth] = useState(getMonth())
   const [year, setYear] = useState(getYear())
@@ -72,6 +72,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
 
   const createNewDownPayment = async () => { 
     console.log("Valor de la seña enmviado",  downPaymentAmount)
+    console.log("tipo de dato seña", typeof downPaymentAmount)
     const collecctionData = ({ 
         orderId: orderData.id,
         collectionType:"Seña",
@@ -81,7 +82,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
         day: day,
         month: month,
         year: year,
-        amount: downPaymentAmount,
+        amount: parseInt(downPaymentAmount),
         account: account,
         loadedBy: userCtx.userName,
         voucher: payImage
@@ -96,7 +97,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
         day: day,
         month: month,
         year: year,
-        amount: downPaymentAmount,
+        amount: parseInt(downPaymentAmount),
         account: account,
         loadedBy: userCtx.userName,
         voucher: payImage

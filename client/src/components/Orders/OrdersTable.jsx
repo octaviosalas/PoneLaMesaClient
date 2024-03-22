@@ -188,20 +188,10 @@ const OrdersTable = () => {
                     const month = filaActual.original.month;
                     const year = filaActual.original.year;
                     const total = filaActual.original.total;
-                    const item = {
-                    id: id,
-                    detail: detail,
-                    paid: paid,
-                    creator: creator,
-                    day: day,
-                    month: month,
-                    year: year,
-                    total: total,
-                    client: client,
-                    clientId: clientId
-                    };
+                    const downPaymentData = filaActual.original.downPaymentData
+                    const item = {  id, detail,  paid,  creator,day, month,year, total,client, clientId, downPaymentData};
                     return (
-                       <PostPayment orderData={item}/>
+                       <PostPayment orderData={item} updateList={getDataAndCreateTable}/>
                       );
                 },
                   }) 

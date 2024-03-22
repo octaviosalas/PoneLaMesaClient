@@ -10,19 +10,11 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
   const [orderData, setOrderData] = useState({})
 
   const handleOpen = () => { 
-    console.log(orderId)
-    console.log("DETALLE", detail)
     onOpen()
     if(showingOn !== "table") { 
       getDataOfCollectionOrder()
-      console.log(orderData.length)
     }
   }
-
-  useEffect(() => { 
-    console.log(orderData)
-  }, [orderData])
-
 
   const getDataOfCollectionOrder = async () => { 
    try {
