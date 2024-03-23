@@ -70,8 +70,8 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
             });
 
             modifiedColumnObjects.push({
-                key: 'Anexar',
-                label: 'Anexar',
+                key: 'Utilizar',
+                label: 'Utilizar',
                 cellRenderer: (cell) => { 
                   const filaActual = cell.row;
                   const id = filaActual.original._id;       
@@ -140,8 +140,7 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
  <ModalContent>
     {(onClose) => (
       <>
-        <ModalHeader className="flex flex-col gap-1">Sub Alquileres Disponibles</ModalHeader>
-
+        <ModalHeader className="flex flex-col gap-1">Sub Alquileres Disponibles</ModalHeader>  
         {load ? 
           <Loading/> 
           :
@@ -154,12 +153,15 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
             </div>
            : 
             <ModalBody className="mb-6">
+               <div className="flex items-center jsutify-center">
+                 <p className="font-medium text-zinc-600 text-sm">Sub Alquileres disponibles para utilizar: {data.length}</p>
+               </div>    
               <Table
                 columnAutoWidth={true}
                 columnSpacing={10}
                 aria-label="Selection behavior table example with dynamic content"
                 selectionBehavior={selectionBehavior}
-                className="w-full mt-2 lg:w-[500px] xl:w-[700px] 2xl:w-[700px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+                className="w-full lg:w-[500px] xl:w-[700px] 2xl:w-[700px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
               >
                 <TableHeader columns={columns}>
                  {(column) => (

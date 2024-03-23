@@ -26,7 +26,24 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
   const [orderClientItem, setOrderClientItem] = useState("")
   const [orderDetailItem, setOrderDetailItem] = useState([])
   const [orderTotalItem, setOrderTotalItem] = useState("")
+  const [remainingAmount, setRemainingAmount] = useState("")
 
+  const handleOpen = () => { 
+    onOpen()
+    if(usedIn === "CreateNewReturn") { 
+      console.log("en used id:, el valor de orderData", orderData)
+      console.log("en used id:, el valor de withDownPayment", withDownPayment)
+      console.log("en used id:, el valor de valueToPay", valueToPay)
+      const match = valueToPay.match(/[0-9.]+/);
+      const valueToPayNumber = match ? parseFloat(match[0].replace(/\./, '')) : NaN;
+      console.log(valueToPayNumber); 
+      setRemainingAmount(valueToPayNumber)
+      getOrderIdToPostPayment()
+      console.log("EL TIPO DE VALUE TO PAY RECIBIDA", typeof valueToPay)
+      console.log("VALUE TO PAY RECIBIDA:", valueToPay[0])
+     }
+
+  }
 
   const getOrderIdToPostPayment = () => { 
     const id = orderData.map((o) => o._id)[0]
@@ -39,13 +56,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
     setOrderTotalItem(total)
   }
 
-  useEffect(() => { 
-     if(usedIn === "CreateNewReturn") { 
-      getOrderIdToPostPayment()
-      console.log("EL TIPO DE VALUE TO PAY RECIBIDA", typeof valueToPay)
-      console.log("VALUE TO PAY RECIBIDA:", valueToPay[0])
-     }
-  }, [])
+ 
 
 
 
@@ -127,7 +138,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
       day: day,
       month: month,
       year: year,
-      amount: withDownPayment ? valueToPay[0] : orderTotalItem,
+      amount: withDownPayment ? remainingAmount : orderTotalItem,
       account: account,
       loadedBy: userCtx.userName,
       voucher: payImage
@@ -215,7 +226,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
   return (
     <>
       {usedIn === "CreateNewReturn" ? 
-        <Button onPress={onOpen}  className="text-white bg-green-800 font-medium text-sm mt-2">Asentar Cobro de {valueToPay}</Button>
+        <Button onPress={handleOpen}  className="text-white bg-green-800 font-medium text-sm mt-2">Asentar Cobro de {valueToPay}</Button>
         :
         <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Asentar</p>}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>

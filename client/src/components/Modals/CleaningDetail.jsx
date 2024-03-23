@@ -18,7 +18,7 @@ const CleaningDetail = ({orderData}) => {
       onOpen()
       console.log("orden original", orderData)
       console.log("DETALLE DE LA ORDEN ORIGINAL", orderData.detail)
-      const missed = orderData.missedArticles.map((miss) => miss.missedProductsData)
+      const missed = orderData.missingArticlesData.map((miss) => miss.missedProductsData)
       if(missed.length > 0) { 
         console.log("encontre missed products")
         setOrderHasMissedProducts(true)
@@ -124,7 +124,7 @@ const CleaningDetail = ({orderData}) => {
                      {productsMissedDetail.length > 0 ? ( 
                       <div className="flex flex-col items-start justify-start">
                           {productsMissedDetail.map((prod) => (
-                            <div className="flex items-center gap-4 justify-center">
+                            <div className="flex items-center gap-4 justify-center" key={prod._id}>
                                  <p className="text-sm text-zinc-600 font-medium"> <b>Producto:</b> {prod.productName}</p>
                                  <p className="text-sm  text-zinc-600 font-medium"><b>Cantidad Faltante:</b> {prod.missedQuantity}</p>
                             </div>

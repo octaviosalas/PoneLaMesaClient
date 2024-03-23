@@ -19,7 +19,7 @@ const LocalDeliveries = () => {
        const orders = response.data
        const filterOrders = orders.filter((ord) => ord.dateOfDelivery === actualDate && ord.placeOfDelivery === "Local"  && ord.orderStatus === "Armado") 
        setLocalDeliveryOrders(filterOrders)
-       console.log("Ordenes filtradas: ", filterOrders)
+       console.log("Table Data", filterOrders)
      } catch (error) {
        console.log(error)
      }
@@ -31,7 +31,7 @@ const LocalDeliveries = () => {
       const orders = response.data
       const filterOrders = orders.filter((ord) => ord.orderStatus === "Entregado") 
       setEveryDeliveries(filterOrders)
-      console.log("Ordenes filtradas: ", filterOrders)
+      console.log("Every Deliveries ", filterOrders)
     } catch (error) {
       console.log(error)
     }

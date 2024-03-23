@@ -116,8 +116,10 @@ const OrdersTable = () => {
                   const month = filaActual.original.month;
                   const year = filaActual.original.year;
                   const total = filaActual.original.total;
-                  const downPaymentData = filaActual.original.downPaymentData
-                  const item = { id, detail, creator, orderSublets, day, month, year, total, client, downPaymentData};
+                  const downPaymentData = filaActual.original.downPaymentData;
+                  const paid = filaActual.original.paid;
+                  const missingArticlesData = filaActual.original.missingArticlesData;
+                  const item = { id, detail, creator, orderSublets, day, month, year, total, client, downPaymentData, paid, missingArticlesData};
                   return (
                      <OrderDetail  orderData={item}/>
                     );

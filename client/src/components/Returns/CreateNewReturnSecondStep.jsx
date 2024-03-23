@@ -31,6 +31,10 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
        }
     },[])
 
+    useEffect(() => { 
+       console.log(orderHasDownPayment)
+    }, [orderHasDownPayment])
+
 
     const comeBackFirstStep = () => { 
         setOrderHasBrokenArticles(true)
@@ -94,6 +98,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                         </div>
                     </div>
                     
+                    {orderData.some((ord) => ord.subletsDetail.length > 0) ?
                      <div className='mt-2'>
                        <h5 className='font-bold text-green-800'>SubAlquileres añadidos</h5>
                         <div className='flex flex-col items-start justify-start '>
@@ -104,22 +109,33 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                                 </div>
                             )))}
                         </div>
-                    </div>
+                    </div> : null}
 
                     <div className='flex flex-col items-start justify-start mt-4'>
-                            {orderHasDownPayment ? 
-                            <p className='font-bold text-green-800'>Esta orden fue señada con: {formatePrice(downPaymentAmount)}</p> 
+                            {orderHasDownPayment && orderPaid !== true ? 
+                              <div className='flex flex-col items-start justify-start'>
+                                <p className='font-bold text-green-800 text-sm underline'>Esta orden fue señada con:</p> 
+                                <p className='font-medium text-zinc-600 text-sm'>{formatePrice(downPaymentAmount)}</p>
+                             </div> 
+                            
                             : null}
 
-                            {orderHasDownPayment ? 
-                            <h5 className='font-bold text-green-800'>Monto Restante a cobrar</h5> 
-                            : 
-                            <h5 className='font-bold text-green-800'>Monto total del Pedido</h5>}
+                            {orderHasDownPayment && orderPaid !== true ? (
+                                <div className='flex flex-col'>
+                                    <h5 className='font-bold text-green-800  text-sm underline mt-2'>Monto Restante a cobrar: </h5>
+                                    <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total - downPaymentAmount))}</p> 
+                                </div>    
+                             
+                            ) : (
+                                orderHasDownPayment !== true && orderPaid !== true ? (
+                                    <div className='flex flex-col'>
+                                       <h5 className='font-bold text-green-800  text-sm underline mt-2'>Monto total del pedido</h5>
+                                       <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total))}</p> 
+                                </div>    
+                            ) : null
+                            )}
 
-                            {orderHasDownPayment ? 
-                            <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total - downPaymentAmount))}</p> 
-                            :  
-                            <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total))}</p>}
+                          
                     </div>
      </div>
         </div>
@@ -130,7 +146,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                 <div className='flex flex-col items-center justify-center'>
                 <p className='text-sm font-medium text-zinc-600 underline'>Este pedido se encuentra pendiente de pago</p>
                    {orderHasDownPayment ? 
-                     <PostPayment usedIn="CreateNewReturn" withDownPayment={true} valueToPay={orderData.map((ord) => ord.total - downPaymentAmount)} orderData={orderData} changeOrderPaid={changeOrderPaid}/>     
+                     <PostPayment usedIn="CreateNewReturn" withDownPayment={true} valueToPay={formatePrice(orderData.map((ord) => ord.total - downPaymentAmount))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>     
                    : <PostPayment usedIn="CreateNewReturn" withDownPayment={false} valueToPay={formatePrice(orderData.map((ord) => ord.total))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>        
                    }
            

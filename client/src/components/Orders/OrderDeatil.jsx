@@ -9,6 +9,9 @@ const OrderDetail = ({orderData, collectionDetail}) => {
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
     const [viewDownPaymentData, setViewDownPaymentData] = useState(false);
+    const [orderHasMissedArticles, setOrderHasMissedArticles] = useState(false);
+    const [viewMissedData, setViewMissedData] = useState(false);
+
 
   useEffect(() => {
     if (orderData && orderData.detail && Array.isArray(orderData.detail) && orderData.detail.length > 0) {
@@ -33,10 +36,19 @@ const OrderDetail = ({orderData, collectionDetail}) => {
     }
   }, [orderData]);
 
+  const handleOpen = () => { 
+    console.log(orderData)
+    onOpen()
+    console.log(orderData.paid)
+    if(orderData.missingArticlesData.length > 0) { 
+      setOrderHasMissedArticles(true)
+    }
+  }
+
   
   return (
     <>
-      {orderData ? <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle</p> : <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle del Cobro</p>}
+      {orderData ? <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle</p> : <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Detalle del Cobro</p>}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
         <ModalContent>
           {(onClose) => (
@@ -53,9 +65,17 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                     <p className="text-zinc-600 font-medium text-sm"><b>Fecha de creacion:</b> {orderData.day} de {orderData.month} de {orderData.year}</p>
                     <p className="text-zinc-600 font-medium text-sm"><b>Cliente:</b> {orderData.client}</p>
 
-                    {orderData.downPaymentData.length > 0 ? 
-                    <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p> 
-                    : null}
+                    {orderData.downPaymentData.length > 0 && orderData.paid === false ? (
+                          <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
+                        ) : (
+                          orderData.paid === true ? (
+                            <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
+                          ) : (
+                            orderData.paid === false && orderData.downPaymentData.length === 0 ? (
+                              <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>
+                            ) : null
+                          )
+                        )}
 
                    {viewDownPaymentData ?
                     <div className="flex flex-col items-start justify-start text-start">
@@ -89,6 +109,9 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                           </div> 
                       </div>
                     : null}
+
+                    {orderHasMissedArticles ? <p  className="text-green-800 underline font-medium text-sm mt-2" onClick={() => setViewMissedData(true)}>Este pedido tiene Articulos sin Devolver </p> : null}
+                    
                 </div>
                    <Table aria-label="Example table with dynamic content" className="w-full shadow-xl flex items-center justify-center mt-2">
                               <TableHeader columns={columns} className="">

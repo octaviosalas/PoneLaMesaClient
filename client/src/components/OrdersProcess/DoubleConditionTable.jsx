@@ -28,10 +28,14 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
         useEffect(() => { 
           if(tableData.length > 0) { 
            setData(tableData)
-          } else if (tableData.length === 0 && typeOfOrders === "entrega") { 
+          } else if (tableData.length === 0 && typeOfOrders === "entregas") { 
             setData(everyDeliveries)
           } 
         }, [tableData])
+
+        useEffect(() => { 
+         console.log(data)
+        }, [data])
 
         const changeTypeOfData = (item) => { 
           setData(item)
@@ -47,7 +51,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
         
         const getDataAndCreateTable = () => { 
                 if(data.length !== 0) { 
-                const propiedades = Object.keys(tableData[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
+                const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
                     && propiedad !== 'orderDetail'&&  propiedad !== 'clientId'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'month' && propiedad !== 'year'
                     && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== "missingArticlesData"  && propiedad !== 'downPaymentData');
                     const columnObjects = propiedades.map(propiedad => ({
@@ -97,7 +101,9 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                         const total = filaActual.original.total;
                         const orderSublets = filaActual.original.subletsDetail;
                         const downPaymentData = filaActual.original.downPaymentData;
-                        const item = { id, orderSublets, detail, creator, day,year, total, client, downPaymentData};
+                        const paid = filaActual.original.paid;
+                        const missingArticlesData = filaActual.original.missingArticlesData;
+                        const item = { id, orderSublets, detail, creator, day,year, total, client, downPaymentData, paid, missingArticlesData};
                         return (
                         <OrderDetail orderData={item}/>
                         );
@@ -170,8 +176,21 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
 
         const createNewPdf = async () => { 
           console.log(data)
+          const dataFormatedToList = data.map((d) => ( 
+             {
+              NumeroDeOrden: d.orderNumber,
+              Cliente: d.client,
+              DireccionDeEnvio: d.placeOfDelivery,
+              Detalle: d.orderDetail.map((ord) => ({ 
+                 Articulo: ord.productName,
+                 Cantidad: ord.quantity
+
+             }))
+             }
+          ))
+          console.log(dataFormatedToList)
           try {
-              const response = await axios.post("http://localhost:4000/orders/createPdf", {data}, {
+              const response = await axios.post("http://localhost:4000/orders/createPdf", {dataFormatedToList}, {
                   responseType: 'blob',
               });
               const blob = new Blob([response.data], { type: 'application/pdf' });      
@@ -209,7 +228,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                     
                        : null}
 
-                       {data === ordersToRepartToday ? 
+                       {data === ordersToRepartToday || data === futuresReparts? 
                        <div className='flex items-center justify-end'>
                           <img className='h-7 w-7 cursor-pointer' title="Imprimir reparto del Dia" onClick={() => createNewPdf()} src={impresora}/>
                        </div>
@@ -279,8 +298,18 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                 {
                 withOutOrders ? 
                 <div className='flex flex-col'>
-                  <p className='text-black font-medium text-md '>No hay pedidos</p> 
-                  <p>Volver</p>
+
+                {data === everyDeliveries ? (
+                  <p className='text-black font-medium text-md'>No hay pedidos entregados</p>
+                ) : data === tableData ? (
+                  <p className='text-black font-medium text-md'>No Hay pedidos para entrega de Local con fecha de Hoy</p>
+                ) : data === futuresReparts ? (
+                  <p className='text-black font-medium text-md'>No Hay pedidos para repartir en los próximos días</p>
+                ) : data === ordersToRepartToday ? (
+                  <p className='text-black font-medium text-md'>No Hay pedidos para repartir hoy</p>
+                ) : null}
+
+                  <p className='underline text-sm cursor-pointer mt-2' onClick={() => setData(everyDeliveries)}>Volver</p>
                 </div>
                  :
                  null

@@ -7,7 +7,7 @@ import OrderDetail from '../Orders/OrderDeatil';
 import CreateNewReturn from '../Returns/CreateNewReturn';
 import ReturnToWashing from '../Returns/ReturnToWashing';
 
-const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList}) => {
+const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFetch, updateList}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -92,72 +92,23 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList})
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
                     const detail = filaActual.original.orderDetail;
-                    const subletsDetail = filaActual.original.subletsDetail;
+                    const orderSublets = filaActual.original.subletsDetail;
+                    const missingArticlesData = filaActual.original.missingArticlesData;
                     const creator = filaActual.original.orderCreator;
                     const client = filaActual.original.client;
                     const day = filaActual.original.day;
                     const month = filaActual.original.month;
                     const year = filaActual.original.year;
                     const total = filaActual.original.total;
-                    const item = {
-                    id: id,
-                    detail: detail,
-                    orderSublets: subletsDetail,
-                    creator: creator,
-                    day: day,
-                    month: month,
-                    year: year,
-                    total: total,
-                    client: client
-                    };
+                    const downPaymentData = filaActual.original.downPaymentData;
+                    const paid = filaActual.original.paid;
+                    
+                    const item = { id,  detail, orderSublets, creator, day,  month, year, total, client, downPaymentData, missingArticlesData, paid};
                     return (
                     <OrderDetail orderData={item}/>
                     );
                 },
                 }) 
-
-               /* modifiedColumnObjects.push({
-                    key: 'Editar',
-                    label: 'Editar',
-                    cellRenderer: (cell) => { 
-
-                        const filaActual = cell.row;
-                        const id = filaActual.original._id;
-                        const provider = filaActual.original.provider;
-                        const month = filaActual.original.month;
-                        const day = filaActual.original.day;
-                        const date = filaActual.original.date;
-                        const productsDetail = filaActual.original.productsDetail;
-                        const item = {
-                        id: id,
-                        provider: provider,
-                        month: month,
-                        day: day,
-                        date: date,
-                        productsDetail: productsDetail                  
-                        };
-                        return (
-                        <EditModal type="sublets" subletData={item} updateSubletList={update}/>
-                        );
-                    },
-                })          
-                            
-                modifiedColumnObjects.push({
-                key: 'Eliminar',
-                label: 'Eliminar',
-                cellRenderer: (cell) => { 
-                    const filaActual = cell.row;
-                    const id = filaActual.original._id;
-                    const subletProductsDetail = filaActual.original.productsDetail
-                    const item = {
-                    id: id,
-                    subletProductsDetail: subletProductsDetail
-                    };
-                    return (
-                    <DeleteOrder type="sublets" subletData={item} updateSubletsList={update}/> 
-                    );
-                },
-                }) */
 
                 setColumns(modifiedColumnObjects);
                 if (tableRef.current) {
@@ -200,7 +151,8 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, updateList})
                        <div className='flex justify-start w-full items-center ml-4 gap-6'>                   
                            <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === everyReturns ? 'underline' : ''}`}  onClick={() => changeDataValues(everyReturns)}>Todas las Devoluciones</p>
                            <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === pendingReturns ? 'underline' : ''}`} onClick={() => changeDataValues(pendingReturns)}>Devoluciones Pendientes</p>
-                           <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === todaysReturns ? 'underline' : ''}`}  onClick={() => changeDataValues(todaysReturns)}>Devoluciones del Dia</p>
+                           <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === todaysReturns ? 'underline' : ''}`}  onClick={() => changeDataValues(todaysReturns)}>Devoluciones del Dia en Local</p>
+                           <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === returnsToFetch ? 'underline' : ''}`}  onClick={() => changeDataValues(returnsToFetch)}>Devoluciones del Dia a domicilio</p>
                        </div>
                        <div className='flex items-center'>
                          <CreateNewReturn updateList={updateList}/>

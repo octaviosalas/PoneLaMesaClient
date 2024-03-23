@@ -56,7 +56,7 @@ const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, upd
 
   return (
     <>
-        <p className="font-medium text-xs text-green-800 cursor-pointer" onClick={handleOpen}>Anexar</p>
+        <p className="font-medium text-xs text-green-800 cursor-pointer" onClick={handleOpen}>Utilizar Sub Alquiler</p>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
                 <ModalContent>
                 {(onClose) => (

@@ -134,7 +134,9 @@ const ProcessTables = ({orderStatus}) => {
                     const year = filaActual.original.year;
                     const total = filaActual.original.total;
                     const downPaymentData = filaActual.original.downPaymentData; 
-                    const item = { id, detail,orderSublets, creator, day, month, year,total, client, downPaymentData};
+                    const paid = filaActual.original.paid;
+                    const missingArticlesData = filaActual.original.missingArticlesData;
+                    const item = { id, detail,orderSublets, creator, day, month, year,total, client, downPaymentData, paid, missingArticlesData};
                     return (
                        <OrderDetail orderData={item}/>
                       );
@@ -151,7 +153,6 @@ const ProcessTables = ({orderStatus}) => {
                       const id = filaActual.original._id;
                       const detail = filaActual.original.orderDetail;
                       const orderSublets = filaActual.original.subletsDetail;
-                      const missedArticles = filaActual.original.missingArticlesData;
                       const creator = filaActual.original.orderCreator;
                       const client = filaActual.original.client;
                       const day = filaActual.original.day;
@@ -159,7 +160,10 @@ const ProcessTables = ({orderStatus}) => {
                       const year = filaActual.original.year;
                       const total = filaActual.original.total;
                       const downPaymentData = filaActual.original.downPaymentData; 
-                      const item = { id, detail, orderSublets,missedArticles, creator, day, month, year,total, client, downPaymentData};
+                      const paid = filaActual.original.paid;
+                      const missingArticlesData = filaActual.original.missingArticlesData;
+
+                      const item = { id, detail, orderSublets,missingArticlesData, creator, day, month, year,total, client, downPaymentData, paid};
                       return (
                          <CleaningDetail orderData={item}/>
                         );
