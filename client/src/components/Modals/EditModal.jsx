@@ -8,8 +8,9 @@ import EditOrderData from "./EditOrderData";
 import EditPurchase from "./EditPurchase";
 import EditClient from "./EditClient";
 import EditProvider from "./EditProvider";
+import EditCollection from "./EditCollection";
 
-const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, articleData, updateChanges, updateClientsChanges, clientData, providerData, updateProvidersList}) => {
+const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, articleData, updateChanges, updateClientsChanges, clientData, providerData, updateProvidersList, collectionData, updateCollectionList}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [step, setStep] = useState(0)
@@ -105,6 +106,26 @@ const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, arti
                 </ModalHeader>
                 <ModalBody className="flex flex-col items-center justify-center">
                   <EditProvider providerData={providerData} closeModalNow={closeModal} updateChangesProviders={updateProvidersList}/>
+                </ModalBody>
+              
+              </>
+            )}
+          </ModalContent>
+          :
+          null
+          }
+      </Modal>
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max min-w-96 bg-white text-black'>
+         {type === "collection" ? 
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1 text-zinc-600  text-md">
+                  <p className="font-bold text-md">Editar Cobro </p>                 
+                </ModalHeader>
+                <ModalBody className="flex flex-col items-center justify-center">
+                  <EditCollection collectionData={collectionData} closeModalNow={closeModal} updateCollectionList={updateCollectionList}/>
                 </ModalBody>
               
               </>

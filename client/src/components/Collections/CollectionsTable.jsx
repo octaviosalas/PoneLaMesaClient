@@ -125,27 +125,10 @@ const CollectionsTable = ({collections}) => {
 
                         const filaActual = cell.row;
                         const id = filaActual.original._id;
-                        const client = filaActual.original.client;
-                        const order = filaActual.original.orderNumber;
-                        const status = filaActual.original.orderStatus;
-                        const month = filaActual.original.month;
-                        const date = filaActual.original.date;
-                        const dateOfDelivery = filaActual.original.dateOfDelivery;
-                        const returnDate = filaActual.original.returnDate;
-                        const orderDetail = filaActual.original.orderDetail;
-                        const item = {
-                        id: id,
-                        client: client,
-                        status: status,
-                        order: order,
-                        month: month,
-                        date: date,
-                        dateOfDelivery: dateOfDelivery,
-                        returnDate: returnDate,
-                        orderDetail: orderDetail                  
-                        };
+                        const amount = filaActual.original.amount;                     
+                        const item = { id, amount};
                         return (
-                        <EditModal type="orders" statusOrder={status} orderData={item} updateList={getDataAndCreateTable}/>
+                        <EditModal type="collection" collectionData={item} updateCollectionsList={getDataAndCreateTable}/>
                         );
                     },
                 })          
@@ -156,11 +139,17 @@ const CollectionsTable = ({collections}) => {
                 cellRenderer: (cell) => { 
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
+                    const orderId = filaActual.original.orderId;
+                    const collectionType = filaActual.original.collectionType;
+                    const downPaymentId = filaActual.original.downPaymentId;
                     const item = {
-                    id: id
+                        id, 
+                        orderId, 
+                        collectionType,
+                        ...(collectionType === "Seña" ? { downPaymentId } : {})
                     };
                     return (
-                    <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
+                        <DeleteOrder type="collection" collectionData={item} updateCollectionList={getDataAndCreateTable}/>
                     );
                 },
                 }) 

@@ -1,4 +1,5 @@
 import Collections from "../models/collections.js";
+import Orders from "../models/orders.js";
 
 export const addNewCollection = async (req, res) => { 
    console.log(req.body)
@@ -36,3 +37,22 @@ export const getCollectionByOrderId = async (req, res) => {
     console.log(error)
   }
 }
+
+
+export const deleteCollection = async (req, res) => { 
+  const {collectionId} = req.params;
+  console.log(req.body.orderId);
+  console.log(collectionId);
+  
+  try {
+      const firstDeleteCollection = await Collections.findByIdAndDelete(collectionId);
+      const updateOrderPaidStatus = await Orders.findByIdAndUpdate(req.body.orderId, { 
+        paid: false
+      });
+      res.status(200).json({ message: 'Cobro y Estados actualizados'});
+  } catch (error) {
+      // Manejar el error
+      console.error(error);
+  }
+ };
+

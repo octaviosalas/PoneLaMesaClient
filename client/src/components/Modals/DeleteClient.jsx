@@ -29,12 +29,11 @@ const DeleteClient = ({clientData, closeModalNow, updateClientList}) => {
     <div>
            <div className="flex flex-col items-center justify-center">
                   <div>
-                     <p className="flex flex-col gap-1 text-black font-bold text-md">¿Estas seguro de eliminar el cliente?</p>
-                     {clientData.id}
+                     <p className="flex flex-col gap-1 text-zinc-600 font-medium text-md">¿Estas seguro de eliminar el cliente?</p>
                   </div>
                   <div className="flex items-center gap-6 mt-4 mb-4">
-                     <Button className="text-sm font-medium text-white bg-green-600" onClick={() => deleteClient()}>Eliminar</Button>
-                     <Button className="text-sm font-medium text-white bg-green-600" onPress={closeModalNow}>Cancelar</Button>
+                     <Button className="text-sm font-medium text-white bg-green-800 w-52" onClick={() => deleteClient()}>Eliminar</Button>
+                     <Button className="text-sm font-medium text-white bg-green-800 w-52" onPress={closeModalNow}>Cancelar</Button>
                   </div>
                  {messageSuccesDeleteClient ?
                   <div className="flex items-center mt-4 mb-2">

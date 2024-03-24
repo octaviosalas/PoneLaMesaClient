@@ -98,10 +98,10 @@ const HistoricProviders = ({providerData, updateList}) => {
                 <p  className="text-zinc-600 font-medium text-sm">{providerData.name}</p>
                  {loadingData ? null :
                   <div className="flex flex-col justify-start items-start">
-                      <p className="text-zinc-600 font-medium text-xs">Total Gastado en <b>{providerData.name}</b>:  {formatePrice(providerExpenses.reduce((acc, el) => acc + el.total, 0))}</p>
-                      <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de <b>Sub Alquileres: </b>{providerExpenses.filter((prov) => prov.razon === "Sub Alquiler").length}</p>
-                      <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de <b>Compras: </b> {providerExpenses.filter((prov) => prov.razon === "Compra").length}</p>
-                      <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de <b>Gastos: </b> {providerExpenses.length}</p>       
+                      <p className="text-zinc-600 font-medium text-xs">   <b>Gastado</b>:  {formatePrice(providerExpenses.reduce((acc, el) => acc + el.total, 0))}</p>
+                      <p className="text-zinc-600 font-medium text-xs mt-1"><b>Sub Alquileres: </b>{providerExpenses.filter((prov) => prov.razon === "Sub Alquiler").length}</p>
+                      <p className="text-zinc-600 font-medium text-xs mt-1"><b>Compras: </b> {providerExpenses.filter((prov) => prov.razon === "Compra").length}</p>
+                      <p className="text-zinc-600 font-medium text-xs mt-1"><b>Gastos: </b> {providerExpenses.length}</p>       
                   </div>}
               </ModalHeader>
               <ModalBody className="flex flex-col justify-center items-center">   
@@ -120,7 +120,7 @@ const HistoricProviders = ({providerData, updateList}) => {
                            onChange={(e) => setInputValue(e.target.value)}
                            value={inputValue} />        
                           </div>
-                          <Table aria-label="Example table with dynamic content" className="w-[450px] xl:w-[900px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto max-h-[350px]">
+                          <Table aria-label="Example table with dynamic content" className="w-[450px] xl:w-[900px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto max-h-[200px] 2xl:max-h-[350px]">
                             <TableHeader columns={columns} >
                               {(column) => (
                                 <TableColumn key={column.key} className="text-xs gap-6">

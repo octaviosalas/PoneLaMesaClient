@@ -7,81 +7,16 @@ import DeletePurchase from "./DeletePurchase";
 import DeleteClient from "./DeleteClient";
 import DeleteProvider from "./DeleteProvider"
 import DeleteSublet from "./DeleteSublet";
+import DeleteCollection from "./DeleteCollection";
 
-const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList, providerData, updateProviderList, subletData, updateSubletsList}) => {
+const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList, providerData, updateProviderList, subletData, updateSubletsList, collectionData, updateCollectionList}) => {
+ 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [successMessage, setSuccessMessage] = useState(false)
   const [messageSuccesDeleteArticle, setMessageSuccesDeleteArticle] = useState(false)
   const [secondStepOfDelete, setSecondStepOfDelete] = useState(false)
 
-  const deleteOrder = () => { 
-     axios.delete(`http://localhost:4000/orders/${orderData.id}`)
-          .then((res) => { 
-            console.log(res.data)
-            updateList()
-            setSuccessMessage(true)
-            setTimeout(() => { 
-              setSuccessMessage(false)
-              onClose()
-            }, 1500)
-          })
-  }
-
-  const deleteOrderAndReplenishStock = () => { 
-    axios.delete(`http://localhost:4000/orders/replenishStock/${orderData.id}`)
-         .then((res) => { 
-           console.log(res.data)
-           updateList()
-           setSuccessMessage(true)
-           setTimeout(() => { 
-             setSuccessMessage(false)
-             onClose()
-           }, 2500)
-         })
- }
- 
-  const deleteArticle = () => { 
-    axios.delete(`http://localhost:4000/products/delete/${productData.id}`)
-         .then((res) => { 
-          console.log(res.data)
-          updateListArticles()
-          setMessageSuccesDeleteArticle(true)
-          setTimeout(() => { 
-            onClose()
-            setMessageSuccesDeleteArticle(false)
-          }, 1500)
-         })
-         .catch((err) => { 
-          console.log(err)
-         })
-  }
-
-  const deletePurchase = () => { 
-    axios.delete(`http://localhost:4000/purchases/${purchaseData.id}`)
-         .then((res) => { 
-          console.log(res.data)
-         })
-         .catch((err) => { 
-          console.log(err)
-         })
-  }
-
-  const deletePurchaseAndUpdateProductStock = () => { 
-    axios.delete(`http://localhost:4000/purchases/replenishShares/${purchaseData.id}`)
-         .then((res) => { 
-          console.log(res.data)
-         })
-         .catch((err) => { 
-          console.log(err)
-         })
-  }
-
-  const goToSecondStepOfDelete = () => { 
-    setSecondStepOfDelete(true)
-  }
-
-
-  return (
+   return (
     <>
      <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Eliminar</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-xl">
@@ -162,6 +97,20 @@ const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, up
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar SubAlquiler</ModalHeader>
               <ModalBody>
                 <DeleteSublet subletData={subletData} closeModalNow={onClose} updateSubletList={updateSubletsList}/>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+        :
+        null}   
+
+    {type === "collection" ? 
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar cobro de {collectionData.collectionType}</ModalHeader>
+              <ModalBody>
+                <DeleteCollection collectionData={collectionData} closeModalNow={onClose} updateCollections={updateCollectionList}/>
               </ModalBody>
             </>
           )}

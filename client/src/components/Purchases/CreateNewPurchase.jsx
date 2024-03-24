@@ -175,7 +175,7 @@ const CreateNewPurchase = ({updateList}) => {
                           </SelectItem>
                         ))}
                   </Select> 
-                  <Input type="text" value={choosenProductName} className="w-64 2xl:w-72" variant="bordered" label="Producto" onChange={(e) => handleInputChange(e.target.value)}/>
+                  <Input type="text" value={choosenProductName} className="w-64 2xl:w-72" variant="underlined" label="Producto" onChange={(e) => handleInputChange(e.target.value)}/>
                   <div className="">
                         {
                         filteredNames !== "" ? 
@@ -190,8 +190,8 @@ const CreateNewPurchase = ({updateList}) => {
                         : null
                         }
                     </div> 
-                    <Input type="number" value={choosenProductQuantity} variant="bordered" label="Cantidad" className=" w-64 2xl:w-72" onChange={(e) => setChoosenProductQuantity(e.target.value)}/> 
-                    <Input type="number" value={choosenProductValue} variant="bordered" label="Valor $" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setChoosenProductValue(parseInt(e.target.value, 10))}/> 
+                    <Input type="number" value={choosenProductQuantity} variant="underlined" label="Cantidad" className=" w-64 2xl:w-72" onChange={(e) => setChoosenProductQuantity(e.target.value)}/> 
+                    <Input type="number" value={choosenProductValue} variant="underlined" label="Valor $" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setChoosenProductValue(parseInt(e.target.value, 10))}/> 
                  
                        {
                         choosenProductName.length !== 0 && choosenProductQuantity.length !== 0  && choosenProductValue.length !== 0?
@@ -227,12 +227,13 @@ const CreateNewPurchase = ({updateList}) => {
                       }
               </ModalBody>
               <ModalFooter className="flex items-center justify-center mt-2 mb-4">
-                <Button  className="font-medium text-white"  style={{backgroundColor:"#399319"}} variant="light"  onPress={onClose}>
-                  Cancelar
-                </Button>
-                <Button  className="font-medium text-white"  style={{backgroundColor:"#227505"}} variant="light" onPress={createNewPurchase}>
+              <Button  className="font-medium text-white bg-green-800 w-52" onPress={createNewPurchase}>
                   Confirmar
                 </Button>
+                <Button  className="font-medium text-white bg-green-800 w-52" onPress={onClose}>
+                  Cancelar
+                </Button>
+          
               </ModalFooter>
             {succesPurchase ? 
               <div className="flex items-center justify-center mt-4 mb-4">

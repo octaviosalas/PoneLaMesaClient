@@ -4,6 +4,7 @@ import Loading from "../Loading/Loading";
 import axios from "axios";
 import { formatePrice } from "../../functions/gralFunctions";
 
+
 const VaucherModal = ({showingOn, detail, orderId}) => {
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
   const [load, setLoad] = useState(false)
@@ -13,6 +14,10 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
     onOpen()
     if(showingOn !== "table") { 
       getDataOfCollectionOrder()
+    } else { 
+      setTimeout(() => { 
+        setLoad(true)
+      }, 2000)
     }
   }
 
@@ -52,7 +57,8 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
                        <p className="font-medium text-sm text-zinc-600">No se ha cargado un Comprobante de Pago</p> 
                        : 
                        <div className="flex flex-col items-center justify-center w-full ">
-                         <img src={detail.voucher} className="w-72 h-72 rounded-2xl "/>
+                         {load && detail.voucher.length > 0 ?  <img src={detail.voucher} className="w-72 h-72 rounded-2xl "/> : <Loading/>}
+                      
                        </div>}
                     </div>
                   ) : ( 
