@@ -17,6 +17,7 @@ const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, close
         console.log(dataUpdated)
         console.log(orderData)
         const articlesWithMissing = dataUpdated.filter(obj => 'missing' in obj);
+        console.log(articlesWithMissing)
         const getClient = orderData.map((ord) => ord.client)[0];
         const getClientId = orderData.map((ord) => ord.clientId)[0];
         const getTotalToPay = articlesWithMissing.reduce((acc, el) => acc + el.replacementPrice * el.missing, 0);

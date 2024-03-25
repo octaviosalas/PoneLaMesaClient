@@ -14,7 +14,7 @@ import VaucherModal from './VaucherModal';
 import CollectionsFilters from './CollectionsFilters';
 
 
-const CollectionsTable = ({collections}) => {
+const CollectionsTable = ({collections, updateCollectionList}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -125,34 +125,50 @@ const CollectionsTable = ({collections}) => {
 
                         const filaActual = cell.row;
                         const id = filaActual.original._id;
-                        const amount = filaActual.original.amount;                     
-                        const item = { id, amount};
+                        const amount = filaActual.original.amount;
+                        const collectionType = filaActual.original.collectionType;
+                        const orderId = filaActual.original.orderId;
+                        const downPaymentId = filaActual.original.downPaymentId;      
+                        const paymentReferenceId = filaActual.original.paymentReferenceId;          
+                        const clientName = filaActual.original.client;                  
+                        const item = { 
+                          id, 
+                          amount,
+                          collectionType,
+                          orderId,
+                          ...(collectionType === "Seña" ? { downPaymentId } : {}),
+                          ...(collectionType === "Reposicion" ? { paymentReferenceId, clientName } : {})
+                         };
                         return (
-                        <EditModal type="collection" collectionData={item} updateCollectionsList={getDataAndCreateTable}/>
+                        <EditModal type="collection" collectionData={item} updateCollectionsList={updateCollectionList}/>
                         );
                     },
                 })          
                             
                 modifiedColumnObjects.push({
-                key: 'Eliminar',
-                label: 'Eliminar',
-                cellRenderer: (cell) => { 
-                    const filaActual = cell.row;
-                    const id = filaActual.original._id;
-                    const orderId = filaActual.original.orderId;
-                    const collectionType = filaActual.original.collectionType;
-                    const downPaymentId = filaActual.original.downPaymentId;
-                    const item = {
-                        id, 
-                        orderId, 
-                        collectionType,
-                        ...(collectionType === "Seña" ? { downPaymentId } : {})
-                    };
-                    return (
-                        <DeleteOrder type="collection" collectionData={item} updateCollectionList={getDataAndCreateTable}/>
-                    );
-                },
-                }) 
+                  key: 'Eliminar',
+                  label: 'Eliminar',
+                  cellRenderer: (cell) => { 
+                      const filaActual = cell.row;
+                      const id = filaActual.original._id;
+                      const orderId = filaActual.original.orderId;
+                      const collectionType = filaActual.original.collectionType;
+                      const downPaymentId = filaActual.original.downPaymentId;
+                      const paymentReferenceId = filaActual.original.paymentReferenceId;          
+                      const clientName = filaActual.original.client;          
+                      const item = {
+                          id, 
+                          orderId, 
+                          collectionType,
+                          ...(collectionType === "Seña" ? { downPaymentId } : {}),
+                          ...(collectionType === "Reposicion" ? { paymentReferenceId, clientName } : {})
+                      };
+              
+                      return (
+                          <DeleteOrder type="collection" collectionData={item} updateCollectionList={updateCollectionList}/>
+                      );
+                  },
+              });
 
                 setColumns(modifiedColumnObjects);
                 console.log(modifiedColumnObjects)

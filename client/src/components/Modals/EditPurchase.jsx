@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import axios from 'axios'
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
@@ -16,6 +16,7 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
     const [succesMessage, setSuccesMessage] = useState(false)
     const [theRealDataOfOrderDetail, setTheRealDataOfOrderDetail] = useState(purchaseData.orderDetail)
 
+    const memoizedPropValue = useMemo(() => purchaseData.detail, []);
 
     const handleQuantityChange = (index, newQuantity) => {
         const updatePurchaseDetail = [...newPurchaseDetail];
@@ -36,80 +37,66 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
         setNewPurchaseDetail(updatePurchaseDetail);
       };
 
-     const changePurchaseData = () => { 
-        const newPurchaseData = ({ 
-          month: newMonth,
-          year: newYear,
-          day: newDay         
-        })
-        axios.put(`http://localhost:4000/purchases/updatePurchaseData/${purchaseData.id}`, newPurchaseData)
-             .then((res) => { 
-              console.log(res.data)
-              setSuccesMessage(true)
-              updateChanges()
-              setTimeout(() => { 
-                closeModalNow()
-                setSuccesMessage(false)
-                setModifyData(false)
-              }, 1500)
-             })
-             .catch((err) => console.log(err))
+      const changePurchaseData = async () => { 
+      const newPurchaseData = ({ 
+        month: newMonth,
+        year: newYear,
+        day: newDay         
+      })
+      try {
+         const updatePurchaseData = await axios.put(`http://localhost:4000/purchases/updatePurchaseData/${purchaseData.id}`, newPurchaseData)
+          if(updatePurchaseData.status === 200) { 
+            setSuccesMessage(true)
+            updateChanges()
+            setTimeout(() => { 
+              closeModalNow()
+              setSuccesMessage(false)
+              setModifyData(false)
+            }, 1500)
+          }
+        } catch (err) {
+          console.log(err)
+        }     
       }
 
   
 
-      const changePurchaseDetail = () => { 
-        
-        const newPurchaseDetailData = ({
-          purchaseDetail: newPurchaseDetail
-        })   
-
-       /* for (let i = 0; i < newPurchaseDetail.length; i++) {
-            const newPurchaseItem = newPurchaseDetail.purchaseDetail[i];
-            const realDataItem = theRealDataOfOrderDetail.find(item => item.productId === newPurchaseItem.productId);
-    
-            if (realDataItem) {
-                const productId = newPurchaseItem.productId;
-                const quantityInTheNewPurchaseData = parseInt(newPurchaseItem.quantity, 10);
-                const quantityInRealPurchaseData = parseInt(realDataItem.quantity, 10);
-    
-                if (quantityInTheNewPurchaseData > quantityInRealPurchaseData) {
-                    const difference = quantityInTheNewPurchaseData - quantityInRealPurchaseData;
-                    productsToIncrease.push({ productId, quantity: difference });
-                    console.log("La cantidad nueva es mayor, hay que sumarle al stock, la diferencia", productId)
-                } else if (quantityInTheNewPurchaseData < quantityInRealPurchaseData) {
-                    const difference = quantityInRealPurchaseData - quantityInTheNewPurchaseData;
-                    productsToDecrease.push({ productId, quantity: difference });
-                    console.log("La cantidad nueva es menor, hay que restarle al stock, la diferencia", productId)
-                  }
-                }
-               }*/
-
-               
-            axios.put(`http://localhost:4000/purchases/updatePurchaseDetail/${purchaseData.id}`, {newPurchaseDetailData})    
-                .then((res) => { 
-                  console.log(res.data)
-                  setSuccesMessage(true)
-                  updateChanges()
-                  setTimeout(() => { 
-                    closeModalNow()
-                    setSuccesMessage(false)
-                  }, 2500)
-                })
-                .catch((err) => console.log(err))
-      }
+      const changePurchaseDetail = () => {  
+        const sumarStock = [];
+        const disminuirStock = [];
+        const getDifferences = newPurchaseDetail.map((newArray) => { 
+           const viewOriginal = memoizedPropValue.filter((original) => original.productId === newArray.productId);
+           return { 
+             nuevaCantidad: Number(newArray.quantity),
+             cantidadOriginal: Number(viewOriginal.map((o) => o.quantity)[0]),
+             diferencia: newArray.quantity - viewOriginal.map((o) => o.quantity)[0],
+             productId: newArray.productId
+           };
+        }).map((dif) => { 
+           if(dif.diferencia > 0) { 
+             sumarStock.push(dif);
+           } else { 
+             disminuirStock.push(dif);
+           }
+        });
+       
+        console.log(sumarStock)
+        console.log(disminuirStock)
+        return { sumarStock, disminuirStock };
+       };
 
       useEffect(() => { 
         console.log(newPurchaseDetail)
+        console.log(memoizedPropValue)
       }, [newPurchaseDetail])
  
   
     return (
-    <div>
+    <div className='w-full'>
 
                 {modifyData === false && modifyOrderDetailData === false ?
-                  <div className="flex flex-col mt-4 items-center justify-center m-4">
-                     <div className='w-96 h-9 flex items-center cursor-pointer  bg-green-800' onClick={() => setModifyData(true)}>
+                  <div className="flex flex-col mt-4 mb-4 items-center justify-center w-full">
+                     <div className='w-full h-9 flex items-center cursor-pointer  bg-green-800' onClick={() => setModifyData(true)}>
                          <p className='font-bold text-white text-md'>Editar datos de la compra</p>
                      </div>
                      <div className='w-full h-9 flex items-center  cursor-pointer  bg-green-600 mt-2'  onClick={() => setModifyOrderDetailData(true)}>
@@ -130,7 +117,7 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
                             <Button className="font-bold text-white text-xs bg-green-600 w-40" onClick={() => changePurchaseData()}>Editar</Button>
                         </div>
 
-                        {succesMessage ? (
+                        {succesMessage === true && modifyData === true ? (
                         <div className="mt-4 mb-4 flex items-center">
                             <p className="font-medium text-green-500 text-sm">Datos de Compra editados con Éxito ✔</p>
                         </div>
@@ -154,7 +141,7 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
                         ))}
                            
                             <div className="flex items-center gap-6 mt-6 mb-2">
-                                <Button className="bg-green-800 font-bold text-white" onClick={() => changePurchaseDetail()}>Confirmar</Button>
+                                <Button className="bg-green-800 font-bold text-white" onClick={() => console.log(changePurchaseDetail())}>Confirmar</Button>
                                 <Button className="bg-green-800 font-bold text-white">Cancelar</Button>
                             </div>
                    </div>
@@ -162,7 +149,7 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
                  null
                  }
 
-                 {succesMessage ? 
+                 {succesMessage === true && modifyOrderDetailData === true ? 
                    <p className='font-bold text-green-700 text-sm'>Detalle de la compra editados Exitosamente ✔</p>
                    :
                    null

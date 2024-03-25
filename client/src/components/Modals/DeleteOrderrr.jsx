@@ -16,7 +16,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
               setSuccessMessage(true)
               setTimeout(() => { 
                 setSuccessMessage(false)
-                onClose()
+                closeModal()
               }, 1500)
             })
     }
@@ -29,7 +29,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
              setSuccessMessage(true)
              setTimeout(() => { 
                setSuccessMessage(false)
-               onClose()
+               closeModal()
              }, 2500)
            })
    }

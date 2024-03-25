@@ -27,6 +27,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
   const [orderDetailItem, setOrderDetailItem] = useState([])
   const [orderTotalItem, setOrderTotalItem] = useState("")
   const [remainingAmount, setRemainingAmount] = useState("")
+  const [withOutLogin, setWithOutLogin] = useState(false)
 
   const handleOpen = () => { 
     onOpen()
@@ -77,7 +78,8 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
   ]
 
   const addNewCollection = async () => { 
-    if(account.length !== 0 ) { 
+    console.log("add new collection")
+    if(account.length !== 0 && userCtx.userId.length > 0) { 
       const collecctionData = ({ 
         orderId: orderData.id,
         collectionType:"Alquiler",
@@ -119,12 +121,20 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
        } catch (error) {
          console.log(err)
        }
-      } else { 
-        setMissedData(true)
+    } else if (userCtx.userId.length === 0) { 
+      console.log("aca")
+      setWithOutLogin(true)
+      setTimeout(() => { 
+        setWithOutLogin(false)
+      }, 2000)
+    } else { 
+      setMissedData(true)
         setTimeout(() => { 
           setMissedData(false)
         }, 1500)
-      }
+    }
+    
+    
       
   }
 
@@ -143,7 +153,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
       loadedBy: userCtx.userName,
       voucher: payImage
     })
-    if(account.length !== 0) { 
+    if(account.length !== 0 && userCtx.userId.length > 0) { 
       try {
         const updateOrderLikePaid = await axios.put(`http://localhost:4000/orders/addPaid/${orderIdItem}`)
         console.log(updateOrderLikePaid.data);
@@ -165,7 +175,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
       } catch (error) {
         console.log(err)
       }
-  } else if (account === "Efectivo") { 
+  } else if (account === "Efectivo" && userCtx.userId.length > 0) { 
     try {
       const updateOrderLikePaid = await axios.put(`http://localhost:4000/orders/addPaid/${orderIdItem}`)
       console.log(updateOrderLikePaid.data);
@@ -187,7 +197,12 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
     } catch (error) {
       console.log(error)
     }
-  } else { 
+  } else if (userCtx.userId.length === 0) { 
+     setWithOutLogin(true)
+     setTimeout(() => { 
+      setWithOutLogin(false)
+    }, 2000)
+  }  else { 
     setMissedData(true)
     setTimeout(() => { 
       setMissedData(false)
@@ -195,7 +210,6 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
   }
   }
   
-
   const handleClose = () => { 
     onClose()
     setAccount("")
@@ -334,9 +348,17 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                       </div>
                     }
                 </ModalFooter>
+
                     {missedData ?
                       <div className="flex items-center justify-center mt-4 mb-4">
-                        <p className="font-medium text-green-800 text-sm">Faltan Datos para Agendar el pago</p>
+                        <p className="font-medium text-green-800 text-sm">Faltan Datos para Agendar el cobro</p>
+                      </div>
+                      :
+                      null}
+
+                      {withOutLogin ?
+                      <div className="flex items-center justify-center mt-4 mb-4">
+                        <p className="font-medium text-green-800 text-sm">Debes iniciar Sesion para registrar un cobro</p>
                       </div>
                       :
                       null}

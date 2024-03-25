@@ -27,7 +27,7 @@ const Collections = () => {
   return (
     <div>
         <NavBarComponent/>
-        <CollectionsTable collections={collectionsData}/>
+        <CollectionsTable collections={collectionsData} updateCollectionList={getCollections}/>
     </div>
   )
 }

@@ -9,7 +9,22 @@ import DeleteProvider from "./DeleteProvider"
 import DeleteSublet from "./DeleteSublet";
 import DeleteCollection from "./DeleteCollection";
 
-const DeleteOrder = ({type, orderData, productData, purchaseData, updateList, updateListArticles, updatePurchasesList, clientData, updateClientList, providerData, updateProviderList, subletData, updateSubletsList, collectionData, updateCollectionList}) => {
+const DeleteOrder = ({
+                        type, 
+                        orderData, 
+                        productData, 
+                        purchaseData, 
+                        updateList, 
+                        updateListArticles, 
+                        updatePurchasesList, 
+                        clientData, 
+                        updateClientList, 
+                        providerData, 
+                        updateProviderList, 
+                        subletData, 
+                        updateSubletsList, 
+                        collectionData, 
+                        updateCollectionList}) => {
  
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [successMessage, setSuccessMessage] = useState(false)

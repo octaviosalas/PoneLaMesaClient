@@ -3,9 +3,8 @@ import axios from 'axios'
 import { useState } from 'react'
 import { Button } from '@nextui-org/react'
 
-//1 - Eliminar cobro + actualizar paid de orden a false ✔
-//2 - Eliminar cobro de reposicion + Actualizar la deuda del cliente a false el paid 
-// 3 - Eliminar cobro de seña + eliminar de la orden el downPaymentData 
+//2 - Eliminar cobro de reposicion + Actualizar la deuda del cliente a false el paid. Para eliminar esto, obtengo el paymentReferenceId, con el cual puedo actualizar deuda el cliente + documento de collections
+
 
 const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) => {
 
@@ -30,16 +29,45 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
             }, 1800)
          }
        } catch (error) {
-         
+         console.log(error)
+
        }
     }
 
-    const deleteReplacementCollection =  () => { 
-   
+    const deleteReplacementCollection =  async () => { 
+      try {
+         const deleteReplacementeCollectionAndUpdateClientDebt = await axios.delete(`http://localhost:4000/collections/deleteCollectionReplacement/${collectionData.id}`, {data: collectionData})
+         console.log(deleteReplacementeCollectionAndUpdateClientDebt.data)
+         if(deleteReplacementeCollectionAndUpdateClientDebt.status === 200) { 
+            setSuccesDeleted(true)
+            setTimeout(() => { 
+               setSuccesDeleted(false)
+               closeModalNow()
+               updateCollections()
+            }, 1800)
+         }
+      } catch (error) {
+         console.log(error)
+
+      }
     }
 
-    const deleteDownPaymentCollection = () => { 
-
+    const deleteDownPaymentCollection = async () => { 
+      try {
+         const deleteDownPaymentData = await axios.delete(`http://localhost:4000/orders/deleteDownPayment/${collectionData.orderId}`, {data: collectionData})
+         console.log(deleteDownPaymentData.data)
+         if(deleteDownPaymentData.status === 200) { 
+          setSuccesDeleted(true)
+             setTimeout(() => { 
+                setSuccesDeleted(false)
+                closeModalNow()
+                updateCollections()
+             }, 1800)
+         }
+      } catch (error) {
+         console.log(error)
+      }
+       
     }
 
       
@@ -66,7 +94,11 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
                   <div className="flex items-center gap-6 mt-4 mb-4">
                      
                      <Button className="text-sm w-52 font-medium text-white bg-green-800" 
-                              onClick={() => {collectionData.collectionType === "Alquiler" ? deleteOrderCollection() : null}}>
+                              onClick={() => {
+                                  collectionData.collectionType === "Alquiler" ? deleteOrderCollection() : 
+                                  collectionData.collectionType === "Seña" ? deleteDownPaymentCollection() :  
+                                  collectionData.collectionType === "Reposicion" ? deleteReplacementCollection() : 
+                                  null}}>
                               Eliminar
                      </Button>
                      <Button className="text-sm w-52 font-medium text-white bg-green-800" 

@@ -189,7 +189,7 @@ const ArticlesTable = ({}) => {
                      column.cellRenderer({ row: { original: item } })
                    ) : (
                      (column.key === "precioUnitarioAlquiler" || 
-                      column.key === "precioUnitarioReposicioon" || column.key === "precioUnitarioBonificados" ||  column.key === "precioUnitarioAlquilerBonificados" ) ? (
+                      column.key === "precioUnitarioReposicion" || column.key === "precioUnitarioBonificados" ||  column.key === "precioUnitarioAlquilerBonificados" ) ? (
                          formatePrice(item[column.key])
                      ) : (
                        item[column.key]

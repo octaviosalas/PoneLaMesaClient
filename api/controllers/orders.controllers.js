@@ -379,16 +379,16 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
  export const deleteDownPaymentData = async (req, res) => {
   const { orderId } = req.params;
-  const { downPaymentReference } = req.body;
-  console.log(downPaymentReference)
+  console.log(req.body.downPaymentId)
 
   try {
-     await Orders.updateOne({ _id: orderId }, { $set: { downPaymentData: [] } });
-     await DownPayments.deleteOne({ downPaymentId: downPaymentReference });
-     await Collections.deleteOne({ downPaymentId: downPaymentReference });
+     await Orders.updateOne({ _id: orderId }, { $set: { downPaymentData: [] } }); //pone vacio el downPaymentData de la orden
+     await DownPayments.deleteOne({ downPaymentId: req.body.downPaymentId }); // elimina la seña del modelo seña
+     await Collections.deleteOne({ downPaymentId: req.body.downPaymentId }); // elimina el pago del modelo de cobros
  
      res.status(200).send({ message: 'Seña eliminado correctamente.' });
   } catch (error) {
      res.status(500).send({ message: 'Error al eliminar downPaymentData.', error });
   }
  };
+

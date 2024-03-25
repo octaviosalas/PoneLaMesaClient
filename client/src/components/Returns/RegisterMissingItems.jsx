@@ -43,6 +43,7 @@ const RegisterMissingItems = ({closeModalNow, orderData, cancel, updateList}) =>
           const quantityMissed = articlesWithMissedPropperty.map((miss) => miss.missing)
           const detectWrongQuantitys = quantityMissed.some((num) => num <= -1)
           if(detectWrongQuantitys === false && hasMissingPropperty) { 
+            console.log("Listo para avanzar")
             setConfirmRegisterMissing(true)
           } else { 
             setLargerAmount(true)
@@ -52,6 +53,7 @@ const RegisterMissingItems = ({closeModalNow, orderData, cancel, updateList}) =>
           }
           console.log(detectWrongQuantitys)
           console.log(quantityMissed)
+          console.log(hasMissingPropperty)
         } else { 
           setConfirmRegisterMissing(false)
           setWithOutQuantityModified(true)

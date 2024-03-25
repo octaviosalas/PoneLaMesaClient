@@ -76,7 +76,7 @@ const PurchasesTable = ({purchasesData, updateList}) => {
                               day
                               };
                               return (
-                                <EditModal type="purchase" updateChanges={getPurchasesDataAndCreateTable} purchaseData={item}/>
+                                <EditModal type="purchase" updatePurchaseList={updateList} purchaseData={item}/>
                               );
                           },
                       })      

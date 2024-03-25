@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Input } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
 import { useState } from 'react'
@@ -10,24 +10,72 @@ const EditCollection = ({collectionData, closeModalNow, updateCollectionList}) =
     const [collectionAmount, setCollectionAmount] = useState(formateInputPrice(collectionData.amount))
     const [succesMessage, setSuccesMessage] = useState(false)
 
-    const changeCollection = () => { 
-        const newAmount = ({ 
-           amount: collectionAmount
-        })
-        axios.put(`http://localhost:4000/collections/changeData/${collectionData.id}`, newAmount)
-             .then((res) => { 
-              console.log(res.data)
-              setSuccesMessage(true)
-              updateCollectionList()
-              setTimeout(() => { 
-                setSuccesMessage(false)
-                closeModalNow()
-              }, 1500)
-             })
-             .catch((err) => { 
-              console.log(err)
-             })
+    const changeCollectionOrderAmount = async () => { 
+       console.log(collectionAmount)
+       const newAmount = ({ 
+        amount: Number(collectionAmount)
+       })
+       try {
+          const updateAmount = await axios.put(`http://localhost:4000/collections/changeAmount/${collectionData.id}`, newAmount)
+          console.log(updateAmount.data)
+          if(updateAmount.status === 200) { 
+            updateCollectionList()
+            setSuccesMessage(true)
+            setTimeout(() => { 
+              setSuccesMessage(false)
+              closeModalNow()
+            }, 1800)
+          }
+       } catch (error) {
+          console.log(error)
+       }      
       }
+
+    const changeCollectionDownPaymentAmount = async () => {
+      const newAmount = ({ 
+        amount: Number(collectionAmount),
+        orderId: collectionData.orderId
+       })
+      try {
+        const updateAmountDownPayment = await axios.put(`http://localhost:4000/collections/changeAmountDownPayment/${collectionData.id}`, newAmount)
+        console.log(updateAmountDownPayment.data)
+        if(updateAmountDownPayment.status === 200) { 
+          updateCollectionList()
+          setSuccesMessage(true)
+          setTimeout(() => { 
+            setSuccesMessage(false)
+            closeModalNow()
+          }, 1800)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }  
+
+    const changeCollectionReplacement = async () => { 
+        const newAmount = ({ 
+          amount: Number(collectionAmount),
+          orderId: collectionData.orderId,
+          clientName: collectionData.clientName, 
+          paymentReferenceId: collectionData.paymentReferenceId,
+        })
+        try {
+           const editReplacement = await axios.put(`http://localhost:4000/collections/changeAmountReplacement/${collectionData.id}`, newAmount)
+           console.log(editReplacement.data)
+           if(editReplacement.status === 200) { 
+            updateCollectionList()
+            setSuccesMessage(true)
+            setTimeout(() => { 
+              setSuccesMessage(false)
+              closeModalNow()
+            }, 1800)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+    }
+
+
 
   return (
     <div>
@@ -44,7 +92,16 @@ const EditCollection = ({collectionData, closeModalNow, updateCollectionList}) =
                       </div>
                     }/>                  
                     <div className="flex items-center justify-center gap-4 mt-4 mb-4">
-                      <Button className="font-bold text-white bg-green-800 text-sm w-52" onClick={() => changeCollection()}>Confirmar Cambios</Button>
+                      <Button 
+                            className="font-bold text-white bg-green-800 text-sm w-52" 
+                            onClick={() => 
+                            {collectionData.collectionType === "Alquiler" ? changeCollectionOrderAmount() : 
+                             collectionData.collectionType === "Seña" ? changeCollectionDownPaymentAmount() : 
+                             collectionData.collectionType === "Reposicion" ? changeCollectionReplacement() : 
+                             ac
+                             null}}>
+                            Confirmar Cambios
+                      </Button>
                       <Button className="font-bold text-white bg-green-600 text-sm w-52" onPress={closeModalNow}>Cancelar</Button>
                     </div>
                    {succesMessage ?

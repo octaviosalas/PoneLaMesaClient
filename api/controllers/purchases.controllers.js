@@ -69,7 +69,7 @@ export const updateCompra = async (req, res) => {
           day: day,
         })
         .then((newPurchaseData) => {                                      
-        res.json({message:"Compra actualizada Correctamente", newPurchaseData})
+          res.status(200).json({ message: 'Compra actualizada', newPurchaseData});
         })
         .catch((err) => { 
         console.log(err)

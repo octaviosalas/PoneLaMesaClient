@@ -10,7 +10,7 @@ import EditClient from "./EditClient";
 import EditProvider from "./EditProvider";
 import EditCollection from "./EditCollection";
 
-const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, articleData, updateChanges, updateClientsChanges, clientData, providerData, updateProvidersList, collectionData, updateCollectionList}) => {
+const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, articleData, updateChanges, updateClientsChanges, clientData, providerData, updateProvidersList, collectionData, updateCollectionsList, updatePurchaseList}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [step, setStep] = useState(0)
@@ -19,6 +19,8 @@ const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, arti
     onClose()
     setStep(0)
   }
+
+  
 
 
   return (
@@ -65,7 +67,7 @@ const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, arti
                   <p className="font-bold text-md">Editar Compra </p>                 
                 </ModalHeader>
                 <ModalBody className="flex flex-col items-center justify-center">
-                  <EditPurchase purchaseData={purchaseData} closeModalNow={closeModal} updateChanges={updateChanges}/>
+                  <EditPurchase purchaseData={purchaseData} closeModalNow={closeModal} updateChanges={updatePurchaseList}/>
                 </ModalBody>
               
               </>
@@ -125,7 +127,7 @@ const EditModal = ({type, statusOrder, updateList, orderData, purchaseData, arti
                   <p className="font-bold text-md">Editar Cobro </p>                 
                 </ModalHeader>
                 <ModalBody className="flex flex-col items-center justify-center">
-                  <EditCollection collectionData={collectionData} closeModalNow={closeModal} updateCollectionList={updateCollectionList}/>
+                  <EditCollection collectionData={collectionData} closeModalNow={closeModal} updateCollectionList={updateCollectionsList}/>
                 </ModalBody>
               
               </>
