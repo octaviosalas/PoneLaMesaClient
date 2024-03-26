@@ -46,6 +46,11 @@ const CreateNewOrder = ({updateList}) => {
   const [productsSelected, setProductsSelected] = useState([]);
   const [clientHasDebt, setClientHasDebt] = useState(false);
   const [clientHasntDebt, setClientHasntDebt] = useState(false);
+  const [nameClientDoesNotExist, setNameClientDoesNotExist] = useState(false)
+  const [alertMessageClientError, setAlertMessageClientError] = useState(false)
+  const [deliveryDateError, setDeliveryDateError] = useState(false)
+  const [returnDateError, setReturnDateError] = useState(false)
+  const [productDoesNotExist, setProductDoesNotExist] = useState(false)
 
 
  useEffect(() => { 
@@ -53,7 +58,6 @@ const CreateNewOrder = ({updateList}) => {
  }, [allProducts])
 
       const knowWichNumerOfOrder = () => { 
-        console.log("envie a: ", actualMonth)
         axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
             .then((res) => { 
               console.log(res.data)
@@ -119,7 +123,6 @@ const CreateNewOrder = ({updateList}) => {
        }
 
        const handleInputClientsChange = (e) => { 
-        console.log(e)
         setChoosenClientName(e);
         if(e.length === 0) { 
           setFilteredClientsNames([])
@@ -127,13 +130,24 @@ const CreateNewOrder = ({updateList}) => {
           setChoosenClientId("")
         } else { 
           const useInputToFindTheClient = allClients.filter((cc) => cc.name.toLowerCase().includes(e))
-          setFilteredClientsNames(useInputToFindTheClient)
-          console.log(useInputToFindTheClient)
+          if(useInputToFindTheClient.length > 0 ) { 
+            setFilteredClientsNames(useInputToFindTheClient)
+            console.log(useInputToFindTheClient)
+            setNameClientDoesNotExist(false)
+
+          } else { 
+            console.log("Agrega al cliente")
+            setNameClientDoesNotExist(true)
+            setFilteredClientsNames([])
+          }
+          
         }
        }
 
-       const chooseClient = async (name, id) => { 
+       const chooseClient = async (name, id, home) => { 
          console.log("recibi", id, name)
+         setPlaceOfDelivery(home)
+         setReturnPlace(home)
          setChoosenClientId(id)
          setChoosenClientName(name)
          setFilteredClientsNames([])
@@ -179,10 +193,16 @@ const CreateNewOrder = ({updateList}) => {
             setTimeout(() => { 
               setMissedData(false)
             }, 2000)
+          } else if (nameClientDoesNotExist === true) { 
+            setAlertMessageClientError(true)
+            setTimeout(() => { 
+              setAlertMessageClientError(false)
+              setChoosenClientName("")
+              setNameClientDoesNotExist(false)
+            }, 2000)
           } else { 
             changeState(true, false)
-            getClientsProductsData()
-      
+            getClientsProductsData()   
           }
 
       }
@@ -195,8 +215,15 @@ const CreateNewOrder = ({updateList}) => {
           setChoosenProductId("")
         } else { 
           const useInputToFindTheProduct = allProducts.filter((prod) => prod.articulo.toLowerCase().includes(e))
-          setFilteredNames(useInputToFindTheProduct)
-          console.log(filteredNames)
+          if(useInputToFindTheProduct.length > 0) { 
+            setFilteredNames(useInputToFindTheProduct)
+            console.log(filteredNames)
+            setProductDoesNotExist(false)
+          } else { 
+            console.log("Agrega al producto")
+            setProductDoesNotExist(true)
+            setFilteredNames([])
+          }         
         }
       }
 
@@ -215,7 +242,7 @@ const CreateNewOrder = ({updateList}) => {
       const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock, choosenProductCategory) => {
         console.log("STOCK DEL PRODUCTO", choosenProductStock)
         console.log("CANTIDAD ELEGIDA", quantity)
-        if(quantity < choosenProductStock) { 
+        if(quantity < choosenProductStock && productDoesNotExist === false) { 
           const choosenProductTotalPrice = price * quantity
           const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice, choosenProductCategory };
           setProductsSelected([...productsSelected, newProduct]);
@@ -226,11 +253,13 @@ const CreateNewOrder = ({updateList}) => {
           setChoosenProductPrice("")
           setChoosenProductCategory("")
           setChoosenProductStock(0)
-        } else { 
+        } else if (quantity > choosenProductStock && productDoesNotExist === false){ 
           setInsufficientStock(true)
           setTimeout(() => { 
             setInsufficientStock(false)
           }, 1500)
+        } else if (quantity < choosenProductStock && productDoesNotExist === true) { 
+          setProductDoesNotExist(true)
         }
       
       };
@@ -325,7 +354,7 @@ const CreateNewOrder = ({updateList}) => {
               <div className="flex flex-col items-center justify-center">
                  <div className="flex flex-col items-center justify-center"> 
               
-                    <Input type="number" variant="underlined" value={orderNumber} label="Numero de Orden" className="mt-2 w-64 2xl:w-72" onChange={(e) => setOrderNumber(e.target.value)}/>
+                    <Input type="number" variant="underlined" value={orderNumber} label="Numero de Orden" className="mt-2 w-64 2xl:w-72" readonly />
                     <Input type="text" variant="underlined" value={choosenClientName} label="Cliente" className="mt-2 w-64 2xl:w-72" onChange={(e) => handleInputClientsChange(e.target.value)}/>
                     <div className="">
                         {
@@ -333,7 +362,7 @@ const CreateNewOrder = ({updateList}) => {
                             <div className='absolute  rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
                                 {filteredClientsNames.map((cc) => (
                                     <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 ml-2" key={cc._id} 
-                                        onClick={() => chooseClient(cc.name, cc._id)}>
+                                        onClick={() => chooseClient(cc.name, cc._id, cc.home)}>
                                         {cc.name}
                                     </p>
                                 ))}
@@ -341,6 +370,7 @@ const CreateNewOrder = ({updateList}) => {
                         : null
                         }
                     </div>  
+                    {nameClientDoesNotExist ? <p className="text-xs font-medium text-zinc-600 mt-1">El cliente debe estar registrado</p> : null}
 
 
                     <Select  css={{
@@ -366,15 +396,60 @@ const CreateNewOrder = ({updateList}) => {
                   
 
 
-                    <Input type="date" variant="underlined"   classNames={{label: "-mt-5"}} value={dateOfDelivery} label="Fecha Entrega" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setDateOfDelivery(e.target.value)}/>
-                    <Input  type="date" variant="underlined"  classNames={{label: "-mt-5"}} placeholder="" value={returnDate} label="Fecha Devolucion" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setReturnDate(e.target.value)}/>
+                           <Input
+                              type="date"
+                              variant="underlined"
+                              classNames={{label: "-mt-5"}}
+                              value={dateOfDelivery}
+                              label="Fecha Entrega"
+                              className="mt-2 w-64 2xl:w-72"
+                              onChange={(e) => {
+                                  const selectedDate = new Date(e.target.value);
+                                  const currentDate = new Date();
+                                  currentDate.setHours(0, 0, 0, 0); 
+                                  if (selectedDate >= currentDate) {
+                                    setDateOfDelivery(e.target.value);
+                                  } else {
+                                    setDeliveryDateError(true)
+                                    setTimeout(() => { 
+                                      setDeliveryDateError(false)
+                                    }, 2000)
+                                  }
+                              }}
+                              />
+                              {deliveryDateError ? <p className="text-zinc-600 text-xs font-medium mt-1">La fecha ingresada es anterior a la actual</p> : null}
+
+                            <Input  
+                            type="date" 
+                            variant="underlined"  
+                            classNames={{label: "-mt-5"}} 
+                            placeholder="" 
+                            value={returnDate} 
+                            label="Fecha Devolucion" 
+                            className="mt-2 w-64 2xl:w-72"  
+                            onChange={(e) => {
+                              const selectedDate = new Date(e.target.value);
+                              const currentDate = new Date();
+                              currentDate.setHours(0, 0, 0, 0); 
+                              if (selectedDate >= currentDate) {
+                                setReturnDate(e.target.value);
+                              } else {
+                                setReturnDateError(true)
+                                setTimeout(() => { 
+                                  setReturnDateError(false)
+                                }, 2000)
+                              }
+                          }}/>
+
+                   {returnDateError ? <p className="text-zinc-600 text-xs font-medium mt-1">La fecha ingresada es anterior a la actual</p> : null}
 
                  </div> 
                  <div className="flex flex-col items-center justify-center mt-6">
                      <Button color="success" className="font-medium text-white" onClick={() => executeFunctionDependsTypeOfClient()}>Armar Pedido</Button>
-                     {clientHasDebt ? <p className="mt-4 text-sm font-medium text-red-600">Este cliente posee una deuda pendiente de Pago</p> : null}
+                     {clientHasDebt ? <p className="mt-4 text-sm font-medium text-white bg-red-600">Este cliente posee una deuda pendiente de Pago</p> : null}
                      {clientHasntDebt ? <p className="mt-4 text-sm font-medium text-green-600">Este cliente no posee una deuda pendiente de Pago ✔</p> : null}
                      {missedData ? <p className="mt-4 text-sm font-medium text-green-800">Debes completar todos los campos</p> : null}
+                     {alertMessageClientError ? <p className="mt-4 text-sm font-medium text-green-800">Debes seleccionar un cliente existente</p> : null}
                  </div>
               </div>       
                 : null}
@@ -407,10 +482,24 @@ const CreateNewOrder = ({updateList}) => {
                         : null
                     }
                     </div>  
-                  <Input type="number" value={choosenProductQuantity} variant="bordered" label="Cantidad" className="mt-2 w-64 2xl:w-72"   onChange={(e) => setChoosenProductQuantity(parseInt(e.target.value, 10))}/>
+
+                    <Input 
+                      type="number"
+                      value={choosenProductQuantity} 
+                      variant="bordered" 
+                      label="Cantidad" 
+                      className="mt-2 w-64 2xl:w-72"  
+                      onChange={(e) => 
+                          e.target.value <= 0 ? console.log("Numero no permitido") : setChoosenProductQuantity(parseInt(e.target.value, 10))
+                      }
+                      />
+              
+                  
+                  {productDoesNotExist ? <p className="text-xs font-medium text-zinc-600">El producto no esta almacenado en tus articulos</p> : null}
+
                   <div className="mt-6 flex flex-col items-center justify-center">
                       {
-                        choosenProductName.length !== 0 && choosenProductQuantity.length !== 0 ?
+                        choosenProductName.length !== 0 && choosenProductQuantity.length !== 0 && productDoesNotExist === false ?
                         <Button 
                          className="mt-6 font-medium text-white w-72" color="success" 
                          onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, 
@@ -469,18 +558,17 @@ const CreateNewOrder = ({updateList}) => {
                   <ModalFooter className="flex items-center justify-center mt-6">
                      {succesMessage !== true ?
                      <div className="flex items-center gap-6">
-                        <Button className="font-medium text-white"  style={{backgroundColor:"#399319"}} variant="light" onPress={() => sendNewOrder(orderStatus)}>
+                        <Button className="font-medium text-white bg-green-800  w-40"  variant="light" onPress={() => sendNewOrder(orderStatus)}>
                           Confirmar Pedido
                         </Button>
-                        <Button className="font-medium text-white"  style={{backgroundColor:"#71CB51"}} variant="light" onPress={setOrderToBeConfirmed}>
+                        <Button className="font-medium text-white bg-green-800  w-40"   variant="light" onPress={setOrderToBeConfirmed}>
                           A Confirmar
                         </Button>
-                        <Button className="font-medium text-white" style={{backgroundColor:"#87D56C"}} variant="light"  onClick={() => {
+                        <Button className="font-medium text-white bg-green-800  w-40"  variant="light"  onClick={() => {
                             changeState(false, true);
                             setProductsSelected([]);
                             setChoosenClientId("");
-                            setChoosenClientName("");
-                            setOrderNumber("");
+                            setChoosenClientName("");                          
                             setDateOfDelivery("")
                             setPlaceOfDelivery("")
                             setReturnPlace("")

@@ -89,7 +89,7 @@ const HistoricProviders = ({providerData, updateList}) => {
   return (
     <>
       <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black bg-gray-100'>
         <ModalContent>
           {(onClose) => (
             <>
@@ -116,7 +116,7 @@ const HistoricProviders = ({providerData, updateList}) => {
                            <input 
                            type="text" 
                            placeholder="Buscar.."  
-                           className="w-[35%] ml-2 border border-gray-200 focus:border-gray-300 focus:ring-0 h-7 rounded-xl focus:outline-none  focus:ring-blue-500" 
+                           className="w-[35%] ml-2 border border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-lg focus:outline-none  focus:ring-blue-500" 
                            onChange={(e) => setInputValue(e.target.value)}
                            value={inputValue} />        
                           </div>

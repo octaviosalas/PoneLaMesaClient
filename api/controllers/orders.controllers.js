@@ -57,9 +57,9 @@ export const getOrderById = async (req, res) => {
   try {
     const findOrderNow = await Orders.findById({_id: orderId})
     if(!findOrderNow) { 
-      res.status(500).json({message: "No encontre la orden"});
+      return res.status(500).json({message: "No encontre la orden"});
     }
-    res.status(200).json(findOrderNow);
+    return res.status(200).json(findOrderNow);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener las ordenes' });
     console.log(error)
