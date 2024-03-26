@@ -89,8 +89,8 @@ const HistoricProviders = ({providerData, updateList}) => {
   return (
     <>
       <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black bg-gray-100'>
-        <ModalContent>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
+       <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
