@@ -130,29 +130,44 @@ export const deleteAndReplenishShares = async (req, res) => {
 };
 
 
-export const updatePurchaseDetail  = async (req, res) => { 
+export const updatePurchaseDetail = async (req, res) => { 
   const { purchaseId } = req.params;
   const { newPurchaseDetailData } = req.body;
-
+  console.log("CUERPO COMPLETO", req.body)
+  console.log("PARA DESCONTAR STOCK", req.body.toDiscountStock)
+  console.log("PARA AUMENTAR STOCK", req.body.toIncrementStock)
+  console.log("nuevo monto total", req.body.newTotalAmount)
+  console.log("EL ARRAY NUEVO ENTERO", req.body.completeNewDetail)
+  console.log("EL ID QUE LLEGA POR PARAMS", purchaseId)
+ 
   try {
-    if (newPurchaseDetailData && newPurchaseDetailData.purchaseDetail ) {
-      const updatePurchaseData = await Purchases.findOneAndUpdate(
-        { _id: purchaseId },
-        {
-          $set: {
-            purchaseDetail: newPurchaseDetailData.purchaseDetail,
-          },
-        },
-        { new: true }
-      );
+     if (req.body && req.body.completeNewDetail) {
+       const updatePurchaseData = await Purchases.findOneAndUpdate(
+         { _id: purchaseId },
+         {
+           $set: {
+             purchaseDetail: req.body.completeNewDetail,
+             total: req.body.newTotalAmount
+           },
+         },
+         { new: true }
+       );
+ 
+       if(req.body.toDiscountStock.length > 0) { 
+         await decrementarStock(req.body.toDiscountStock);
+       }
+ 
+       if(req.body.toIncrementStock.length > 0) { 
+         await incrementarStock(req.body.toIncrementStock);
+       }
+ 
 
-      res.json({ message: "Se actualizo correctamente el detalle de la Orden", updatePurchaseData });
-    } else {
-      res.status(400).json({ message: 'El objeto newPurchaseDetailData no tiene la estructura esperada.' });
-    }
+       res.status(200).json({ message: "Se actualizo correctamente el detalle de la Orden", updatePurchaseData });
+     } else {
+       res.status(400).json({ message: 'El objeto newPurchaseDetailData no tiene la estructura esperada.' });
+     }
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error interno del servidor' });
+     console.error(error);
+     res.status(500).json({ message: 'Error interno del servidor' });
   }
 }
-

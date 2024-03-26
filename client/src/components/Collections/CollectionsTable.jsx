@@ -85,15 +85,8 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                     const day = filaActual.original.day
                     const month = filaActual.original.month
                     const year = filaActual.original.year
-                   
-                    const item = {
-                    id: id,
-                    account: account,
-                    loadedBy: loadedBy,
-                    amount: amount,
-                    day: day,
-                    month: month,
-                    year: year                   
+                    const orderId = filaActual.original.orderId
+                    const item = { id, account,loadedBy,amount,day,month,year,orderId,         
                     };
                     return (
                        <OrderDetail collectionDetail={item}/>

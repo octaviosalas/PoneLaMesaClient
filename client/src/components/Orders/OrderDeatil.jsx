@@ -3,6 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 import { formatePrice } from "../../functions/gralFunctions";
 import { useState, useEffect } from "react";
+import axios from "axios";
 
 const OrderDetail = ({orderData, collectionDetail}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
@@ -11,6 +12,10 @@ const OrderDetail = ({orderData, collectionDetail}) => {
     const [viewDownPaymentData, setViewDownPaymentData] = useState(false);
     const [orderHasMissedArticles, setOrderHasMissedArticles] = useState(false);
     const [viewMissedData, setViewMissedData] = useState(false);
+    const [error, setError] = useState(false);
+    const [viewOrderDetail, setViewOrderDetail] = useState(false)
+    const [collectionOrderDetailArticles, setCollectionOrderDetailArticles] = useState([])
+    const [secondTableColumns, setSecondTableColumns] = useState([])
 
 
   useEffect(() => {
@@ -44,6 +49,56 @@ const OrderDetail = ({orderData, collectionDetail}) => {
       setOrderHasMissedArticles(true)
     }
   }
+
+  const getOrderOfCollections = async () => { 
+     try {
+      const getOrderData = await axios.get(`http://localhost:4000/orders/${collectionDetail.orderId}`)
+      console.log(getOrderData.data)
+      if(getOrderData.status === 200) { 
+        console.log("status 200 confirmado")
+        setCollectionOrderDetailArticles(getOrderData.data.orderDetail)
+        /*setViewOrderDetail(true)
+        if (getOrderData.data.orderDetail && getOrderData.data.orderDetail.length > 0) {
+          const firstDetail = getOrderData.data.orderDetail[0];
+
+          const properties = Object.keys(firstDetail);
+
+          const filteredProperties = properties.filter(property => 
+           property !== 'productId' &&  
+           property !== 'choosenProductCategory' &&  
+           property !== 'choosenProductTotalPrice' && 
+           property !== 'price' &&  
+           property !== 'replacementPrice');
+
+          console.log(filteredProperties)
+
+          const columnLabelsMap = {
+            productName: 'Articulo',
+            quantity: 'Cantidad',
+          };
+
+          console.log(collectionOrderDetailArticles)
+      
+          const tableColumns = filteredProperties.map(property => ({
+            key: property,
+            label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+          }));
+
+          console.log(filteredProperties.length)
+          console.log(tableColumns.length)
+      
+          setSecondTableColumns(tableColumns);
+        }*/
+      }
+     } catch (error) {
+       console.log(error)
+       setError(true)
+     }
+  }
+
+
+
+
 
   
   return (
@@ -147,8 +202,9 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                            <p className="text-sm text-zinc-600 font-bold">Valor total del Pedido: {formatePrice(orderData.total)} </p>
                            {orderData.orderSublets.length > 0 ? <p className="text-xs text-green-800 font-medium"> (La suma total Incluye los SubAlquileres)</p> : null}
                         </div>        
-              </ModalBody> :
-              <div className="flex flex-col items-start justify-start text-start w-[500px] ml-4">
+              </ModalBody>
+               :
+              <div className="flex flex-col items-start justify-start text-start w-[500px] ml-6">
                   <p className="text-sm font-medium text-zinc-600"><b>Cargado por: </b> {collectionDetail.loadedBy}</p>
                   <p  className="text-sm font-medium text-zinc-600"><b>Fecha de Cobro: </b>{collectionDetail.day} de {collectionDetail.month} del {collectionDetail.year}</p>
                   <p className="text-sm font-medium text-zinc-600"><b>Monto Cobrado:</b>{formatePrice(collectionDetail.amount)}</p>
@@ -159,8 +215,57 @@ const OrderDetail = ({orderData, collectionDetail}) => {
               </div>      
                }
               <ModalFooter className="flex items-center justify-center mt-2">
-                <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button>
-               
+               {orderData ? 
+               <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button> 
+                : 
+                <div className="flex items-center justify-center gap-4">
+                    {viewOrderDetail === false ?
+                        <div className="gap-4 flex items-center">
+                          <Button className="bg-green-800 text-white font-medium w-72" onClick={() => getOrderOfCollections()}>Ver Orden Correspondiente</Button>
+                          <Button className="bg-green-800 text-white font-medium w-72">Cerrar</Button> 
+                        </div> 
+                    : null}
+                </div>
+               }
+
+               {viewOrderDetail === true ? 
+                  <div>
+                     {collectionOrderDetailArticles.length > 0 ?
+                      <Table aria-label="Example table with dynamic content" className="w-full shadow-xl flex items-center justify-center mt-2">
+                              <TableHeader columns={secondTableColumns} className="">
+                                {(column) => (
+                                  <TableColumn key={column.key} className="text-xs gap-6">
+                                    {column.label}
+                                  </TableColumn>
+                                )}
+                              </TableHeader>
+                              <TableBody items={collectionOrderDetailArticles}>
+                              {(item) => (
+                                <TableRow key={item.productName}>
+                                  {columns.map(column => (
+                                   <TableCell key={column.key} className="text-start items-start">
+                                   {column.cellRenderer ? (
+                                       column.cellRenderer({ row: { original: item } })
+                                     ) : (
+                                       (column.key === "price" || 
+                                        column.key === "replacementPrice" ||
+                                        column.key === "choosenProductTotalPrice" ) ? (
+                                           formatePrice(item[column.key])
+                                       ) : (
+                                         item[column.key]
+                                       )
+                                     )}
+                                   </TableCell>
+                                  ))}
+                                </TableRow>
+                              )}
+                            </TableBody>
+                        </Table> : <p>aa</p>}
+                  </div>
+                  :
+                  null
+                }
+           
               </ModalFooter>
             </>
           )}

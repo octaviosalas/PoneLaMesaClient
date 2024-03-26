@@ -16,7 +16,7 @@ export const incrementarStock = async (productosComprados) => {
       await ProductsClients.findByIdAndUpdate(
         productId,
         { $inc: { stock: cantidad }},
-        { new: true } // Para obtener el producto actualizado después de la actualización
+        { new: true }
       );
     }
   } catch (error) {
@@ -53,7 +53,17 @@ export const getOrders = async (req, res) => {
 }
 
 export const getOrderById = async (req, res) => { 
-     
+  const {orderId} = req.params
+  try {
+    const findOrderNow = await Orders.findById({_id: orderId})
+    if(!findOrderNow) { 
+      res.status(500).json({message: "No encontre la orden"});
+    }
+    res.status(200).json(findOrderNow);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las ordenes' });
+    console.log(error)
+  }   
 }
 
 export const getMonthlyOrders = async (req, res) => { 

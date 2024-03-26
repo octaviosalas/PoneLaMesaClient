@@ -22,8 +22,7 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
         const updatePurchaseDetail = [...newPurchaseDetail];
         updatePurchaseDetail[index] = {
           ...updatePurchaseDetail[index],
-          quantity: newQuantity,
-          choosenProductTotalPrice: newQuantity * updatePurchaseDetail[index].price
+          quantity: Number(newQuantity),
         };
         setNewPurchaseDetail(updatePurchaseDetail);
       };
@@ -61,34 +60,67 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
 
   
 
-      const changePurchaseDetail = () => {  
-        const sumarStock = [];
-        const disminuirStock = [];
-        const getDifferences = newPurchaseDetail.map((newArray) => { 
-           const viewOriginal = memoizedPropValue.filter((original) => original.productId === newArray.productId);
-           return { 
-             nuevaCantidad: Number(newArray.quantity),
-             cantidadOriginal: Number(viewOriginal.map((o) => o.quantity)[0]),
-             diferencia: newArray.quantity - viewOriginal.map((o) => o.quantity)[0],
-             productId: newArray.productId
-           };
-        }).map((dif) => { 
-           if(dif.diferencia > 0) { 
-             sumarStock.push(dif);
-           } else { 
-             disminuirStock.push(dif);
-           }
-        });
-       
-        console.log(sumarStock)
-        console.log(disminuirStock)
-        return { sumarStock, disminuirStock };
+      const changePurchaseDetail = async () => {  
+        try {
+            const sumarStock = [];
+            const disminuirStock = [];
+            const getDifferences = await newPurchaseDetail.map((newArray) => { 
+            const viewOriginal = memoizedPropValue.filter((original) => original.productId === newArray.productId);
+              return { 
+              newQuantity: Number(newArray.quantity),
+              originalQuantity: Number(viewOriginal.map((o) => o.quantity)[0]),
+              quantity: newArray.quantity - viewOriginal.map((o) => o.quantity)[0],
+              productId: newArray.productId,
+              newValue: Number(newArray.value)
+            };
+            }).map((dif) => { 
+              if(dif.quantity > 0) { 
+                sumarStock.push(dif); 
+              }  else if (dif.quantity < 0){ 
+                dif.quantity = Math.abs(dif.quantity);
+                disminuirStock.push(dif); 
+             }
+            });
+            //console.log("ARRAY ORIGINAL DE COMPRA DETAIL", memoizedPropValue)
+            //console.log("NUEVO ARRAY ENTERO DE COMPRA DETAIL", newPurchaseDetail)
+            //console.log("SUMAR STOCK POR DIFERENCIA POSITIVA", sumarStock)
+            //console.log("DESCONTAR STOCK POR DIFERENCIA NEGATIVA", disminuirStock)
+            const newTotalPurchaseAmount = newPurchaseDetail.reduce((acc, el) => acc + +el.value, 0);
+            //console.log(newTotalPurchaseAmount)
+
+            const newPurchaseDetailData = ({ 
+              newTotalAmount: newTotalPurchaseAmount,
+              toDiscountStock: disminuirStock,
+              toIncrementStock: sumarStock,
+              completeNewDetail: newPurchaseDetail
+            })
+
+            const updateDetail = await axios.put(`http://localhost:4000/purchases/updatePurchaseDetail/${purchaseData.id}`, newPurchaseDetailData)
+            console.log(updateDetail.data)
+            if(updateDetail.status === 200) { 
+                setSuccesMessage(true)
+                setTimeout(() => { 
+                  closeModalNow()
+                  updateChanges()
+                  setSuccesMessage(false)
+                  setModifyData(false)
+                  setModifyOrderDetailData(false)
+                }, 2000)
+            }
+
+            } catch (error) {
+              console.log(error) 
+            }
+
        };
 
-      useEffect(() => { 
-        console.log(newPurchaseDetail)
-        console.log(memoizedPropValue)
-      }, [newPurchaseDetail])
+  /*    useEffect(() => { 
+        console.log("Nuevos datos", newPurchaseDetail)
+        console.log("Datos Originales", memoizedPropValue)
+        console.log()
+      }, [newPurchaseDetail]) */
+
+      
  
   
     return (
@@ -129,29 +161,31 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
                  }
 
                  {modifyOrderDetailData === true ? 
-                     <div>
+                     <div className=''>
                         {newPurchaseDetail.map((ord, index) => (
                             <div key={index} className="flex flex-col">
-                            <div className="flex items-center justify-start w-72 gap-4 mt-2">
-                                <p className="font-medium text-zinc-500 text-sm">{ord.productName}</p>
-                                <Input type="number" variant="underlined" label="Cantidad" className="max-w-md min-w-sm" value={ord.quantity} onChange={(e) => handleQuantityChange(index, e.target.value)} />
-                                <Input type="number" variant="underlined" label="Total" className="max-w-md min-w-sm" value={ord.value} onChange={(e) => handleTotalChange(index, e.target.value)} />
-                            </div>
+                              <div className="flex items-center justify-start w-72 gap-4 mt-2">
+                                  <p className="font-medium text-zinc-500 text-sm">{ord.productName}</p>
+                                  <Input type="number" variant="underlined" label="Cantidad" className="max-w-md min-w-sm" value={ord.quantity} onChange={(e) => handleQuantityChange(index, e.target.value)} />
+                                  <Input type="number" variant="underlined" label="Total" className="max-w-md min-w-sm" value={ord.value} onChange={(e) => handleTotalChange(index, e.target.value)} />
+                              </div>
                             </div>
                         ))}
                            
-                            <div className="flex items-center gap-6 mt-6 mb-2">
-                                <Button className="bg-green-800 font-bold text-white" onClick={() => console.log(changePurchaseDetail())}>Confirmar</Button>
-                                <Button className="bg-green-800 font-bold text-white">Cancelar</Button>
+                            <div className="flex justify-center items-center gap-6 mt-6 mb-2">
+                                <Button className="bg-green-800 font-bold text-white" onClick={() => changePurchaseDetail()}>Confirmar</Button>
+                                <Button className="bg-green-800 font-bold text-white" onClick={() => setModifyOrderDetailData(false)}>Cancelar</Button>
                             </div>
                    </div>
                  :
                  null
                  }
 
-                 {succesMessage === true && modifyOrderDetailData === true ? 
-                   <p className='font-bold text-green-700 text-sm'>Detalle de la compra editados Exitosamente ✔</p>
-                   :
+                  {succesMessage === true && modifyOrderDetailData === true ? 
+                  <div className='mt-2 mb-2 flex flex-col items-center justify-center'>
+                    <p className='font-bold text-green-800 text-sm'>Detalle de compra editados Exitosamente</p>
+                    <p className='font-bold text-green-800 text-sm mt-2'>Ten en cuenta, que esto impactara en el Stock</p>
+                   </div>:
                    null
                   }
 

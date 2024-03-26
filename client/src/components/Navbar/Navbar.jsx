@@ -96,16 +96,16 @@ const NavBarComponent = () =>  {
                         <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Finanzas </p>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions">
-                        <DropdownItem key="Clientes" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
+                        <DropdownItem key="Cobros" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
                         <DropdownItem key="Compras" onClick={() => goTo("compras")}>Compras</DropdownItem>
-                        <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Empleados</DropdownItem>
-                        <DropdownItem key="Compras" onClick={() => goTo("compras")}>Cierres</DropdownItem>
-                        <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Clientes</DropdownItem>
+                        <DropdownItem key="Employers" onClick={() => goTo("Estadisticas/Clientes")}>Empleados</DropdownItem>
+                        <DropdownItem key="Cierres" onClick={() => goTo("compras")}>Cierres</DropdownItem>
+                        <DropdownItem key="EstadisticasClientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Clientes</DropdownItem>
                         <DropdownItem key="Articulos" onClick={() => goTo("Estadisticas/Articulos")}>Estadisticas Articulos</DropdownItem>
                         <DropdownItem key="Alquileres" onClick={() => goTo("Estadisticas/Alquileres")}>Estadisticas Alquileres</DropdownItem>
-                        <DropdownItem key="Cobros" onClick={() => goTo("Estadisticas/Cobros")}>Estadisticas Cobros</DropdownItem>    
-                        <DropdownItem key="Compras" onClick={() => goTo("Estadisticas/Compras")}>Estadisticas Compras</DropdownItem>    
-                        <DropdownItem key="Clientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Empleados</DropdownItem>
+                        <DropdownItem key="EstadisticasCobros" onClick={() => goTo("Estadisticas/Cobros")}>Estadisticas Cobros</DropdownItem>    
+                        <DropdownItem key="EstadisticasCompras" onClick={() => goTo("Estadisticas/Compras")}>Estadisticas Compras</DropdownItem>    
+                        <DropdownItem key="EstadisticasClientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Empleados</DropdownItem>
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>

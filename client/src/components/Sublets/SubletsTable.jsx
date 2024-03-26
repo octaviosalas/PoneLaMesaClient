@@ -7,6 +7,7 @@ import OrderDetail from '../Orders/OrderDeatil';
 import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
 import UseSubletToOrder from './UseSubletToOrder';
+import SubletDetail from './SubletDetail';
 
 
 const SubletsTable = ({sublets, update}) => {
@@ -56,14 +57,7 @@ const SubletsTable = ({sublets, update}) => {
                       const amount = filaActual.original.amount;
                       const provider = filaActual.original.provider;
                       const used = filaActual.original.used;
-
-                      const item = {
-                      id: id,
-                      productsDetail: productsDetail,
-                      amount: amount,                     
-                      provider: provider,
-                      used: used
-                      };
+                      const item = { id, productsDetail, amount, provider, used, };
                       return (
                        <UseSubletToOrder subletData={item} update={update}/>
                       );
@@ -76,25 +70,17 @@ const SubletsTable = ({sublets, update}) => {
                 cellRenderer: (cell) => { 
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
-                    const detail = filaActual.original.orderDetail;
-                    const creator = filaActual.original.orderCreator;
+                    const provider = filaActual.original.provider;
+                    const amount = filaActual.original.amount;
                     const client = filaActual.original.client;
                     const day = filaActual.original.day;
                     const month = filaActual.original.month;
                     const year = filaActual.original.year;
-                    const total = filaActual.original.total;
-                    const item = {
-                    id: id,
-                    detail: detail,
-                    creator: creator,
-                    day: day,
-                    month: month,
-                    year: year,
-                    total: total,
-                    client: client
-                    };
+                    const used = filaActual.original.used;
+                    const productsDetail = filaActual.original.productsDetail;
+                    const item = {id, provider, amount, day, month, year, used,  client, productsDetail};
                     return (
-                    <OrderDetail orderData={item}/>
+                    <SubletDetail subletDetailData={item}/>
                     );
                 },
                 }) 
@@ -111,14 +97,8 @@ const SubletsTable = ({sublets, update}) => {
                         const day = filaActual.original.day;
                         const date = filaActual.original.date;
                         const productsDetail = filaActual.original.productsDetail;
-                        const item = {
-                        id: id,
-                        provider: provider,
-                        month: month,
-                        day: day,
-                        date: date,
-                        productsDetail: productsDetail                  
-                        };
+                        const amount = filaActual.original.amount;
+                        const item = {id,  provider, month, day, date, productsDetail, amount};
                         return (
                         <EditModal type="sublets" subletData={item} updateSubletList={update}/>
                         );
@@ -132,10 +112,7 @@ const SubletsTable = ({sublets, update}) => {
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
                     const subletProductsDetail = filaActual.original.productsDetail
-                    const item = {
-                    id: id,
-                    subletProductsDetail: subletProductsDetail
-                    };
+                    const item = {id, subletProductsDetail};
                     return (
                     <DeleteOrder type="sublets" subletData={item} updateSubletsList={update}/> 
                     );
@@ -143,33 +120,33 @@ const SubletsTable = ({sublets, update}) => {
                 }) 
 
                 setColumns(modifiedColumnObjects);
-                console.log(modifiedColumnObjects)
-                if (tableRef.current) {
-                tableRef.current.updateColumns(modifiedColumnObjects);
-                }            
-            } 
-        }
+                    console.log(modifiedColumnObjects)
+                    if (tableRef.current) {
+                    tableRef.current.updateColumns(modifiedColumnObjects);
+                    }            
+                  } 
+                 }
 
-            const filteredData = data.filter((item) => {
-                return Object.values(item).some((value) =>
-                value.toString().toLowerCase().includes(inputValue.toLowerCase())
-                );
-            });
+                const filteredData = data.filter((item) => {
+                    return Object.values(item).some((value) =>
+                    value.toString().toLowerCase().includes(inputValue.toLowerCase())
+                    );
+                });
+
+                useEffect(() => { 
+                    setTimeout(() => { 
+                        setLoadData(false)
+                    }, 2000)
+                }, [columns, data])
 
             useEffect(() => { 
-                setTimeout(() => { 
-                    setLoadData(false)
-                }, 2000)
-            }, [columns, data])
-
-        useEffect(() => { 
-            if(data.length > 0) { 
-            getDataAndCreateTable()
-            console.log("ejecuto data mas a 0")
-            } else { 
-                setWithOutCollections(true)
-            }
-        }, [data])
+                if(data.length > 0) { 
+                getDataAndCreateTable()
+                console.log("ejecuto data mas a 0")
+                } else { 
+                    setWithOutCollections(true)
+                }
+            }, [data])
 
      return (
         <div>
@@ -179,7 +156,7 @@ const SubletsTable = ({sublets, update}) => {
                data.length > 0 ? (
                   <>
                    <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
-                     <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
+                     <div className='h-12 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
                        <div className='flex justify-between w-full items-center ml-4'>                   
                            <p className='text-sm font-bold text-zinc-600'>Sub Alquileres Realizados</p>
                        </div>
@@ -187,7 +164,7 @@ const SubletsTable = ({sublets, update}) => {
                      </div>
                      <div className='w-full flex items-center gap-2 justify-start mt-4'>
                        <input
-                         className="w-[50%] border border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl"
+                         className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500"  
                          placeholder="Buscador"
                          onChange={(e) => setInputValue(e.target.value)}
                          value={inputValue}
