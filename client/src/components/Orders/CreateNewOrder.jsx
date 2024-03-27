@@ -54,10 +54,6 @@ const CreateNewOrder = ({updateList}) => {
   const [errorInQuantity, setErrorInQuantity] = useState(false)
 
 
- useEffect(() => { 
-  console.log(allProducts)
- }, [allProducts])
-
       const knowWichNumerOfOrder = () => { 
         axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
             .then((res) => { 
@@ -75,10 +71,7 @@ const CreateNewOrder = ({updateList}) => {
             })
             .catch((err) => console.log(err))
       }
-
-      useEffect(() => { 
-        knowWichNumerOfOrder()
-      }, [])
+       
   
       const typeOfClients = [
         {
@@ -94,6 +87,7 @@ const CreateNewOrder = ({updateList}) => {
       const handleOpen = () => { 
         onOpen()
         getClientsData()
+        knowWichNumerOfOrder()
       }
 
       const closeModal = () => { 

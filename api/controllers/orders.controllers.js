@@ -4,7 +4,6 @@ import Collections from "../models/collections.js";
 import ProductsClients from "../models/productsClients.js";
 import PDFDocument from "pdfkit";
 import fs from 'fs';
-import { formatePrice } from "../../client/src/functions/gralFunctions.js";
 
 
 export const incrementarStock = async (productosComprados) => { 

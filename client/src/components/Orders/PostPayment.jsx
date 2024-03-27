@@ -79,7 +79,9 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
 
   const addNewCollection = async () => { 
     console.log("add new collection")
-    if(account.length !== 0 && userCtx.userId.length > 0) { 
+    console.log(account)
+    console.log(userCtx.userId)
+    if(account.length !== 0 && userCtx.userId !== null) { 
       const collecctionData = ({ 
         orderId: orderData.id,
         collectionType:"Alquiler",
@@ -121,7 +123,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
        } catch (error) {
          console.log(err)
        }
-    } else if (userCtx.userId.length === 0) { 
+    } else if (userCtx.userId === null) { 
       console.log("aca")
       setWithOutLogin(true)
       setTimeout(() => { 
