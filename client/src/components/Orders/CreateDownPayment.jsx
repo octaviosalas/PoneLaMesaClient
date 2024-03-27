@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem, accordion} from "@nextui-org/react";
 import { formatePrice, getDay, getMonth, getYear, getDate } from "../../functions/gralFunctions";
 import axios from "axios";
 import { useContext } from "react";
@@ -29,6 +29,9 @@ const CreateDownPayment = ({orderData, updateList}) => {
   const [errorMessage, setErrorMessage] = useState(false)
   const [deleteDownPaymentSuccesMessage, setDeleteDownPaymentSuccesMessage] = useState(false)
   const [downPaymentId, setDownPaymentId] = useState("")
+  const [errorInQuantity, setErrorInQuantity] = useState(false)
+  const [missedData, setMisedData] = useState(false)
+
   const uniqueId = uuidv4();
 
 
@@ -79,62 +82,70 @@ const CreateDownPayment = ({orderData, updateList}) => {
   };
 
   const createNewDownPayment = async () => { 
-    console.log("Valor de la seña enmviado",  downPaymentAmount)
-    console.log("tipo de dato seña", typeof downPaymentAmount)
-    const collecctionData = ({ 
-        orderId: orderData.id,
-        collectionType:"Seña",
-        downPaymentId: uniqueId, 
-        client: orderData.client,
-        orderDetail: orderData.detail,
-        date: actualDate,
-        day: day,
-        month: month,
-        year: year,
-        amount: parseInt(downPaymentAmount),
-        account: account,
-        loadedBy: userCtx.userName,
-        voucher: payImage
-      })
-
-    const downPaymentData = ({ 
-        orderId: orderData.id,
-        client: orderData.client,
-        clientId: orderData.clientId,
-        orderDetail: orderData.detail,
-        downPaymentId: uniqueId,
-        date: actualDate,
-        day: day,
-        month: month,
-        year: year,
-        amount: parseInt(downPaymentAmount),
-        account: account,
-        loadedBy: userCtx.userName,
-        voucher: payImage
-      })  
-
-    try {
-        const createPayment = await axios.post(`http://localhost:4000/downPayment/createNewDownPayment`, downPaymentData) 
-        console.log(createPayment.data)
-        console.log(createPayment.status)
-        if(createPayment.status === 200) { 
-            const createCollection = await axios.post(`http://localhost:4000/collections/addNewCollection`, collecctionData) 
-            console.log(createCollection.data)
-            console.log(createCollection.status)
-           if(createCollection.status === 200) { 
-             setSuccesMessage(true)
-             setTimeout(() => { 
-                setSuccesMessage(false)
-                onClose()
-                updateList()
-             }, 2000)
-           } else { 
-            setErrorMessage(true)
-           }
-        }
-    } catch (error) {
-        console.log(error)
-    }    
+    if(account.length > 0 && downPaymentAmount > 0) { 
+      console.log("Valor de la seña enmviado",  downPaymentAmount)
+      console.log("tipo de dato seña", typeof downPaymentAmount)
+      const collecctionData = ({ 
+          orderId: orderData.id,
+          collectionType:"Seña",
+          downPaymentId: uniqueId, 
+          client: orderData.client,
+          orderDetail: orderData.detail,
+          date: actualDate,
+          day: day,
+          month: month,
+          year: year,
+          amount: parseInt(downPaymentAmount),
+          account: account,
+          loadedBy: userCtx.userName,
+          voucher: payImage
+        })
+  
+      const downPaymentData = ({ 
+          orderId: orderData.id,
+          client: orderData.client,
+          clientId: orderData.clientId,
+          orderDetail: orderData.detail,
+          downPaymentId: uniqueId,
+          date: actualDate,
+          day: day,
+          month: month,
+          year: year,
+          amount: parseInt(downPaymentAmount),
+          account: account,
+          loadedBy: userCtx.userName,
+          voucher: payImage
+        })  
+  
+      try {
+          const createPayment = await axios.post(`http://localhost:4000/downPayment/createNewDownPayment`, downPaymentData) 
+          console.log(createPayment.data)
+          console.log(createPayment.status)
+          if(createPayment.status === 200) { 
+              const createCollection = await axios.post(`http://localhost:4000/collections/addNewCollection`, collecctionData) 
+              console.log(createCollection.data)
+              console.log(createCollection.status)
+             if(createCollection.status === 200) { 
+               setSuccesMessage(true)
+               setTimeout(() => { 
+                  setSuccesMessage(false)
+                  onClose()
+                  updateList()
+               }, 2000)
+             } else { 
+              setErrorMessage(true)
+             }
+          }
+      } catch (error) {
+          console.log(error)
+      }    
+    } else { 
+      setMisedData(true)
+      setTimeout(() => { 
+        setMisedData(false)
+      }, 1800)
+    }
+   
 
   }
 
@@ -157,6 +168,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
     }
   }
 
+
   return (
     <>
       <p className="text-green-800 text-xs font-medium cursor-pointer" onClick={handleOpen}>Asentar Seña</p>
@@ -173,17 +185,30 @@ const CreateDownPayment = ({orderData, updateList}) => {
                  <p className="text-zinc-600 text-sm font-medium"><b>Mes : </b>{orderData.month}</p>
                  <p className="text-zinc-600 text-sm font-medium"><b>Monto total de la orden: </b>{formatePrice(orderData.total)}</p>
 
-                 <Input 
-                 type="number" 
-                 variant="faded" 
-                 placeholder="Ingresa el valor de la seña" 
-                 value={downPaymentAmount} 
-                 onChange={(e) => setDownPaymentAmount(e.target.value)}
-                 startContent={
-                    <div className="pointer-events-none flex items-center">
-                      <span className="text-default-400 text-small">$</span>
-                    </div>
-                  }/>
+                 
+                             <Input 
+                              type="number" 
+                              variant="faded" 
+                              placeholder="Ingresa el valor de la seña" 
+                              value={downPaymentAmount}   
+                              onChange={(e) => {
+                              const value = e.target.value;
+                              if (value === '' || (value > 0 && !isNaN(value))) {
+                                setDownPaymentAmount(e.target.value);
+                                setErrorInQuantity(false)
+                              } else {
+                                setErrorInQuantity(true)
+                              }
+                              }} 
+                              startContent={
+                              <div className="pointer-events-none flex items-center">
+                                <span className="text-default-400 text-small">$</span>
+                              </div>
+                              }
+                             />
+
+                             {errorInQuantity ? <p className="text-xs text-zinc-700 font-medium">Debes ingresar un numero mayor a 0</p> : null}
+
 
                  <Select variant="faded" label="Selecciona la cuenta de Cobro" className="w-full" onChange={(e) => setAccount(e.target.value)} >
                     {availablesAccounts.map((acc) => (
@@ -261,6 +286,11 @@ const CreateDownPayment = ({orderData, updateList}) => {
              {succesMessage?
               <div className="mt-4 mb-4 flex items-center justify-center">
                 <p className="font-medium text-green-800 text-sm">La seña fue asentada a la Orden ✔</p>
+              </div> : null}
+
+              {missedData?
+              <div className="mt-4 mb-4 flex items-center justify-center">
+                <p className="font-medium text-green-800 text-sm">Debes seleccionar una cuenta</p>
               </div> : null}
 
             </>

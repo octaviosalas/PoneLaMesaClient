@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useMemo, useEffect} from 'react'
 import { Input, Button } from '@nextui-org/react'
 import { formatePrice } from '../../../functions/gralFunctions'
 import axios from 'axios'
@@ -20,6 +20,10 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
     const [errorInQuantity, setErrorInQuantity] = useState(false)
     const [errorInArticle, setErrorInArticle] = useState(false)
     const [showError, setShowError] = useState(false)
+    const [newOrderDetailWithChanges, setNewOrderDetailWithChanges] = useState(newOrderDetailArray)
+
+    const originalOrderDetailData = useMemo(() => newOrderDetailArray, []);
+
 
     const getClientsProductsData = () => { 
         axios.get("http://localhost:4000/products/productsClients")
@@ -34,7 +38,22 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
 
     useEffect(() => { 
         getClientsProductsData()
+        console.log(originalOrderDetailData)
     }, [])
+
+    const handleQuantityChange = (index, newQuantity) => {
+      const updateOrderDetail = [...newOrderDetailWithChanges];
+      updateOrderDetail[index] = {
+        ...updateOrderDetail[index],
+        quantity: Number(newQuantity),
+      };
+      setNewOrderDetailWithChanges(updateOrderDetail);
+    };
+
+    useEffect(() => { 
+      getClientsProductsData()
+      console.log(newOrderDetailWithChanges)
+  }, [newOrderDetailWithChanges])
 
     const handleInputChange = (e) => { 
         setChoosenProductName(e);
@@ -74,7 +93,7 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
             if(quantity < choosenProductStock) { 
               const choosenProductTotalPrice = price * quantity
               const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
-              setProductsSelected([...productsSelected, newProduct]);
+              setNewOrderDetailWithChanges([...newOrderDetailWithChanges, newProduct]);
               setChoosenProductId("")
               setChoosenProductName("")
               setChoosenProductQuantity("")
@@ -106,63 +125,7 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
         );
     };
 
-    const changeOrderDetail = () => {   //ESTA FUNCION SE ENCARGA DE SABER QUE RESTAR AL STOCK Y QUE SUMAR AL STOCK 
-        const newOrderDetailData = ({
-          total: newOrderDetailArray.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0),
-          orderDetail: newOrderDetailArray
-        })   
-
-        const productsToIncrease = [];
-        const productsToDecrease = [];
-        for (let i = 0; i < newOrderDetailData.orderDetail.length; i++) {
-        const newOrderItem = newOrderDetailData.orderDetail[i];
-        const realDataItem = theRealDataOfOrderDetail.find(item => item.productId === newOrderItem.productId);
-
-        if (realDataItem) {
-            const productId = newOrderItem.productId;
-            const quantityInNewOrder = parseInt(newOrderItem.quantity, 10);
-            const quantityInRealData = parseInt(realDataItem.quantity, 10);
-
-            if (quantityInNewOrder > quantityInRealData) {
-                const difference = quantityInNewOrder - quantityInRealData;
-                productsToIncrease.push({ productId, quantity: difference });
-            } else if (quantityInNewOrder < quantityInRealData) {
-                const difference = quantityInRealData - quantityInNewOrder;
-                productsToDecrease.push({ productId, quantity: difference });
-              }
-            }
-           }
-          console.log("Productos a aumentar:", productsToIncrease);
-          console.log("Productos a disminuir:", productsToDecrease); 
-
-            const dataToSend = {
-                productData: productsToDecrease.map(product => ({
-                    productId: product.productId,
-                    quantity: product.quantity
-                }))
-              };
-
-              axios.put('http://localhost:4000/products/returnQuantityToStock', dataToSend)
-              .then((res) => { 
-                console.log(res.data)                             
-              })
-              .catch((err) => {
-                console.log(err)
-              })
-
-               axios.put(`http://localhost:4000/orders/updateOrderDetail/${orderData.id}`, {newOrderDetailData})    
-                .then((res) => { 
-                  console.log(res.data)
-                  setSuccesMessage(true)
-                  updateList()
-                  setTimeout(() => { 
-                    closeModalNow()
-                    setSuccesMessage(false)
-                  }, 2500)
-                })
-                .catch((err) => console.log(err))
-    }
-
+  
    /* const addNewArticlesToOrder = () => { //ESTA FUNCION ENVIA EL DETALLE NUEVO SIN VERIFICAR NADA
         axios.put(`http://localhost:4000/orders/addNewOrderDetail/${orderData.id}`, productsSelected)
              .then((res) => { 
@@ -187,13 +150,71 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
         setChoosenProductId("")
         setChoosenProductQuantity("")
         comeBack()
-      }
+    }
+
+    
+    
+     const changePurchaseDetail = async () => {  
+       try {
+            const sumarStock = [];
+            const disminuirStock = [];
+            const getDifferences = await newOrderDetailWithChanges.map((newArray) => { 
+            const viewOriginal = originalOrderDetailData.filter((original) => original.productId === newArray.productId);
+              return { 
+              newQuantity: Number(newArray.quantity),
+              originalQuantity: Number(viewOriginal.map((o) => o.quantity)[0]),
+              quantity: newArray.quantity - viewOriginal.map((o) => o.quantity)[0],
+              productId: newArray.productId
+            };
+            }).map((dif) => { 
+              if(dif.quantity > 0) { 
+                sumarStock.push(dif); 
+              }  else if (dif.quantity < 0){ 
+                dif.quantity = Math.abs(dif.quantity);
+                disminuirStock.push(dif); 
+             }
+            });
+            console.log("ARRAY ORIGINAL DE COMPRA DETAIL", originalOrderDetailData)
+            console.log("NUEVO ARRAY ENTERO DE COMPRA DETAIL", newOrderDetailWithChanges)
+            console.log("SUMAR STOCK POR DIFERENCIA POSITIVA", sumarStock)
+            console.log("DESCONTAR STOCK POR DIFERENCIA NEGATIVA", disminuirStock) 
+            const newTotalPurchaseAmount = newOrderDetailWithChanges.reduce((acc, el) => acc + el.price * el.quantity, 0);
+            console.log(formatePrice(newTotalPurchaseAmount))
+
+            const newPurchaseDetailData = ({ 
+              newTotalAmount: newTotalPurchaseAmount,
+              toDiscountStock: disminuirStock,
+              toIncrementStock: sumarStock,
+              completeNewDetail: newOrderDetailArray
+            })
+            
+            console.log(newOrderDetailWithChanges) //ACA ESTAN LOS DATOS ENTEROS PARA ENVIAR AL BACKEND, ESTE ARRAY DEBE RECIBIR EL UPDATE ORDER
+
+          /* const updateDetail = await axios.put(`http://localhost:4000/purchases/updatePurchaseDetail/${purchaseData.id}`, newPurchaseDetailData)
+            console.log(updateDetail.data)
+            if(updateDetail.status === 200) { 
+                setSuccesMessage(true)
+                setTimeout(() => { 
+                  closeModalNow()
+                  updateChanges()
+                  setSuccesMessage(false)
+                  setModifyData(false)
+                  setModifyOrderDetailData(false)
+                }, 2000)
+            }
+*/
+            } catch (error) {
+              console.log(error) 
+            }
+
+       };
+    
 
 
 
   return (
     <div className="flex flex-col justify-center items-center">
-            {newOrderDetailArray.map((ord, index) => (
+            {newOrderDetailWithChanges.map((ord, index) => (
                 <div key={index} className="flex flex-col">
                 <div className="flex items-center justify-start w-72 gap-4 mt-2">
                     <p className="font-medium text-zinc-500 text-sm">{ord.productName}</p>
@@ -201,16 +222,33 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
                 </div>
                 </div>
             ))}
+
+               {
+                productsSelected.length > 0 ? (
+                  productsSelected.map((ord, index) => (
+                    <>
+                      <div key={index} className="flex flex-col">
+                        <div className="flex items-center justify-start w-72 gap-4 mt-2">
+                          <p className="font-medium text-zinc-500 text-sm">{ord.productName}</p>
+                          <Input type="number" variant="underlined" label="Cantidad" className="max-w-md min-w-sm" value={ord.quantity}/>
+                          <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(ord.productId)}>X</p>
+                        </div>                      
+                      </div>
+                    </>
+                  ))
+                ) : null
+               }
+
             <div className="flex items-center justify-center mt-2">
             {productsSelected.length > 0 ? (
                 <p className="font-bold text-zinc-600">       
                     Total: {formatePrice(
-                    newOrderDetailArray.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) +
+                    newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) +
                     productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)
                     )}
                 </p>
                 ) : (
-                <p className='text-zinc-600 font-medium text-sm'>Total: {formatePrice(newOrderDetailArray.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))}</p>
+                <p className='text-zinc-600 font-medium text-sm'>Total: {formatePrice(newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))}</p>
                 )}
             </div>
 
@@ -240,7 +278,7 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
                             onChange={(e) => {
                             const value = e.target.value;
                             if (value === '' || (value > 0 && !isNaN(value))) {
-                              setChoosenProductQuantity(e.target.value);
+                              setChoosenProductQuantity(Number(e.target.value));
                               setErrorInQuantity(false)
                             } else {
                               setErrorInQuantity(true)
@@ -262,48 +300,17 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
                         null
                     }
 
-                   
-
-                {productsSelected.length !== 0 ? 
-                    <div className="flex flex-col">
-                    <div className="flex flex-col mt-6">
-                        {productsSelected.map((prod) => ( 
-                            <div className="flex justify-between gap-4 items-center mt-1" key={prod._id}>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
-                                <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>
-                                <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Unitario Alquiler: </b>{formatePrice(prod.price)}</p>
-                            </div>
-                            <div>
-                                <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
-                            </div>
-                            
-                            </div>
-                        ))}
-                    </div>
-                    <div className="flex flex-col mt-2">
-                        <p className="text-zinc-700 text-sm"> <b>Total:</b>{formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))} ARS</p> 
-                    </div>
-                    </div>  
-                    :
-                    null
-                } 
-
-                {
-                insufficientStock ?
-                <div className="flex items-center justify-center mt-4">
-                        <p className="font-medium text-sm text-green-600 underline">Stock Insuficiente</p>
-                </div>
-                    : 
-                    null
-                }  
+                    {insufficientStock ?
+                         <div className="flex items-center justify-center mt-4">
+                            <p className="font-medium text-sm text-green-600 underline">Stock Insuficiente</p>
+                        </div> : null }  
                 </div>
                 :
                 null
             }
 
             <div className="flex items-center gap-6 mt-6">
-            <Button className="bg-green-800 font-bold text-white w-56" onClick={() => changeOrderDetail()}>Confirmar</Button>
+            <Button className="bg-green-800 font-bold text-white w-56" onClick={() => changePurchaseDetail()}>Confirmar</Button>
 
             {!addNewProductToOrder ? <Button className="bg-green-800 font-bold text-white  w-56" onClick={() => setAddNewProductToOrder(true)}>Agregar Nuevo Producto</Button>
             :null}

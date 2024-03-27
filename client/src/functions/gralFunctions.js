@@ -130,10 +130,11 @@ export const typeOfClientsAvailables = [
 ];
 
 export const diferentOrdersStatus = [
-  { label: 'No Entregado', value: 'No Entregado' },
+  { label: 'A Confirmar', value: 'A Confirmar' },
+  { label: 'Armado', value: 'Armado' },
   { label: 'Entregado', value: 'Entregado' },
-  { label: 'Devuelto', value: 'Devuelto' },
-  { label: 'Suspendido', value: 'Suspendido' },
+  { label: 'Devuelto', value: 'Devuelto'},
+  { label: 'Lavado', value: 'Lavado'},
 ];
 
 export const paidOrNotPaid = [

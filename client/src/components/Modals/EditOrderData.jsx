@@ -13,22 +13,10 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
     const [status, setStatus] = useState("Selecciona un Estado ↓")
     const [successMessage, setSuccesMessage] = useState(false)
     const [errorMessage, setErrorMessage] = useState(false)
-    const [newOrderDetailArray, setNewOrderDetailArray] = useState(orderData.orderDetail)
-    const [theRealDataOfOrderDetail, setTheRealDataOfOrderDetail] = useState(orderData.orderDetail)
     const [modifyData, setModifyData] = useState(false)
     const [modifyOrderDetailData, setModifyOrderDetailData] = useState(false)
-    const [addNewProductToOrder, setAddNewProductToOrder] = useState(false)
     const [allArticles, setAallArticles] = useState([])
-    const [choosenProductName, setChoosenProductName] = useState("")
-    const [choosenProductId, setChoosenProductId] = useState("")
-    const [choosenProductPrice, setChoosenProductPrice] = useState("")
-    const [choosenProductPriceReplacement, setChoosenProductPriceReplacement] = useState("")
-    const [choosenProductQuantity, setChoosenProductQuantity] = useState("")
-    const [choosenProductStock, setChoosenProductStock] = useState("")
-    const [filteredNames, setFilteredNames] = useState("")
-    const [productsSelected, setProductsSelected] = useState("")
-    const [insufficientStock, setInsufficientStock] = useState("")
-    const [successAddMessage, setSuccessAddMessage] = useState(false)
+    
 
     //Funciones para agregar nuevos articulos a la Orden 
       const getClientsProductsData = () => { 
@@ -86,8 +74,8 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
               </div>
 
                   {step === 0 ? 
-                    <div className="flex flex-col justify-start items-start ml-2">
-                      <p className="text-sm font-medium mt-2">Pedido numero: {orderData.order}</p>
+                    <div className="flex flex-col justify-start items-start ml-4">
+                      <p className="text-sm font-medium mt-2">Numero de Orden: {orderData.order}</p>
                       <p className="text-sm font-medium ">Mes: {orderData.month}</p>
                       <p className="text-sm font-medium ">Cliente: {orderData.client}</p>
                     </div>
