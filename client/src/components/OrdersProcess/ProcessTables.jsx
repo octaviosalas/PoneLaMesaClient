@@ -267,10 +267,11 @@ const ProcessTables = ({orderStatus}) => {
                               <p className='font-bold ml-4'>Pedidos en Lavado</p>                      
                             </div>
                        }
+                       {/*    <p className={`text-sm font-bold text-zinc-600 cursor-pointer ${data === tableData ? 'underline' : ''}`} onClick={() => changeTypeOfData(tableData)}>Retiros del Dia</p>  */}
                       {orderStatus === "Armado" &&
                             <div className='flex items-center w-full justify-start gap-8 '> 
-                              <p className='font-bold cursor-pointer text-sm ml-4' onClick={() => setViewJustToday(false)}>Pedidos en Armado</p>
-                              <p className='font-bold cursor-pointer text-sm' onClick={() => setViewJustToday(true)}>Para entregar Hoy</p>
+                              <p className={`font-bold cursor-pointer text-sm ml-4 ${viewJustToday === false ? "underline" : ""}`} onClick={() => setViewJustToday(false)}>Pedidos en Armado</p>
+                              <p className={`font-bold cursor-pointer text-sm ml-4 ${viewJustToday === true ? "underline" : ""}`} onClick={() => setViewJustToday(true)}>Para entregar Hoy</p>
                             </div>
                        }
                         {orderStatus === "Retiro en Local" &&
@@ -342,7 +343,7 @@ const ProcessTables = ({orderStatus}) => {
 
                  {
                     viewJustToday ?
-                    <p className='text-sm text-zinc-600 underline cursor-pointer mt-4' onClick={() =>comeBackBecauseTheAreNoResults()}>Volver</p>
+                    <p className='text-sm text-zinc-600 underline cursor-pointer mt-4' onClick={() => setViewJustToday(false)}>Volver</p>
                     :
                     <Link to="/articulos"><p className='text-sm text-zinc-600 underline cursor-pointer mt-4'>Volver</p></Link>
                  }

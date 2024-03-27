@@ -225,16 +225,13 @@ export const deleteAndReplenishArticles = async (req, res) => {
 
 export const updateOrderData = async (req, res) => { 
   const {orderId} = req.params
-  const {newOrderDeliveryDate, newOrderReturnDate, newOrderClient, newOrderReturnPlace, newOrderDeliveryPlace} = req.body
+  const {newOrderClient, newOrderClientId} = req.body
   console.log(req.body)
 
       try {
         Orders.findByIdAndUpdate({ _id: orderId }, { 
         client: newOrderClient,
-        dateOfDelivery: newOrderDeliveryDate,
-        placeOfDelivery: newOrderDeliveryPlace,
-        returnDate: newOrderReturnDate,
-        returnPlace: newOrderReturnPlace,
+        clientId: newOrderClientId,       
         })
         .then((newOrderData) => {                                      
         res.json({message:"Orden actualizada Correctamente", newOrderData})

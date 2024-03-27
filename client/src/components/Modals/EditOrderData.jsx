@@ -2,8 +2,192 @@ import React, { useState, useEffect } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
 import axios from "axios";
-import { formatePrice, getProductsClients } from "../../functions/gralFunctions";
+import { formatePrice, everyClients } from "../../functions/gralFunctions";
 import EditArticle from "./EditArticle";
+import EditClientOrderData from "./editOrder/EditClientOrderData";
+import EditDetailOrderData from "./editOrder/EditDetailOrderData";
+
+const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
+
+    const [step, setStep] = useState(0)
+    const [status, setStatus] = useState("Selecciona un Estado ↓")
+    const [successMessage, setSuccesMessage] = useState(false)
+    const [errorMessage, setErrorMessage] = useState(false)
+    const [newOrderDetailArray, setNewOrderDetailArray] = useState(orderData.orderDetail)
+    const [theRealDataOfOrderDetail, setTheRealDataOfOrderDetail] = useState(orderData.orderDetail)
+    const [modifyData, setModifyData] = useState(false)
+    const [modifyOrderDetailData, setModifyOrderDetailData] = useState(false)
+    const [addNewProductToOrder, setAddNewProductToOrder] = useState(false)
+    const [allArticles, setAallArticles] = useState([])
+    const [choosenProductName, setChoosenProductName] = useState("")
+    const [choosenProductId, setChoosenProductId] = useState("")
+    const [choosenProductPrice, setChoosenProductPrice] = useState("")
+    const [choosenProductPriceReplacement, setChoosenProductPriceReplacement] = useState("")
+    const [choosenProductQuantity, setChoosenProductQuantity] = useState("")
+    const [choosenProductStock, setChoosenProductStock] = useState("")
+    const [filteredNames, setFilteredNames] = useState("")
+    const [productsSelected, setProductsSelected] = useState("")
+    const [insufficientStock, setInsufficientStock] = useState("")
+    const [successAddMessage, setSuccessAddMessage] = useState(false)
+
+    //Funciones para agregar nuevos articulos a la Orden 
+      const getClientsProductsData = () => { 
+      axios.get("http://localhost:4000/products/productsClients")
+            .then((res) => { 
+              console.log(res.data)
+              setAallArticles(res.data);
+            })
+            .catch((err) => { 
+              console.log(err)
+            })
+      }
+
+      useEffect(() => { 
+        getClientsProductsData()
+      }, [])
+
+      
+
+     //Funciones para editar datos de la orden - Cantidad de cada Producto Elegido
+      const changeOrderState = () => { 
+        if(status === "Selecciona un Estado ↓") { 
+          setErrorMessage(true)
+          setTimeout(() => { 
+            setErrorMessage(false)
+          }, 1500)
+        } else { 
+          const newStatus = status
+          axios.put(`http://localhost:4000/orders/changeOrderState/${orderData.id}`,  { newStatus })
+               .then((res) => { 
+                console.log(res.data)
+                updateList()
+                setSuccesMessage(true)
+                setTimeout(() => { 
+                  setSuccesMessage(false)
+                  closeModalNow()
+                  setStep(0)
+                  setStatus("Selecciona un Estado ↓")
+                }, 2500)
+               })
+               .catch((err) => { 
+                console.log(err)
+               })
+        }
+      }
+ 
+    
+
+
+  return (
+    <div>
+       <div className="flex flex-col">
+              <div className="flex flex-col items-start justify-start mt-2 ml-4">
+                <p className="font-bold text-md text-zinc-600">Editar Pedido </p>
+              </div>
+
+                  {step === 0 ? 
+                    <div className="flex flex-col justify-start items-start ml-2">
+                      <p className="text-sm font-medium mt-2">Pedido numero: {orderData.order}</p>
+                      <p className="text-sm font-medium ">Mes: {orderData.month}</p>
+                      <p className="text-sm font-medium ">Cliente: {orderData.client}</p>
+                    </div>
+                  : null}
+                           
+                <div className="mt-4 mb-4 w-full">
+                  {step === 0 ?
+                  <div className="flex flex-col items-center justify-center ml-2 mr-2">
+                      <div className="bg-green-800 w-full h-11 flex items-center cursor-pointer"  onClick={() => setStep(2)}>
+                         <p className="font-medium ml-4 text-white text-sm">Modificar Datos</p>
+                      </div>
+                      <div className="bg-green-700 w-full h-11 flex items-center cursor-pointer mt-1" onClick={() => setStep(1)}>
+                         <p className="font-medium ml-4 text-white text-sm">Cambiar Estado</p>
+                      </div>                            
+                  </div>
+                  
+                  : null}
+
+
+
+                    {step === 1 ? 
+                      <div className="flex flex-col items-center justify-center mb-4">
+                        <div>
+                         {orderStatus === "Armado" ? 
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">      
+                                  <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>         
+                                  <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
+                                  <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
+                              </Select> 
+                            : 
+                            <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
+                              <SelectItem key={"confirmar"} value={"A Confirmar"} onClick={() => setStatus("A Confirmar")} >A Confirmar</SelectItem>     
+                              <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>          
+                              <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
+                              <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
+                              <SelectItem key={"Lavado"} value={"Lavado"} onClick={() => setStatus("Lavado")} >Lavado</SelectItem>     
+                              <SelectItem key={"Repuesto"} value={"Repuesto"} onClick={() => setStatus("Repuesto")}>Repuesto</SelectItem>                                          
+                            </Select>
+                           }               
+                        </div>
+                        <div className="flex gap-6 items-center mt-6">
+                          <Button className="font-bold text-white text-xs bg-green-600 w-40" onClick={() => changeOrderState()}>Confirmar</Button>
+                          <Button className="font-bold text-white text-xs bg-green-600 w-40" onClick={() => closeModalNow()}>Cancelar</Button>
+                          <Button className="font-bold text-white text-xs bg-green-600 w-40" onClick={() =>  setStep(0)}>Volver</Button>
+                        </div>
+
+                      {successMessage ?
+                        <div className="font-medium text-sm text-zinc-600 cursor-pointer mt-4">
+                          <p className="font-medium text-sm text-green-600">Estado de orden Modificado con Exito ✔</p>
+                        </div> :
+                        null}
+
+                      {errorMessage ?
+                        <div className="font-medium text-sm text-zinc-600 cursor-pointer mt-4">
+                          <p className="font-medium text-sm text-green-600">Debes seleccionar un estado</p>
+                        </div> :
+                        null}                      
+                      </div>
+                      :
+                    null}
+
+                      {step === 2 && modifyData !== true && modifyOrderDetailData !== true ? (
+                          <div className="flex flex-col items-center justify-center ml-2 mr-2">
+                          <div className="h-11 bg-green-600 w-full cursor-pointer flex  items-center " onClick={() => setModifyData(true)}>
+                            <p className="font-bold text-white text-sm">Modificar datos del Cliente</p>
+                          </div>
+                          <div className="h-11 bg-green-800 w-full cursor-pointer flex  items-center  mt-1" onClick={() => setModifyOrderDetailData(true)}>
+                            <p className="font-bold text-white text-sm">Modificar detalle de Orden</p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium underline cursor-pointer flex  items-center  mt-4 text-zinc-500" onClick={() => setStep(0)}>Volver</p>
+                          </div>
+                        </div>
+                      ) : step === 2 && modifyData === true && modifyOrderDetailData !== true ? (
+
+                        <div className="flex flex-col w-full">
+                           <EditClientOrderData comeBack={()=> setModifyData(false)} clientName={orderData.client} clientId={orderData.clientId} orderId={orderData.id} updateClientData={updateList} closeModal={closeModalNow}/>
+                        </div>
+
+                      ) : step === 2 && modifyData !== true && modifyOrderDetailData === true ? 
+                         <EditDetailOrderData newOrderDetailArray={orderData.orderDetail} comeBack={()=> setModifyOrderDetailData(false)}/>
+                       : null}
+                                      
+                </div>           
+              </div>
+    </div>
+  )
+}
+
+export default EditOrderData
+
+
+/* 
+ import React, { useState, useEffect } from "react";
+import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input} from "@nextui-org/react";
+import {Select, SelectItem} from "@nextui-org/react";
+import axios from "axios";
+import { formatePrice, getProductsClients, everyClients } from "../../functions/gralFunctions";
+import EditArticle from "./EditArticle";
+import EditClientOrderData from "./editOrder/EditClientOrderData";
 
 const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
 
@@ -13,6 +197,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
     const [errorMessage, setErrorMessage] = useState(false)
     const [newOrderDeliveryDate, setNewOrderDeliveryDate] = useState(orderData.dateOfDelivery)
     const [newOrderReturnDate, setNewOrderReturnDate] = useState(orderData.returnDate)
+    const [newOrderClientId, setNewOrderClientId] = useState(orderData.clientId)
     const [newOrderClient, setNewOrderClient] = useState(orderData.client)
     const [newOrderReturnPlace, setNewOrderReturnPlace] = useState(orderData.returnPlace)
     const [newOrderDeliveryPlace, setNewOrderDeliveryPlace] = useState(orderData.placeOfDelivery)
@@ -32,10 +217,10 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
     const [productsSelected, setProductsSelected] = useState("")
     const [insufficientStock, setInsufficientStock] = useState("")
     const [successAddMessage, setSuccessAddMessage] = useState(false)
-
+    const [everyClientsData, setEveryClientsData] = useState(everyClients())
 
     //Funciones para agregar nuevos articulos a la Orden 
-     const getClientsProductsData = () => { 
+      const getClientsProductsData = () => { 
       axios.get("http://localhost:4000/products/productsClients")
             .then((res) => { 
               console.log(res.data)
@@ -62,8 +247,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
           console.log(filteredNames)
         }
       }
-
-      
+   
       const chooseProduct = (name, id, price, replacementPrice, stock) => { 
         console.log("recibi", id, name, price, replacementPrice, stock)
         setChoosenProductName(name)
@@ -129,8 +313,6 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
               console.log(err)
              })
       }
- 
-
 
      //Funciones para editar datos de la orden - Cantidad de cada Producto Elegido
       const changeOrderState = () => { 
@@ -158,29 +340,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                })
         }
       }
-
-      const changeOrderData = () => { 
-        const newOrderData = ({ 
-          newOrderDeliveryDate: newOrderDeliveryDate,
-          newOrderReturnDate: newOrderReturnDate,
-          newOrderClient: newOrderClient,
-          newOrderReturnPlace: newOrderReturnPlace,
-          newOrderDeliveryPlace: newOrderDeliveryPlace
-        })
-        axios.put(`http://localhost:4000/orders/updateOrderData/${orderData.id}`, newOrderData)
-             .then((res) => { 
-              console.log(res.data)
-              setSuccesMessage(true)
-              updateList()
-              setTimeout(() => { 
-                closeModalNow()
-                setSuccesMessage(false)
-                setModifyData(false)
-              }, 1500)
-             })
-             .catch((err) => console.log(err))
-      }
-
+ 
       const changeOrderDetail = () => { 
         
         const newOrderDetailData = ({
@@ -323,8 +483,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                         <div className="font-medium text-sm text-zinc-600 cursor-pointer mt-4">
                           <p className="font-medium text-sm text-green-600">Debes seleccionar un estado</p>
                         </div> :
-                        null} 
-                      
+                        null}                      
                       </div>
                       :
                     null}
@@ -342,25 +501,14 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                           </div>
                         </div>
                       ) : step === 2 && modifyData === true && modifyOrderDetailData !== true ? (
+
                         <div className="flex flex-col w-full">
-                          <div className="flex flex-col items-center justify-center">
-                            <Input type="text" variant="underlined" label="Cliente" value={newOrderClient} className="w-56 mt-2" onChange={(e) => setNewOrderClient(e.target.value)} />
-                            <Input type="text" variant="underlined" label="Fecha de Entrega" value={newOrderDeliveryDate} className="w-56 mt-2" onChange={(e) => setNewOrderDeliveryDate(e.target.value)} />
-                            <Input type="text" variant="underlined" label="Lugar Entrega" value={newOrderDeliveryPlace} className="w-56 mt-2" onChange={(e) => setNewOrderDeliveryPlace(e.target.value)} />
-                            <Input type="text" variant="underlined" label="Fecha de Devolucion" value={newOrderReturnDate} className="w-56 mt-2" onChange={(e) => setNewOrderReturnDate(e.target.value)} />
-                            <Input type="text" variant="underlined" label="Lugar Devolucion" value={newOrderReturnPlace} className="w-56 mt-2" onChange={(e) => setNewOrderReturnPlace(e.target.value)} />
-                         
-                            <div className="mt-4 mb-4 flex items-center gap-6">
-                              <Button className="font-bold text-white text-xs bg-green-600 w-40" onClick={() => setModifyData(false)}>Cancelar</Button>
-                              <Button className="font-bold text-white text-xs bg-green-600 w-40" onClick={() => changeOrderData()}>Editar</Button>
-                            </div>
-                            {successMessage ? (
-                              <div className="mt-4 mb-4 flex items-center">
-                                <p className="font-medium text-green-500 text-sm">Datos de Orden editados con Éxito ✔</p>
-                              </div>
-                            ) : null}
-                          </div>
+                           <EditClientOrderData comeBack={()=> setModifyData(false)} clientName={orderData.client} clientId={orderData.clientId} orderId={orderData.id} updateClientData={updateList} closeModal={closeModalNow}/>
                         </div>
+
+
+
+
                       ) : step === 2 && modifyData !== true && modifyOrderDetailData === true ? 
                           <div className="flex flex-col justify-center items-center">
                             {newOrderDetailArray.map((ord, index) => (
@@ -468,6 +616,11 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                        : null}
                      
 
+
+
+
+
+
                    
                 </div>           
               </div>
@@ -476,42 +629,4 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
 }
 
 export default EditOrderData
-
-
-/* 
-  if (productsToIncrease.length > 0) {
-          console.log("hay productos para aumentar")
-          const productIdsToCheckStock = productsToIncrease.map(product => product.productId);
-      
-          // Hacer la solicitud al backend para obtener el stock de los productos a aumentar
-          axios.get(`http://localhost:4000/products/${productIdsToCheckStock.join(',')}`)
-               .then((res) => { 
-                console.log(res.data)
-                const stockData = res.data;
-
-                // Verificar si la cantidad agregada es menor al stock para cada producto a aumentar
-                const productsWithInsufficientStock = productsToIncrease.filter(product => {
-                    const stockInfo = stockData.find(info => info._id === product.productId);
-        
-                    // Calcular la diferencia entre la nueva cantidad y la cantidad anteriormente almacenada
-                    const diferenciaCantidad = product.quantity - stockInfo.stock;
-        
-                    if (stockInfo && diferenciaCantidad > stockInfo.stock) {
-                        console.error(`La cantidad agregada para ${product.articulo} es mayor al stock disponible.`);
-                        // Puedes manejar esta situación según tus necesidades
-                        return true;
-                    }
-        
-                    return false;
-                });
-        
-                if (productsWithInsufficientStock.length === 0) {
-                    // Continuar con el código para enviar las cantidades al backend
-                    // ...
-                }
-               })
-               .catch((err) => { 
-                console.log('Error al obtener el stock de productos a aumentar:', err.message);
-               })
-      } 
 */

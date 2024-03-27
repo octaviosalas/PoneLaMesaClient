@@ -192,3 +192,15 @@ export const typesOfCollections = [
   { label: "Reposicion", value: "Reposicion"},
   { label: "Seña", value: "Seña"},
 ];
+
+
+export const everyClients = async () => { 
+  try {
+    const getData = await axios.get(`http://localhost:4000/clients`)
+    const response = getData.data
+    console.log("Todos los clientes", response)
+    return response   
+  } catch (error) {
+     console.log(error)
+  }
+}

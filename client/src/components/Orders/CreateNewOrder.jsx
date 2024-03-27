@@ -51,6 +51,7 @@ const CreateNewOrder = ({updateList}) => {
   const [deliveryDateError, setDeliveryDateError] = useState(false)
   const [returnDateError, setReturnDateError] = useState(false)
   const [productDoesNotExist, setProductDoesNotExist] = useState(false)
+  const [errorInQuantity, setErrorInQuantity] = useState(false)
 
 
  useEffect(() => { 
@@ -328,15 +329,6 @@ const CreateNewOrder = ({updateList}) => {
 
       }
 
-     /* 
-          const response = axios.get(`http://localhost:4000/clients/${clientData.id}`)
-          const data = await response
-          const finalClientData = data.data
-          console.log(finalClientData.clientDebt)
-          const verifyDebt = finalClientData.clientDebt.some((s) => s.paid === false)
-          console.log(verifyDebt)
-     */
-
   return (
     <>
       <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={handleOpen}>Crear Pedido</p>
@@ -483,16 +475,27 @@ const CreateNewOrder = ({updateList}) => {
                     }
                     </div>  
 
-                    <Input 
-                      type="number"
-                      value={choosenProductQuantity} 
-                      variant="bordered" 
-                      label="Cantidad" 
-                      className="mt-2 w-64 2xl:w-72"  
-                      onChange={(e) => 
-                          e.target.value <= 0 ? console.log("Numero no permitido") : setChoosenProductQuantity(parseInt(e.target.value, 10))
-                      }
-                      />
+                    
+                      
+                     <Input 
+                        type="number"
+                        value={choosenProductQuantity} 
+                        variant="bordered" 
+                        label="Cantidad" 
+                        className="mt-2 w-64 2xl:w-72"  
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '' || (value > 0 && !isNaN(value))) {
+                              setChoosenProductQuantity(parseInt(e.target.value, 10));
+                              setErrorInQuantity(false)
+                            } else {
+                              setErrorInQuantity(true)
+                            }
+                        }} 
+                        />
+
+                        {errorInQuantity ? <p className="text-xs text-zinc-700 font-medium">Debes ingresar un numero mayor a 0</p> : null}
+                      
               
                   
                   {productDoesNotExist ? <p className="text-xs font-medium text-zinc-600">El producto no esta almacenado en tus articulos</p> : null}

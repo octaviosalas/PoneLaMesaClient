@@ -31,7 +31,10 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
   const [succesMessage, setSuccesMessage] = useState(false)
   const [showObservation, setShowObservation] = useState(false)
   const [observation, setObservation] = useState("")
-
+  const [productDoesNotExist, setProductDoesNotExist] = useState(false)
+  const [missedProductExisted, setMissedProductExisted] = useState(false)
+  const [errorInQuantity, setErrorInQuantity] = useState(false)
+  const [errorInProductChoosenValue, setErrorInProductChoosenValue] = useState(false)
 
     //Funciones para obtener proveedores
     const getProviders = async () => { 
@@ -58,19 +61,28 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
       console.log(everyArticles)
     }, [everyArticles])
 
-    //Funciones para Input automatico de productos
+
     const handleProductChange = (e) => { 
       setProductChoosenName(e)
       if(e.length === 0) { 
-        filteredNames([])
+        setFilteredNames([])
         setProductChoosenName("")
         setProductChoosenId("")
       } else { 
         const useInputToFindTheArticle = everyArticles.filter((cc) => cc.articulo.toLowerCase().includes(e))
-        setFilteredNames(useInputToFindTheArticle)
-        console.log(useInputToFindTheArticle)
-      }
+        if(useInputToFindTheArticle.length > 0) { 
+          setFilteredNames(useInputToFindTheArticle)
+          console.log(useInputToFindTheArticle)
+          setProductDoesNotExist(false)
+        } else { 
+          console.log("Agrega al producto")
+          setProductDoesNotExist(true)
+          setFilteredNames([])
+        }
+       
+      } 
     }
+
 
     const chooseArticle = (name, id, price, replacementPrice) => { 
       const roundedPrice = Math.round(parseFloat(price));
@@ -84,21 +96,34 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
     }
     
     const addProductSelected = (productName, productId, quantity, price, value, replacementPrice) => {
-        const rentalPrice = Math.round(parseFloat(price));
-        console.log("tipo de dato", typeof rentalPrice)
-        const numericPrice = parseFloat(value); 
-        console.log("numeric price", numericPrice)
-        const numericQuantity = parseFloat(quantity); 
-        const numericReplacement = parseFloat(replacementPrice); 
-        const newProduct = { productName, productId, quantity: numericQuantity, rentalPrice, value: numericPrice, replacementPrice: numericReplacement };
-        setProductsChoosen([...productsChoosen, newProduct]);
-        setProductChoosenId("")
-        setProductChoosenValue("")
-        setProductChoosenPrice(0)
-        setProductChoosenQuantity("")
-        setProductChoosenName("")
-        setProductChoosenReplacementPrice("")
-        console.log(productsChoosen)
+        if(productDoesNotExist) { 
+          setMissedProductExisted(true)
+          setTimeout(() => { 
+            setMissedProductExisted(false)
+            setProductChoosenId("")
+            setProductChoosenName("")
+            setProductChoosenQuantity("")
+            setProductChoosenValue("")
+            setProductDoesNotExist(false)
+          }, 1600)
+        } else { 
+          const rentalPrice = Math.round(parseFloat(price));
+          console.log("tipo de dato", typeof rentalPrice)
+          const numericPrice = parseFloat(value); 
+          console.log("numeric price", numericPrice)
+          const numericQuantity = parseFloat(quantity); 
+          const numericReplacement = parseFloat(replacementPrice); 
+          const newProduct = { productName, productId, quantity: numericQuantity, rentalPrice, value: numericPrice, replacementPrice: numericReplacement };
+          setProductsChoosen([...productsChoosen, newProduct]);
+          setProductChoosenId("")
+          setProductChoosenValue("")
+          setProductChoosenPrice(0)
+          setProductChoosenQuantity("")
+          setProductChoosenName("")
+          setProductChoosenReplacementPrice("")
+          console.log(productsChoosen)
+        }
+     
     };
     
     const handleRemoveProduct = (productIdToDelete) => {
@@ -107,7 +132,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
       );
     };
 
-    //Funcion para creacion de subalquiler y gasto.
+
     const addNewSublet = async () => { 
       const newSubletData = ({ 
         productsDetail: productsChoosen,
@@ -136,7 +161,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
         providerId: providerChoosenId
       }) 
 
-      if(userCtx.userName === null || userCtx.userEmail === null) { 
+      if(userCtx.userId.length <= 0) { 
         setMissedData(true)
         setErrorText("Debes iniciar Sesion para almacenar un SubAlquiler")
         setTimeout(() => { 
@@ -148,22 +173,26 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
         setTimeout(() => { 
           setMissedData(false)
         }, 1500)
-      } else { 
-        console.log("DATO DEL GASTO", newExpense)
-        console.log(newSubletData)
+      } else if (productDoesNotExist) { 
+        setMissedProductExisted(true)
+        setTimeout(() => { 
+          setMissedProductExisted(false)
+        }, 1800)
+      } 
+      else  { 
         axios.post("http://localhost:4000/sublets", newSubletData)
         .then((res) => { 
           console.log(res.data)
           setSuccesMessage(true)
-          if(usedIn === "withOutSubletsToUse") { 
-            closeBothModals()
-            updateTable()
-          }
-          setTimeout(() => { 
-            setSuccesMessage(false)
-            onClose()
-          }, 1500)
-        })
+              if(usedIn === "withOutSubletsToUse") { 
+                closeBothModals()
+                updateTable()
+              }
+              setTimeout(() => { 
+                setSuccesMessage(false)
+                onClose()
+              }, 1500)
+            })
         .catch((err) => console.log(err))  
 
          axios.post("http://localhost:4000/expenses/addNewExpense", newExpense)     
@@ -174,6 +203,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
           console.log(err)
          })
       }   
+      
     }
 
     useEffect(() => { 
@@ -211,10 +241,53 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
                         : null
                         }
                     </div>  
-                   <Input label="Cantidad" type="number" className="mt-2" value={productChoosenQuantity} variant="underlined" onChange={(e) => setProductChoosenQuantity(e.target.value)}/>  
-                   <Input label="Precio Total" type="number" className="mt-2" value={productChoosenValue} variant="underlined" onChange={(e) => setProductChoosenValue(e.target.value)}/>  
+                   
+                     {productDoesNotExist ?
+                     <div className="flex justify-start text-start">
+                        <p className="text-zinc-600 text-xs font-medium">Debes agregar el producto</p>
+                     </div>  : null}
+
+
+                     <Input 
+                        label="Cantidad" 
+                        type="text" 
+                        className="mt-2" 
+                        value={productChoosenQuantity} 
+                        variant="underlined" 
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '' || (value > 0 && !isNaN(value))) {
+                              setProductChoosenQuantity(value);
+                              setErrorInQuantity(false)
+                            } else {
+                              setErrorInQuantity(true)
+                            }
+                        }} 
+                        />
+
+                        {errorInQuantity ? <p className="text-xs text-zinc-700 font-medium">Debes ingresar un numero mayor a 0</p> : null}
+
+                        <Input 
+                        label="Cantidad" 
+                        type="text" 
+                        className="mt-2" 
+                        value={productChoosenValue} 
+                        variant="underlined" 
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '' || (value > 0 && !isNaN(value))) {
+                              setProductChoosenValue(value);
+                              setErrorInProductChoosenValue(false)
+                            } else {
+                              setErrorInProductChoosenValue(true)
+                            }
+                        }} 
+                        />
+
+                        {errorInProductChoosenValue ? <p className="text-xs text-zinc-700 font-medium">Debes ingresar un numero mayor a 0</p> : null}
+
                      {
-                        productChoosenName.length !== 0 && productChoosenQuantity.length !== 0  && productChoosenValue !== null?
+                        productChoosenName.length !== 0 && productChoosenQuantity.length !== 0  && productChoosenValue > 0?
                         <Button className="mt-6 w-52 font-medium text-white" color="success" 
                          onClick={() => addProductSelected(productChoosenName, productChoosenId, productChoosenQuantity, productChoosenPrice, productChoosenValue, productChoosenReplacementPrice )}>Añadir</Button> 
                         : 
@@ -272,6 +345,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
                   
                   <div className="mt-2 mb-4 flex items-center justify-center">
                      {missedData ? <p className="text-green-800 font-medium text-sm mt-6">{errorText}</p> : null}
+                     {missedProductExisted ? <p className="text-green-800 font-medium text-sm mt-6">Debes ingresar un Articulo existente</p> : null}
                      {succesMessage ? <p className="text-green-800 font-medium text-sm mt-6"> SubAlquiler Creado con exito</p> : null}
                   </div>
             </>
