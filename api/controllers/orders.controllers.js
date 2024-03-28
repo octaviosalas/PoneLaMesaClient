@@ -248,19 +248,29 @@ export const updateOrderData = async (req, res) => {
 export const updateOrderDetail = async (req, res) => {
   const { orderId } = req.params;
   const { newOrderDetailData } = req.body;
+  console.log(req.body)
 
   try {
-    if (newOrderDetailData && newOrderDetailData.orderDetail && newOrderDetailData.total) {
+    if (req.body && req.body.completeNewDetail && req.body.newTotalAmount) {
       const updatedOrderData = await Orders.findOneAndUpdate(
         { _id: orderId },
         {
           $set: {
-            total: newOrderDetailData.total,
-            orderDetail: newOrderDetailData.orderDetail,
+            total: req.body.newTotalAmount,
+            orderDetail: req.body.completeNewDetail,
           },
         },
         { new: true }
       );
+
+      if(req.body.toDiscountStock.length > 0) { 
+        await decrementarStock(req.body.toDiscountStock);
+      }
+
+      if(req.body.toIncrementStock.length > 0) { 
+        await incrementarStock(req.body.toIncrementStock);
+      }
+
 
       res.json({ message: "Detalles del pedido actualizados correctamente", updatedOrderData });
     } else {

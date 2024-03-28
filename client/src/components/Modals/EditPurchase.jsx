@@ -113,15 +113,6 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
             }
 
        };
-
-  /*    useEffect(() => { 
-        console.log("Nuevos datos", newPurchaseDetail)
-        console.log("Datos Originales", memoizedPropValue)
-        console.log()
-      }, [newPurchaseDetail]) */
-
-      
- 
   
     return (
     <div className='w-full'>

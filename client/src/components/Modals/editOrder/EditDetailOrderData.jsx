@@ -3,7 +3,7 @@ import { Input, Button } from '@nextui-org/react'
 import { formatePrice } from '../../../functions/gralFunctions'
 import axios from 'axios'
 
-const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
+const EditDetailOrderData = ({newOrderDetailArray, orderId, comeBack, closeModalNow, updateChanges}) => {
 
     const [productsSelected, setProductsSelected] = useState("")
     const [filteredNames, setFilteredNames] = useState("")
@@ -21,6 +21,8 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
     const [errorInArticle, setErrorInArticle] = useState(false)
     const [showError, setShowError] = useState(false)
     const [newOrderDetailWithChanges, setNewOrderDetailWithChanges] = useState(newOrderDetailArray)
+    const [succesMessage, setSuccesMessage] = useState(false)
+    const [newTotalOrderAmount, setNewTotalOrderAmount] = useState(0)
 
     const originalOrderDetailData = useMemo(() => newOrderDetailArray, []);
 
@@ -39,6 +41,7 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
     useEffect(() => { 
         getClientsProductsData()
         console.log(originalOrderDetailData)
+        console.log("mira aca", newOrderDetailArray)
     }, [])
 
     const handleQuantityChange = (index, newQuantity) => {
@@ -88,8 +91,6 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
 
     const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock) => {
         if(errorInArticle === false && errorInQuantity === false) { 
-            console.log("STOCK DEL PRODUCTO", choosenProductStock)
-            console.log("CANTIDAD ELEGIDA", quantity)
             if(quantity < choosenProductStock) { 
               const choosenProductTotalPrice = price * quantity
               const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
@@ -120,27 +121,10 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
     };
 
     const handleRemoveProduct = (productIdToDelete) => {
-        setProductsSelected((prevProducts) =>
+        setNewOrderDetailWithChanges((prevProducts) =>
           prevProducts.filter((prod) => prod.productId !== productIdToDelete)
         );
     };
-
-  
-   /* const addNewArticlesToOrder = () => { //ESTA FUNCION ENVIA EL DETALLE NUEVO SIN VERIFICAR NADA
-        axios.put(`http://localhost:4000/orders/addNewOrderDetail/${orderData.id}`, productsSelected)
-             .then((res) => { 
-              console.log(res.data)
-              updateList()
-              setSuccessAddMessage(true)
-              setTimeout(() => { 
-                closeModalNow()
-                setSuccessAddMessage(false)
-              }, 1500)
-             })
-             .catch((err) => { 
-              console.log(err)
-             })
-    }*/
 
     const cancelAddProduct = () => { 
         setAddNewProductToOrder(false)
@@ -152,8 +136,7 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
         comeBack()
     }
 
-    
-    
+     
      const changePurchaseDetail = async () => {  
        try {
             const sumarStock = [];
@@ -174,35 +157,36 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
                 disminuirStock.push(dif); 
              }
             });
+
             console.log("ARRAY ORIGINAL DE COMPRA DETAIL", originalOrderDetailData)
             console.log("NUEVO ARRAY ENTERO DE COMPRA DETAIL", newOrderDetailWithChanges)
             console.log("SUMAR STOCK POR DIFERENCIA POSITIVA", sumarStock)
             console.log("DESCONTAR STOCK POR DIFERENCIA NEGATIVA", disminuirStock) 
-            const newTotalPurchaseAmount = newOrderDetailWithChanges.reduce((acc, el) => acc + el.price * el.quantity, 0);
-            console.log(formatePrice(newTotalPurchaseAmount))
+            const newTotalOrderAmount = newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)
 
-            const newPurchaseDetailData = ({ 
-              newTotalAmount: newTotalPurchaseAmount,
+            console.log(formatePrice(newTotalOrderAmount))
+           
+             const newPurchaseDetailData = ({ 
+              newTotalAmount: newTotalOrderAmount,
               toDiscountStock: disminuirStock,
               toIncrementStock: sumarStock,
-              completeNewDetail: newOrderDetailArray
+              completeNewDetail: newOrderDetailWithChanges
             })
+            
             
             console.log(newOrderDetailWithChanges) //ACA ESTAN LOS DATOS ENTEROS PARA ENVIAR AL BACKEND, ESTE ARRAY DEBE RECIBIR EL UPDATE ORDER
 
-          /* const updateDetail = await axios.put(`http://localhost:4000/purchases/updatePurchaseDetail/${purchaseData.id}`, newPurchaseDetailData)
+           const updateDetail = await axios.put(`http://localhost:4000/orders/updateOrderDetail/${orderId}`, newPurchaseDetailData)
             console.log(updateDetail.data)
             if(updateDetail.status === 200) { 
-                setSuccesMessage(true)
+              setSuccessAddMessage(true)
                 setTimeout(() => { 
                   closeModalNow()
                   updateChanges()
-                  setSuccesMessage(false)
-                  setModifyData(false)
-                  setModifyOrderDetailData(false)
+                  setSuccessAddMessage(false)
                 }, 2000)
             }
-*/
+
             } catch (error) {
               console.log(error) 
             }
@@ -219,32 +203,18 @@ const EditDetailOrderData = ({newOrderDetailArray, comeBack}) => {
                 <div className="flex items-center justify-start w-72 gap-4 mt-2">
                     <p className="font-medium text-zinc-500 text-sm">{ord.productName}</p>
                     <Input type="number" variant="underlined" label="Cantidad" className="max-w-md min-w-sm" value={ord.quantity} onChange={(e) => handleQuantityChange(index, e.target.value)} />
+                    <p className="cursor-pointer text-xs" onClick={() => handleRemoveProduct(ord.productId)}>X</p>
                 </div>
                 </div>
             ))}
 
-               {
-                productsSelected.length > 0 ? (
-                  productsSelected.map((ord, index) => (
-                    <>
-                      <div key={index} className="flex flex-col">
-                        <div className="flex items-center justify-start w-72 gap-4 mt-2">
-                          <p className="font-medium text-zinc-500 text-sm">{ord.productName}</p>
-                          <Input type="number" variant="underlined" label="Cantidad" className="max-w-md min-w-sm" value={ord.quantity}/>
-                          <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(ord.productId)}>X</p>
-                        </div>                      
-                      </div>
-                    </>
-                  ))
-                ) : null
-               }
+           
 
             <div className="flex items-center justify-center mt-2">
-            {productsSelected.length > 0 ? (
+            {newOrderDetailWithChanges.length > 0 ? (
                 <p className="font-bold text-zinc-600">       
                     Total: {formatePrice(
-                    newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) +
-                    productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)
+                    newOrderDetailWithChanges.reduce((acc, el) => acc + el.quantity * el.price, 0)
                     )}
                 </p>
                 ) : (

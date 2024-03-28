@@ -304,6 +304,7 @@ const CreateNewOrder = ({updateList}) => {
             day: actualDay,
             paid: false
           })
+          console.log("ENVIO", orderData)
           axios.post("http://localhost:4000/orders/create", orderData)
               .then((res) => { 
                 console.log(res.data)

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import axios from "axios";
 
@@ -6,10 +6,58 @@ export const ReturnToWashing = ({orderData, updateList}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [succesMessage, setSuccesMessage] = useState(false);
+  const originalOrderDetailData = useMemo(() => orderData.orderDetail, []);
 
   const handleOpen = () => { 
     console.log(orderData)
+    console.log(originalOrderDetailData)
     onOpen()
+    if(orderData.missingArticlesData.length === 0) { //SI NO TIENE ARTICULOS FALTANTES MANDO ESTO A LAVADO
+      unifiedArticlesByQuantity(orderData.orderDetail)    
+      console.log("No tiene faltantes")
+    } else { 
+      console.log("Tiene faltantes")
+      const getProductMissed = orderData.missingArticlesData.map((or) => or.missedProductsData).map((orig) => orig.productMissed).flat() // SI TIENE ARTICULOS FALTANTES MANDO ESTO
+      console.log("Articulos Faltantes", getProductMissed)
+      const detectProductsWithMissedQuantitys = originalOrderDetailData.map((original) => { 
+        const detectMissed = getProductMissed.filter((prodMissed) => prodMissed.productId === original.productId)
+        return  { 
+          originalOrderQuantity: original.quantity,
+          missedQuantity: detectMissed.map((missed) => missed.missedQuantity)[0],
+          difference: original.quantity -  detectMissed.map((missed) => missed.missedQuantity)[0],
+          productName:  original.productName,
+          productId: original.productId
+        }
+      })
+    //ACA DEBO FILTRAR AL ORIGINAL, DEVOLVER EL QUE NO TIENE EL ID IGUAL A detectProductsWithMissedQuantitys Y SI LO TIENE, DEVOLVER EL NUEVO
+    console.log(detectProductsWithMissedQuantitys)
+    }
+  }
+
+  const unifiedArticlesByQuantity = async (item) => { 
+    try {
+        const agroupArticlesByName = await item.reduce((acc, el) => { 
+          const articleName = el.productName
+          if(acc[articleName]) { 
+            acc[articleName].push({quantity: el.quantity, productId: el.productId});
+          } else { 
+            acc[articleName] = [{quantity: el.quantity, productId: el.productId}];
+          }
+        return acc
+        }, {})
+        const transformDataInArray = Object.entries(agroupArticlesByName).map(([productName, items]) => {
+          const quantityToWash = items.reduce((acc, item) => acc + item.quantity, 0);
+          const productId = items[0].productId;
+          return {
+             productName: productName,
+             quantityToWash: quantityToWash,
+             productId: productId
+          };
+         });
+        console.log(transformDataInArray)
+      }  catch (error) {
+      console.log(error)
+    }
   }
 
   const returnOrderToWashed = async () => { 

@@ -73,10 +73,14 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                         const id = filaActual.original._id;
                         const orderNumber = filaActual.original.orderNumber;
                         const month = filaActual.original.month;
+                        const orderDetail = filaActual.original.orderDetail;
+                        const missingArticlesData = filaActual.original.missingArticlesData;
                         const item = {
                         id: id,
                         orderNumber: orderNumber,
-                        month: month
+                        month: month,
+                        orderDetail: orderDetail,
+                        missingArticlesData: missingArticlesData
                         };
                         return (
                          <ReturnToWashing orderData={item} updateList={updateList}/>
