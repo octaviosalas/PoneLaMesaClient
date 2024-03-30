@@ -7,30 +7,45 @@ export const ReturnToWashing = ({orderData, updateList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [succesMessage, setSuccesMessage] = useState(false);
   const originalOrderDetailData = useMemo(() => orderData.orderDetail, []);
+  const [withOutMissedArticles, setWithOutMissedArticles] = useState(false)
+  const [withMissedArticles, setWithMissedArticles] = useState(false)
+  const [dataToSendToWash, setDataToSendToWash] = useState([])
 
   const handleOpen = () => { 
     console.log(orderData)
-    console.log(originalOrderDetailData)
+    console.log("Array original del pedido: ", originalOrderDetailData)
     onOpen()
-    if(orderData.missingArticlesData.length === 0) { //SI NO TIENE ARTICULOS FALTANTES MANDO ESTO A LAVADO
-      unifiedArticlesByQuantity(orderData.orderDetail)    
+    if(orderData.missingArticlesData.length === 0) { 
       console.log("No tiene faltantes")
+      setWithOutMissedArticles(true)
+      setWithMissedArticles(false)
+      unifiedArticlesByQuantity(orderData.orderDetail)    
     } else { 
+      setWithMissedArticles(true)
+      setWithOutMissedArticles(false)
       console.log("Tiene faltantes")
-      const getProductMissed = orderData.missingArticlesData.map((or) => or.missedProductsData).map((orig) => orig.productMissed).flat() // SI TIENE ARTICULOS FALTANTES MANDO ESTO
+      const getProductMissed = orderData.missingArticlesData.map((or) => or.missedProductsData).map((orig) => orig.productMissed).flat() 
       console.log("Articulos Faltantes", getProductMissed)
       const detectProductsWithMissedQuantitys = originalOrderDetailData.map((original) => { 
         const detectMissed = getProductMissed.filter((prodMissed) => prodMissed.productId === original.productId)
         return  { 
           originalOrderQuantity: original.quantity,
           missedQuantity: detectMissed.map((missed) => missed.missedQuantity)[0],
-          difference: original.quantity -  detectMissed.map((missed) => missed.missedQuantity)[0],
+          quantityToWash: original.quantity -  detectMissed.map((missed) => missed.missedQuantity)[0],
           productName:  original.productName,
           productId: original.productId
         }
       })
-    //ACA DEBO FILTRAR AL ORIGINAL, DEVOLVER EL QUE NO TIENE EL ID IGUAL A detectProductsWithMissedQuantitys Y SI LO TIENE, DEVOLVER EL NUEVO
-    console.log(detectProductsWithMissedQuantitys)
+    console.log("Los faltantes del pedido", detectProductsWithMissedQuantitys)
+    const theFinalArrayData = detectProductsWithMissedQuantitys.map((prod) => { 
+      return { 
+        productName: prod.productName,
+        productId: prod.productId,
+        quantityToPassToWash: prod.missedQuantity !== undefined ? prod.quantityToWash : prod.originalOrderQuantity
+      }
+    })
+    console.log("Array para enviar al backend", theFinalArrayData)
+    setDataToSendToWash(theFinalArrayData)
     }
   }
 
@@ -50,17 +65,18 @@ export const ReturnToWashing = ({orderData, updateList}) => {
           const productId = items[0].productId;
           return {
              productName: productName,
-             quantityToWash: quantityToWash,
+             quantityToPassToWash: quantityToWash,
              productId: productId
           };
          });
         console.log(transformDataInArray)
+        setDataToSendToWash(transformDataInArray)
       }  catch (error) {
       console.log(error)
     }
   }
 
-  const returnOrderToWashed = async () => { 
+ /* const returnOrderToWashed = async () => { 
     try {
         const newStatus = "Lavado"
         const changeOrderStatus = await axios.put(`http://localhost:4000/orders/changeOrderState/${orderData.id}`, {newStatus})
@@ -77,7 +93,31 @@ export const ReturnToWashing = ({orderData, updateList}) => {
          console.log(error)
     }
   
+  }*/
+  
+  const sendDataToWash =  async () => { 
+    console.log(dataToSendToWash)
+     try {
+         const sendNewArticlesToWashModel = await axios.post("http://localhost:4000/cleaning/addNewArticles", dataToSendToWash)
+         console.log(sendNewArticlesToWashModel.data)
+         if(sendNewArticlesToWashModel.status === 200) { 
+            const newStatus = "Lavado"
+            const changeOrderStatus = await axios.put(`http://localhost:4000/orders/changeOrderState/${orderData.id}`, {newStatus})
+            console.log(changeOrderStatus.data)
+              if(changeOrderStatus.status === 200) { 
+                  setSuccesMessage(true)
+                  updateList()
+                  setTimeout(() => { 
+                      setSuccesMessage(false)
+                      onClose()
+                  }, 1800)
+              }
+         }
+     } catch (error) {
+         console.log(error)
+     }
   }
+
 
   return (
     <>
@@ -88,12 +128,14 @@ export const ReturnToWashing = ({orderData, updateList}) => {
             <>
               <ModalHeader className="flex flex-col">Modal Title</ModalHeader>
               <ModalBody>
-                <div className="flex items-center justify-center mt-4">
-                  <p className="text-sm font-medium text-green-800">¿Estas seguro de pasar la orden {orderData.orderNumber} del mes de {orderData.month} a Lavado?</p>
+                <div className="flex flex-col items-center justify-center mt-4">
+                  <p className="text-sm font-medium text-green-800">¿Estas seguro de pasar la orden a Lavado?</p>
+                  {withMissedArticles ? <p className="text-xs font-medium text-zinc-600 mt-2">Los articulos se pasaran a lavado descontando los faltantes del pedido</p> :
+                   <p className="text-xs font-medium text-zinc-600 mt-2">Esta orden no posee faltantes</p>}
                 </div>
               </ModalBody>
               <ModalFooter className="mb-2 flex gap-4 items-center justify-center">
-                <Button className="bg-green-800 text-sm text-white font-medium" onClick={() => returnOrderToWashed()}>
+                <Button className="bg-green-800 text-sm text-white font-medium" onClick={() => sendDataToWash()}>
                   Confirmar
                 </Button>
                 <Button className="bg-green-800 text-sm text-white font-medium" onPress={onClose}>

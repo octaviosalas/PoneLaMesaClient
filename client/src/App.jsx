@@ -9,7 +9,7 @@ import Orders from './pages/Orders'
 import Purchases from './pages/Purchases'
 import Armed from './components/OrdersProcess/Armed'
 import ToBeConfirmed from './components/OrdersProcess/ToBeConfirmed'
-import Cleaning from "./components/OrdersProcess/Cleaning"
+import Cleaning from "./components/Cleaning/Cleaning"
 import LocalDeliveries from './components/OrdersProcess/LocalDeliveries'
 import Returns from './components/OrdersProcess/Returns'
 import Returned from './components/OrdersProcess/Returned'

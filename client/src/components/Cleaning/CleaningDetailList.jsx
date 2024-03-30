@@ -5,7 +5,7 @@ import axios from "axios";
 import Loading from "../Loading/Loading"
 import MarkWashedArticlesAsFinished from './MarkWashedArticlesAsFinished';
 
-const CleaningDetailList = ({washData}) => {
+const CleaningDetailList = ({washData, updateNumbers}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -21,7 +21,7 @@ const CleaningDetailList = ({washData}) => {
 
      const getDataAndCreateTable = () => { 
         if(data.length !== 0) { 
-        const propiedades = Object.keys(washData[0]).filter(propiedad =>  propiedad !== 'productId' );
+        const propiedades = Object.keys(washData[0]).filter(propiedad =>  propiedad !== 'productId' &&  propiedad !== '__v'  &&  propiedad !== '_id');
         const columnObjects = propiedades.map(propiedad => ({
             key: propiedad,
             label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -33,8 +33,8 @@ const CleaningDetailList = ({washData}) => {
                 return { ...column, label: 'ID' };
             } else if (column.key === 'productName') {
                 return { ...column, label: 'Articulo' };
-            } else if (column.key === 'quantityToWash') {
-                return { ...column, label: 'Cantidad' };
+            } else if (column.key === 'quantity') {
+                return { ...column, label: 'Cantidad para Lavar' };
             } else {
                 return column;
             }
@@ -45,12 +45,12 @@ const CleaningDetailList = ({washData}) => {
             label: 'Registrar Lavado',
             cellRenderer: (cell) => { 
                 const filaActual = cell.row;
-                const id = filaActual.original.productId;
+                const productId = filaActual.original.productId;
                 const productName = filaActual.original.productName;
-                const quantity = filaActual.original.quantityToWash
-                const item = { id, productName, quantity};
+                const quantity = filaActual.original.quantity
+                const item = { productId, productName, quantity};
                 return (
-                   <MarkWashedArticlesAsFinished washedData={item}/>
+                   <MarkWashedArticlesAsFinished washedData={item} updateNumbers={updateNumbers}/>
                 );
             },
             }) 
@@ -79,14 +79,22 @@ const CleaningDetailList = ({washData}) => {
 });
 
   return (
-    <div>
-        <input
+              <div>
+                    <div className='h-12 flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px]'>
+                       <div className='flex w-full justify-start items-center ml-4'>                   
+                           <p className='font-bold text-sm text-zinc-600 underline'>Cantidades de Articulos en Lavado</p>
+                       </div>
+                       <div className='flex justify-start mr-4'></div>
+                     </div>
+                    <div className='flex justify-start items-start text-start mt-2'>
+                        <input
                           className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
                           placeholder="Buscador"
                           onChange={(e) => setInputValue(e.target.value)}
                           value={inputValue}/>
-          {data.length >0 && columns.length > 0 ? 
-           <Table
+                    </div>
+              {data.length >0 && columns.length > 0 ? 
+                   <Table
                      columnAutoWidth={true}
                      columnSpacing={10}
                      aria-label="Selection behavior table example with dynamic content"

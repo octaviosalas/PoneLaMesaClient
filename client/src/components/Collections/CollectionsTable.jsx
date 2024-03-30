@@ -228,7 +228,7 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                data.length > 0 ? (
                   <>
                    <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
-                     <div className='h-12 w-full flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
+                     <div className='h-12 flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px]'>
                        <div className='flex w-full justify-start items-center ml-4'>                   
                            <CollectionsFilters 
                               applyFilters={applyFilters} 

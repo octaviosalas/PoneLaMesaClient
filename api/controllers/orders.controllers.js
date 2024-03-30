@@ -23,6 +23,21 @@ export const incrementarStock = async (productosComprados) => {
   }
 };
 
+export const incrementStockJustInOneProduct = async (productoCompra) => { 
+  try {
+     const { productId, quantity } = productoCompra;
+     const cantidad = quantity; 
+     console.log("Me llego:", productId, cantidad);
+     await ProductsClients.findByIdAndUpdate(
+       productId, // Pasar directamente el productId
+       { $inc: { stock: cantidad }},
+       { new: true }
+     );
+  } catch (error) {
+     throw new Error(`Error al incrementar el stock: ${error.message}`);
+  }
+ };
+
 export const decrementarStock = async (productosComprados) => { 
   try {
     for (const productoCompra of productosComprados) {

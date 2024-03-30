@@ -9,7 +9,7 @@ const cleaningSchema = mongoose.Schema({
         type: String
     }, 
     quantity: { 
-        type: String
+        type: Number
     }
 })
 
