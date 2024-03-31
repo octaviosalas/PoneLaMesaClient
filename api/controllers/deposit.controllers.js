@@ -1,7 +1,19 @@
-import Cleaning from "../models/cleaningDay.js"
-import { incrementStockJustInOneProduct } from "./orders.controllers.js";
+import Deposit from "../models/depositDay.js"
 
-export const addNewArticlesToWash = async (req, res) => {
+export const getDepositData = async (req, res) => { 
+    try {
+        const depositData = await Deposit.find()
+        if(!depositData) { 
+            return res.status(404).json({ message: 'No hay articulos en deposito' });
+        }
+        res.status(200).json(depositData);
+
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener arituclos de deposito' });
+    }
+}
+
+export const addNewArticlesToDeposit = async (req, res) => { 
     try {
         const products = req.body;
 
@@ -11,13 +23,13 @@ export const addNewArticlesToWash = async (req, res) => {
                 $inc: { quantity: product.quantityToPassToWash } 
             };
 
-            const updatedDocument = await Cleaning.findOneAndUpdate(filter, update, {
+            const updatedDocument = await Deposit.findOneAndUpdate(filter, update, {
                 new: true, 
                 upsert: false 
             });
 
             if (!updatedDocument) {
-                const newProduct = new Cleaning({
+                const newProduct = new Deposit({
                     productId: product.productId,
                     productName: product.productName,
                     quantity: product.quantityToPassToWash 
@@ -31,27 +43,14 @@ export const addNewArticlesToWash = async (req, res) => {
         console.error(error);
         res.status(500).send('Error al procesar los productos');
     }
-};
-
-export const getCleaningData = async (req, res) => { 
-    try {
-        const cleaningData = await Cleaning.find()
-        if(!cleaningData) { 
-            return res.status(404).json({ message: 'No hay lavado' });
-        }
-        res.status(200).json(cleaningData);
-
-    } catch (error) {
-        res.status(500).json({ error: 'Error al obtener lavados' });
-    }
 }
 
-export const updateCleaningData = async (req, res) => { 
+export const updateDepositData = async (req, res) => { 
     const {productId} = req.params;
     console.log(req.body)
     
     try {
-        const findTheProduct = await Cleaning.findOneAndUpdate(
+        const findTheProduct = await Deposit.findOneAndUpdate(
             {productId: productId}, 
             { $set: { quantity: req.body.newQuantity } },
             { new: true } 
@@ -66,8 +65,3 @@ export const updateCleaningData = async (req, res) => {
         res.status(500).json({ message: 'Error al actualizar los datos de limpieza' });
     }
 }
-
-
-
-
-

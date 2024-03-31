@@ -10,22 +10,36 @@ export const ReturnToWashing = ({orderData, updateList}) => {
   const [withOutMissedArticles, setWithOutMissedArticles] = useState(false)
   const [withMissedArticles, setWithMissedArticles] = useState(false)
   const [dataToSendToWash, setDataToSendToWash] = useState([])
+  const [dataToSendToDeposit, setDataToSendToDeposit] = useState([])
+  const [orderHasDepositArticles, setOrderHasDepositArticles] = useState(false)
+
 
   const handleOpen = () => { 
     console.log(orderData)
     console.log("Array original del pedido: ", originalOrderDetailData)
     onOpen()
     if(orderData.missingArticlesData.length === 0) { 
-      console.log("No tiene faltantes")
+      console.log("Esta orden no tiene faltantes")
       setWithOutMissedArticles(true)
       setWithMissedArticles(false)
       unifiedArticlesByQuantity(orderData.orderDetail)    
+
+      const findDeposit = orderData.orderDetail.some((ord) => ord.choosenProductCategory === "deposito") //Aca arranco a corroborar deposito    
+      if(findDeposit) { 
+        const getDepositArticles = orderData.orderDetail.filter((ord) => ord.choosenProductCategory === "deposito")
+        console.log("ORDEN SIN FALTANTES, ARTICULOS A DEPOSITO:", getDepositArticles)
+        setDataToSendToDeposit(getDepositArticles)
+        setOrderHasDepositArticles(true)
+      }
+
     } else { 
+
       setWithMissedArticles(true)
       setWithOutMissedArticles(false)
-      console.log("Tiene faltantes")
+      console.log("Esta orden tiene faltantes")
       const getProductMissed = orderData.missingArticlesData.map((or) => or.missedProductsData).map((orig) => orig.productMissed).flat() 
       console.log("Articulos Faltantes", getProductMissed)
+
       const detectProductsWithMissedQuantitys = originalOrderDetailData.map((original) => { 
         const detectMissed = getProductMissed.filter((prodMissed) => prodMissed.productId === original.productId)
         return  { 
@@ -33,19 +47,32 @@ export const ReturnToWashing = ({orderData, updateList}) => {
           missedQuantity: detectMissed.map((missed) => missed.missedQuantity)[0],
           quantityToWash: original.quantity -  detectMissed.map((missed) => missed.missedQuantity)[0],
           productName:  original.productName,
-          productId: original.productId
+          productId: original.productId,
+          productCategory: original.choosenProductCategory
         }
       })
+      
     console.log("Los faltantes del pedido", detectProductsWithMissedQuantitys)
     const theFinalArrayData = detectProductsWithMissedQuantitys.map((prod) => { 
       return { 
         productName: prod.productName,
         productId: prod.productId,
-        quantityToPassToWash: prod.missedQuantity !== undefined ? prod.quantityToWash : prod.originalOrderQuantity
+        quantityToPassToWash: prod.missedQuantity !== undefined ? prod.quantityToWash : prod.originalOrderQuantity,
+        productCategory: prod.productCategory
       }
     })
-    console.log("Array para enviar al backend", theFinalArrayData)
-    setDataToSendToWash(theFinalArrayData)
+
+    const justWashProducts = theFinalArrayData.filter((ord) =>  ord.productCategory === "local")
+    console.log("Array para enviar al backend de LAVADO", justWashProducts)
+    const depositArticles = theFinalArrayData.filter((ord) => ord.productCategory === "deposito")
+    console.log("ORDEN CON FALTANTES, ARTICULOS CON CANTIDAD CORRECTA PARA DEPOSITO", depositArticles)
+      if(depositArticles.length > 0) { 
+        setOrderHasDepositArticles(true)
+        setDataToSendToDeposit(depositArticles)
+      } else { 
+        console.log("ESTA ORDEN NO POSEE ARTICULOS PARA DEPOSITO")
+      }
+    setDataToSendToWash(justWashProducts)
     }
   }
 
@@ -76,24 +103,6 @@ export const ReturnToWashing = ({orderData, updateList}) => {
     }
   }
 
- /* const returnOrderToWashed = async () => { 
-    try {
-        const newStatus = "Lavado"
-        const changeOrderStatus = await axios.put(`http://localhost:4000/orders/changeOrderState/${orderData.id}`, {newStatus})
-        console.log(changeOrderStatus.data)
-        if(changeOrderStatus.status === 200) { 
-            setSuccesMessage(true)
-            updateList()
-            setTimeout(() => { 
-                setSuccesMessage(false)
-                onClose()
-            }, 1800)
-        }
-    } catch (error) {
-         console.log(error)
-    }
-  
-  }*/
   
   const sendDataToWash =  async () => { 
     console.log(dataToSendToWash)
