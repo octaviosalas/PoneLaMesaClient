@@ -3,9 +3,10 @@ import { useState, useRef, useEffect } from 'react'
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Input} from "@nextui-org/react";
 import axios from "axios";
 import Loading from "../Loading/Loading"
-import MarkWashedArticlesAsFinished from './MarkWashedArticlesAsFinished';
+import MarkWashedArticlesAsFinished from '../Cleaning/MarkWashedArticlesAsFinished';
+import MarkDepositArticlesAsFinished from './MarkDepositArticlesAsFinished';
 
-const CleaningDetailList = ({washData, updateNumbers}) => {
+const DepositList = ({depositData, updateNumbers}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -14,14 +15,14 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
 
     useEffect(() => { 
-        setData(washData)
-        console.log("LOS WASH DATA", washData)
-     }, [washData])
+        setData(depositData)
+        console.log("LOS DEPOSIT DATA", depositData)
+     }, [depositData])
      
 
      const getDataAndCreateTable = () => { 
         if(data.length !== 0) { 
-        const propiedades = Object.keys(washData[0]).filter(propiedad =>  propiedad !== 'productId' &&  propiedad !== '__v'  &&  propiedad !== '_id');
+        const propiedades = Object.keys(depositData[0]).filter(propiedad =>  propiedad !== 'productId' &&  propiedad !== '__v'  &&  propiedad !== '_id');
         const columnObjects = propiedades.map(propiedad => ({
             key: propiedad,
             label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -41,8 +42,8 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
         });
     
             modifiedColumnObjects.push({
-            key: 'Registrar Lavado',
-            label: 'Registrar Lavado',
+            key: 'Registrar Reposicion',
+            label: 'Registrar Reposicion',
             cellRenderer: (cell) => { 
                 const filaActual = cell.row;
                 const productId = filaActual.original.productId;
@@ -50,7 +51,7 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
                 const quantity = filaActual.original.quantity
                 const item = { productId, productName, quantity};
                 return (
-                   <MarkWashedArticlesAsFinished washedData={item} updateNumbers={updateNumbers}/>
+                   <MarkDepositArticlesAsFinished depositData={item} updateNumbers={updateNumbers}/>
                 );
             },
             }) 
@@ -80,20 +81,18 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
    });
 
   return (
-           <div className='flex flex-col items-center justify-center 2xl:mt-12'>
-                <div className='flex flex-col items-start justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
-                      <div className='h-12 items-center justify-start w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>             
-                              <p className='font-bold text-sm text-zinc-600 underline ml-2'>Cantidades de Articulos en Lavado</p>
-                      </div>     
-                      <input
+    <div className='flex flex-col items-center justify-center 2xl:mt-12'>
+       <div className='flex flex-col items-start justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
+          <div className='h-12 items-center justify-start w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>                     
+                           <p className='font-bold ml-3 text-sm text-zinc-600 underline'>Cantidades de Articulos en Deposito</p>
+                       </div>
+                       <input
                           className="w-[35%] mt-2 border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
                           placeholder="Buscador"
                           onChange={(e) => setInputValue(e.target.value)}
                           value={inputValue}
                         />     
-                </div>
-                 
-                      
+                     </div>
                    
               {data.length >0 && columns.length > 0 ? 
                    <Table
@@ -101,7 +100,7 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
                      columnSpacing={10}
                      aria-label="Selection behavior table example with dynamic content"
                      selectionBehavior={selectionBehavior}
-                     className="w-full mt-2  lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+                     className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
                    >
                      <TableHeader columns={columns}>
                        {(column) => (
@@ -135,4 +134,4 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
   )
 }
 
-export default CleaningDetailList
+export default DepositList

@@ -24,7 +24,8 @@ import Providers from './pages/Providers'
 import Sublets from './pages/Sublets'
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react'
-
+import Deposit from './components/Deposit/Deposit'
+import EmployeesMain from './components/Employees/EmployeesMain'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -47,9 +48,11 @@ function App() {
             <Route path="/compras" element={<Purchases />} />   
             <Route path="/Cobros" element={<Collections />} />   
             <Route path="/clientes" element={<Clients />} />  
+            <Route path="/Empleados" element={<EmployeesMain />} /> 
             <Route path="/Armado" element={<Armed />} />   
             <Route path="/AConfirmar" element={<ToBeConfirmed />} />   
             <Route path="/Lavado" element={<Cleaning />} />   
+            <Route path="/Deposito" element={<Deposit />} />   
             <Route path="/Proveedores" element={<Providers />} />   
             <Route path="/EntregasLocal" element={<LocalDeliveries />} /> 
             <Route path="/Devoluciones" element={<Returns />} /> 

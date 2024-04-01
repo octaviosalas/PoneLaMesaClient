@@ -121,10 +121,11 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
     }
 
     const filteredData = data.filter((item) => {
-        return Object.values(item).some((value) =>
-        value.toString().toLowerCase().includes(inputValue.toLowerCase())
-        );
-    });
+      return Object.values(item).some((value) => {
+         if (value === null) return false;
+         return value.toString().toLowerCase().includes(inputValue.toLowerCase());
+      });
+     });
 
     useEffect(() => { 
         console.log("cambio columnas y data")

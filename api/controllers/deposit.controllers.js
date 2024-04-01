@@ -1,4 +1,5 @@
 import Deposit from "../models/depositDay.js"
+import { incrementStockJustInOneProduct } from "./orders.controllers.js";
 
 export const getDepositData = async (req, res) => { 
     try {
@@ -20,7 +21,7 @@ export const addNewArticlesToDeposit = async (req, res) => {
         for (const product of products) {
             const filter = { productId: product.productId };
             const update = {
-                $inc: { quantity: product.quantityToPassToWash } 
+                $inc: { quantity: product.quantity } 
             };
 
             const updatedDocument = await Deposit.findOneAndUpdate(filter, update, {
@@ -32,7 +33,7 @@ export const addNewArticlesToDeposit = async (req, res) => {
                 const newProduct = new Deposit({
                     productId: product.productId,
                     productName: product.productName,
-                    quantity: product.quantityToPassToWash 
+                    quantity: product.quantity 
                 });
                 await newProduct.save();
             }
@@ -47,6 +48,7 @@ export const addNewArticlesToDeposit = async (req, res) => {
 
 export const updateDepositData = async (req, res) => { 
     const {productId} = req.params;
+    console.log(productId)
     console.log(req.body)
     
     try {

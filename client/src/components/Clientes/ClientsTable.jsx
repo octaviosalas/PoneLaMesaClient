@@ -141,19 +141,25 @@ const ClientsTable = () => {
             }, []);
 
             const filteredData = data.filter((item) => {
-                return Object.values(item).some((value) =>
-                value.toString().toLowerCase().includes(inputValue.toLowerCase())
-                );
-            });
+              return Object.values(item).some((value) => {
+                 if (value === null) return false;
+                 return value.toString().toLowerCase().includes(inputValue.toLowerCase());
+              });
+             });
 
 
   return (
     <div className='flex flex-col items-center justify-center'>
          {columns.length !== 0 && data.length !== 0 ? 
          <>
-          <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
-              <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>              
-                <CreateNewClient updateList={getClientsDataAndCreateTable}/>                    
+          <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] ' >
+              <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>  
+                <div className='flex justify-start ml-2'>
+                   <p className='text-sm font-medium text-zinc-600'>Clientes</p>
+                </div>   
+                <div className='flex justify-end mr-2'>
+                  <CreateNewClient updateList={getClientsDataAndCreateTable}/>      
+                </div>                        
               </div>
               <div className='w-full flex jusitfy-start text-center mt-4 '>
                <input 
@@ -168,7 +174,7 @@ const ClientsTable = () => {
             columnSpacing={10}  
             aria-label="Selection behavior table example with dynamic content"   
             selectionBehavior={selectionBehavior} 
-            className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right overflow-y-auto"
+            className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px]  max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right overflow-y-auto"
             >
           <TableHeader columns={columns} >
                     {(column) => (

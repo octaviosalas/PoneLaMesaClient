@@ -55,8 +55,8 @@ const CreateNewClient = ({type, updateList}) => {
        type === "creatingOrder" ?
         <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Crear Cliente</p> 
         :
-        <div className="flex border justify-end items-end">
-         <Button onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Crear Cliente +</Button>
+        <div className="flex justify-end items-end">
+         <p onClick={onOpen} className="text-green-zinc-700 font-bold text-sm cursor-pointer">Crear Cliente +</p>
         </div>
 
         }
@@ -67,11 +67,11 @@ const CreateNewClient = ({type, updateList}) => {
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-medium">Crear Cliente</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center justify-center"> 
-                   <Input type="text" label="Nombre" value={name} variant="bordered" className="w-72" onChange={(e) => setName(e.target.value)}/>
-                   <Input type="text" label="Telefono" value={telephone} variant="bordered" className="w-72 mt-2" onChange={(e) => setTelephone(e.target.value)}/>
-                   <Input type="text" label="Email" value={email} variant="bordered" className="w-72 mt-2" onChange={(e) => setEmail(e.target.value)}/>
-                   <Input type="text" label="Direccion" value={home} variant="bordered" className="w-72 mt-2" onChange={(e) => setHome(e.target.value)}/>
-                   <Select label="Tipo de Cliente" value={typeOfClient} variant="bordered" className="w-72 mt-2">
+                   <Input type="text" variant="underlined" label="Nombre" value={name} className="w-72" onChange={(e) => setName(e.target.value)}/>
+                   <Input type="text" variant="underlined" label="Telefono" value={telephone} className="w-72 mt-2" onChange={(e) => setTelephone(e.target.value)}/>
+                   <Input type="text" variant="underlined" label="Email" value={email} className="w-72 mt-2" onChange={(e) => setEmail(e.target.value)}/>
+                   <Input type="text" variant="underlined" label="Direccion" value={home} className="w-72 mt-2" onChange={(e) => setHome(e.target.value)}/>
+                   <Select label="Tipo de Cliente"  variant="underlined" value={typeOfClient} className="w-72 mt-2 "  style={{ border: 'none' }}>
                       <SelectItem onClick={() => setTypeOfClient("Bonificado")}>Bonificado</SelectItem>
                       <SelectItem onClick={() => setTypeOfClient("No Bonificado")}>No Bonificado</SelectItem>
                    </Select>

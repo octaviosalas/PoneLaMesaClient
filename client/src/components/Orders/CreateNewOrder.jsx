@@ -360,10 +360,7 @@ const CreateNewOrder = ({updateList}) => {
                     {nameClientDoesNotExist ? <p className="text-xs font-medium text-zinc-600 mt-1">El cliente debe estar registrado</p> : null}
 
 
-                    <Select  css={{
-                              $$inputBorderRadius: '0', // Elimina los bordes redondeados
-                              $$inputBorder: 'none', // Elimina el borde
-                            }}  variant="underlined"  label="Tipo de Cliente" className="max-w-xs border border-none mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
+                    <Select style={{ border: 'none' }} variant="underlined"  label="Tipo de Cliente" className="max-w-xs border border-none mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
                       {typeOfClients.map((client) => (
                         <SelectItem key={client.value} value={client.value}>
                           {client.label}

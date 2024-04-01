@@ -4,11 +4,12 @@ import { incrementStockJustInOneProduct } from "./orders.controllers.js";
 export const addNewArticlesToWash = async (req, res) => {
     try {
         const products = req.body;
+        console.log(products)
 
         for (const product of products) {
             const filter = { productId: product.productId };
             const update = {
-                $inc: { quantity: product.quantityToPassToWash } 
+                $inc: { quantity: product.quantity } 
             };
 
             const updatedDocument = await Cleaning.findOneAndUpdate(filter, update, {
@@ -20,7 +21,7 @@ export const addNewArticlesToWash = async (req, res) => {
                 const newProduct = new Cleaning({
                     productId: product.productId,
                     productName: product.productName,
-                    quantity: product.quantityToPassToWash 
+                    quantity: product.quantity 
                 });
                 await newProduct.save();
             }

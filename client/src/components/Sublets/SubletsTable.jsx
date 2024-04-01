@@ -127,11 +127,12 @@ const SubletsTable = ({sublets, update}) => {
                   } 
                  }
 
-                const filteredData = data.filter((item) => {
-                    return Object.values(item).some((value) =>
-                    value.toString().toLowerCase().includes(inputValue.toLowerCase())
-                    );
-                });
+                 const filteredData = data.filter((item) => {
+                  return Object.values(item).some((value) => {
+                     if (value === null) return false;
+                     return value.toString().toLowerCase().includes(inputValue.toLowerCase());
+                  });
+                 });
 
                 useEffect(() => { 
                     setTimeout(() => { 
