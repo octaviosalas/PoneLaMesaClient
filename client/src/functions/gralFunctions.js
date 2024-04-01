@@ -205,3 +205,20 @@ export const everyClients = async () => {
      console.log(error)
   }
 }
+
+
+export const convertTo12HourFormat = (time24) => {
+  const [hour, minute] = time24.split(':').map(Number);
+  let period = 'AM';
+  let hour12 = hour;
+  if (hour >= 12) {
+      period = 'PM';
+      if (hour > 12) {
+          hour12 = hour - 12;
+      }
+  }
+  if (hour12 === 0) {
+      hour12 = 12; 
+  }
+  return `${hour12.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${period}`;
+}
