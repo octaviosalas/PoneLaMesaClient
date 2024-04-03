@@ -74,6 +74,28 @@ export const getProductsBonusClients = async () => {
       throw error;
     }
   };
+
+  export const getMonthlyOrder = async (month) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/orders/getByMonth/${month}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  export const getMonthlySublets = async (month) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/sublets/getByMonth/${month}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+
   
 
 

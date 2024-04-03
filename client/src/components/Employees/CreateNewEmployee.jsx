@@ -3,25 +3,29 @@ import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Inpu
 import {Card, CardHeader, CardBody, CardFooter, Image} from "@nextui-org/react";
 import axios from "axios";
 
-const CreateNewEmployee = ({type}) => {
+const CreateNewEmployee = ({type, updateList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
   const [name, setName] = useState("")
   const [dni, setDni] = useState("")
+  const [hourAmount, setHourAmount] = useState(0)
+  const [numberError, setNumberError] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [missedData, setMissedData] = useState(false)
 
   const createNew = async () => { 
-    if(name.length > 5 && dni.length > 0) { 
+    if(name.length > 5 && dni.length > 0 && numberError === false) { 
         const newData = ({ 
             name: name,
-            dni: dni
+            dni: dni,
+            hourAmount: hourAmount
         })
         try {
             const sendData = await axios.post("http://localhost:4000/employees/create", newData)
             console.log(sendData.data)
             if(sendData.status === 200) { 
                 setSuccesMessage(true)
+                updateList()
                 setTimeout(() => { 
                     setSuccesMessage(false)
                     onClose()
@@ -42,11 +46,6 @@ const CreateNewEmployee = ({type}) => {
     }  
   }
  
-
- 
-
-
-
 
 
   return (
@@ -73,6 +72,25 @@ const CreateNewEmployee = ({type}) => {
               <ModalBody>
                 <Input type="text" variant="underlined" label="Nombre" id="name" name="name" onChange={(e) => setName(e.target.value)}/>
                 <Input type="number" variant="underlined" label="Dni" id="dni" name="dni" className="mt-2"  onChange={(e) => setDni(e.target.value)}/>
+                <Input 
+                type="number" 
+                variant="underlined" 
+                label="Valor Hora" 
+                id="hourAmount" 
+                name="hourAmount" 
+                className="mt-2"   
+                onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === '' || (value > 0 && !isNaN(value))) {
+                              setHourAmount(parseInt(e.target.value, 10));
+                              setNumberError(false)
+                            } else {
+                              setNumberError(true)
+                            }
+                        }} />
+
+                {numberError ? <p className="text-xs font-medium text-zinc-600">El numero debe ser mayor a 0 </p> : null}        
+
                     <div className="flex gap-4 items-center jsutify-center mt-4 mb-4">
                        <Button className="bg-green-800 text-white font-medium text-sm w-48" onClick={() => createNew()}>Guardar</Button>
                        <Button className="bg-green-800 text-white font-medium text-sm w-48">Cancelar</Button>

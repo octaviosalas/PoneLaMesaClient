@@ -23,6 +23,12 @@ const purchasesSchema = mongoose.Schema({
     purchaseDetail: { 
         type: Array
     },  
+    prodiverName: { 
+        type:String
+    },
+    providerId: { 
+        type: String
+    }
 })
 
 const Purchases = mongoose.model("purchases", purchasesSchema)

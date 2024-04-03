@@ -50,3 +50,44 @@ export const getShiftByEmployeeId = async (req, res) => {
     console.log(error)
   }
 }
+
+
+export const updateEmployeeData = async (req, res) => { 
+  console.log(req.params)
+  const { employeeId } = req.params;
+  const {name, dni, hourAmount} = req.body
+
+    try {
+        Employees.findByIdAndUpdate({ _id: employeeId }, { 
+        name: name,
+        dni: dni,
+        hourAmount: hourAmount             
+        })
+        .then((newEmployeeData) => {                                      
+        res.json({message:"Empleado Modificado", newEmployeeData})
+        })
+        .catch((err) => { 
+        console.log(err)
+        })
+      } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+      }
+}
+
+
+export const deleteEmployee = async (req, res) => { 
+  const {employeeId} = req.params
+  console.log(employeeId)
+  try {
+    const deletedEmployees = await Employees.findByIdAndDelete({_id: employeeId});
+    if (deletedEmployees) {
+      res.status(200).json({ message: 'Empleado eliminado correctamente', deleted: deletedEmployees });
+    } else {
+      res.status(404).json({ message: 'Empleado no encontrado' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar el cliente' });
+  }
+}

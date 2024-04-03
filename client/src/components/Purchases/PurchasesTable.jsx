@@ -39,7 +39,7 @@ const PurchasesTable = ({purchasesData, updateList}) => {
                       if(data.length !== 0) { 
                         const propiedades = Object.keys(purchasesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
                         propiedad !== '__v'  &&  propiedad !== 'day'  &&  propiedad !== 'date'  &&  
-                        propiedad !== 'year' &&  propiedad !== 'purchaseDetail');
+                        propiedad !== 'year' &&  propiedad !== 'purchaseDetail'  &&  propiedad !== 'providerId'  &&  propiedad !== 'providerName');
                         const columnObjects = propiedades.map(propiedad => ({
                             key: propiedad,
                             label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),

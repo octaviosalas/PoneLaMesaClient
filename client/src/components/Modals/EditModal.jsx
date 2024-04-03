@@ -10,6 +10,7 @@ import EditClient from "./EditClient";
 import EditProvider from "./EditProvider";
 import EditCollection from "./EditCollection";
 import EditSublet from "./EditSublet";
+import EditEmployee from "./EditEmployee";
 
 const EditModal = ({
                     type, statusOrder, 
@@ -19,7 +20,7 @@ const EditModal = ({
                     clientData, providerData, 
                     updateProvidersList, collectionData, 
                     updateCollectionsList, updatePurchaseList, 
-                    subletData, updateSubletList}) => {
+                    subletData, updateSubletList, employeeData, updateEmployee}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [step, setStep] = useState(0)
@@ -157,6 +158,26 @@ const EditModal = ({
                 </ModalHeader>
                 <ModalBody className="flex flex-col items-center justify-center">
                   <EditSublet subletData={subletData} closeModalNow={closeModal} updateSubletList={updateSubletList}/>
+                </ModalBody>
+              
+              </>
+            )}
+          </ModalContent>
+          :
+          null
+          }
+      </Modal>
+
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max min-w-96 bg-white text-black'>
+         {type === "employee" ? 
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1 text-zinc-600  text-md">
+                  <p className="font-bold text-md">Editar Empleado </p>                 
+                </ModalHeader>
+                <ModalBody className="flex flex-col items-center justify-center">
+                  <EditEmployee data={employeeData} closeModalNow={closeModal} update={updateEmployee}/>
                 </ModalBody>
               
               </>

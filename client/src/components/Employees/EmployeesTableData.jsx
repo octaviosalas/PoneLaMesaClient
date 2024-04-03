@@ -11,7 +11,7 @@ import EmployeesReport from './EmployeesReport';
 import CreateNewEmployee from './CreateNewEmployee';
 
 
-const EmployeesTableData = ({employeesData}) => {
+const EmployeesTableData = ({employeesData, updateList}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -70,17 +70,12 @@ const EmployeesTableData = ({employeesData}) => {
 
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
+                    const dni = filaActual.original.dni;
+                    const hourAmount = filaActual.original.hourAmount;
                     const name = filaActual.original.name;
-                    const telephone = filaActual.original.telephone;
-                    const email = filaActual.original.email;                  
-                    const item = {
-                    id: id,
-                    name: name,
-                    telephone: telephone,
-                    email: email   
-                    };
+                    const item = {id, dni, name, hourAmount};
                     return (
-                    <EditModal />
+                    <EditModal type="employee" employeeData={item} updateEmployee={updateList}/>
                     );
                 },
             })       
@@ -91,11 +86,10 @@ const EmployeesTableData = ({employeesData}) => {
             cellRenderer: (cell) => { 
                 const filaActual = cell.row;
                 const id = filaActual.original._id;
-                const item = {
-                id: id
-                };
+                const name = filaActual.original.name;
+                const item = {id, name};
                 return (
-                <DeleteOrder />
+                <DeleteOrder type="employee" employeeData={item} updateEmployee={updateList}/>
                 );
             },
             }) 
@@ -144,7 +138,7 @@ const EmployeesTableData = ({employeesData}) => {
                                <p className='text-sm font-bold text-zinc-600'>Empleados</p>
                             </div>       
                             <div  className='flex justify-end'>
-                               <CreateNewEmployee type="table"/>
+                               <CreateNewEmployee type="table" updateList={updateList}/>
                             </div>      
                          </div>
                          <div className='flex justify-start mr-4'></div>

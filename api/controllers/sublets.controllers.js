@@ -24,6 +24,19 @@ export const getEverySublets = async (req, res) => {
       }
 }
 
+export const getMonthlySublets = async (req, res) => { 
+  const {month} = req.params
+  console.log(month)
+  console.log("me llego algo")
+  try {
+     const justThisMonthSublets = await Sublets.find({month: month})
+     res.status(200).json(justThisMonthSublets);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las ordenes del mes' });
+    console.log(error)
+  }
+}
+
 export const getSubletById = async (req, res) => { 
     try {
         const subletSearched = await Sublets.findById(req.params.id);

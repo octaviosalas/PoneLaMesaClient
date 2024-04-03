@@ -110,7 +110,9 @@ const CreateNewPurchase = ({updateList}) => {
            year: actualYear,
            creatorPurchase: userCtx.userName,
            total: productsSelected.reduce((acc, el) => acc + el.value, 0),
-           purchaseDetail: productsSelected
+           purchaseDetail: productsSelected,
+           providerName: choosenProviderName,
+           providerId: choosenProviderId
 
         })
 

@@ -9,25 +9,31 @@ const EmployeesData = () => {
 
   const [employeesData, setEmployeesData] = useState([])
    
-  useEffect(() => {
-    const fetchData = async () => {
+  
+
+  
+  const everyEmployees = async () => { 
       try {
-        const data = await everyEmployees();
-        setEmployeesData(data);
-        console.log(data)
+        const getData = await axios.get(`http://localhost:4000/employees`)
+        const response = getData.data
+        console.log("Todos los empleados", response)
+        setEmployeesData(response);
       } catch (error) {
-        console.error("Error fetching clients:", error);
+        console.log(error)
       }
-    };   
-    fetchData();
-  }, []);
+    }
+
+    useEffect(() => { 
+      everyEmployees()
+    }, [])
+  
 
  
 
   return (
     <div>
          <NavBarComponent/>
-         <EmployeesTableData employeesData={employeesData}/>
+         <EmployeesTableData employeesData={employeesData} updateList={everyEmployees}/>
     </div>
   )
 }
