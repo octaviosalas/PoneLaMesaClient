@@ -1,51 +1,73 @@
-import React from 'react'
-import {Card, CardHeader, CardBody, CardFooter, Image, Button} from "@nextui-org/react";
+import React, {useState} from "react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Image} from "@nextui-org/react";
+import { months, everyYears } from "../../functions/gralFunctions";
+import {Select, SelectItem} from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
+const ClousureMonth = () =>  {
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [years, setYears] = useState(everyYears)
+  const [everyMonths, setEveryMonths] = useState(months)
+  const [yearSelected, setYearSelected] = useState("");
+  const [monthSelected, setMonthSelected] = useState("")
+  const navigate = useNavigate()
 
-const ClosuresCards = () => {
+  const goToSeeTheClousure =  (year, month) => { 
+    console.log(year)
+    console.log(month)
+    navigate(`/Cierre/${year}/${month}`)
+  }
+  
   return (
-    <div className='flex items-center gap-8'>
-         <Card isFooterBlurred className="w-full h-[300px] col-span-12 sm:col-span-5">
-            <CardHeader className="absolute z-10 top-1 flex-col items-start">
-                <h4 className="text-black font-medium text-2xl">Cierre Filtrado</h4>
-            </CardHeader>
-          <Image
-            removeWrapper
-            alt="Card example background"
-            className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRlALvhd4Rgk_jkgJ8LGnfjBkXHyzvoVnAdtB9RSIeRF8aSwBxbzCuBTfT0O9PRNEwr0s&usqp=CAU"
-          />
-          <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
-            <div>
-               <p className="text-black text-tiny">Reporte Filtrado.</p>
-            </div>
-            <Button className="text-tiny" color="primary" radius="full" size="sm">
-             Abrir
-            </Button>
-          </CardFooter>
-     </Card>
-
-     <Card isFooterBlurred className="w-full h-[300px] col-span-12 sm:col-span-5">
-            <CardHeader className="absolute z-10 top-1 flex-col items-start">
-                <h4 className="text-black font-medium text-2xl">Cierre Mensual</h4>
-            </CardHeader>
-          <Image
-            removeWrapper
-            alt="Card example background"
-            className="z-0 w-full h-full scale-125 -translate-y-6 object-cover"
-            src="https://www.gerencie.com/wp-content/uploads/asiente-cierre-contable.png"
-          />
-          <CardFooter className="absolute bg-white/30 bottom-0 border-t-1 border-zinc-100/50 z-10 justify-between">
-            <div>
-              <p className="text-black text-tiny">Reporte Mensual.</p>
-            </div>
-            <Button className="text-tiny" color="primary" radius="full" size="sm">
-             Abrir
-            </Button>
-          </CardFooter>
-     </Card>
-    </div>
-  )
+    <>
+      <Button onPress={onOpen} className="h-[305px]">
+        <Card className="w-full h-full cursor-pointer">
+              <CardHeader className="absolute z-10 top-1 flex-col !items-start">
+                <p className="text-tiny text-black uppercase font-bold">Cierre del Mes</p>
+              </CardHeader>
+              <Image
+                removeWrapper
+                alt="Card background"
+                className="z-0 w-full h-full object-cover"
+                src="https://www.gerencie.com/wp-content/uploads/asiente-cierre-contable.png"
+              />
+          </Card>
+      </Button>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Crear Cierre</ModalHeader>
+              <ModalBody className="flex flex-col items-center justify-center">
+              <Select variant={"faded"} label="Selecciona un año" className="max-w-xs" value={yearSelected}>          
+                                            {years.map((year) => (
+                                            <SelectItem key={year.value} value={year.label} textValue={year.value} onClick={() => setYearSelected(year.value)}>
+                                                {year.label}
+                                            </SelectItem>
+                                            ))}
+                                    </Select>
+              <Select variant={"faded"} label="Selecciona un mes" className="max-w-xs mt-3" value={monthSelected}>          
+                                {everyMonths.map((month) => (
+                                <SelectItem key={month.label} value={month.value} onClick={() => setMonthSelected(month.value)}>
+                                {month.label}
+                                </SelectItem>))}
+              </Select>
+              </ModalBody>
+              <ModalFooter className="flex gap-4 items-center justify-center">
+                <Button className="bg-green-800 text-white font-medium text-sm w-72" onClick={() => goToSeeTheClousure(yearSelected, monthSelected)}>
+                  Ver Cierre
+                </Button>
+                <Button className="bg-green-800 text-white font-medium text-sm w-72" onPress={onClose}>
+                  Cerrar
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
 }
 
-export default ClosuresCards
+export default ClousureMonth

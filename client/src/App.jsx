@@ -28,6 +28,7 @@ import Deposit from './components/Deposit/Deposit'
 import EmployeesMain from './components/Employees/EmployeesMain'
 import EmployeesData from './components/Employees/EmployeesData'
 import ClosuresMain from './components/Closures/ClosuresMain'
+import MonthlyClousure from './components/Closures/MonthlyClousure'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -61,12 +62,12 @@ function App() {
             <Route path="/EntregasLocal" element={<LocalDeliveries />} /> 
             <Route path="/Devoluciones" element={<Returns />} /> 
             <Route path="/Reposiciones" element={<Returned />} /> 
-            <Route path="/Estadisticas/Articulos" element={<EstadisticsArticles />} /> 
-            <Route path="/Estadisticas/Alquileres" element={<EstadisticsOrders />} /> 
-            <Route path="/Estadisticas/Clientes" element={<EstadisticsClients />} /> 
-            <Route path="/Estadisticas/Cobros" element={<EstadisticsCollections />} /> 
-            <Route path="/Estadisticas/Compras" element={<EstadisticsPurchases />} /> 
-
+            <Route path="/Estadisticas/Articulos" element={<EstadisticsArticles />}/> 
+            <Route path="/Estadisticas/Alquileres" element={<EstadisticsOrders />}/> 
+            <Route path="/Estadisticas/Clientes" element={<EstadisticsClients />}/> 
+            <Route path="/Estadisticas/Cobros" element={<EstadisticsCollections />}/> 
+            <Route path="/Estadisticas/Compras" element={<EstadisticsPurchases />}/> 
+            <Route path="/Cierre/:year/:month" element={<MonthlyClousure />} /> 
 
           </Routes>
      </UserProvider>

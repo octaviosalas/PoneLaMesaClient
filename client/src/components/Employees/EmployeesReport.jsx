@@ -82,7 +82,7 @@ export const EmployeesReport = ({employeeData}) => {
               <ModalFooter className="flex flex-col  gap-4 items-center justify-center">
                 <div className="flex gap-4 items-center justify-center">
                      <Button className="bg-green-800 text-white font-medium text-sm w-72" onPress={searchShifts}> Confirmar </Button>
-                    <Button  className="bg-green-800 text-white font-medium text-sm w-72"  onPress={onClose}> Cancelar </Button>
+                     <Button  className="bg-green-800 text-white font-medium text-sm w-72"  onPress={onClose}> Cancelar </Button>
                 </div>
                 {missedData ? <p className="mt-4 mb-2 text-green-800 font-medium text-sm">Debes completar año y mes</p> : null}
                 {withOutShifts ? <p className="mt-4 mb-2 text-green-800 font-medium text-sm">No hay datos que cumplan con el mes y el año aplicado </p> : null}

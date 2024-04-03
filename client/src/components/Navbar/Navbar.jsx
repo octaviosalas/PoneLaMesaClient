@@ -37,10 +37,9 @@ const NavBarComponent = () =>  {
        
         <NavbarContent className="hidden md:flex">
           <div className="flex  gap-6">
-          <NavbarItem>
-              <Link color="foreground" href="/Pedidos" className="hover:text-green-600 cursor-pointer hover:font-medium">
+          <NavbarItem onClick={() => goTo("Pedidos")} className="text-black font-medium cursor-pointer">
                 Pedidos
-              </Link>
+            
           </NavbarItem>
           <NavbarItem>
               <Dropdown>
@@ -81,10 +80,8 @@ const NavBarComponent = () =>  {
                         </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
-          <NavbarItem>
-              <Link color="foreground" href="clientes" className="hover:text-green-600 cursor-pointer hover:font-medium">
-                Clientes
-              </Link>
+          <NavbarItem  onClick={() => goTo("clientes")}  className="text-black font-medium cursor-pointer">
+                Clientes          
           </NavbarItem>      
           <NavbarItem>
           <Dropdown>
@@ -105,10 +102,10 @@ const NavBarComponent = () =>  {
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
-          <NavbarItem>
-              <Link color="foreground" href="Empleados" className="hover:text-green-600 cursor-pointer hover:font-medium">
+          <NavbarItem onClick={() => goTo("Empleados")}  className="text-black font-medium cursor-pointer">
+              
                 Empleados
-              </Link>
+   
           </NavbarItem>
         
         
