@@ -206,6 +206,17 @@ export const everyClients = async () => {
   }
 }
 
+export const everyEmployees = async () => { 
+  try {
+    const getData = await axios.get(`http://localhost:4000/employees`)
+    const response = getData.data
+    console.log("Todos los empleados", response)
+    return response   
+  } catch (error) {
+     console.log(error)
+  }
+}
+
 
 export const convertTo12HourFormat = (time24) => {
   const [hour, minute] = time24.split(':').map(Number);
@@ -222,3 +233,23 @@ export const convertTo12HourFormat = (time24) => {
   }
   return `${hour12.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${period}`;
 }
+
+
+export const everyActivities = [ 
+  { label: 'Lavado', value: 'Lavado' },
+  { label: 'Armado de Pedidos', value: 'Armado de Pedidos' },
+  { label: 'Atencion Local', value: 'Atencion Local' },
+  { label: 'Reparto', value: 'Reparto' },
+  { label: 'Horas Extras', value: 'Horas Extras'}
+
+]
+
+
+
+export const obtenerHoraActualArgentina = () => {
+  const fecha = new Date();
+  const opciones = { hour: '2-digit', minute: '2-digit', hour12: true };
+  const horaArgentina = fecha.toLocaleTimeString('es-AR', opciones);
+  return horaArgentina;
+}
+

@@ -14,6 +14,7 @@ import expensesRoutes from "./routes/expenses.routes.js"
 import downPaymentsRoutes from "./routes/downPayments.routes.js"
 import cleaningRoutes from "./routes/cleaning.routes.js"
 import depositRoutes from "./routes/deposit.routes.js"
+import employeesRoutes from "./routes/employees.routes.js"
 
 const app = express()
 const PORT = 4000
@@ -36,6 +37,7 @@ app.use("/expenses", expensesRoutes)
 app.use("/downPayment", downPaymentsRoutes)
 app.use("/cleaning", cleaningRoutes)
 app.use("/deposit", depositRoutes)
+app.use("/employees", employeesRoutes)
 
 
 

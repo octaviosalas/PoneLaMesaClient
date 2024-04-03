@@ -7,6 +7,9 @@ const employeesSchema = mongoose.Schema({
     }, 
     dni: { 
         type: String
+    },
+    hourAmount: { 
+        type: Number
     }
 })
 

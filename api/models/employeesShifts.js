@@ -8,12 +8,21 @@ const employeesShiftsSchema = mongoose.Schema({
     employeeId: { 
         type: String
     }, 
+    realStartTime: { 
+        type: String
+    },
     closingHour: { 
         type: String
     },    
     startTime: { 
         type: String
     },   
+    hours: { 
+        type: Number
+    },
+    minutes: { 
+        type: Number
+    },
     day: { 
         type: Number
     },   

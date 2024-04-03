@@ -3,6 +3,8 @@ import NavBarComponent from '../Navbar/Navbar'
 import {Card, CardHeader, CardBody, CardFooter, Image, Button} from "@nextui-org/react";
 import CreateNewShift from './CreateNewShift';
 import ViewEmployees from './ViewEmployees';
+import CreateNewEmployee from './CreateNewEmployee';
+import EmployeesData from './EmployeesData';
 
 
 const EmployeesMain = () => {
@@ -28,6 +30,7 @@ const EmployeesMain = () => {
         <div className='flex items-center gap-4'>
            <CreateNewShift/>
            <ViewEmployees/>
+           <CreateNewEmployee/>
         </div>
   
     </div>

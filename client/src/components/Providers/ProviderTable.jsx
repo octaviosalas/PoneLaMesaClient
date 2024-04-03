@@ -4,12 +4,8 @@ import { useEffect, useState, useRef } from 'react'
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Input} from "@nextui-org/react";
 import DeleteOrder from '../Modals/DeleteOrder';
 import EditModal from '../Modals/EditModal';
-import OrderDetail from '../Orders/OrderDeatil';
 import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
-import {Link} from "react-router-dom"
-import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
-import { useNavigate } from 'react-router-dom';
 import HistoricProviders from './HistoricProviders';
 import CreateProvider from './CreateProvider';
 
