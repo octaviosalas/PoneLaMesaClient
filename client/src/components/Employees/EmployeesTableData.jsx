@@ -9,6 +9,7 @@ import EditModal from '../Modals/EditModal';
 import Loading from '../Loading/Loading';
 import EmployeesReport from './EmployeesReport';
 import CreateNewEmployee from './CreateNewEmployee';
+import EstadisticsEmployees from './EstadisticsEmployees';
 
 
 const EmployeesTableData = ({employeesData, updateList}) => {
@@ -137,7 +138,8 @@ const EmployeesTableData = ({employeesData, updateList}) => {
                             <div className='flex justify-start'>
                                <p className='text-sm font-bold text-zinc-600'>Empleados</p>
                             </div>       
-                            <div  className='flex justify-end'>
+                            <div  className='flex justify-end mr-2 gap-4'>
+                               <EstadisticsEmployees/>
                                <CreateNewEmployee type="table" updateList={updateList}/>
                             </div>      
                          </div>

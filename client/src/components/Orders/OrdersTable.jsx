@@ -12,7 +12,7 @@ import { formatePrice } from '../../functions/gralFunctions';
 import PostPayment from './PostPayment';
 import getBackendData from '../../Hooks/GetBackendData';
 import CreateSublet from "../ArticlesTable/CreateSublet"
-
+import EstadisticsOrders from './EstadisticsOrders';
 
 const OrdersTable = () => {
 
@@ -281,6 +281,7 @@ const OrdersTable = () => {
                 )}
           </TableBody>
        </Table> 
+       <EstadisticsOrders/>
          </> 
        : 
        <div className='flex flex-col items-center justify-center'>
