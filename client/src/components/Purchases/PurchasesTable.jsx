@@ -13,6 +13,7 @@ import CreateNewPurchase from "./CreateNewPurchase"
 import Loading from '../Loading/Loading';
 import PurchaseDetail from './PurchaseDetail';
 import getBackendData from '../../Hooks/GetBackendData';
+import EstadisticsPurchases from './EstadisticsPurchases';
 
 const PurchasesTable = ({purchasesData, updateList}) => {
 
@@ -197,7 +198,7 @@ const PurchasesTable = ({purchasesData, updateList}) => {
                     columnSpacing={10}  
                     aria-label="Selection behavior table example with dynamic content"   
                     selectionBehavior={selectionBehavior} 
-                    className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right overflow-y-auto"
+                    className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right shadow-2xl shadow-top shadow-left-right overflow-y-auto"
                   >
                     <TableHeader columns={columns}>
                       {(column) => (
@@ -224,6 +225,7 @@ const PurchasesTable = ({purchasesData, updateList}) => {
                       )}
                     </TableBody>
                   </Table> 
+                  <EstadisticsPurchases/>
                 </>
               ) : data.length === 0 ? (
                   <div>

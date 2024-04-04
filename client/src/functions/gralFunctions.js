@@ -165,18 +165,18 @@ export const paidOrNotPaid = [
 ];
 
 export const everyMonthsOfTheYear = [
-  { key: "enero", label: "enero"},
-  { key: "febrero", label: "febrero"},
-  { key: "marzo", label: "marzo"},
-  {key: "abril", label: "abril"},
-  {key: "mayo", label: "mayo"},
-  {key: "junio", label: "junio"},
-  {key: "julio", label: "julio"},
-  {key: "agosto", label: "agosto"},
-  {key: "septiembre", label: "septiembre"},
-  {key: "octubre", label: "octubre"},
-  {key: "noviembre", label: "noviembre"},
-  {key: "diciembre", label: "diciembre"},
+  { value: "enero", label: "enero"},
+  { value: "febrero", label: "febrero"},
+  { value: "marzo", label: "marzo"},
+  {value: "abril", label: "abril"},
+  {value: "mayo", label: "mayo"},
+  {value: "junio", label: "junio"},
+  {value: "julio", label: "julio"},
+  {value: "agosto", label: "agosto"},
+  {value: "septiembre", label: "septiembre"},
+  {value: "octubre", label: "octubre"},
+  {value: "noviembre", label: "noviembre"},
+  {value: "diciembre", label: "diciembre"},
 ];
 
 export const everyYears = [
@@ -275,3 +275,10 @@ export const obtenerHoraActualArgentina = () => {
   return horaArgentina;
 }
 
+export const obtenerMesAnterior = () => {
+  const hoy = new Date();
+  hoy.setMonth(hoy.getMonth() - 1);
+  const mesAnterior = hoy.toLocaleString("es-ES", { month: "long" });
+  return mesAnterior;
+ }
+ 

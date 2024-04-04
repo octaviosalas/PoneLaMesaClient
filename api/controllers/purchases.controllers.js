@@ -44,6 +44,22 @@ export const getAllPurchases = async (req, res) => {
   }
 }
 
+
+export const getPurchasesByMonth = async (req, res) => { 
+  const {month} = req.params
+  console.log(month)
+
+  try {
+     const thisMonthPurchases = await Purchases.find({month: month})
+     res.status(200).json(thisMonthPurchases);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las compras del mes' });
+    console.log(error)
+  }
+}
+
+
+
 export const getPurchaseById = async (req, res) => { 
   const {purchaseId} = req.params
   try {

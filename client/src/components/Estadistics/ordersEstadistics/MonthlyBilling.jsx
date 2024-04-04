@@ -77,6 +77,8 @@ const MonthlyBilling = () => {
 
     useEffect(() => { 
         getMonthSelectedData()
+        console.log(monthSelected)
+        console.log(yearSelected)
     }, [monthSelected, yearSelected])
 
     
@@ -95,7 +97,7 @@ const MonthlyBilling = () => {
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...everyMonths]}>
                             {(item) => (
-                            <DropdownItem key={item.key} onClick={() => setMonthSelected(item.label)}>
+                            <DropdownItem key={item.value} onClick={() => setMonthSelected(item.label)}>
                                 {item.label}
                             </DropdownItem>
                             )}
@@ -106,14 +108,14 @@ const MonthlyBilling = () => {
                         <DropdownTrigger>
                             <p className='text-black cursor-pointer font-bold text-xl'>...</p>
                         </DropdownTrigger>
-                        <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...availableYears]}>
+                        <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...everyYears]}>
                             {(item) => (
-                            <DropdownItem key={item.key} onClick={() => setYearSelected(item.label)}>
+                            <DropdownItem key={item.value} onClick={() => setYearSelected(item.label)}>
                                 {item.label}
                             </DropdownItem>
                             )}
                         </DropdownMenu>
-                  </Dropdown>
+                        </Dropdown>
             </div>
 
            

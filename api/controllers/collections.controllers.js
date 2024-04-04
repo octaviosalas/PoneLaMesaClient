@@ -25,6 +25,23 @@ export const getAllCollections = async (req, res) => {
   }
 }
 
+
+
+export const getCollectionsByMonth = async (req, res) => { 
+  const {month} = req.params
+  console.log(month)
+  console.log("shaodfiashfdoiasdfhio")
+
+  try {
+     const thisMonthCollections = await Collections.find({month: month})
+     res.status(200).json(thisMonthCollections);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los cobros del mes' });
+    console.log(error)
+  }
+}
+
+
 export const getCollectionByOrderId = async (req, res) => { 
   const {orderId} = req.params
   console.log(req.params)
