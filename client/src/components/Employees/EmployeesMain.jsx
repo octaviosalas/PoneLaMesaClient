@@ -1,11 +1,11 @@
 import React from 'react'
 import NavBarComponent from '../Navbar/Navbar'
-import {Card, CardHeader, CardBody, CardFooter, Image, Button} from "@nextui-org/react";
+import {Card, CardHeader, CardBody, CardFooter, Image, Button, User} from "@nextui-org/react";
 import CreateNewShift from './CreateNewShift';
 import ViewEmployees from './ViewEmployees';
 import CreateNewEmployee from './CreateNewEmployee';
-import EmployeesData from './EmployeesData';
-
+import { useContext } from 'react';
+import { UserContext } from '../../store/userContext';
 
 const EmployeesMain = () => {
   
@@ -20,6 +20,8 @@ const EmployeesMain = () => {
     return `${horas}:${minutos} ${ampm}`;
    }
 
+   const userCtx = useContext(UserContext)
+
    console.log(obtenerHoraArgentina())
    
    console.log(obtenerHoraArgentina());
@@ -28,9 +30,17 @@ const EmployeesMain = () => {
     <div>
       <NavBarComponent/> 
         <div className='flex items-center gap-4'>
-           <CreateNewShift/>
-           <ViewEmployees/>
-           <CreateNewEmployee/>
+          {userCtx.userRol === "Dueño" ?
+          <>
+            <CreateNewShift/>
+            <ViewEmployees/>
+            <CreateNewEmployee/>
+          </>
+          :
+          <div className="flex flex-col items-center mt-24">
+             <p className='text-green-800 font-medium text-md'>No tenes acceso a esta seccion</p>
+          </div>
+          }
         </div>
   
     </div>

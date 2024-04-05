@@ -9,13 +9,15 @@ import  {
    deleteClient,
    updateClientData,
    createClientDebt,
-   updateDebtStatus
+   updateDebtStatus,
+   getClientsByType
 } from '../controllers/clients.controllers.js' 
 
 
 // Routes:
 clientesRoutes.get('/', getClients);
 clientesRoutes.get('/:clientId', getClientData);
+clientesRoutes.get('/byType/:typeOfClient', getClientsByType);
 clientesRoutes.post('/createClient', createNewClient);
 clientesRoutes.delete('/:clientId', deleteClient);
 clientesRoutes.put('/changeData/:clientId', updateClientData);

@@ -22,6 +22,20 @@ export const getClients = async (req, res) => {
       }
 }
 
+
+export const getClientsByType = async (req, res) => { 
+  const {typeOfClient} = req.params
+  console.log(typeOfClient)
+
+  try {
+     const searchClients = await Clients.find({typeOfClient: typeOfClient})
+     res.status(200).json(searchClients);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los clientes por tipo' });
+    console.log(error)
+  }
+}
+
 export const getClientData = async (req, res) => { 
     const {clientId} = req.params
     try {

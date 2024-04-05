@@ -27,6 +27,17 @@ const NavBarComponent = () =>  {
   const goTo = (ruta) => { 
     navigate(`/${ruta}`)
   }
+
+  useEffect(() => { 
+    if(userCtx.userRol === "Dueño") { 
+      console.log("DUEÑOOOOOOO")
+      console.log(userCtx.userRol)
+    } else { 
+      console.log("NO HAY DUEÑO LOGUEADO")
+      console.log(userCtx.userRol)
+
+    }
+  })
   
   
 
@@ -91,7 +102,6 @@ const NavBarComponent = () =>  {
                       <DropdownMenu aria-label="Static Actions">
                         <DropdownItem key="Cobros" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
                         <DropdownItem key="Compras" onClick={() => goTo("compras")}>Compras</DropdownItem>
-                        <DropdownItem key="Employers" onClick={() => goTo("Estadisticas/Clientes")}>Empleados</DropdownItem>
                         <DropdownItem key="Cierres" onClick={() => goTo("cierres")}>Cierres</DropdownItem>
                         <DropdownItem key="EstadisticasClientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Clientes</DropdownItem>
                         <DropdownItem key="Articulos" onClick={() => goTo("Estadisticas/Articulos")}>Estadisticas Articulos</DropdownItem>

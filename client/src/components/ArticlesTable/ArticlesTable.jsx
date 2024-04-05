@@ -16,15 +16,19 @@ import getBackendData from '../../Hooks/GetBackendData';
 import CreateSublet from './CreateSublet';
 import EstadisticsArticles from './EstadisticsArticles';
 
+
 const ArticlesTable = ({}) => {
 
     const tableRef = useRef(null);
+
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [inputValue, setInputValue] = useState("")
     const { queryData } = getBackendData(`products/productsClients`);
     const [waitingData, setWaitingData] = useState(false)
+
+
 
 
     const getProductsDataAndCreateTable =  () => { 

@@ -216,7 +216,7 @@ const OrdersTable = () => {
 
   return (
     <div>
-         <div className='flex flex-col items-center justify-center 2xl:mt-12'>
+         <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
          {columns.length !== 0 && data.length !== 0? 
          <>
           <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >

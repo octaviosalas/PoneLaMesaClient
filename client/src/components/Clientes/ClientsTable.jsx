@@ -11,6 +11,7 @@ import EditModal from '../Modals/EditModal';
 import Loading from '../Loading/Loading';
 import CreateNewClient from "./CreateNewClient";
 import HistoricClient from './HistoricClient';
+import EstadisticsClientsModal from './EstadisticsClientsModal';
 import EstadisticsClients from './EstadisticsClients';
 
 
@@ -159,7 +160,7 @@ const ClientsTable = () => {
                    <p className='text-sm font-medium text-zinc-600'>Clientes</p>
                 </div>   
                 <div className='flex justify-end gap-4 mr-2'>
-                  <EstadisticsClients/>
+                  <EstadisticsClientsModal/>
                   <CreateNewClient updateList={getClientsDataAndCreateTable}/>      
                 </div>                        
               </div>
@@ -203,6 +204,7 @@ const ClientsTable = () => {
                 )}
           </TableBody>
        </Table> 
+       <EstadisticsClients/>
          </>
           
        : <Loading/>}
