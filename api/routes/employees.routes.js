@@ -8,13 +8,17 @@ const employeesRoutes = express.Router();
   createShift,
   getShiftByEmployeeId,
   updateEmployeeData,
-  deleteEmployee
+  deleteEmployee,
+  getShifsByMonth,
+  getEmployeesById
 } from '../controllers/employees.controllers.js' 
 
 
 // Routes: 
 employeesRoutes.get('/', getEmployees);
+employeesRoutes.get('/getOneEmployee/:employeeId', getEmployeesById);
 employeesRoutes.get('/getEmployeeShifts/:employeeId', getShiftByEmployeeId);
+employeesRoutes.get('/getShifsByMonth/:month', getShifsByMonth);
 employeesRoutes.post("/create", createEmployee)
 employeesRoutes.put('/changeData/:employeeId', updateEmployeeData);
 employeesRoutes.delete('/deleteEmployee/:employeeId', deleteEmployee);

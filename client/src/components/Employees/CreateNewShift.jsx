@@ -19,6 +19,7 @@ const CreateNewShift = () => {
   const [showSecondData, setShowSecondData] = useState(false)
   const [employees, setEmployees] = useState([])
   const [employeeName, setEmployeeName] = useState("")
+  const [employeeHourAmount, setEmployeeHourAmount] = useState(0)
   const [employeeId, setEmployeeId] = useState("")
   const [activities, setActivities] = useState([])
   const [observations, setObservations] = useState("")
@@ -78,11 +79,22 @@ const CreateNewShift = () => {
       setShowSecondData(true)
     }
 
-    const employeerData = (id, name) => { 
+    const employeerData = async (id, name) => { 
       console.log(id)
       console.log(name)
       setEmployeeId(id)
       setEmployeeName(name)
+      if(id.length > 0) { 
+        console.log("si")
+        try {
+          const getAmountHourEmployee = await axios.get(`http://localhost:4000/employees/getOneEmployee/${id}`)
+          const response = getAmountHourEmployee.data
+          console.log(response) 
+          setEmployeeHourAmount(response.hourAmount)
+        } catch (error) {
+          console.log(error)
+        }
+      }
     }
 
    
@@ -101,12 +113,13 @@ const CreateNewShift = () => {
     }
 
     const createShift = async () => { 
-      if(employeeName.length > 0 && employeeId.length > 0 && startTime.length > 0 && closingHour.length > 0 && activities.length > 0) { 
+      if(employeeName.length > 0 && employeeId.length > 0 && startTime.length > 0 && closingHour.length > 0 && activities.length > 0 && employeeHourAmount !== 0) { 
         try {
           const shiftData = ({   
               employeeName: employeeName,
               employeeId: employeeId,
               realStartTime: realActualTime,
+              hourAmountPaid: employeeHourAmount,
               day: actualDay,
               month: actualMonth,
               year: actualYear,
@@ -116,7 +129,8 @@ const CreateNewShift = () => {
               observations: observations,
               activities: activities,
               hours: shiftHours,
-              minutes: shiftMinutes
+              minutes: shiftMinutes,
+              totalAmountPaidShift: shiftHours * employeeHourAmount
           })
             const createNewShift = await axios.post("http://localhost:4000/employees/createShift", shiftData)
             const response = createNewShift.data

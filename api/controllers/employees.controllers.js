@@ -36,6 +36,29 @@ export const createShift = async (req, res) => {
     }
 }
 
+export const getShifsByMonth = async (req, res) => { 
+  const { month } = req.params;
+  try {
+    const siftsByMonth = await EmployeesShifts.find({month: month})
+    res.status(200).json(siftsByMonth);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los turnos' });
+    console.log(error)
+  }
+}
+
+export const getEmployeesById = async (req, res) => { 
+  const {employeeId} = req.params
+  console.log(employeeId)
+
+  try {
+    const employeeData = await Employees.findById({_id: employeeId})
+    res.status(200).json(employeeData);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al buscar turnos del empleado' });
+    console.log(error)
+  }
+}
 
 export const getShiftByEmployeeId = async (req, res) => { 
 

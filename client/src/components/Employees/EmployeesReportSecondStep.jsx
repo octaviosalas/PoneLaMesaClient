@@ -4,7 +4,9 @@ import { formatePrice } from '../../functions/gralFunctions'
 
 const EmployeesReportSecondStep = ({filteredData, closeModal, monthSelected, hourAmount}) => {
 
-    const [everyHours, setEveryHours] = useState(filteredData.map((data) => data.hours).reduce((acc, el) => acc + el, 0))
+    const [everyHours, setEveryHours] = useState(filteredData.map((data) => data.totalAmountPaidShift).reduce((acc, el) => acc + el, 0))
+
+   
     
 
 
@@ -13,7 +15,7 @@ const EmployeesReportSecondStep = ({filteredData, closeModal, monthSelected, hou
        <h5 className='mt-2 font-medium text-black text-sm'>Reporte {monthSelected}: </h5>
        <p className='text-zinc-700 font-medium text-sm'>Cantidad de horas trabajadas: {everyHours}</p>
        <p className='text-zinc-700 font-medium text-sm'>Cantidad turnos: {filteredData.length}</p>
-       <p className='text-zinc-700 font-medium text-sm underline'>Monto a Pagar: {formatePrice(hourAmount * everyHours)}</p>
+       <p className='text-zinc-700 font-medium text-sm underline'>Monto a Pagar: {formatePrice(everyHours)}</p>
 
        <div className='flex flex-col'>
          <h5 className='mt-2 font-medium text-black text-sm'>Detalle de los turnos: </h5>

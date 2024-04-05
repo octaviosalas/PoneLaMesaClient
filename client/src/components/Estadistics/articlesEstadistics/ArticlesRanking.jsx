@@ -6,57 +6,6 @@ import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 
 
-/* 
- useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const ordersData = await getEveryOrders();
-            console.log(ordersData)
-            if(monthSelected === "Todos" && yearSelected === "Todos") { 
-              if(ordersData.length !== 0) { 
-                setAllOrders(ordersData);
-                setWithOutOrders(false)
-              } else { 
-                setWithOutOrders(true)
-              }
-      
-
-            } else if (yearSelected !== "Todos" && monthSelected !== "Todos") { 
-              const filterDataByMonthAndYearSelected = ordersData.filter((orders) => orders.month === monthSelected && orders.year === yearSelected)
-              if(filterDataByMonthAndYearSelected.length !== 0) { 
-                  setAllOrders(filterDataByMonthAndYearSelected);
-                  setWithOutOrders(false)
-              } else { 
-                setWithOutOrders(true)
-              }     
-
-            } else if (yearSelected !== "Todos" && monthSelected === "Todos") { 
-              const filterDataByYear = ordersData.filter((orders) => orders.year === yearSelected)
-              if(filterDataByYear.length !== 0) { 
-                setAllOrders(filterDataByYear);
-                setWithOutOrders(false)
-              } else { 
-                setWithOutOrders(true)
-              }      
-
-            } else if (yearSelected === "Todos" && monthSelected !== "Todos") { 
-              const filterDataByMonth = ordersData.filter((orders) => orders.month === monthSelected)
-              if(filterDataByMonth.length !== 0) { 
-                setAllOrders(filterDataByMonth);
-                setWithOutOrders(false)
-              } else { 
-                setWithOutOrders(true)
-              }      
-            }
-
-
-          } catch (error) {
-            console.error("Error fetching orders:", error);
-          }
-        };
-        fetchData();
-      }, [monthSelected, yearSelected]); 
-*/
 
 const ArticlesRanking = () => {
 
@@ -174,7 +123,7 @@ const ArticlesRanking = () => {
                           </DropdownTrigger>
                           <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...everyMonths]}>
                               {(item) => (
-                              <DropdownItem key={item.key} onClick={() => setMonthSelected(item.label)}>
+                              <DropdownItem key={item.value} onClick={() => setMonthSelected(item.label)}>
                                   {item.label}
                               </DropdownItem>
                               )}
@@ -186,7 +135,7 @@ const ArticlesRanking = () => {
                         </DropdownTrigger>
                         <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...availableYears]}>
                             {(item) => (
-                            <DropdownItem key={item.key} onClick={() => setYearSelected(item.label)}>
+                            <DropdownItem key={item.value} onClick={() => setYearSelected(item.label)}>
                                 {item.label}
                             </DropdownItem>
                             )}

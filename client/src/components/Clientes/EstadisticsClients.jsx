@@ -50,7 +50,7 @@ const EstadisticsClients = () => {
                     <img src={iconEstadistics} className='h-7 w-7 ml-4'/>
                     <p className='text-xs font-medium text-zinc-600'>Cantidad Total de Clientes: {quantityClients}</p>
                     <p className='text-xs font-medium text-zinc-600'>Cantidad de Clientes Bonificados: {quantityBonifiedClients}</p>
-                    <p className='text-xs font-medium text-zinc-600'>Cantidad de Clientes No Bonificados: {quantityNoBonifiedClients}</p>
+                    <p className='mr-4 text-xs font-medium text-zinc-600'>Cantidad de Clientes No Bonificados: {quantityNoBonifiedClients}</p>
                 </div>}
     </div>
   )

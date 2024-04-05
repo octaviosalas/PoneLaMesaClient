@@ -11,6 +11,9 @@ const employeesShiftsSchema = mongoose.Schema({
     realStartTime: { 
         type: String
     },
+    hourAmountPaid: { 
+        type: Number
+    },
     closingHour: { 
         type: String
     },    
@@ -41,6 +44,10 @@ const employeesShiftsSchema = mongoose.Schema({
     activities: { 
         type: Array
     },   
+    totalAmountPaidShift: { 
+        type: Number
+    },   
+    
 })
 
 const EmployeesShifts = mongoose.model("EmployeesShifts", employeesShiftsSchema)

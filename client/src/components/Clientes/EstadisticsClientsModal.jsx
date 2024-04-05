@@ -131,14 +131,12 @@ const EstadisticsClientsModal = () => {
                },
              });
 
-             
-         
-             // Add the new "Puesto" column
              tableColumns.unshift({
                key: 'puesto',
                label: 'Puesto',
                cellRenderer: (cell) => {
-                 return `${cell.row.index + 1}`;
+                 const filaActual = cell.row;
+                 return `${filaActual.index + 1}`;
                },
              });
          
@@ -159,14 +157,13 @@ const EstadisticsClientsModal = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Estadisticas Clientes</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                Estadisticas Clientes
+                <p className='underline font-medium text-sm text-zinc-600'>Ranking de clientes ordenados de mayor a menor</p>
+                </ModalHeader>
               <ModalBody>
               <div>
-                  <div className='flex flex-col justify-start items-start'>
-                     <div className="flex items-center gap-6">
-                     <p className='underline font-medium text-sm text-zinc-600'>Ranking de clientes ordenados de mayor a menor</p>
-                     </div>
-                 
+                  <div className='flex flex-col justify-start items-start'>                            
                   </div>
                   <div className='flex gap-4 items-center justify-center mt-4 mb-2'>
                    <Select variant={"faded"} label="Selecciona un Mes" className="max-w-xs" value={monthSelected}>          
