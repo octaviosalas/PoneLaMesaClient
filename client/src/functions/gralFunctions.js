@@ -96,7 +96,15 @@ export const getProductsBonusClients = async () => {
   };
 
 
-  
+  export const getMonthlyCollections = async (month) => {
+    try {
+      const response = await axios.get(`http://localhost:4000/collections/getByMonth/${month}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
 
 
 export const getDate = () => {

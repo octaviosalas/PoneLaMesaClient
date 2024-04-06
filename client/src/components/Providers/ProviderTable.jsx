@@ -8,6 +8,7 @@ import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
 import HistoricProviders from './HistoricProviders';
 import CreateProvider from './CreateProvider';
+import EstadisticsProviders from './EstadisticsProviders';
 
 const ProviderTable = ({providers, updateProvidersList}) => {
 
@@ -144,9 +145,15 @@ const ProviderTable = ({providers, updateProvidersList}) => {
                   <>
                   <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
                     <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
-                       <div className='flex justify-between  w-full items-center ml-4'>                   
-                           <p className='text-sm font-bold text-zinc-600'>Proveedores</p>
-                             <CreateProvider updateList={updateProvidersList}/>
+                       <div className='flex justify-between  w-full items-center ml-4'>         
+                       <div className='flex justify-start'>
+                         <p className='text-sm font-bold text-zinc-600'>Proveedores</p>
+                       </div>
+                       <div className='flex justify-end gap-6'>            
+                          <EstadisticsProviders/>    
+                          <CreateProvider updateList={updateProvidersList}/>       
+                       </div>          
+                 
                        </div>
                        <div className='flex justify-start mr-4'></div>
                      </div>

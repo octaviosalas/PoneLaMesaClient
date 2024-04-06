@@ -151,7 +151,7 @@ const ClientsTable = () => {
 
 
   return (
-    <div className='flex flex-col items-center justify-center'>
+    <div className='flex flex-col items-center justify-center  mt-16 2xl:mt-12'>
          {columns.length !== 0 && data.length !== 0 ? 
          <>
           <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] ' >

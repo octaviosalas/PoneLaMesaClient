@@ -29,6 +29,7 @@ import EmployeesMain from './components/Employees/EmployeesMain'
 import EmployeesData from './components/Employees/EmployeesData'
 import ClosuresMain from './components/Closures/ClosuresMain'
 import MonthlyClousure from './components/Closures/MonthlyClousure'
+import MainExpenses from './components/Expenses/MainExpenses'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -52,6 +53,7 @@ function App() {
             <Route path="/pedidos" element={<Orders />} />   
             <Route path="/compras" element={<Purchases />} />   
             <Route path="/Cobros" element={<Collections />} />   
+            <Route path="/Gastos" element={<MainExpenses />} />   
             <Route path="/clientes" element={<Clients />} />  
             <Route path="/Empleados" element={<EmployeesMain />} /> 
             <Route path="/Empleados/ListadoDeEmpleados" element={<EmployeesData />} /> 

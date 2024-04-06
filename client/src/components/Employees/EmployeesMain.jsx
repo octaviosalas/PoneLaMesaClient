@@ -38,7 +38,7 @@ const EmployeesMain = () => {
           </>
           :
           <div className="flex flex-col items-center mt-24">
-             <p className='text-green-800 font-medium text-md'>No tenes acceso a esta seccion</p>
+           <CreateNewShift/>
           </div>
           }
         </div>

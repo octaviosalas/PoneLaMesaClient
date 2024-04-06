@@ -49,8 +49,7 @@ const NavBarComponent = () =>  {
         <NavbarContent className="hidden md:flex">
           <div className="flex  gap-6">
           <NavbarItem onClick={() => goTo("Pedidos")} className="text-black font-medium cursor-pointer">
-                Pedidos
-            
+                Pedidos        
           </NavbarItem>
           <NavbarItem>
               <Dropdown>
@@ -58,7 +57,6 @@ const NavBarComponent = () =>  {
                         <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Local </p>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions">
-                        <DropdownItem textValue="Create New Order"  isReadOnly key="new"><CreateNewOrder/></DropdownItem>
                         <DropdownItem textValue="Create New Order" key="confirmed" onClick={() => goTo("AConfirmar")}>A Confirmar</DropdownItem>
                         <DropdownItem textValue="Create New Order" key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
                         <DropdownItem textValue="Create New Order" key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem> 
@@ -103,6 +101,7 @@ const NavBarComponent = () =>  {
                         <DropdownItem key="Cobros" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
                         <DropdownItem key="Compras" onClick={() => goTo("compras")}>Compras</DropdownItem>
                         <DropdownItem key="Cierres" onClick={() => goTo("cierres")}>Cierres</DropdownItem>
+                        <DropdownItem key="Cierres" onClick={() => goTo("gastos")}>Gastos</DropdownItem>
                         <DropdownItem key="EstadisticasClientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Clientes</DropdownItem>
                         <DropdownItem key="Articulos" onClick={() => goTo("Estadisticas/Articulos")}>Estadisticas Articulos</DropdownItem>
                         <DropdownItem key="Alquileres" onClick={() => goTo("Estadisticas/Alquileres")}>Estadisticas Alquileres</DropdownItem>

@@ -18,8 +18,6 @@ export const EmployeesReport = ({employeeData}) => {
   const [secondStep, setSecondStep] = useState(false)
   const [withOutShifts, setWithOutShifts] = useState(false)
  
-  console.log(employeeData)
-
 
   const searchShifts = async () => { 
     console.log(monthSelected)

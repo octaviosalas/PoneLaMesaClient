@@ -189,7 +189,7 @@ const EstadisticsClientsModal = () => {
                   :
                   <div className="flex items-center justify-center">
                     {loading ? <Loading/> :
-                     <Table aria-label="Example table with dynamic content" className="w-[780px] shadow-xl flex items-center justify-center mt-2">
+                     <Table aria-label="Example table with dynamic content" className="w-[780px] shadow-xl flex items-center justify-center mt-2 max-h-[300px] overlfow-y-auto">
                         <TableHeader columns={columns} className="">
                           {(column) => (
                             <TableColumn key={column.key} className="text-xs gap-6">

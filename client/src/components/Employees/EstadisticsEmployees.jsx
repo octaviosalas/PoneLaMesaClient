@@ -1,14 +1,14 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-import { formatePrice, getMonth, getYear, getEveryOrders, everyMonthsOfTheYear, everyYears } from '../../functions/gralFunctions';
+import { formatePrice, getMonth, getYear, getEveryOrders, everyMonthsOfTheYear, everyYears, months } from '../../functions/gralFunctions';
 import {Select, SelectItem} from "@nextui-org/react";
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Input} from "@nextui-org/react";
 import Loading from "../Loading/Loading";
 
 const EstadisticsEmployees = () => { 
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [monthSelected, setMonthSelected] = useState("")
   const [yearSelected, setYearSelected] = useState(0)
   const [everyMonths, setVeryMonths] = useState(everyMonthsOfTheYear)
@@ -46,11 +46,13 @@ const EstadisticsEmployees = () => {
           totalHours: employeeData.reduce((acc, el) => acc + el.hours, 0),
           totalAmountToPaid: employeeData.reduce((acc, el) => acc + el.totalAmountPaidShift, 0)
         }))
+        console.log(agroupSiftsByEmployeeId, transformResultInArrayData)
         if(transformResultInArrayData.length > 0) { 
           setEmployeesDataResolved(transformResultInArrayData)
           setWithOutData(false)
         } else { 
           setWithOutData(true)
+          setEmployeesDataResolved([])
         }
         console.log(agroupSiftsByEmployeeId)
         console.log(transformResultInArrayData)
@@ -64,7 +66,16 @@ const EstadisticsEmployees = () => {
      onClose()    
   }
 
+  const handleClose = () => { 
+    setEmployeesDataResolved([])
+    setYearSelected(0)
+    setMonthSelected("")
+    onClose()
+    setLoading(false)
+  }
+
   useEffect(() => { 
+    console.log("sisi")
      if(employeesDataResolved.length > 0) { 
       setLoading(true)
        console.log(employeesDataResolved);
@@ -122,45 +133,50 @@ const EstadisticsEmployees = () => {
                             ))}
                         </Select>
                    </div>
+                   {monthSelected.length > 0 && yearSelected !== 0 ?
+                      <div className="flex flex-col mt-2 mb-2 ml-4 items-start justify-start w-full ">
+                          <p className="font-medium text-green-800 text-sm">Mes Elegido: {monthSelected}</p>
+                          <p  className="font-medium text-green-800 text-sm">Año Elegido:{yearSelected}</p>
+                      </div> : null}
                    <div>
-                      {monthSelected.length === 0 && yearSelected === 0 ? <p className="mt-4 font-medium text-sm text-zinc-600">Debes elegir un mes y año</p> : null}
 
                       {withOutData ? <p className="mt-4 font-medium text-sm text-zinc-600">No hay turnos asentados en este mes</p> : null}
 
-                      {employeesDataResolved.length > 0 && columns.length > 0  ? 
-                      <div className="mt-4 mb-4 flex items-center justify-center">
-                            <Table aria-label="Example table with dynamic content" className="w-[780px] shadow-xl flex items-center justify-center mt-2">
-                              <TableHeader columns={columns} className="">
-                                {(column) => (
-                                  <TableColumn key={column.key} className="text-xs gap-6">
-                                    {column.label}
-                                  </TableColumn>
-                                )}
-                              </TableHeader>
-                              <TableBody items={employeesDataResolved}>
-                              {(item) => (
-                                <TableRow key={item.employeeId}>
-                                  {columns.map(column => (
-                                  <TableCell key={column.key} className="text-start items-start">
-                                  {column.cellRenderer ? (
-                                      column.cellRenderer({ row: { original: item } })
-                                    ) : (
-                                      (column.key === "totalAmountToPaid") ? (
-                                          formatePrice(item[column.key])
-                                      ) : (
-                                        item[column.key]
-                                      )
+                      {employeesDataResolved.length > 0 && columns.length > 0  ? ( 
+                            <div className="mt-4 mb-4 flex items-center justify-center">
+                                <Table aria-label="Example table with dynamic content" className="w-[780px] shadow-xl flex items-center justify-center mt-2 max-h-[300px] overlfow-y-auto">
+                                  <TableHeader columns={columns} className="">
+                                    {(column) => (
+                                      <TableColumn key={column.key} className="text-xs gap-6">
+                                        {column.label}
+                                      </TableColumn>
                                     )}
-                                  </TableCell>
-                                  ))}
-                                </TableRow>
-                              )}
-                            </TableBody>
-                        </Table>
-                      </div>
-                     
-                       :  <Loading/> 
-                            
+                                  </TableHeader>
+                                  <TableBody items={employeesDataResolved}>
+                                  {(item) => (
+                                    <TableRow key={item.employeeId}>
+                                      {columns.map(column => (
+                                      <TableCell key={column.key} className="text-start items-start">
+                                      {column.cellRenderer ? (
+                                          column.cellRenderer({ row: { original: item } })
+                                        ) : (
+                                          (column.key === "totalAmountToPaid") ? (
+                                              formatePrice(item[column.key])
+                                          ) : (
+                                            item[column.key]
+                                          )
+                                        )}
+                                      </TableCell>
+                                      ))}
+                                    </TableRow>
+                                  )}
+                                </TableBody>
+                              </Table>
+                          </div>
+                      ) : monthSelected.length === 0 && yearSelected === 0 ? ( 
+                        <p className="mt-4 font-medium text-sm text-zinc-600">Debes elegir un mes y año</p>
+                      ) : loading === true && monthSelected.length !== 0 && yearSelected !== 0 ?
+                         <Loading/> : null                        
                       }
 
                    </div>
@@ -168,7 +184,7 @@ const EstadisticsEmployees = () => {
                   
               </ModalBody>
               <ModalFooter className="flex items-center gap-4 justify-center">
-                <Button className="bg-green-800 font-medium text-sm text-white w-72" onPress={onClose}>
+                <Button className="bg-green-800 font-medium text-sm text-white w-72" onPress={handleClose}>
                   Cerrar
                 </Button>
                 <Button className="bg-green-800 font-medium text-sm text-white w-72" onClick={() =>  getShiftsData()}>
