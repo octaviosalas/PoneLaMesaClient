@@ -22,6 +22,7 @@ const EstadisticsClientsModal = () => {
   const [size, setSize] = useState("4xl")
   const [loading, setLoading] = useState(true)
 
+
         useEffect(() => {
           const fetchData = async () => {
             try {
@@ -131,14 +132,17 @@ const EstadisticsClientsModal = () => {
                },
              });
 
-             tableColumns.unshift({
-               key: 'puesto',
-               label: 'Puesto',
-               cellRenderer: (cell) => {
-                 const filaActual = cell.row;
-                 return `${filaActual.index + 1}`;
-               },
-             });
+
+            let rowIndex = 0; // Inicializa un contador fuera del método de renderizado
+
+          tableColumns.unshift({
+          key: 'puesto',
+          label: 'Puesto',
+          cellRenderer: (cell) => {
+              rowIndex++; // Incrementa el contador cada vez que se renderiza una fila
+              return `${rowIndex}`;
+          },
+          });
          
              setColumns(tableColumns);
              if(columns.length > 0) { 

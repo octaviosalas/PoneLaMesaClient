@@ -9,18 +9,22 @@ const MainExpenses = () => {
  
     const [everyExpenses, setEveryExpenses] = useState([])
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const data = await getEveryExpenses();
-            setEveryExpenses(data);
-            console.log(data)
+   
+
+
+       const getEveryExpenses = async () => {
+        try {
+          const query = await axios.get("http://localhost:4000/expenses");
+          const response = query.data
+          setEveryExpenses(response)
           } catch (error) {
-            console.error("Error fetching gastos:", error);
-          }
-        };   
-        fetchData();
-      }, []);
+          console.error(error);
+        }
+      };
+
+      useEffect(() => {
+        getEveryExpenses()
+      }, [])
 
 
 

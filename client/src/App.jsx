@@ -30,6 +30,7 @@ import EmployeesData from './components/Employees/EmployeesData'
 import ClosuresMain from './components/Closures/ClosuresMain'
 import MonthlyClousure from './components/Closures/MonthlyClousure'
 import MainExpenses from './components/Expenses/MainExpenses'
+import PendingReplacements from "./components/PendingReplacements/PendingReplacements"
 
 function App() {
   const [count, setCount] = useState(0)
@@ -66,13 +67,12 @@ function App() {
             <Route path="/EntregasLocal" element={<LocalDeliveries />} /> 
             <Route path="/Devoluciones" element={<Returns />} /> 
             <Route path="/Reposiciones" element={<Returned />} /> 
+            <Route path="/ReposicionesPendientes" element={<PendingReplacements />} /> 
             <Route path="/Estadisticas/Articulos" element={<EstadisticsArticles />}/> 
             <Route path="/Estadisticas/Alquileres" element={<EstadisticsOrders />}/> 
             <Route path="/Estadisticas/Clientes" element={<EstadisticsClients />}/> 
             <Route path="/Estadisticas/Cobros" element={<EstadisticsCollections />}/> 
-            <Route path="/Estadisticas/Compras" element={<EstadisticsPurchases />}/> 
             <Route path="/Cierre/:year/:month" element={<MonthlyClousure />} /> 
-
           </Routes>
      </UserProvider>
 

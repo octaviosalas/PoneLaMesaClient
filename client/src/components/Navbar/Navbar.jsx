@@ -101,13 +101,8 @@ const NavBarComponent = () =>  {
                         <DropdownItem key="Cobros" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
                         <DropdownItem key="Compras" onClick={() => goTo("compras")}>Compras</DropdownItem>
                         <DropdownItem key="Cierres" onClick={() => goTo("cierres")}>Cierres</DropdownItem>
-                        <DropdownItem key="Cierres" onClick={() => goTo("gastos")}>Gastos</DropdownItem>
-                        <DropdownItem key="EstadisticasClientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Clientes</DropdownItem>
-                        <DropdownItem key="Articulos" onClick={() => goTo("Estadisticas/Articulos")}>Estadisticas Articulos</DropdownItem>
-                        <DropdownItem key="Alquileres" onClick={() => goTo("Estadisticas/Alquileres")}>Estadisticas Alquileres</DropdownItem>
-                        <DropdownItem key="EstadisticasCobros" onClick={() => goTo("Estadisticas/Cobros")}>Estadisticas Cobros</DropdownItem>    
+                        <DropdownItem key="Cierres" onClick={() => goTo("gastos")}>Gastos</DropdownItem>                 
                         <DropdownItem key="EstadisticasCompras" onClick={() => goTo("Estadisticas/Compras")}>Estadisticas Compras</DropdownItem>    
-                        <DropdownItem key="EstadisticasClientes" onClick={() => goTo("Estadisticas/Clientes")}>Estadisticas Empleados</DropdownItem>
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>

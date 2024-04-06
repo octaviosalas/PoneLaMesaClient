@@ -187,20 +187,30 @@ const ExpensesTable = ({expensesData, updateList}) => {
                     <TableBody items={filteredData}>
                       {(item) => (
                         <TableRow key={item._id}>
-                          {columns.map((column) => (
-                            <TableCell key={column.key}  className='text-left' >
-                              {column.cellRenderer ? (
-                                column.cellRenderer({ row: { original: item } })
-                              ) : (
-                                (column.key === "amount") ? (
-                                  formatePrice(item[column.key])
-                                ) : (
-                                  item[column.key]
-                                )
-                              )}
-                            </TableCell>
-                          ))}
-                        </TableRow>
+                        {columns.map((column) => (
+                           <TableCell key={column.key} className='text-left'>
+                             {column.cellRenderer ? (
+                               column.cellRenderer({ row: { original: item } })
+                             ) : (
+                               column.key === "typeOfExpense" ? (
+                                 item[column.key] === "Gasto Fijo" ? (
+                                   <>
+                                     {item[column.key]} ({item.fixedExpenseType})
+                                   </>
+                                 ) : (
+                                   item[column.key]
+                                 )
+                               ) : (
+                                 column.key === "amount" ? (
+                                   formatePrice(item[column.key])
+                                 ) : (
+                                   item[column.key]
+                                 )
+                               )
+                             )}
+                           </TableCell>
+                         ))}
+                       </TableRow>
                       )}
                     </TableBody>
                   </Table> 

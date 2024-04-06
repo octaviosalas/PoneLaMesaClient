@@ -34,6 +34,10 @@ const expenseSchema = mongoose.Schema({
     },
     providerId: { 
         type: String
+    },
+    fixedExpenseType: {
+        type: String,
+        required: function() { return this.typeOfExpense === 'Gasto Fijo'; }
     }
 })
 
