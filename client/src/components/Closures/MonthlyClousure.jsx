@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {everyMonthsOfTheYear, everyYears, getMonth, getEveryPurchases, getEveryExpenses, getMonthlyOrder, getMonthlySublets, getMonthlyCollections, formatePrice } from '../../functions/gralFunctions';
+import {everyMonthsOfTheYear, everyYears, getMonth, getEveryPurchases, getEveryExpenses, getMonthlyOrder, getMonthlySublets, getMonthlyCollections, formatePrice, getMonthlyFixedExpenses } from '../../functions/gralFunctions';
 import { useParams } from 'react-router-dom';
 import NavBarComponent from '../Navbar/Navbar';
 import Loading from '../Loading/Loading';
@@ -21,6 +21,9 @@ const MonthlyClousure = () => {
     const [totalAmountOrdersPaid, setTotalAmountOrdersPaid] = useState(0)
     const [totalAmountOrdersWithOutPaid, setTotalAmountOrdersWithOutPaid] = useState(0)
     const [ordersQuantity, setOrdersQuantity] = useState(0)
+    const [allFixedExpenses, setAllFixedExpenses] = useState([])
+    const [totalAmountFixedExpenses, setTotalAmountFixedExpenses] = useState(0)
+    const [withOutFixedExpenses, setWithOutFixedExpenses] = useState(false)
     const [allSublets, setAllSublets] = useState([])
     const [totalAmountSublets, setTotalAmountSublets] = useState(0)
     const [collectionsAgroupByType, setCollectionsAgroupByType] = useState([])
@@ -101,9 +104,21 @@ const MonthlyClousure = () => {
               setWithOutSublets(true)
             } else { 
               const getTotalAmountSublets = subletsData.reduce((acc, el) => acc + el.amount, 0)
-              console.log("Monto total facturado en Subalquileres", getTotalAmountSublets)
+              console.log("Monto total gstado en Subalquileres", getTotalAmountSublets)
               setTotalAmountSublets(getTotalAmountSublets)
             }
+
+             //gastosFijos
+             const fixedExpenses = await getMonthlyFixedExpenses(month, year); 
+             console.log("GASTOS FIJOS TOTALES MES Y AÑO", fixedExpenses)
+             setAllFixedExpenses(fixedExpenses)
+             if(fixedExpenses.length === 0) { 
+              setWithOutFixedExpenses(true)
+             } else { 
+               const getTotalAmountExpensesFixed = fixedExpenses.reduce((acc, el) => acc + el.amount, 0)
+               console.log("Monto total gstado en gastos fijos", getTotalAmountExpensesFixed)
+               setTotalAmountFixedExpenses(getTotalAmountExpensesFixed)
+             }
             
             //empleados
             const getShiftsByMonth = await axios.get(`http://localhost:4000/employees/getShifsByMonth/${month}`)
@@ -328,7 +343,26 @@ const MonthlyClousure = () => {
                                 </div>
                               ))}
                             </div>
-                  </div>       
+                  </div>     
+
+                  <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
+                        <h5 className='font-bold text-black text-md'> - Gastos Fijos - </h5> 
+                        <h6 className='font-medium text-white text-sm bg-red-500'>Monto total Gastado: {formatePrice(totalAmountFixedExpenses)}</h6> 
+                        <div className='mt-6 ml-4'>
+                          {allFixedExpenses.map((exp, index) =>  ( 
+                            <div className='flex flex-col items-start justify-start mt-4' key={exp._id}> 
+                              <div className='flex items-center'>
+                                <p className='text-md'><b>{index + 1} - {exp.fixedExpenseType}</b></p> 
+                              </div>  
+                              
+                              <div className='flex flex-col items-start'>
+                                <p><b className='text-sm'>Total: </b>{formatePrice(exp.amount)} </p>  
+                                <p className='underline text-xs'>Ver detalle</p>
+                              </div>                   
+                            </div>
+                          ))}
+                        </div>
+                </div>  
 
               </div>   
 
@@ -418,7 +452,8 @@ const MonthlyClousure = () => {
                         <p><b>Monto total Gastado en Compras:</b> {formatePrice(totalAmountPurchases)}</p>
                         <p><b>Monto total Gastado en Sub Alquileres:</b> {formatePrice(totalAmountSublets)}</p>
                         <p><b>Gasto total en Empleados:</b> {formatePrice(employeesReport.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
-                        <p><b>GANANCIA NETA:</b> {formatePrice(totalAmountOrders - (totalAmountExpenses + employeesReport.reduce((acc, el) => acc + el.totalAmountToPaid, 0)))}</p>
+                        <p><b>Gasto total en Gastos Fijos:</b> {formatePrice(totalAmountFixedExpenses)}</p>
+                        <p><b>Ganancia Neta:</b> {formatePrice(totalAmountOrders - (totalAmountExpenses + employeesReport.reduce((acc, el) => acc + el.totalAmountToPaid, 0)))}</p>
                     </div>
                        
                      </div>

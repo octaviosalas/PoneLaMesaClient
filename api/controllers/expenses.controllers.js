@@ -32,3 +32,16 @@ export const getTypesFixedExpenses = async (req, res) => {
       console.log(error)
     }
 }
+
+export const getMonthlyExpenses = async (req, res) => { 
+  const {month} = req.params
+  console.log(month)
+
+  try {
+     const justThisMonthExpenses = await Expenses.find({month: month})
+     res.status(200).json(justThisMonthExpenses);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los gastos del mes' });
+    console.log(error)
+  }
+}

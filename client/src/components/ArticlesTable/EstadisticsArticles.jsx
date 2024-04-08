@@ -153,9 +153,13 @@ const EstadisticsArticles = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
+               <ModalHeader className="flex flex-col gap-1">
                 Top 5 Articulos
                 <p className='underline font-medium text-sm text-zinc-600'>Ordenados por facturacion generada:</p>
+                <div>
+                    <p className="text-sm font-medium text-zinc-600">Mes Seleccionado: {monthSelected.charAt(0).toUpperCase() + monthSelected.slice(1).toLowerCase()}</p>
+                    <p className="text-sm font-medium text-zinc-600">Año Seleccionado: {yearSelected}</p>
+                </div>
                 </ModalHeader>
               <ModalBody>                        
                   <div className='flex items-center gap-4'>

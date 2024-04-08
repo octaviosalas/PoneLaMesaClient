@@ -155,14 +155,14 @@ const ClientsTable = () => {
          {columns.length !== 0 && data.length !== 0 ? 
          <>
           <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] ' >
-              <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>  
-                <div className='flex justify-start ml-2'>
-                   <p className='text-sm font-medium text-zinc-600'>Clientes</p>
-                </div>   
-                <div className='flex justify-end gap-4 mr-2'>
-                  <EstadisticsClientsModal/>
-                  <CreateNewClient updateList={getClientsDataAndCreateTable}/>      
-                </div>                        
+             <div className='flex justify-start items-start text-start w-full ml-2'>
+                <p className='text-zinc-500 font-medium text-md'>Clientes</p>
+             </div>
+              <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none mt-2'>    
+                  <div className='flex justify-end items-end gap-4 mr-2 w-full'>
+                    <EstadisticsClientsModal/>
+                    <CreateNewClient updateList={getClientsDataAndCreateTable}/>      
+                  </div>                        
               </div>
               <div className='w-full flex jusitfy-start text-center mt-4 '>
                <input 

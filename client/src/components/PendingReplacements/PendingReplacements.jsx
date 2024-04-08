@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from "axios"
 import NavBarComponent from '../Navbar/Navbar'
+import PendingReplacementsTableData from './PendingReplacementsTableData'
 
 const PendingReplacements = () => {
 
+    const [pendingReplacements, setPendingReplacements] = useState([])
   
     const getPendings = async () => { 
         try {
@@ -20,11 +22,15 @@ const PendingReplacements = () => {
             const transformAndShowClient = getWithOutPaid.map((cc) => { 
                 return  { 
                     clientName: cc.orderCompletedData.map((c) => c.client)[0],
+                    clientId: cc.orderCompletedData.map((c) => c.clientId)[0],
                     amountToPay: cc.amountToPay,
-                    replacementeDetail: cc.productsMissed
+                    replacementeDetail: cc.productsMissed,
+                    debtId: cc.debtId,
+                    orderCompletedData: cc.orderCompletedData
                 }
             })
             console.log("Reposiciones pendientes de pago en detalle", transformAndShowClient)
+            setPendingReplacements(transformAndShowClient)
         } catch (error) {
             console.log(error)
         }
@@ -32,11 +38,12 @@ const PendingReplacements = () => {
 
     useEffect(()=> { 
         getPendings()
-    })
+    }, [])
 
   return (
     <div>
       <NavBarComponent/>
+      <PendingReplacementsTableData replacementes={pendingReplacements} updateList={getPendings}/>
     </div>
   )
 }

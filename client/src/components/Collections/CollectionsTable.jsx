@@ -12,6 +12,7 @@ import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunction
 import { useNavigate } from 'react-router-dom';
 import VaucherModal from './VaucherModal';
 import CollectionsFilters from './CollectionsFilters';
+import CollectionsEstadisticsModal from './CollectionsEstadisticsModal';
 
 
 const CollectionsTable = ({collections, updateCollectionList}) => {
@@ -229,14 +230,19 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                data.length > 0 ? (
                   <>
                 <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
-                  <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
-                       <div className='flex w-full justify-start items-center ml-4'>                   
+                 <div className='flex justify-start items-start text-start w-full ml-2'>
+                      <p className='text-zinc-500 font-medium text-md'>Cobros</p>
+                  </div>
+                  <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none mt-2'>
+                       <div className='flex w-full justify-start items-center ml-1'>                   
                            <CollectionsFilters 
                               applyFilters={applyFilters} 
                               applyFiltersByType={applyFiltersByType}
                               isFilterApplied={isFilterApplied} />
                        </div>
-                       <div className='flex justify-start mr-4'></div>
+                       <div className='flex justify-end mr-4 w-full'>
+                        <CollectionsEstadisticsModal/>
+                       </div>
                      </div>
                      <div className='flex justify-between items-center w-full'>
                       <div className='w-full flex items-center gap-2 justify-start mt-4'>

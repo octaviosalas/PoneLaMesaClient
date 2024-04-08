@@ -92,7 +92,13 @@ const ViewMoreEstadistics = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Estadisticas Alquileres</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                Estadisticas Alquileres
+                <div className='flex flex-col justify-start items-start'>
+                    <p className='font-medium text-sm text-zinc-600'> Mes Elegido: {monthSelected}</p>
+                    <p className='font-medium text-sm text-zinc-600'> Año Elegido: {yearSelected}</p>
+                 </div>
+              </ModalHeader>
               <ModalBody>
            
                
@@ -115,16 +121,15 @@ const ViewMoreEstadistics = () => {
 
            
           
-                        <div className='flex flex-col mt-6'>
-                            <div className='flex flex-col justify-start items-start'>
-                                    <p className='font-medium text-sm text-zinc-600'> Mes Elegido: <b>{monthSelected}</b></p>
-                                    <p className='font-medium text-sm text-zinc-600'> Año Elegido: <b>{yearSelected}</b></p>
-                                </div>
+                        <div className='flex flex-col mt-2 items-center justify-center'>
                                 <div>
                                 {withOutOrdersMonth ?
                                 <p className='font-medium text-sm text-red-600 mt-4'>No hubo pedidos en {monthSelected} de {yearSelected}</p>
                                 :
-                                <p className='font-medium text-sm text-green-800 mt-2'>El Monto total facturado  es: <b>{formatePrice(monthAmountFactured)}</b> </p>
+                                <div>
+                                  <p className='font-medium text-sm text-green-800 mt-2'>El Monto total facturado  es: <b>{formatePrice(monthAmountFactured)}</b> </p>
+                                  <p className='font-medium text-sm text-green-800 mt-2'>Cantidad de Alquileres: {selectedMonthOrdersData.length}</p>
+                                </div>
                                 }
                                 </div>
                         </div>

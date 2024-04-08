@@ -222,9 +222,6 @@ const EstadisticsClientsModal = () => {
                       </TableBody>
                    </Table>}
                   </div>
-           
-                
-                
                 }          
           
      </div>

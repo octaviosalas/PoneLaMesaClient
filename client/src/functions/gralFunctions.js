@@ -96,10 +96,26 @@ export const getProductsBonusClients = async () => {
   };
 
 
-  export const getMonthlyCollections = async (month) => {
+  export const getMonthlyCollections = async (month, year) => {
     try {
       const response = await axios.get(`http://localhost:4000/collections/getByMonth/${month}`);
-      return response.data;
+      const data = response.data;
+      const finalResponse = data.filter((cc) => cc.year === year)
+      return finalResponse;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
+  export const getMonthlyFixedExpenses = async (month, year) => {
+    console.log("MES ELEGIDO", month)
+    const formateYearType = Number(year)
+    try {
+      const response = await axios.get(`http://localhost:4000/expenses/getExpensesByMonth/${month}`);
+      const filterData = response.data.filter((d) => d.typeOfExpense === "Gasto Fijo")
+      const lastFilter = filterData.filter((dd) => dd.year === formateYearType)
+      return lastFilter
     } catch (error) {
       console.error(error);
       throw error;
@@ -274,7 +290,10 @@ export const everyActivities = [
 
 ]
 
-
+export const shiftsSchedules = [ 
+  { label: 'Mañana', value: 'Mañana' },
+  { label: 'Tarde', value: 'Tarde' },
+]
 
 export const obtenerHoraActualArgentina = () => {
   const fecha = new Date();

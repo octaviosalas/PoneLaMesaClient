@@ -11,6 +11,8 @@ import CreateExpense from './CreateExpense';
 import Loading from '../Loading/Loading';
 import CreateNewPurchase from '../Purchases/CreateNewPurchase';
 import CreateSublet from '../ArticlesTable/CreateSublet';
+import ExpensesEstadistics from './ExpensesEstadistics';
+import FilterExpenses from './FilterExpenses';
 
 
 const ExpensesTable = ({expensesData, updateList}) => {
@@ -22,9 +24,10 @@ const ExpensesTable = ({expensesData, updateList}) => {
     const [inputValue, setInputValue] = useState("")
     const [loadData, setLoadData] = useState(false)
     const [withOutExpenses, setWithOutExpenses] = useState(false)
+    const [filterIsOn, setFilterIsOn] = useState(false)
 
     useEffect(() => { 
-        setData(expensesData)
+        setData(expensesData.reverse())
         console.log(expensesData)
       }, [expensesData])
 
@@ -33,7 +36,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
             console.log("toy")
             const propiedades = Object.keys(expensesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
             propiedad !== '__v'  &&  propiedad !== 'expenseDetail'  &&  propiedad !== 'date'  &&  
-            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&  propiedad !== 'providerName');
+            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&  propiedad !== 'providerName' &&  propiedad !== 'fixedExpenseType');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -112,7 +115,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
         }            
         } else { 
           console.log("VACIO")
-          setWaitingData(true)
+      
         }
 
      
@@ -142,8 +145,24 @@ const ExpensesTable = ({expensesData, updateList}) => {
            if (value === null) return false;
            return value.toString().toLowerCase().includes(inputValue.toLowerCase());
         });
-       });
+    });
 
+    const isFilterApplied = (value) => { 
+      setFilterIsOn(value)
+    }
+
+    const applyFiltersByMonth =  (monthSelected) => {
+      const filteringByMonth = filteredData.filter((orders) => orders.month === monthSelected);
+      console.log(filteringByMonth);
+      setData(filteringByMonth);
+      console.log(filteringByMonth);
+     
+    };
+
+    const undoFilter = () => { 
+      setFilterIsOn(false)
+      updateList()
+    }
 
 
   return (
@@ -152,26 +171,34 @@ const ExpensesTable = ({expensesData, updateList}) => {
          {columns.length !== 0 && data.length !== 0 ? 
                 <>
                   <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none'>
-                    <div className='h-12 items-center justify-between w-full flex bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
+                    <div className='flex justify-start items-start text-start w-full ml-2'>
+                       <p className='text-zinc-500 font-medium text-md'>Gastos</p>
+                    </div>
+                    <div className='h-12 items-center justify-between w-full flex bg-green-200 gap-10 rounded-t-lg rounded-b-none mt-2'>
                          <div className='flex justify-start'>
-                           <p className='text-zinc-600 font-medium text-sm ml-2'>Todos los Gastos</p>
+                          <FilterExpenses applyMonthFilter={applyFiltersByMonth}  isFilterApplied={isFilterApplied}  getAllDataAgain={updateList}/>
                          </div>
                          <div className='flex justify-end mr-4 gap-4'>
                            <CreateNewPurchase/>
                            <CreateSublet/>
                            <CreateExpense updateList={updateList}/>  
+                           <ExpensesEstadistics/>
                          </div>          
                     </div>
                     <div className='flex justify-between items-center w-full'>
-                      <div className='w-full flex items-center gap-2 justify-start mt-4'>
-                        <input
-                          className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
-                          placeholder="Buscador"
-                          onChange={(e) => setInputValue(e.target.value)}
-                          value={inputValue}/>                                            
-                       </div>                     
+                    <div className='w-full flex items-center gap-2 jusitfy-start mt-4'>
+                        <input 
+                            className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
+                            placeholder="Buscador" 
+                            onChange={(e) => setInputValue(e.target.value)}
+                            value={inputValue} />
+                            {filterIsOn ? 
+                            <p className='text-xs text-zinc-500 font-medium cursor-pointer' onClick={() => undoFilter()}> Deshacer Filtro </p>
+                            : null}
+                    </div>                 
                      </div>
                   </div>
+                 
                   <Table 
                     columnAutoWidth={true} 
                     columnSpacing={10}  
@@ -213,10 +240,14 @@ const ExpensesTable = ({expensesData, updateList}) => {
                        </TableRow>
                       )}
                     </TableBody>
-                  </Table> 
-                 
+                  </Table>                         
                 </>
-              : null}
+              :  
+              <div className='flex flex-col items-center justify-center'>
+              <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>
+              <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => updateList()}>Deshacer Filtros</p>
+            </div>
+          }
         </div>
     </div>
   )

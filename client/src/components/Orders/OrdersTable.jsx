@@ -63,10 +63,10 @@ const OrdersTable = () => {
 
     const getDataAndCreateTable = () => { 
       axios.get("http://localhost:4000/orders")
-      .then((res) => { 
-        const allOrders = res.data
-        console.log(allOrders)
-        setData(allOrders)
+            .then((res) => { 
+              const allOrders = res.data.reverse()
+              console.log(allOrders)
+              setData(allOrders)
         if(allOrders.length !== 0) { 
             const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
             && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' && propiedad !== 'clientId' && propiedad !== 'date' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid'  && propiedad !== 'downPaymentData');
