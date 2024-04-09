@@ -15,6 +15,9 @@ const productsSchema = new mongoose.Schema({
       },
       stock: { 
         type: Number
+      },
+      estimatedWashTime: { 
+        type: Number
       }
   });
   

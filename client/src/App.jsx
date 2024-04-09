@@ -31,6 +31,8 @@ import ClosuresMain from './components/Closures/ClosuresMain'
 import MonthlyClousure from './components/Closures/MonthlyClousure'
 import MainExpenses from './components/Expenses/MainExpenses'
 import PendingReplacements from "./components/PendingReplacements/PendingReplacements"
+import EmployeesShifts from './components/Employees/EmployeesShifts'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -73,6 +75,7 @@ function App() {
             <Route path="/Estadisticas/Clientes" element={<EstadisticsClients />}/> 
             <Route path="/Estadisticas/Cobros" element={<EstadisticsCollections />}/> 
             <Route path="/Cierre/:year/:month" element={<MonthlyClousure />} /> 
+            <Route path="/Empleados/Turnos" element={<EmployeesShifts />} /> 
           </Routes>
      </UserProvider>
 

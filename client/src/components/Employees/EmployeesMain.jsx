@@ -6,6 +6,7 @@ import ViewEmployees from './ViewEmployees';
 import CreateNewEmployee from './CreateNewEmployee';
 import { useContext } from 'react';
 import { UserContext } from '../../store/userContext';
+import ViewShifts from './ViewShifts';
 
 const EmployeesMain = () => {
   
@@ -31,11 +32,17 @@ const EmployeesMain = () => {
       <NavBarComponent/> 
         <div className='flex items-center gap-4'>
           {userCtx.userRol === "Dueño" ?
-          <>
-            <CreateNewShift/>
-            <ViewEmployees/>
-            <CreateNewEmployee/>
-          </>
+          <div className='flex flex-col items-center justify-center'>
+            <div className='flex items-center gap-2'>
+                <CreateNewShift/>
+                <CreateNewEmployee/>
+            </div>
+            <div className='flex items-center gap-2 mt-4'>
+               <ViewEmployees/>
+               <ViewShifts/>
+            </div>
+          </div>
+        
           :
           <div className="flex flex-col items-center mt-24">
            <CreateNewShift/>

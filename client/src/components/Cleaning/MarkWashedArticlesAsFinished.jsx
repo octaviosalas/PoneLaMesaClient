@@ -4,6 +4,7 @@ import axios from "axios";
 import {getDay, getMonth, getDate, getYear, shiftsSchedules, everyMonthsOfTheYear} from "../../functions/gralFunctions"
 
 const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
+
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [newQuantity, setNewQuantity] = useState(0)
   const [succesUpdate, setSuccesUpdate] = useState(false)
@@ -20,9 +21,24 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
   const [shiftChoosenYear, setShiftChoosenYear] = useState(0)
   const [secondStep, setSecondStep] = useState(false)
   const [yearError, setYearError] = useState(false)
+  const [productEstimatedTime, setProductEstimatedTime] = useState(0)
 
-  const handleOpen = () => { 
+
+  const getTimeEstimatedWashedd = () => { 
+    axios.get(`http://localhost:4000/products/${washedData.productId}`)
+         .then((res) => { 
+          console.log(res.data)
+          setProductEstimatedTime(res.data.estimatedWashTime)
+         })
+         .catch((err) => { 
+          console.log(err)
+         })
+  }
+
+  const handleOpen =  () => { 
     console.log(washedData)
+    console.log(washedData.productId)
+    getTimeEstimatedWashedd()
     onOpen()
   }
 
@@ -36,7 +52,9 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
   }
 
   const updateArticleStock = async () => { 
-    if(newQuantity !== 0 && errorInQuantity !== true && shiftChoosenDay > 0 && shiftChoosenMonth.length > 0 && yearError !== true) { 
+    console.log(typeof newQuantity)
+    const formatedNewQuantity = Number(newQuantity)
+    if(formatedNewQuantity !== 0 && errorInQuantity !== true && shiftChoosenDay > 0 && shiftChoosenMonth.length > 0 && yearError !== true) { 
       const quantityToBeUpdated = ({ 
         newQuantity: washedData.quantity - newQuantity,
         quantity: Number(newQuantity),
@@ -49,7 +67,7 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
         year: Number(shiftChoosenYear),
         date: actualDate,
         shift: shiftChoosen,
-        replenishDetail: [{productName: washedData.productName, productId: washedData.productId, quantity: newQuantity}]
+        replenishDetail: [{productName: washedData.productName, productId: washedData.productId, quantity: formatedNewQuantity, estimatedWashTime: productEstimatedTime}]
       }) 
   
        try {

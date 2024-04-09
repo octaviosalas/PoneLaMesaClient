@@ -188,6 +188,12 @@ export const paidOrNotPaid = [
   { label: 'Pendiente de Pago', value: false },
 ];
 
+export const typeOfExpenses = [
+  { label: 'Gasto Fijo', value: "Gasto Fijo" },
+  { label: 'Compra', value: 'Compra' },
+  { label: 'Sub Alquiler', value: 'Sub Alquiler' }
+];
+
 export const everyMonthsOfTheYear = [
   { value: "enero", label: "enero"},
   { value: "febrero", label: "febrero"},

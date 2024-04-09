@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
-import { months, typeOfClientsAvailables, diferentOrdersStatus, paidOrNotPaid } from "../../functions/gralFunctions";
+import { months, typeOfClientsAvailables, diferentOrdersStatus, paidOrNotPaid, typeOfExpenses } from "../../functions/gralFunctions";
 
-const FilterExpenses = ({applyMonthFilter, isFilterApplied, getAllDataAgain}) => {
+const FilterExpenses = ({applyMonthFilter, applyFiltersByType, isFilterApplied, getAllDataAgain}) => {
 
     const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
     const [filterByMonthSetp, setFilterByMonthSetp] = useState(false)
+    const [filterByExpenseType, setFilterByExpenseType] = useState(false)
     const [monthSelected, setMonthSelected] = useState("")
+    const [typeSelected, setTypeSelected] = useState("")
     const [missedFilter, setMissedFilter] = useState(false)
 
     const handleOpen = () => {
@@ -27,12 +29,25 @@ const FilterExpenses = ({applyMonthFilter, isFilterApplied, getAllDataAgain}) =>
         onClose()
         isFilterApplied(true)
         setFilterByMonthSetp(false)
-      
+        setMonthSelected("")
+      }
+
+      const applyFilterByType= () => { 
+        applyFiltersByType(typeSelected)
+        onClose()
+        isFilterApplied(true)
+        setFilterByMonthSetp(false)
         setMonthSelected("")
       }
 
       const chooseMonthFilters = () => { 
         setFilterByMonthSetp(true)
+        setFilterByExpenseType(false)
+      }
+
+      const chooseTypeFilters= () => { 
+        setFilterByExpenseType(true)
+        setFilterByMonthSetp(false)
       }
 
 
@@ -51,13 +66,13 @@ const FilterExpenses = ({applyMonthFilter, isFilterApplied, getAllDataAgain}) =>
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center justify-center">
-                   <div className="bg-green-500 w-full h-11 flex items-center cursor-pointer" onClick={() => chooseMonthFilters()}>
+                   <div className="bg-green-800 w-full h-11 flex items-center cursor-pointer" onClick={() => chooseMonthFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Mes</p>
                    </div>
-                   {/*<div className="bg-green-600 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseClientFilters()}>
-                        <p className="font-bold text-white text-sm ml-4">Filtrar Por Tipo de Cliente</p>
+                   <div className="bg-green-800 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseTypeFilters()}>
+                        <p className="font-bold text-white text-sm ml-4">Filtrar Por Tipo de Gasto</p>
                    </div>
-                   <div className="bg-green-700 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderStatusFilters()}>
+                   {/*<div className="bg-green-700 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderStatusFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Estado de Pedido</p>
                    </div>
                    <div className="bg-green-800 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderPaidOrNoPaidFilters()}>
@@ -76,6 +91,18 @@ const FilterExpenses = ({applyMonthFilter, isFilterApplied, getAllDataAgain}) =>
                           ))}
                         </Select>
                     </div>
+                    : null}     
+
+                    {filterByExpenseType ? 
+                    <div>
+                          <Select variant={"faded"} label="Selecciona el Tipo de Gasto" className="w-72">          
+                          {typeOfExpenses.map((typeOfExp) => (
+                            <SelectItem key={typeOfExp.value} value={typeOfExp.value} onClick={() => setTypeSelected(typeOfExp.value)}>
+                              {typeOfExp.label}
+                            </SelectItem>
+                          ))}
+                        </Select>
+                    </div>
                     : null}                
                 </div>
 
@@ -86,7 +113,7 @@ const FilterExpenses = ({applyMonthFilter, isFilterApplied, getAllDataAgain}) =>
                   className="font-bold text-white bg-green-800"
                   onClick={() => (
                   monthSelected !== "" ? applyFilterByMonthSelected() :
-                  invalidFilters())
+                  typeOfExpenses !== "" ? applyFilterByType() : null)
                   }
                   >
                   Aplicar

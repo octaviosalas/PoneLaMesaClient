@@ -12,6 +12,8 @@ export const productsClientsData = async (req, res) => {
    }
 }
 
+
+
 export const productsBonusClientsData = async (req, res) => { 
     try {
         const getData = await ProductsBonusClients.find()
@@ -23,6 +25,7 @@ export const productsBonusClientsData = async (req, res) => {
 
 export const getProductById = async (req, res) => { 
   const {productId} = req.params
+  console.log("ID RECIBIDO", productId)
   try {
     const getData = await ProductsClients.findById({_id: productId})
     if (getData) {
@@ -129,3 +132,17 @@ export const returnQuantityToStock = async (req, res) => {
   const {productId} = req.params
   await incrementarStock(req.body.productData);
 }
+
+
+export const addEstimatedWashTimeToAllProducts = async (req, res) => { 
+
+  try {
+     const result = await ProductsClients.updateMany(
+       {}, // Criterio que coincide con todos los documentos
+       { $set: { estimatedWashTime: 0.52 } } // Actualiza la propiedad estimatedWashTime a 0.52
+     );
+     console.log(result); // Muestra el resultado de la operación
+  } catch (error) {
+     console.error(error); // Maneja cualquier error que pueda ocurrir
+  }
+ }

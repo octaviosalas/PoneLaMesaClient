@@ -3,13 +3,13 @@ const replenishmentRoutes = express.Router();
 
 
 import  {
-    saveNewReplenishment
+    saveNewReplenishment,
+    getMonthlyReplenishments
 } from '../controllers/replenishment.controllers.js' 
 
 
-// Routes:
-
 replenishmentRoutes.post('/', saveNewReplenishment);
+replenishmentRoutes.get('/:month', getMonthlyReplenishments);
 
 
 

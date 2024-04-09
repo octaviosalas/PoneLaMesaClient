@@ -40,7 +40,7 @@ const ArticlesTable = ({}) => {
             setData(allProducts)
             if(allProducts.length !== 0) { 
               console.log(data)
-              const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' &&  propiedad !== '__v');
+              const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' &&  propiedad !== '__v' &&  propiedad !== 'estimatedWashTime');
               const columnObjects = propiedades.map(propiedad => ({
                   key: propiedad,
                   label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),

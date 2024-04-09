@@ -12,8 +12,9 @@ export const ReturnToWashing = ({orderData, updateList}) => {
   const [dataToSendToWash, setDataToSendToWash] = useState([])
   const [dataToSendToDeposit, setDataToSendToDeposit] = useState([])
   const [orderHasDepositArticles, setOrderHasDepositArticles] = useState(false)
+  const [estimatedTime, setEstimatedTime] = useState(0)
 
-
+ 
   const handleOpen = () => { 
     console.log(orderData)
     console.log("Array original del pedido: ", originalOrderDetailData)
@@ -201,7 +202,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col">Modal Title</ModalHeader>
+              <ModalHeader className="flex flex-col">Pasar a Lavado</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center justify-center mt-4">
                   <p className="text-sm font-medium text-green-800">¿Estas seguro de pasar la orden a Lavado?</p>

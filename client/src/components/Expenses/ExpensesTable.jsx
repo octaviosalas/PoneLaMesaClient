@@ -155,8 +155,14 @@ const ExpensesTable = ({expensesData, updateList}) => {
       const filteringByMonth = filteredData.filter((orders) => orders.month === monthSelected);
       console.log(filteringByMonth);
       setData(filteringByMonth);
-      console.log(filteringByMonth);
-     
+      console.log(filteringByMonth);   
+    };
+
+    const applyFiltersByType =  (typeOfExpenses) => {
+      const filteringByTypeOfExpense = filteredData.filter((orders) => orders.typeOfExpense === typeOfExpenses);
+      console.log(filteringByTypeOfExpense);
+      setData(filteringByTypeOfExpense);
+      console.log(filteringByTypeOfExpense);   
     };
 
     const undoFilter = () => { 
@@ -176,7 +182,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
                     </div>
                     <div className='h-12 items-center justify-between w-full flex bg-green-200 gap-10 rounded-t-lg rounded-b-none mt-2'>
                          <div className='flex justify-start'>
-                          <FilterExpenses applyMonthFilter={applyFiltersByMonth}  isFilterApplied={isFilterApplied}  getAllDataAgain={updateList}/>
+                          <FilterExpenses applyMonthFilter={applyFiltersByMonth} applyFiltersByType={applyFiltersByType}  isFilterApplied={isFilterApplied}  getAllDataAgain={updateList}/>
                          </div>
                          <div className='flex justify-end mr-4 gap-4'>
                            <CreateNewPurchase/>
@@ -185,18 +191,23 @@ const ExpensesTable = ({expensesData, updateList}) => {
                            <ExpensesEstadistics/>
                          </div>          
                     </div>
-                    <div className='flex justify-between items-center w-full'>
-                    <div className='w-full flex items-center gap-2 jusitfy-start mt-4'>
-                        <input 
-                            className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
+                    <div className='flex justify-between items-center w-full mt-2'>              
+                       <div className='flex justify-start gap-2 w-full items-center'>
+                         <input 
+                            className="w-[55%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
                             placeholder="Buscador" 
                             onChange={(e) => setInputValue(e.target.value)}
                             value={inputValue} />
                             {filterIsOn ? 
                             <p className='text-xs text-zinc-500 font-medium cursor-pointer' onClick={() => undoFilter()}> Deshacer Filtro </p>
                             : null}
+                       </div>
+                       <div className='flex justify-end items-center mr-2 w-full'>
+                          <p className='font-medium text-zinc-600 text-sm'>Total Gastado: {formatePrice(data.reduce((acc, el) => acc + el.amount, 0))}</p>
+                       </div>
+                   
                     </div>                 
-                     </div>
+             
                   </div>
                  
                   <Table 
