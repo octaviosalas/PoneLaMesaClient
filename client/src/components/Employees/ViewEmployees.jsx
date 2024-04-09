@@ -14,7 +14,7 @@ const ViewEmployees = () => {
 
   return (
     <div onClick={() => goTo()}>
-       <Card className="w-96 h-96 cursor-pointer">
+       <Card className="w-80 h-80 cursor-pointer">
             <CardHeader className="absolute z-10 top-1 flex-col !items-start">
               <p className="text-tiny text-black uppercase font-bold">Ver Empleados</p>
             </CardHeader>
@@ -22,7 +22,7 @@ const ViewEmployees = () => {
               removeWrapper
               alt="Card background"
               className="z-0 w-full h-full object-cover"
-              src="https://img.freepik.com/vector-premium/trabajo-equipo-personajes-negocios-comunicacion-trabajo-equipo-dibujos-animados-empleados-corporativos-personas-oficina-ilustracion-equipo-negocios_176516-369.jpg"
+              src="https://static.vecteezy.com/system/resources/previews/005/950/858/non_2x/employee-management-icon-editable-vector.jpg"
             />
         </Card>
     </div>

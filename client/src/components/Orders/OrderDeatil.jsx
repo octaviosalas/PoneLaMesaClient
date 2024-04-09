@@ -18,13 +18,13 @@ const OrderDetail = ({orderData, collectionDetail}) => {
     const [viewOrderDetail, setViewOrderDetail] = useState(false)
     const [collectionOrderDetailArticles, setCollectionOrderDetailArticles] = useState([])
     const [collectionOrderDetail, setCollectionOrderDetail] = useState([])
+    const [missedArticlesDetail, setMissedArticlesDetail] = useState([])
+    
     const navigate = useNavigate()
 
     const redirectToPage = (item) => { 
       navigate(`/${item}`)
     }
-
-   
 
     const getOrderOfCollections = async () => { 
         console.log(collectionDetail)
@@ -70,6 +70,9 @@ const OrderDetail = ({orderData, collectionDetail}) => {
     console.log(orderData.paid)
     if(orderData.missingArticlesData.length > 0) { 
       setOrderHasMissedArticles(true)
+      console.log("ACACACACA", orderData.missingArticlesData)
+      console.log(orderData.missingArticlesData.map((ord) => ord.missedProductsData).map((a) => a.productMissed).flat())
+      setMissedArticlesDetail(orderData.missingArticlesData.map((ord) => ord.missedProductsData).map((a) => a.productMissed).flat())
     }
   }
 
@@ -107,10 +110,10 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                           <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
                         ) : (
                           orderData.paid === true ? (
-                            <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
+                            <p className="text-green-800  font-medium text-sm mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
                           ) : (
                             orderData.paid === false && orderData.downPaymentData.length === 0 ? (
-                              <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>
+                              <p className="text-white bg-red-500  font-medium text-sm mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>
                             ) : null
                           )
                         )}
@@ -129,11 +132,6 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                     null
                    }
 
-
-                    {orderData.orderSublets.length === 0 ? 
-                    <p className="text-zinc-600 underline font-medium text-sm mt-2">Este pedido no tiene Articulos Sub Alquilados</p>
-                     : null}
-
                     {orderData.orderSublets.length > 0 ?
                       <div className="mt-2">
                         <p className="text-green-800 underline font-medium text-sm">Este pedido contiene Articulos Sub Alquilados</p>
@@ -147,8 +145,17 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                           </div> 
                       </div>
                     : null}
-
-                    {orderHasMissedArticles ? <p  className="text-green-800 underline font-medium text-sm mt-2" onClick={() => setViewMissedData(true)}>Este pedido tiene Articulos sin Devolver </p> : null}
+                    {orderHasMissedArticles ? <p  className="text-red-500 underline font-medium text-sm cursor-pointer" onClick={() => setViewMissedData(prevState => !prevState)}>Se registraron Faltantes en este Pedido </p> : null}
+                    {viewMissedData ? 
+                    <div>
+                       {missedArticlesDetail.map((p) => ( 
+                        <div className="flex items-center gap-4">
+                           <p className="text-sm font-medium text-zinc-600">Articulo: {p.productName}</p>
+                           <p className="text-sm font-medium text-zinc-600">Cantidad Faltante: {p.missedQuantity}</p>
+                        </div>
+                       ))}
+                    </div> : null}
+                    
                     
                 </div>
                    <Table aria-label="Example table with dynamic content" className="w-full shadow-xl flex items-center justify-center mt-2">

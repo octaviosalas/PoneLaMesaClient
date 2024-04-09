@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Select, SelectItem, Input, Textarea} from "@nextui-org/react";
 import {Card, CardHeader, CardBody, CardFooter, Image} from "@nextui-org/react";
 import { convertTo12HourFormat } from "../../functions/gralFunctions";
-import { everyEmployees, getDate, getDay, getYear, getMonth, everyActivities, obtenerHoraActualArgentina } from "../../functions/gralFunctions";
+import { everyEmployees, getDate, getDay, getYear, getMonth, everyActivities, obtenerHoraActualArgentina, shiftsSchedules } from "../../functions/gralFunctions";
 import axios from "axios";
 
 
@@ -31,6 +31,7 @@ const CreateNewShift = () => {
   const [succesMessage, setSuccesMessage] = useState(false)
   const [missedData, setMissedData] = useState(false)
   const [newNameActivitie, setNewNameActivitie] = useState(false)
+  const [shiftChoosen, setShiftChoosen] = useState("")
 
     useEffect(() => {
       const fetchData = async () => {
@@ -113,7 +114,7 @@ const CreateNewShift = () => {
     }
 
     const createShift = async () => { 
-      if(employeeName.length > 0 && employeeId.length > 0 && startTime.length > 0 && closingHour.length > 0 && activities.length > 0 && employeeHourAmount !== 0) { 
+      if(employeeName.length > 0 && employeeId.length > 0 && startTime.length > 0 && shiftChoosen.length > 0 && closingHour.length > 0 && activities.length > 0 && employeeHourAmount !== 0) { 
         try {
           const shiftData = ({   
               employeeName: employeeName,
@@ -130,7 +131,8 @@ const CreateNewShift = () => {
               activities: activities,
               hours: shiftHours,
               minutes: shiftMinutes,
-              totalAmountPaidShift: shiftHours * employeeHourAmount
+              totalAmountPaidShift: shiftHours * employeeHourAmount,
+              shift: shiftChoosen
           })
             const createNewShift = await axios.post("http://localhost:4000/employees/createShift", shiftData)
             const response = createNewShift.data
@@ -167,7 +169,7 @@ const CreateNewShift = () => {
   return (
     <>
     <Button onClick={() => onOpen()} className="h-[305px]">
-        <Card className="w-full h-full cursor-pointer">
+        <Card className="w-[600px] h-full cursor-pointer">
             <CardHeader className="absolute z-10 top-1 flex-col !items-start">
               <p className="text-tiny text-black uppercase font-bold">Turnos</p>
               <h4 className="text-black font-medium text-large">Iniciar Turno</h4>
@@ -199,6 +201,15 @@ const CreateNewShift = () => {
 
                 {showSecondData ? 
                 <>
+                    <div>
+                      <Select variant="faded" label="Selecciona el Turno" className="max-w-full mt-2 border border-none" value={shiftChoosen}>          
+                          {shiftsSchedules.map((shift) => (
+                          <SelectItem key={shift.value} value={shift.label} textValue={shift.value} onClick={() => setShiftChoosen(shift.value)}>
+                            {shift.label}
+                          </SelectItem>
+                              ))}
+                      </Select>
+                    </div>
                     <div>
                       <Select aria-label="Descripción del campo de selección" label="Nombre Empleado" value={employeeName}>
                         {employees.map((em) => (

@@ -46,6 +46,9 @@ const employeesShiftsSchema = mongoose.Schema({
     },   
     totalAmountPaidShift: { 
         type: Number
+    }, 
+    shift: { 
+        type: String
     },   
     
 })

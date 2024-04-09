@@ -100,7 +100,7 @@ export const getProductsBonusClients = async () => {
     try {
       const response = await axios.get(`http://localhost:4000/collections/getByMonth/${month}`);
       const data = response.data;
-      const finalResponse = data.filter((cc) => cc.year === year)
+      const finalResponse = data.filter((cc) => cc.year === Number(year))
       return finalResponse;
     } catch (error) {
       console.error(error);
@@ -184,8 +184,8 @@ export const diferentOrdersStatus = [
 ];
 
 export const paidOrNotPaid = [
-  { label: 'Abonados', value: true },
-  { label: 'No Abonados', value: false },
+  { label: 'Abonado', value: true },
+  { label: 'Pendiente de Pago', value: false },
 ];
 
 export const everyMonthsOfTheYear = [

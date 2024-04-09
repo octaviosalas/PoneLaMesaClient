@@ -124,16 +124,16 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
               </ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center justify-center">
-                   <div className="bg-green-500 w-full h-11 flex items-center cursor-pointer" onClick={() => chooseMonthFilters()}>
+                   <div className="bg-green-900 w-full h-11 flex items-center cursor-pointer" onClick={() => chooseMonthFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Mes</p>
                    </div>
-                   <div className="bg-green-600 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseClientFilters()}>
+                   <div className="bg-green-900 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseClientFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Tipo de Cliente</p>
                    </div>
-                   <div className="bg-green-700 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderStatusFilters()}>
+                   <div className="bg-green-900 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderStatusFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Estado de Pedido</p>
                    </div>
-                   <div className="bg-green-800 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderPaidOrNoPaidFilters()}>
+                   <div className="bg-green-900 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderPaidOrNoPaidFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Abonado o No Abonado</p>
                    </div>
                 </div>

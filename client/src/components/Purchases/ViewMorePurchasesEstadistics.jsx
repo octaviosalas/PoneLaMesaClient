@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { accounts, everyMonthsOfTheYear, formatePrice, getYear, everyYears, getMonth, getEveryPurchases } from '../../functions/gralFunctions';
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Select, SelectItem} from "@nextui-org/react";
 import viewMore from "../../images/viewMore.png"
 import arrowDown from "../../images/arrowDown.png"
 
@@ -82,61 +82,49 @@ const ViewMorePurchasesEstadistics = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Estadisticas de Compras</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                Estadisticas de Compras
+                <div className='flex flex-col justify-start items-start mt-4'>
+                  <p className='font-medium text-sm text-zinc-600'> Mes Elegido: <b>{monthSelected}</b></p>
+                  <p className='font-medium text-sm text-zinc-600'> Año Elegido: <b>{yearSelected}</b></p>
+              </div>
+                </ModalHeader>
               <ModalBody>
               <div>
-        <Card>
-            <CardHeader className='flex flex-col items-top justify-between'>
+       
             
-              <div className='flex gap-4'>
-                  <Dropdown>
-                        <DropdownTrigger>
-                            <div className="flex items-center gap-1">
-                                <p className='text-black cursor-pointer font-medium text-md'>Elegir Mes </p>
-                                <img src={arrowDown} className='h-3 w-2 mt-1'/>
-                             </div>
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...everyMonths]}>
-                            {(item) => (
-                            <DropdownItem key={item.value} onClick={() => setMonthSelected(item.label)}>
-                                {item.label}
-                            </DropdownItem>
-                            )}
-                        </DropdownMenu>
-                  </Dropdown>
-                  <Dropdown>
-                        <DropdownTrigger>
-                            <div className="flex items-center gap-1">
-                                <p className='text-black cursor-pointer font-medium text-md'>Elegir Año </p>
-                                <img src={arrowDown} className='h-3 w-2 mt-1'/>
-                            </div>
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label="Dynamic Actions" items={[{ key: '0', label: 'Todos' }, ...availableYears]}>
-                            {(item) => (
-                               <DropdownItem key={item.value} onClick={() => setYearSelected(item.label)}>
-                                {item.label}
-                            </DropdownItem>
-                            )}
-                        </DropdownMenu>
-                  </Dropdown>
-              </div>
-              <div className='flex flex-col justify-start items-start mt-4'>
-                <p className='font-medium text-sm text-zinc-600'> Mes Elegido: <b>{monthSelected}</b></p>
-                <p className='font-medium text-sm text-zinc-600'> Año Elegido: <b>{yearSelected}</b></p>
-              </div>
+            <div className='flex items-center justify-center gap-4'>
+                    <Select variant={"faded"} label="Selecciona un Mes" className="max-w-full" value={monthSelected}>          
+                        {everyMonths.map((month) => (
+                          <SelectItem key={month.value} value={month.label} textValue={month.value} onClick={() => setMonthSelected(month.value)}>
+                            {month.label}
+                          </SelectItem>
+                        ))}
+                    </Select>
+                    <Select variant={"faded"} label="Selecciona un Año" className="max-w-full" value={yearSelected}>          
+                        {availableYears.map((year) => (
+                           <SelectItem key={year.value} value={year.label} textValue={year.value} onClick={() => setYearSelected(year.value)}>
+                              {year.label}
+                           </SelectItem>
+                        ))}
+                   </Select>
+                  </div>
+            
 
-            </CardHeader>
+          
             {withOutPurchases ? 
-              <CardBody>
-                <p>No hay compras</p>
-              </CardBody>
+              <div className='flex items-center justify-center mt-4'>
+                <p className='text-sm font-medium text-red-600'>No hay compras</p>   
+              </div>
               :
-              <CardBody>
+               <div className='flex flex-col items-start justify-start mt-2'>
                     <p className='font-medium text-sm text-green-800 mt-2'>Cantidad de Compras: <b className='font-medium text-zinc-600'>{allPurchases.length} compras</b></p>
                     <p className='font-medium text-sm text-green-800 mt-1'>Monto Gastado:<b className='font-medium text-zinc-600'> {formatePrice(allPurchases.reduce((acc, el) => acc + el.total, 0))}</b> </p>
-              </CardBody>
+               </div>
+                   
+         
             }          
-        </Card>
+        
     </div>
               </ModalBody>
                <ModalFooter className="flex items-center justify-center">

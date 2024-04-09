@@ -51,7 +51,7 @@ const CreateNewEmployee = ({type, updateList}) => {
   return (
     <>
    {type !== "table" ? <Button onClick={() => onOpen()} className="h-[305px]">
-        <Card className="w-full h-full cursor-pointer">
+        <Card className="w-[600px] h-full cursor-pointer">
             <CardHeader className="absolute z-10 top-1 flex-col !items-start">
               <p className="text-tiny text-black uppercase font-bold">Crear Empleado +</p>
             </CardHeader>
@@ -59,7 +59,7 @@ const CreateNewEmployee = ({type, updateList}) => {
               removeWrapper
               alt="Card background"
               className="z-0 w-full h-full object-cover"
-              src="https://omniawfm.com/blog/images/optimizar-el-calendario-de-turnos-de-trabajo.jpg"
+              src="https://cdn-icons-png.flaticon.com/512/5070/5070296.png"
             />
         </Card>
     </Button> : <p className="text-zinc-700 font-medium text-sm cursor-pointer" onClick={() => onOpen()}>Crear empleado +</p>}

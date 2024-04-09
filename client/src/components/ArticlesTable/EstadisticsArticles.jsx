@@ -163,20 +163,20 @@ const EstadisticsArticles = () => {
                 </ModalHeader>
               <ModalBody>                        
                   <div className='flex items-center gap-4'>
-                  <Select variant={"faded"} label="Selecciona un Mes" className="max-w-xs" value={monthSelected}>          
-                        {everyMonths.map((month) => (
-                          <SelectItem key={month.value} value={month.label} textValue={month.value} onClick={() => setMonthSelected(month.value)}>
-                            {month.label}
-                          </SelectItem>
-                        ))}
+                      <Select variant={"faded"} label="Selecciona un Mes" className="max-w-xs" value={monthSelected}>          
+                          {everyMonths.map((month) => (
+                            <SelectItem key={month.value} value={month.label} textValue={month.value} onClick={() => setMonthSelected(month.value)}>
+                              {month.label}
+                            </SelectItem>
+                          ))}
+                      </Select>
+                      <Select variant={"faded"} label="Selecciona un Año" className="max-w-xs" value={yearSelected}>          
+                          {availableYears.map((year) => (
+                            <SelectItem key={year.value} value={year.label} textValue={year.value} onClick={() => setYearSelected(year.value)}>
+                                {year.label}
+                            </SelectItem>
+                          ))}
                     </Select>
-                    <Select variant={"faded"} label="Selecciona un Año" className="max-w-xs" value={yearSelected}>          
-                        {availableYears.map((year) => (
-                           <SelectItem key={year.value} value={year.label} textValue={year.value} onClick={() => setYearSelected(year.value)}>
-                              {year.label}
-                           </SelectItem>
-                        ))}
-                   </Select>
                   </div>
 
                    

@@ -150,14 +150,14 @@ const SubletsTable = ({sublets, update}) => {
             }, [data])
 
      return (
-        <div>
+      <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
           {loadData ? (
             <Loading />
               ) : (
                data.length > 0 ? (
                   <>
-                   <div className='flex flex-col  w-full rounded-t-lg rounded-b-none'>
-                     <div className='h-12 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
+                  <div className='flex flex-col items-center justify-center'>
+                     <div className='h-12 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
                        <div className='flex justify-between w-full items-center ml-4'>                   
                            <p className='text-sm font-bold text-zinc-600'>Sub Alquileres Realizados</p>
                        </div>
@@ -178,7 +178,7 @@ const SubletsTable = ({sublets, update}) => {
                      columnSpacing={10}
                      aria-label="Selection behavior table example with dynamic content"
                      selectionBehavior={selectionBehavior}
-                     className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1300px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+                     className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
                    >
                      <TableHeader columns={columns}>
                        {(column) => (

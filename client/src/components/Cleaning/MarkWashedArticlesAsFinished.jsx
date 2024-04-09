@@ -105,8 +105,8 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
                         />
 
                   {secondStep ? 
-                  <div className="flex flex-col items-start justify-start mt-4 w-full">
-                      <div className="flex justify-start items-start">
+                  <div className="flex flex-col items-center justify-center mt-4 w-full">
+                      <div className="flex justify-center items-center">
                         <p className="text-md font-medium text-zinc-600">Ingresa los datos del turno correspondiente</p>
                       </div>
                       

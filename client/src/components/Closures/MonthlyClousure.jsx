@@ -151,7 +151,7 @@ const MonthlyClousure = () => {
             }
 
             //Cobros
-            const collectionsData = await getMonthlyCollections(month)
+            const collectionsData = await getMonthlyCollections(month, year)
             const getTotalAmount = collectionsData.reduce((acc, el) => acc + el.amount, 0)
             setTotalAmountCollections(formatePrice(getTotalAmount))
             const agroupCollectionsByType = collectionsData.reduce((acc, el) => { 
