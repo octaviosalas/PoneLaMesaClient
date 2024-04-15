@@ -18,7 +18,7 @@ const ViewMorePurchasesEstadistics = () => {
   const [everyMonths, setEveryMonths] = useState(everyMonthsOfTheYear)
   const [withOutPurchases, setWithOutPurchases] = useState(false)
   const [allPurchases, setAllPurchases] = useState([])
-
+  const [size, setSize] = useState("lg")
 
   useEffect(() => {
       const fetchData = async () => {
@@ -78,7 +78,7 @@ const ViewMorePurchasesEstadistics = () => {
   return (
     <>
       <img onClick={onOpen} src={viewMore} className="h-7 w-7 cursor-pointer mr-4"/>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true} size={size}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -117,9 +117,12 @@ const ViewMorePurchasesEstadistics = () => {
                 <p className='text-sm font-medium text-red-600'>No hay compras</p>   
               </div>
               :
-               <div className='flex flex-col items-start justify-start mt-2'>
-                    <p className='font-medium text-sm text-green-800 mt-2'>Cantidad de Compras: <b className='font-medium text-zinc-600'>{allPurchases.length} compras</b></p>
-                    <p className='font-medium text-sm text-green-800 mt-1'>Monto Gastado:<b className='font-medium text-zinc-600'> {formatePrice(allPurchases.reduce((acc, el) => acc + el.total, 0))}</b> </p>
+               <div className='flex flex-col items-center justify-center mt-2'> 
+                   <div className='flex justify-start items-start flex-col'>
+                      <p className='font-medium text-sm text-green-800 mt-2'>Cantidad de Compras: <b className='font-medium text-zinc-600'>{allPurchases.length} compras</b></p>
+                      <p className='font-medium text-sm text-green-800 mt-1'>Monto Gastado:<b className='font-medium text-zinc-600'> {formatePrice(allPurchases.reduce((acc, el) => acc + el.total, 0))}</b> </p>
+                   </div>
+                   
                </div>
                    
          

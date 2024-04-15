@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
 import { months, typeOfClientsAvailables, diferentOrdersStatus, paidOrNotPaid } from "../../functions/gralFunctions";
 
 
-const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain, applyClientFilter, applyOrderStatusFilter, applyFiltersByPaidOrNoPaid}) => {
+const FiltersOrdersTable = ({applyMonthFilter, applyDateFilter, isFilterApplied, getAllDataAgain, applyClientFilter, applyOrderStatusFilter, applyFiltersByPaidOrNoPaid}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [filterByMonthSetp, setFilterByMonthSetp] = useState(false)
+  const [filterByDate, setFilterByDate] = useState(false)
   const [filterByTypeOfClientStep, setFilterByTypeOfClientStep] = useState(false)
   const [filterByOrderStatusStep, setFilterByOrderStatusStep] = useState(false)
   const [filterByOrderPaid, setFilterByOrderPaid] = useState(false)
@@ -16,6 +17,8 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
   const [statusSelected, setStatusSelected] = useState("")
   const [paidOrNoPaidSelected, setPaidOrNoPaidSelected] = useState("")
   const [missedFilter, setMissedFilter] = useState(false)
+  const [firstDate, setFirstDate] = useState("")
+  const [secondDate, setSecondDate] = useState("")
 
 
   const applyFilterByMonthSelected = () => { 
@@ -25,7 +28,20 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     setFilterByMonthSetp(false)
     setFilterByOrderStatusStep(false)
     setFilterByOrderStatusStep(false)
+    setFilterByDate(false)
     setMonthSelected("")
+  }
+  
+  const applyFilterByDatesSelected = () => { 
+    applyDateFilter(firstDate, secondDate)
+    onClose()
+    isFilterApplied(true)
+    setFilterByMonthSetp(false)
+    setFilterByOrderStatusStep(false)
+    setFilterByOrderStatusStep(false)
+    setFilterByDate(false)
+    setFirstDate("")
+    setSecondDate("")
   }
 
   const applyFilterByTypeOfClientSelected = () => { 
@@ -34,6 +50,7 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     isFilterApplied(true)
     setFilterByMonthSetp(false)
     setFilterByOrderStatusStep(false)
+    setFilterByDate(false)
     setFilterByOrderStatusStep(false)
     setTypeOfClientSelected("")
   }
@@ -42,6 +59,7 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     applyOrderStatusFilter(statusSelected)
     onClose()
     isFilterApplied(true)
+    setFilterByDate(false)
     setFilterByMonthSetp(false)
     setFilterByOrderStatusStep(false)
     setStatusSelected("")
@@ -54,6 +72,7 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     setFilterByMonthSetp(false)
     setFilterByTypeOfClientStep(false)
     setFilterByOrderStatusStep(false)
+    setFilterByDate(false)
     setStatusSelected("")
   }
 
@@ -76,6 +95,16 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     setFilterByTypeOfClientStep(false)
     setFilterByOrderStatusStep(false)
     setFilterByOrderPaid(false)
+    setFilterByDate(false)
+  }
+
+  const chooseOrderByDate = () => { 
+    setFilterByMonthSetp(false)
+    setFilterByTypeOfClientStep(false)
+    setFilterByOrderStatusStep(false)
+    setFilterByOrderPaid(false)
+    setFilterByDate(true)
+    
   }
 
   const chooseClientFilters = () => { 
@@ -83,6 +112,8 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     setFilterByTypeOfClientStep(true)
     setFilterByOrderStatusStep(false)
     setFilterByOrderPaid(false)
+    setFilterByDate(false)
+
   }
 
   const chooseOrderStatusFilters = () => { 
@@ -90,6 +121,8 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     setFilterByTypeOfClientStep(false)
     setFilterByOrderStatusStep(true)
     setFilterByOrderPaid(false)
+    setFilterByDate(false)
+
 
   }
 
@@ -98,6 +131,8 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
     setFilterByTypeOfClientStep(false)
     setFilterByOrderStatusStep(false)
     setFilterByOrderPaid(true)
+    setFilterByDate(false)
+
   }
 
 
@@ -107,6 +142,33 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
       setMissedFilter(false)
     }, 1700)
   }
+
+  function obtenerNombreMes(mes) {
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    return meses[mes];
+  }
+
+  const handleDateChange = (e) => {
+    setFirstDate(e.target.value);
+    const fechaObj = new Date(e.target.value);
+    const dia = fechaObj.getDate();
+    const mes = obtenerNombreMes(fechaObj.getMonth());
+    const anio = fechaObj.getFullYear();
+    console.log(`mes: ${mes}`);
+    console.log(`año: ${anio}`);
+    console.log(`dia: ${dia}`);
+  };
+
+  const handleSecondDateChange = (e) => {
+      setSecondDate(e.target.value);
+      const fechaObj = new Date(e.target.value);
+      const dia = fechaObj.getDate();
+      const mes = obtenerNombreMes(fechaObj.getMonth());
+      const anio = fechaObj.getFullYear();
+      console.log(`mes: ${mes}`);
+      console.log(`año: ${anio}`);
+      console.log(`dia: ${dia}`);
+  };
 
 
   return (
@@ -126,6 +188,9 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
                 <div className="flex flex-col items-center justify-center">
                    <div className="bg-green-900 w-full h-11 flex items-center cursor-pointer" onClick={() => chooseMonthFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Mes</p>
+                   </div>
+                   <div className="bg-green-900 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseOrderByDate()}>
+                        <p className="font-bold text-white text-sm ml-4">Filtrar Por Fecha</p>
                    </div>
                    <div className="bg-green-900 w-full h-11 mt-2 flex items-center cursor-pointer" onClick={() => chooseClientFilters()}>
                         <p className="font-bold text-white text-sm ml-4">Filtrar Por Tipo de Cliente</p>
@@ -150,6 +215,15 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
                         </Select>
                     </div>
                     : null}
+
+                  {filterByDate ? 
+                      <div>
+                          <div>
+                            <Input className="w-96" type="date" label="Desde" onChange={handleDateChange}   classNames={{label: "-mt-5"}}/>
+                            <Input className="w-96" type="date" label="Hasta" onChange={handleSecondDateChange}   classNames={{label: "-mt-5"}}/>
+                          </div>
+                      </div>
+                      : null}
 
                     {filterByTypeOfClientStep ? 
                     <div>
@@ -195,6 +269,7 @@ const FiltersOrdersTable = ({applyMonthFilter, isFilterApplied, getAllDataAgain,
                   className="font-bold text-white bg-green-800"
                   onClick={() => (
                   monthSelected !== "" ? applyFilterByMonthSelected() : 
+                  firstDate !== "" && secondDate !== "" ? applyFilterByDatesSelected() : 
                   typeOfClientSelected !== "" ? applyFilterByTypeOfClientSelected() : 
                   statusSelected !== "" ? applyFilterByStatusOfTheOrder() : 
                   paidOrNoPaidSelected !== "" ? applyFilterByPaid() : 

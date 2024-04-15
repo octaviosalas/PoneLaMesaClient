@@ -6,16 +6,16 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loading from "../Loading/Loading";
 import { formatePrice } from "../../functions/gralFunctions";
+import EveryOrdersDetails from "./ClousuresDetailsModals/EveryOrdersDetails";
+import ExpensesDetail from "./ClousuresDetailsModals/ExpensesDetail";
+import CollectionsDetail from "./ClousuresDetailsModals/CollectionsDetail";
+import EmployeesLiquidation from "./ClousuresDetailsModals/EmployeesLiquidation";
 
 
 const PersonalizedClousure = () => {
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
-  const [years, setYears] = useState(everyYears)
-  const [everyMonths, setEveryMonths] = useState(months)
-  const [size, setSize] = useState("3xl")
-  const [yearSelected, setYearSelected] = useState("");
-  const [monthSelected, setMonthSelected] = useState("")
+  const [firstDateToShow, setFirstDateToShow] = useState("")
+  const [secondDateToShow, setSecondDateToShow] = useState("")
   const [firstDate, setFirstDate] = useState("")
   const [secondDate, setSecondDate] = useState("")
   const [filteredOrdersObtained, setFilteredOrdersObtained] = useState([])
@@ -60,6 +60,7 @@ const PersonalizedClousure = () => {
     console.log(`mes: ${mes}`);
     console.log(`año: ${anio}`);
     console.log(`dia: ${dia}`);
+    setFirstDateToShow(`${dia} de ${mes} del ${anio}`)
   };
 
   const handleSecondDateChange = (e) => {
@@ -71,6 +72,8 @@ const PersonalizedClousure = () => {
       console.log(`mes: ${mes}`);
       console.log(`año: ${anio}`);
       console.log(`dia: ${dia}`);
+      setSecondDateToShow(`${dia} de ${mes} del ${anio}`)
+
   };
  
   const getResource = async (url) => {
@@ -142,6 +145,7 @@ const PersonalizedClousure = () => {
              data: data
          }
        })
+
        
        const getPurchases = transform.filter((tr) => tr.collectionType === "Compra").map((d) => d.data).flat()
        const getSublets = transform.filter((tr) => tr.collectionType === "Sub Alquiler").map((d) => d.data).flat()
@@ -151,6 +155,8 @@ const PersonalizedClousure = () => {
        const totalAmountExpended = getFixedExpenses.reduce((acc, el) => acc + el.amount, 0)
        const allExpenses = transform.map((d) => d.data).flat()
        const getTotalAmountExpensesFiltered = allExpenses.reduce((acc, el) => acc + el.amount, 0)
+       console.log("Por aca gastos enteros props", allExpenses)
+
        setJustPurchases(getPurchases)
        setJustSublets(getSublets)
        setJustFixedExpenses(getFixedExpenses)
@@ -195,80 +201,85 @@ const PersonalizedClousure = () => {
     setFilteredNoPaidOrdersTotalAmount(totalAmountnOPaidOrders)
     console.log("Ordenes agrupadas por pagas o impagas", transform)
     return transform
-}
+   }
 
-   const agroupCollectionByType = (filteredCollectionsObtained) => { 
-    const agroupByTypeCollections = filteredCollectionsObtained.reduce((acc, el) => { 
-      const collectionType = el.collectionType
-      if(acc[collectionType]) { 
-        acc[collectionType].push(el)
-      } else { 
-        acc[collectionType] = [el]
-      } 
-      return acc
-    }, {})
-    const transform = Object.entries(agroupByTypeCollections).map(([collectionType, data]) => { 
-      return { 
-           collectionType: collectionType,
-           quantityCollections: data.length,
-           totalAmount: data.reduce((acc, el) => acc + el.amount, 0)
-      }
-    })
+    const agroupCollectionByType = (filteredCollectionsObtained) => { 
+      const agroupByTypeCollections = filteredCollectionsObtained.reduce((acc, el) => { 
+        const collectionType = el.collectionType
+        if(acc[collectionType]) { 
+          acc[collectionType].push(el)
+        } else { 
+          acc[collectionType] = [el]
+        } 
+        return acc
+      }, {})
+      const transform = Object.entries(agroupByTypeCollections).map(([collectionType, data]) => { 
+        return { 
+            collectionType: collectionType,
+            quantityCollections: data.length,
+            totalAmount: data.reduce((acc, el) => acc + el.amount, 0)
+        }
+      })
+      
+      console.log("Cobros agrupados por tipo", transform)
+      const getTotalAmountCollections = transform.reduce((acc , el) => acc + el.totalAmount, 0)
+      setCollectionsAgroupByType(transform)
+      setCollectionsTotalAmount(getTotalAmountCollections)
+      return transform
+    }
+
+    const agroupCollectionByAccount = (filteredCollectionsObtained) => { 
+      const accountCollections = filteredCollectionsObtained.reduce((acc, el) => { 
+        const account = el.account
+        if(acc[account]) { 
+          acc[account].push(el)
+        } else { 
+          acc[account] = [el]
+        } 
+        return acc
+      }, {})
+      const transform = Object.entries(accountCollections).map(([account, data]) => { 
+        return { 
+            account: account,
+            quantityCollections: data.length,
+            totalAmount: data.reduce((acc, el) => acc + el.amount, 0)
+        }
+      })
+      
+      console.log("Cobros agrupados por cuenta", transform)
+      setCollectionsAgroupByAccount(transform)
+      return transform
+    }
+
+    const getEmployeesShiftsDataAmount = (filteredShiftsObtained) => { 
     
-    console.log("Cobros agrupados por tipo", transform)
-    const getTotalAmountCollections = transform.reduce((acc , el) => acc + el.totalAmount, 0)
-    setCollectionsAgroupByType(transform)
-    setCollectionsTotalAmount(getTotalAmountCollections)
-    return transform
-   }
-
-   const agroupCollectionByAccount = (filteredCollectionsObtained) => { 
-    const accountCollections = filteredCollectionsObtained.reduce((acc, el) => { 
-      const account = el.account
-      if(acc[account]) { 
-        acc[account].push(el)
-      } else { 
-        acc[account] = [el]
-      } 
-      return acc
-    }, {})
-    const transform = Object.entries(accountCollections).map(([account, data]) => { 
-      return { 
-           account: account,
-           quantityCollections: data.length,
-           totalAmount: data.reduce((acc, el) => acc + el.amount, 0)
-      }
-    })
-    
-    console.log("Cobros agrupados por cuenta", transform)
-    setCollectionsAgroupByAccount(transform)
-    return transform
-   }
-
-   const getEmployeesShiftsDataAmount = (filteredShiftsObtained) => { 
-   
-             const agroupSiftsByEmployeeId = filteredShiftsObtained.reduce((acc, el) => { 
-               const employeeId = el.employeeId
-               if(acc[employeeId]) { 
-                 acc[employeeId].push(el)
-               } else { 
-                 acc[employeeId] = [el]
-               }
-               return acc
-             }, {})
-             const transformResultInArrayData = Object.entries(agroupSiftsByEmployeeId).map(([employeeId, employeeData]) => ({ 
-               employeeId: employeeId,
-               employeeName: employeeData.map((em) => em.employeeName)[0],
-               quantityShifts: employeeData.length,
-               totalHours: employeeData.reduce((acc, el) => acc + el.hours, 0),
-               totalAmountToPaid: employeeData.reduce((acc, el) => acc + el.totalAmountPaidShift, 0)
-             }))
-             console.log("EMPLEADOS DATA", transformResultInArrayData)      
-             setJustEmployeesData(transformResultInArrayData)      
-   }
+              const agroupSiftsByEmployeeId = filteredShiftsObtained.reduce((acc, el) => { 
+                const employeeId = el.employeeId
+                if(acc[employeeId]) { 
+                  acc[employeeId].push(el)
+                } else { 
+                  acc[employeeId] = [el]
+                }
+                return acc
+              }, {})
+              const transformResultInArrayData = Object.entries(agroupSiftsByEmployeeId).map(([employeeId, employeeData]) => ({ 
+                employeeId: employeeId,
+                employeeName: employeeData.map((em) => em.employeeName)[0],
+                quantityShifts: employeeData.length,
+                totalHours: employeeData.reduce((acc, el) => acc + el.hours, 0),
+                totalAmountToPaid: employeeData.reduce((acc, el) => acc + el.totalAmountPaidShift, 0)
+              }))
+              console.log("EMPLEADOS DATA", transformResultInArrayData)      
+              setJustEmployeesData(transformResultInArrayData)      
+    }
 
     const nowShowClousureData = () => { 
       setShowData(true)
+    }
+
+    const comeBackAndChooseOtherDate = () => { 
+      setShowData(false)
+      setDataAvailable(false)
     }
 
 
@@ -276,286 +287,140 @@ const PersonalizedClousure = () => {
     <div className="flex flex-col">
         <NavBarComponent/>
         <div className="w-full flex flex-col items-center mt-36">
-             <div>
+             <div> 
+                  {dataAvailable && showData ? <p>{firstDateToShow} al {secondDateToShow}</p> : null}
                   <Input className="w-96" type="date" onChange={handleDateChange} />
                   <Input className="w-96" type="date" onChange={handleSecondDateChange} />
              </div>
              <div>
-              {dataAvailable ?                 
-                    <Button className="bg-green-800 font-medium text-white text-sm w-96 mt-2" onClick={() => nowShowClousureData()}>Ver Datos</Button>
-                    :   
-                    <> 
-                    <div className="flex flex-col items-center justify-center">
-                         <div className="flex items-center gap-2">
-                            <Button className="bg-green-800 text-white font-medium text-sm w-96" onClick={() => getOrdersData()}>
-                                Siguiente
-                            </Button> 
-                            <Button className="bg-green-800 text-white font-medium text-sm w-96" >
-                              Cerrar
-                            </Button>
-                         </div>
-                         <div className="flex items-center">
-                            {load ? <Loading/> : null}
-                         </div>
-                    </div>
-                 </> 
-                  }    
+             {dataAvailable ? (
+                  showData ?
+                    <Button className="bg-green-800 font-medium text-white text-sm w-96 mt-4" onClick={() => comeBackAndChooseOtherDate()}>Modificar Fecha</Button>
+                    : 
+                   <Button className="bg-green-800 font-medium text-white text-sm w-96 mt-4" onClick={() => nowShowClousureData()}>Ver Datos</Button>
+                  ) : (
+                  <>
+                      <div className="flex flex-col items-center justify-center">
+                        <div className="flex items-center gap-2">
+                          <Button className="bg-green-800 text-white font-medium text-sm w-96 mt-4" onClick={() => getOrdersData()}>
+                            Siguiente
+                          </Button>
+                          <Button className="bg-green-800 text-white font-medium text-sm w-96 mt-4">
+                            Cerrar
+                          </Button>
+                        </div>
+                        <div className="flex items-center">
+                          {load ? <Loading/> : null}
+                        </div>
+                      </div>
+                  </>
+              )}  
              </div>
         </div>
-        {showData ? 
 
-        <> 
-          <div className="flex items-center gap-6">
+          {showData ? 
+          <> 
+            <div className="flex items-center gap-6 justify-between">
 
-                  <div className="bg-gray-100 p-6 flex items-center justify-center dark:bg-gray-800">
-                      <span className="text-sm font-medium">
-                        <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                            <h5 className='font-bold text-black text-md'> - Todos los Pedidos - </h5> 
-                            <h6 className='font-medium text-white text-sm bg-green-800'>Monto total: {formatePrice(filteredOrdersTotalAmount)}</h6> 
-                            <div className='mt-6 ml-4'>
-                              {filteredOrdersObtained.map((ord) =>  ( 
-                                <div className='flex flex-col items-start justify-start mt-4' key={ord._id}> 
-                                  <div className='flex items-center'>
-                                    <p className='text-md'><b>{ord.orderNumber} - {ord.client}</b></p> 
-                                  </div>  
-                                  <div>
-                                    <p><b className='text-sm'>Total: </b>{formatePrice(ord.total)} </p>  
-                                  </div>                  
-                                </div>
-                              ))}
+                   <div className="flex flex-col items-start justify-start w-full">
+                        <div className="flex flex-col items-start justify-start">
+                            <div>
+                              <p className="font-bold text-sm text-zinc-600">Pedidos</p>
                             </div>
-                        </div>
-                    </span>
-                  </div>
-
-                  <div className="bg-gray-100 p-6 flex items-center justify-center dark:bg-gray-800">
-                    <span className="text-sm font-medium">
-                              <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                                  <h5 className='font-bold text-black text-md'> - Pedidos Pendientes de Cobro - </h5> 
-                                  <h6 className='font-medium text-white text-sm bg-green-800'>Monto total: {formatePrice(filteredNoPaidOrdersTotalAmount)}</h6> 
-                                  <div className='mt-6 ml-4'>
-                                    {justNoPaidOrder.map((ord) =>  ( 
-                                      <div className='flex flex-col items-start justify-start mt-4' key={ord._id}> 
-                                        <div className='flex items-center'>
-                                          <p className='text-md'><b>{ord.orderNumber} - {ord.client}</b></p> 
-                                        </div>  
-                                        <div>
-                                          <p><b className='text-sm'>Total: </b>{formatePrice(ord.total)} </p>  
-                                        </div>                  
-                                      </div>
-                                    ))}
-                                  </div>
+                              <div className="flex items-center gap-12 mt-6">
+                                <p className="font-bold text-sm text-zinc-600">Total</p>
+                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredOrdersTotalAmount)}</p>
+                                <p className="font-medium text-sm text-zinc-600"><EveryOrdersDetails ordersData={filteredOrdersObtained} first={firstDateToShow} second={secondDateToShow} type={"all"}/></p>
                               </div>
-                    </span>
-                  </div>
-
-                  <div className="bg-gray-100 p-6 flex items-center justify-center dark:bg-gray-800">
-                    <span className="text-sm font-medium">
-                      <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                          <h5 className='font-bold text-black text-md'> - Pedidos Cobrados - </h5> 
-                          <h6 className='font-medium text-white text-sm bg-green-800'>Monto total: {formatePrice(filteredPaidOrdersTotalAmount)}</h6> 
-                          <div className='mt-6 ml-4'>
-                            {justPaidOrder.map((ord) =>  ( 
-                              <div className='flex flex-col items-start justify-start mt-4' key={ord._id}> 
-                                <div className='flex items-center'>
-                                  <p className='text-md'><b>{ord.orderNumber} - {ord.client}</b></p> 
-                                </div>  
-                                <div>
-                                  <p><b className='text-sm'>Total: </b>{formatePrice(ord.total)} </p>  
-                                </div>                  
+                              <div className="flex items-center gap-12 mt-2">
+                                <p className="font-medium text-sm text-zinc-600">Pendientes</p>           
+                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredNoPaidOrdersTotalAmount)}</p>
+                                <p className="font-medium text-sm text-zinc-600"><EveryOrdersDetails ordersData={justNoPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"noPaid"}/></p>
                               </div>
-                            ))}
-                          </div>
-                      </div>
-                    </span>
-                  </div>
-
-          </div>
-
-          <div className="flex items-center gap-6">
-
-               <div className="bg-gray-100 p-6 flex items-center justify-center dark:bg-gray-800">
-                 <span className="text-sm font-medium">
-                    <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                        <h5 className='font-bold text-black text-md'> - Todos los Gastos - </h5> 
-                        <h6 className='font-medium text-white text-sm bg-red-500'>Monto total Gastado: {formatePrice(filteredExpensesTotalAmount)}</h6> 
-                        <div className='mt-6 ml-4'>
-                          {justAllExpenses.map((exp, index) =>  ( 
-                            <div className='flex flex-col items-start justify-start mt-4' key={exp._id}> 
-                              <div className='flex items-center'>
-                                <p className='text-md'><b>{index + 1} - {exp.providerName}</b></p> 
-                              </div>  
-                              
-                              <div className='flex flex-col items-start'>
-                                <p><b className='text-sm'>Total: </b>{formatePrice(exp.amount)} </p>  
-                                <p className='underline text-xs'>Ver detalle</p>
-                              </div>                   
-                            </div>
-                          ))}
+                              <div className="flex items-center gap-12 mt-2">
+                                <p className="font-medium text-sm text-zinc-600">Cobrados</p>           
+                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredPaidOrdersTotalAmount)}</p>
+                                <p className="font-medium text-sm text-zinc-600"><EveryOrdersDetails ordersData={justPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"paid"}/></p>
+                              </div>
                         </div>
-                     </div>
-                 </span>
-              </div>
 
-               <div className="bg-gray-100 p-6 flex items-center justify-center dark:bg-gray-800">
-                    <span className="text-sm font-medium">    
-                        <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                            <h5 className='font-bold text-black text-md'> - Compras - </h5> 
-                            <h6 className='font-medium text-white text-sm bg-red-500'>Monto total Gastado: {formatePrice(filteredPurchasesTotalAmount)}</h6> 
-                            <div className='mt-6 ml-4'>
-                              {justPurchases.map((ord, index) =>  ( 
-                                <div className='flex flex-col items-start justify-start mt-4' key={ord._id}> 
-                                  <div className='flex items-center'>
-                                    <p className='text-md'><b>{index + 1} - {ord.providerName}</b></p> 
-                                  </div>  
-                                  <div className='flex flex-col items-start'>
-                                    <p><b className='text-sm'>Total: </b>{formatePrice(ord.amount)} </p>  
-                                    <p className='underline text-xs'>Ver detalle</p>
-                                </div>                     
-                                </div>
-                              ))}
+                        <div className="flex flex-col items-start justify-start">
+                            <div>
+                              <p className="font-bold text-sm text-zinc-600">Gastos</p>
                             </div>
+                              <div className="flex items-center gap-12 mt-6">
+                                <p className="font-bold text-sm text-zinc-600">Total</p>
+                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredExpensesTotalAmount)}</p>
+                                <p className="font-medium text-sm text-zinc-600"><ExpensesDetail expensesData={justAllExpenses} first={firstDateToShow} second={secondDateToShow} type={"all"}/></p>
+                              </div>
+                              <div className="flex items-center gap-12 mt-2">
+                                <p className="font-medium text-sm text-zinc-600">Compras</p>           
+                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredPurchasesTotalAmount)}</p>
+                                <p className="font-medium text-sm text-zinc-600"><ExpensesDetail expensesData={justPurchases} first={firstDateToShow} second={secondDateToShow}  type={"purchases"}/></p>
+                              </div>
+                              <div className="flex items-center gap-12 mt-2">
+                                <p className="font-medium text-sm text-zinc-600">Gastos Fijos</p>           
+                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredFixedTotalAmount)}</p>
+                                <p className="font-medium text-sm text-zinc-600"><ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/></p>
+                              </div>
+                              <div className="flex items-center gap-12 mt-2">
+                                <p className="font-medium text-sm text-zinc-600">Sub Alquileres:</p>           
+                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredSubletsTotalAmount)}</p>
+                                <p className="font-medium text-sm text-zinc-600"><ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/></p>
+                              </div>
                         </div>
-                   </span>
-               </div>
-
-               <div className="bg-gray-100 p-6 flex items-center justify-center dark:bg-gray-800">
-                    <span className="text-sm font-medium">    
-                        <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                            <h5 className='font-bold text-black text-md'> - Gastos Fijos - </h5> 
-                            <h6 className='font-medium text-white text-sm bg-red-500'>Monto total Gastado: {formatePrice(filteredFixedTotalAmount)}</h6> 
-                            <div className='mt-6 ml-4'>
-                              {justFixedExpenses.map((ord, index) =>  ( 
-                                <div className='flex flex-col items-start justify-start mt-4' key={ord._id}> 
-                                  <div className='flex items-center'>
-                                    <p className='text-md'><b>{index + 1} - {ord.providerName}</b></p> 
-                                  </div>  
-                                  <div className='flex flex-col items-start'>
-                                    <p><b className='text-sm'>Total: </b>{formatePrice(ord.amount)} </p>  
-                                    <p className='underline text-xs'>Ver detalle</p>
-                                </div>                     
-                                </div>
-                              ))}
-                            </div>
-                        </div>
-                   </span>
-               </div>
-
-          </div>
-
-          <div className="flex items-center gap-6">
-
-             <div className="bg-gray-100 p-6 flex items-center justify-center dark:bg-gray-800">
-                      <span className="text-sm font-medium">    
-                        <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                            <h5 className='font-bold text-black text-md'> - Sub Alquileres - </h5> 
-                            <h6 className='font-medium text-white text-sm bg-red-500'>Monto total Gastado: {formatePrice(filteredSubletsTotalAmount)}</h6> 
-                            <div className='mt-6 ml-4'>
-                              {justSublets.map((ord, index) =>  ( 
-                                <div className='flex flex-col items-start justify-start mt-4' key={ord._id}> 
-                                  <div className='flex items-center'>
-                                    <p className='text-md'><b>{index + 1} - {ord.providerName}</b></p> 
-                                  </div>  
-                                  <div className='flex flex-col items-start'>
-                                    <p><b className='text-sm'>Total: </b>{formatePrice(ord.amount)} </p>  
-                                    <p className='underline text-xs'>Ver detalle</p>
-                                </div>                     
-                                </div>
-                              ))}
-                            </div>
+                      
+                   
+                       
+                       <div className="flex items-center gap-12 mt-6">
+                          <p className="font-bold text-sm text-zinc-600">Todos los Cobros: </p>
+                          <p className="font-medium text-sm text-zinc-600"> {formatePrice(collectionsTotalAmount)}</p>                     
+                             <CollectionsDetail 
+                              byAccount={collectionsAgroupByAccount} 
+                              byType={collectionsAgroupByType} 
+                              allCollections={filteredCollectionsObtained}
+                              frist={firstDateToShow}
+                              second={secondDateToShow}/>
+                       </div>                  
+                    
+                       <div className="flex items-center gap-12 mt-2">
+                          <p className="font-medium text-sm text-zinc-600">Liquidacion Empleados: </p>
+                          <p className="font-medium text-sm text-zinc-600"><EmployeesLiquidation empployeesData={justEmployeesData} first={firstDateToShow}second={secondDateToShow}/></p>
                        </div>
-                  </span>
-             </div>
+                                                          
+                   </div>
+                   <div className="flex flex-col items-center gap-12 mt-6">
+                          <p className="font-bold text-sm text-zinc-600">Resumen del Cierre: </p>
+                         
+                        <div className='flex flex-col items-center justify-center '>
+                            <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
+                                <div className='w-full bg-green-800'>
+                                  <p className='text-sm font-bold text-white'>Resumen Cierre</p>
+                                </div>
+                                <div className='flex flex-col items.start text-start justify-start'>
+                                    <p><b>Total Cobrado en Alquileres:</b>  {formatePrice(filteredPaidOrdersTotalAmount)}</p>
+                                    <p><b>Monto total Gastado:</b> {formatePrice(filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
+                                    <p><b>Monto total Gastado en Compras:</b> {formatePrice(filteredPurchasesTotalAmount)}</p>
+                                    <p><b>Monto total Gastado en Sub Alquileres:</b> {formatePrice(filteredSubletsTotalAmount)}</p>
+                                    <p><b>Gasto total en Empleados:</b> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
+                                    <p><b>Gasto total en Gastos Fijos:</b> {formatePrice(filteredFixedTotalAmount)}</p>
+                                    <p><b>Ganancia Neta:</b> {formatePrice(filteredPaidOrdersTotalAmount - (filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0)))}</p>
+                                </div>                      
+                             </div>
+                          </div>  
+                       </div>  
 
-             <div className="bg-gray-100 p-6 flex items-center justify-center dark:bg-gray-800">
-                    <span className="text-sm font-medium">
-                        <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                          <h5 className='font-bold text-black text-md'> - Cobros / Tipo de Cobros - </h5> 
-                          <h6 className='font-medium text-white text-sm bg-green-800'>Monto total Cobrado: {formatePrice(collectionsTotalAmount)}</h6> 
-                          <div className='mt-6 ml-4'>
-                            {collectionsAgroupByType.map((cc) =>  ( 
-                              <div className='flex flex-col items-start justify-start text-start mt-4' key={cc.collectionType}> 
-                                <div className='flex items-center'>
-                                  <p className='text-md'><b>Tipo de Cobro:</b> {cc.collectionType}</p> 
-                                </div>  
-                                <div>
-                                  <p><b className='text-sm'>Total Cobrado: </b> {formatePrice(cc.totalAmount)} </p>  
-                                  <p><b className='text-sm'>Cantidad de Cobros: </b> {cc.quantityCollections} </p>  
-                                </div>                  
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                    </span>
-             </div>
+                   
+            </div>
 
-                
-             <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                        <h5 className='font-bold text-white bg-green-800 text-md'> - Cobros Por Cuentas - </h5>                 
-                          <div className='mt-6 ml-4'>
-                            {collectionsAgroupByAccount.map((cc) =>  ( 
-                              <div className='flex flex-col items-start justify-start text-start mt-4' key={cc.account}> 
-                                <div className='flex items-center'>
-                                  <p className='text-md underline'><b>Cuenta:</b> {cc.account}</p> 
-                                </div>  
-                                <div>
-                                  <p><b className='text-sm'>Total Cobrado: </b> {formatePrice(cc.totalAmount)} </p>  
-                                  <p><b className='text-sm'>Cantidad de Cobros: </b> {cc.quantityCollections} </p>  
-                                  <p><b className='text-sm'>Cobros Alquileres: </b> {cc.ordersCollections} </p>  
-                                  <p><b className='text-sm'>Cobros Señas: </b> {cc.downPaymentCollections} </p>  
-                                  <p><b className='text-sm'>Cobros Reposiciones: </b> {cc.replacementeCollections} </p>  
-                                </div>                  
-                              </div>
-                            ))}
-                          </div>
-             </div>
+          </>
+            :
+            null
+          }
 
-          </div>
-
-           <div className="flex items-center gap-6">
-
-                 <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                            <h5 className='font-bold text-black text-md'> - Liquidacion Empleados</h5> 
-                            <h6 className='font-medium text-white text-sm bg-green-800'> Monto total a Pagar: {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</h6> 
-                           <div className='mt-6 ml-4'>
-                            {justEmployeesData.map((em) =>  ( 
-                              <div className='flex flex-col items-start justify-start text-start mt-4' key={em.employeeId}> 
-                                 <div className='flex items-center'>
-                                   <p className='text-md'><b>Empleado: </b> {em.employeeName}</p> 
-                                </div>  
-                             <div>
-                              <p><b className='text-sm'>Turnos Realizados: </b> {em.quantityShifts} </p>  
-                              <p><b className='text-sm'>Total de horas: </b> {em.totalHours} </p>  
-                              <p><b className='text-sm'>Total a Pagar: </b> {formatePrice(em.totalAmountToPaid)} </p> 
-                            </div>                  
-                          </div>
-                        ))}
-                     </div>
-                  </div>
-
-                  <div className='flex flex-col items-center justify-center '>
-                    <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
-                        <div className='w-full bg-green-800'>
-                          <p className='text-sm font-bold text-white'>Resumen Cierre</p>
-                        </div>
-                        <div className='flex flex-col items.start text-start justify-start'>
-                            <p><b>Total Cobrado en Alquileres:</b>  {formatePrice(filteredPaidOrdersTotalAmount)}</p>
-                            <p><b>Monto total Gastado:</b> {formatePrice(filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
-                            <p><b>Monto total Gastado en Compras:</b> {formatePrice(filteredPurchasesTotalAmount)}</p>
-                            <p><b>Monto total Gastado en Sub Alquileres:</b> {formatePrice(filteredSubletsTotalAmount)}</p>
-                            <p><b>Gasto total en Empleados:</b> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
-                            <p><b>Gasto total en Gastos Fijos:</b> {formatePrice(filteredFixedTotalAmount)}</p>
-                            <p><b>Ganancia Neta:</b> {formatePrice(filteredPaidOrdersTotalAmount - (filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0)))}</p>
-                        </div>                      
-                      </div>
-                  </div>  
-          </div>
-        </>
-          :
-          null
-        }
     </div>
   )
 }
 
 export default PersonalizedClousure
+

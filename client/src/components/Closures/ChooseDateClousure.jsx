@@ -253,7 +253,7 @@ const ChooseDateClousures = () =>  {
   return (
     <>
      
-        <Card className="w-full h-full cursor-pointer" onClick={() => console.log("a")}>
+        <Card className="w-auto h-full cursor-pointer" onClick={() => console.log("a")}>
               <CardHeader className="absolute z-10 top-1 flex-col !items-start">
                 <p className="text-tiny text-black uppercase font-bold">Cierre Filtrado por Fechas</p>
               </CardHeader>

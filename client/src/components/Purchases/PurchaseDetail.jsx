@@ -5,16 +5,6 @@ import { formatePrice } from "../../functions/gralFunctions";
 
 import { useState, useEffect } from "react";
 
-/* 
-  const item = {
-                    id: id,
-                    detail,
-                    date,
-                    day,
-                    month,
-                    year,
-                    creator     
-*/
 
 const PurchaseDetail = ({purchaseData}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");

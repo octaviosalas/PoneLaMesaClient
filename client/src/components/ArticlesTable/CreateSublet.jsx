@@ -212,7 +212,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
 
   return (
     <>
-      <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={handleOpen}>Sub Alquilar Articulos</p>
+      <p className="text-sm font-bold text-zinc-600 cursor-pointer" onClick={handleOpen}>Sub Alquilar Articulos</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-max">
         <ModalContent>
           {(onClose) => (

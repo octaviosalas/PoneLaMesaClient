@@ -72,7 +72,7 @@ const CreateExpense = ({updateList}) => {
 
   return (
     <>
-      <p className="text-zinc-600 font-medium text-sm" onClick={handleOpen}>Crear Gasto Fijo</p>
+      <p className="text-zinc-600 font-bold text-sm" onClick={handleOpen}>Crear Gasto Fijo</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
         <ModalContent>
           {(onClose) => (

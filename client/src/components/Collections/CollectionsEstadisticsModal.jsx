@@ -126,7 +126,7 @@ const CollectionsEstadisticsModal = () => {
 
   return (
     <>
-      <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={onOpen}>Estadisticas de Cobros</p>
+      <p className="text-sm font-bold text-zinc-600 cursor-pointer" onClick={onOpen}>Estadisticas de Cobros</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
         <ModalContent>
           {(onClose) => (

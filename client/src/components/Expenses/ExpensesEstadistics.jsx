@@ -95,7 +95,7 @@ const ExpensesEstadistics = () => {
 
   return (
     <>
-      <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={onOpen}>Estadisticas de Gastos</p>
+      <p className="text-sm font-bold text-zinc-600 cursor-pointer" onClick={onOpen}>Estadisticas de Gastos</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
         <ModalContent>
           {(onClose) => (

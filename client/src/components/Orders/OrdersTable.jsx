@@ -34,6 +34,16 @@ const OrdersTable = () => {
             setData(filteringByMonth);
       };
 
+      const applyFiltersByDate = (firstDate, secondDate) => {
+        const fechaDesde = new Date(firstDate);
+        const fechaHasta = new Date(secondDate);
+        const filteringByDate = filteredData.filter(orden => {
+           const fechaOrden = new Date(orden.date);
+           return fechaOrden >= fechaDesde && fechaOrden <= fechaHasta;
+        });
+        setData(filteringByDate);
+       };
+
     const applyFiltersByTypeOfClient =  (typeSelected) => {
       const filteringByTypeOfClient = filteredData.filter((orders) => orders.typeOfClient === typeSelected);
       console.log(filteringByTypeOfClient);
@@ -225,6 +235,7 @@ const OrdersTable = () => {
                         <FiltersOrdersTable 
                         getAllDataAgain={getDataAndCreateTable} 
                         applyMonthFilter={applyFiltersByMonth}
+                        applyDateFilter={applyFiltersByDate}
                         applyClientFilter={applyFiltersByTypeOfClient}
                         applyOrderStatusFilter={applyFiltersByOrderState}
                         applyFiltersByPaidOrNoPaid={applyFiltersByPaidOrNoPaid}
