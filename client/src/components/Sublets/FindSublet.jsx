@@ -136,7 +136,7 @@ const FindSublet = ({orderData, updateListOfToBeConfirmedOrders}) =>  {
 
   return (
     <>
-   <p onClick={handleOpen} className="font-medium text-xs text-green-800 cursor-pointer">Anexar Sub Alquiler</p>
+   <p onClick={handleOpen} className="font-medium text-xs text-green-800 cursor-pointer">Anexar</p>
 <Modal isOpen={isOpen} onOpenChange={onOpenChange} className="max-w-max min-w-96">
  <ModalContent>
     {(onClose) => (

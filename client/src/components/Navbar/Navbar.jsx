@@ -28,17 +28,7 @@ const NavBarComponent = () =>  {
     navigate(`/${ruta}`)
   }
 
-  useEffect(() => { 
-    if(userCtx.userRol === "Dueño") { 
-      console.log("DUEÑOOOOOOO")
-      console.log(userCtx.userRol)
-    } else { 
-      console.log("NO HAY DUEÑO LOGUEADO")
-      console.log(userCtx.userRol)
 
-    }
-  })
-  
   
 
   return (

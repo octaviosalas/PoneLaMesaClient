@@ -168,8 +168,8 @@ const CreateNewShift = () => {
 
   return (
     <>
-    <Button onClick={() => onOpen()} className="h-[305px]">
-        <Card className="w-[600px] h-full cursor-pointer">
+    <div onClick={() => onOpen()} className="w-[400px] h-52 2xl:w-[600px] 2xl:h-80">
+        <Card className=" cursor-pointer">
             <CardHeader className="absolute z-10 top-1 flex-col !items-start">
               <p className="text-tiny text-black uppercase font-bold">Turnos</p>
               <h4 className="text-black font-medium text-large">Iniciar Turno</h4>
@@ -181,7 +181,7 @@ const CreateNewShift = () => {
               src="https://omniawfm.com/blog/images/optimizar-el-calendario-de-turnos-de-trabajo.jpg"
             />
         </Card>
-    </Button>
+    </div>
      
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

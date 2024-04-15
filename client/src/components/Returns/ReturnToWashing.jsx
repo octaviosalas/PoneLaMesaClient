@@ -96,6 +96,8 @@ export const ReturnToWashing = ({orderData, updateList}) => {
     }
   }
 
+  
+
   const unifiedLocalArticlesByQuantity = async (item) => { 
     try {
         const agroupArticlesByName = await item.reduce((acc, el) => { 
@@ -233,50 +235,3 @@ export const ReturnToWashing = ({orderData, updateList}) => {
 export default ReturnToWashing
 
 
-/* 
-
-
-  const sendDataToWash =  async () => { 
-    console.log(dataToSendToWash)
-     try {
-         console.log("enviando articulos a lavado")
-         const sendNewArticlesToWashModel = await axios.post("http://localhost:4000/cleaning/addNewArticles", dataToSendToWash)
-         console.log(sendNewArticlesToWashModel.data)
-            if(sendNewArticlesToWashModel.status === 200 && orderHasDepositArticles) { 
-                console.log("enviando articulos a deposito")
-                const sendNewArticlesToDepositModel = await axios.post(`http://localhost:4000/deposit/addNewArticles`, dataToSendToDeposit)
-                console.log(sendNewArticlesToDepositModel.data)
-                if(sendNewArticlesToDepositModel.status === 200) { 
-                  console.log("envie deposito + lavado, ahora paso orden a lavado")
-                   const newStatus = "Lavado"
-                   const changeOrderStatus = await axios.put(`http://localhost:4000/orders/changeOrderState/${orderData.id}`, {newStatus})
-                   console.log(changeOrderStatus.data)
-                   if(changeOrderStatus.status === 200) { 
-                    setSuccesMessage(true)
-                    updateList()
-                    setTimeout(() => { 
-                        setSuccesMessage(false)
-                        onClose()
-                    }, 1800)
-                }
-                }
-            } else if (sendNewArticlesToWashModel.status === 200 && orderHasDepositArticles === false) { 
-              console.log("envie solo lavado, ahora paso orden a lavado")
-              const newStatus = "Lavado"
-              const changeOrderStatus = await axios.put(`http://localhost:4000/orders/changeOrderState/${orderData.id}`, {newStatus})
-              console.log(changeOrderStatus.data)
-              if(changeOrderStatus.status === 200) { 
-               setSuccesMessage(true)
-               updateList()
-               setTimeout(() => { 
-                   setSuccesMessage(false)
-                   onClose()
-               }, 1800)
-             }
-            }
-      } catch (error) {
-         console.log(error)
-     }
-  }
-
-*/

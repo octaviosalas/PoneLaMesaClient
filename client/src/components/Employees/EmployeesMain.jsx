@@ -37,7 +37,7 @@ const EmployeesMain = () => {
                 <CreateNewShift/>
                 <CreateNewEmployee/>
             </div>
-            <div className='flex items-center gap-2 mt-4'>
+            <div className='flex items-center gap-2 mt-6'>
                <ViewEmployees/>
                <ViewShifts/>
             </div>

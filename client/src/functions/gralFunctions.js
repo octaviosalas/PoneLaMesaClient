@@ -45,6 +45,16 @@ export const getProductsBonusClients = async () => {
     }
   };
 
+  export const getEveryCollections = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/collections");
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
   export const getSublets = async () => {
     try {
       const response = await axios.get("http://localhost:4000/sublets");

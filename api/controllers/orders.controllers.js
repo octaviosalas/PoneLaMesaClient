@@ -57,6 +57,7 @@ export const decrementarStock = async (productosComprados) => {
 };
 
 export const getOrders = async (req, res) => { 
+  console.log("eee")
     try {
       const orders = await Orders.find()
       res.status(200).json(orders);

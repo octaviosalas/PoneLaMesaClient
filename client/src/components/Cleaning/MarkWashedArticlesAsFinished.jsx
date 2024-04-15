@@ -54,7 +54,10 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
   const updateArticleStock = async () => { 
     console.log(typeof newQuantity)
     const formatedNewQuantity = Number(newQuantity)
-    if(formatedNewQuantity !== 0 && errorInQuantity !== true && shiftChoosenDay > 0 && shiftChoosenMonth.length > 0 && yearError !== true) { 
+    const formatedDay = Number(shiftChoosenDay)
+    console.log(shiftChoosenMonth.length)
+    console.log(formatedDay)
+    if(formatedNewQuantity !== 0 && errorInQuantity !== true && formatedDay > 0 && shiftChoosenMonth.length > 0 && yearError !== true) { 
       const quantityToBeUpdated = ({ 
         newQuantity: washedData.quantity - newQuantity,
         quantity: Number(newQuantity),
@@ -62,7 +65,7 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
        });
 
       const replenishData = ( { 
-        day: shiftChoosenDay,
+        day: formatedDay,
         month: shiftChoosenMonth,
         year: Number(shiftChoosenYear),
         date: actualDate,

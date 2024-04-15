@@ -74,6 +74,16 @@ export const getShiftByEmployeeId = async (req, res) => {
   }
 }
 
+export const getEveryEmployeesShifts = async (req, res) => { 
+
+  try {
+    const allEmployeesShifts = await EmployeesShifts.find()
+    res.status(200).json(allEmployeesShifts);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener los empleados' });
+    console.log(error)
+  }
+}
 
 export const updateEmployeeData = async (req, res) => { 
   console.log(req.params)

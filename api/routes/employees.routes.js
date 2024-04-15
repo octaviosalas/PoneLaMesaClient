@@ -1,7 +1,6 @@
 import express from 'express';
 const employeesRoutes = express.Router();
 
-
  import  {
   getEmployees,
   createEmployee,
@@ -10,14 +9,15 @@ const employeesRoutes = express.Router();
   updateEmployeeData,
   deleteEmployee,
   getShifsByMonth,
-  getEmployeesById
+  getEmployeesById,
+  getEveryEmployeesShifts
 } from '../controllers/employees.controllers.js' 
 
 
-// Routes: 
 employeesRoutes.get('/', getEmployees);
 employeesRoutes.get('/getOneEmployee/:employeeId', getEmployeesById);
 employeesRoutes.get('/getEmployeeShifts/:employeeId', getShiftByEmployeeId);
+employeesRoutes.get('/everyShifts/', getEveryEmployeesShifts);
 employeesRoutes.get('/getShifsByMonth/:month', getShifsByMonth);
 employeesRoutes.post("/create", createEmployee)
 employeesRoutes.put('/changeData/:employeeId', updateEmployeeData);
