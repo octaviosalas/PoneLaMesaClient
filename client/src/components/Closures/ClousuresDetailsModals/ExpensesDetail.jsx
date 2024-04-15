@@ -41,7 +41,7 @@ const ExpensesDetail = ({expensesData, first, second, type}) => {
 
   return (
     <>
-      <p className="text-sm font-medium text-green-800 cursor-pointer" onClick={onOpen}>Ver Detalle</p>
+      <p className="text-sm font-medium text-green-800 cursor-pointer mt-1" onClick={onOpen}>Ver Detalle</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
         <ModalContent>
           {(onClose) => (

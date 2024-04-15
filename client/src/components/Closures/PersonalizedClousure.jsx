@@ -288,9 +288,14 @@ const PersonalizedClousure = () => {
         <NavBarComponent/>
         <div className="w-full flex flex-col items-center mt-36">
              <div> 
-                  {dataAvailable && showData ? <p>{firstDateToShow} al {secondDateToShow}</p> : null}
-                  <Input className="w-96" type="date" onChange={handleDateChange} />
-                  <Input className="w-96" type="date" onChange={handleSecondDateChange} />
+                  {dataAvailable && showData ? <p className="text-sm font-medium text-black">Reporte desde: {firstDateToShow} al {secondDateToShow}</p> : null}
+
+                  {showData ? null :
+                  <>
+                    <Input className="w-96" type="date" onChange={handleDateChange} />
+                    <Input className="w-96" type="date" onChange={handleSecondDateChange} />
+                  </>}
+
              </div>
              <div>
              {dataAvailable ? (
@@ -320,98 +325,121 @@ const PersonalizedClousure = () => {
 
           {showData ? 
           <> 
-            <div className="flex items-center gap-6 justify-between">
+            <div className="flex gap-24 items-center justify-between mt-12"> 
+              <div className="flex flex-col">
 
-                   <div className="flex flex-col items-start justify-start w-full">
-                        <div className="flex flex-col items-start justify-start">
-                            <div>
-                              <p className="font-bold text-sm text-zinc-600">Pedidos</p>
-                            </div>
-                              <div className="flex items-center gap-12 mt-6">
-                                <p className="font-bold text-sm text-zinc-600">Total</p>
-                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredOrdersTotalAmount)}</p>
-                                <p className="font-medium text-sm text-zinc-600"><EveryOrdersDetails ordersData={filteredOrdersObtained} first={firstDateToShow} second={secondDateToShow} type={"all"}/></p>
-                              </div>
-                              <div className="flex items-center gap-12 mt-2">
-                                <p className="font-medium text-sm text-zinc-600">Pendientes</p>           
-                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredNoPaidOrdersTotalAmount)}</p>
-                                <p className="font-medium text-sm text-zinc-600"><EveryOrdersDetails ordersData={justNoPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"noPaid"}/></p>
-                              </div>
-                              <div className="flex items-center gap-12 mt-2">
-                                <p className="font-medium text-sm text-zinc-600">Cobrados</p>           
-                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredPaidOrdersTotalAmount)}</p>
-                                <p className="font-medium text-sm text-zinc-600"><EveryOrdersDetails ordersData={justPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"paid"}/></p>
-                              </div>
-                        </div>
+               <div className="flex flex-col items-center justify-start text-start w-[500px] ">
+                  <div className="flex items-start justify-start text-start w-full">
+                     <p className="text-zinc-600 font-bold text-md">Pedidos</p>
+                  </div>
+                  <div className="flex items-center text-start justify-between mt-2 w-full">
+                      <div className="flex flex-col">
+                        <p className="text-zinc-600 font-medium text-sm mt-1">Todos los pedidos</p>
+                        <p className="text-zinc-600 font-medium text-sm mt-1">Pendientes</p>
+                        <p className="text-zinc-600 font-medium text-sm mt-1">Cobrados</p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredOrdersTotalAmount)}</p>
+                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredNoPaidOrdersTotalAmount)}</p>
+                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredPaidOrdersTotalAmount)}</p>
+                      </div>
+                      <div>
+                        <EveryOrdersDetails ordersData={filteredOrdersObtained} first={firstDateToShow} second={secondDateToShow} type={"all"}/>
+                        <EveryOrdersDetails ordersData={justNoPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"noPaid"}/>
+                        <EveryOrdersDetails ordersData={justPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"paid"}/>
+                      </div>
+                  </div>               
+               </div>
 
-                        <div className="flex flex-col items-start justify-start">
-                            <div>
-                              <p className="font-bold text-sm text-zinc-600">Gastos</p>
-                            </div>
-                              <div className="flex items-center gap-12 mt-6">
-                                <p className="font-bold text-sm text-zinc-600">Total</p>
-                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredExpensesTotalAmount)}</p>
-                                <p className="font-medium text-sm text-zinc-600"><ExpensesDetail expensesData={justAllExpenses} first={firstDateToShow} second={secondDateToShow} type={"all"}/></p>
-                              </div>
-                              <div className="flex items-center gap-12 mt-2">
-                                <p className="font-medium text-sm text-zinc-600">Compras</p>           
-                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredPurchasesTotalAmount)}</p>
-                                <p className="font-medium text-sm text-zinc-600"><ExpensesDetail expensesData={justPurchases} first={firstDateToShow} second={secondDateToShow}  type={"purchases"}/></p>
-                              </div>
-                              <div className="flex items-center gap-12 mt-2">
-                                <p className="font-medium text-sm text-zinc-600">Gastos Fijos</p>           
-                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredFixedTotalAmount)}</p>
-                                <p className="font-medium text-sm text-zinc-600"><ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/></p>
-                              </div>
-                              <div className="flex items-center gap-12 mt-2">
-                                <p className="font-medium text-sm text-zinc-600">Sub Alquileres:</p>           
-                                <p className="font-medium text-sm text-zinc-600"> {formatePrice(filteredSubletsTotalAmount)}</p>
-                                <p className="font-medium text-sm text-zinc-600"><ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/></p>
-                              </div>
-                        </div>
-                      
-                   
-                       
-                       <div className="flex items-center gap-12 mt-6">
-                          <p className="font-bold text-sm text-zinc-600">Todos los Cobros: </p>
-                          <p className="font-medium text-sm text-zinc-600"> {formatePrice(collectionsTotalAmount)}</p>                     
+               <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
+                  <div className="flex items-start justify-start text-start w-full">
+                     <p className="text-zinc-600 font-bold text-md">Gastos</p>
+                  </div>
+                  <div className="flex items-center justify-between text-start  mt-2  w-full">
+                      <div className="flex flex-col">
+                        <p className="text-zinc-600 font-medium text-sm  mt-1">Todos los Gastos</p>
+                        <p className="text-zinc-600 font-medium text-sm  mt-1">Compras</p>
+                        <p className="text-zinc-600 font-medium text-sm  mt-1">Gastos Fijos</p>
+                        <p className="text-zinc-600 font-medium text-sm  mt-1">Sub Alquileres</p>
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="font-medium text-sm text-zinc-600  mt-1">  {formatePrice(filteredExpensesTotalAmount)}</p>
+                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredPurchasesTotalAmount)}</p>
+                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredFixedTotalAmount)}</p>
+                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredSubletsTotalAmount)}</p>
+                      </div>
+                      <div>
+                       <ExpensesDetail expensesData={justAllExpenses} first={firstDateToShow} second={secondDateToShow} type={"all"}/>
+                       <ExpensesDetail expensesData={justPurchases} first={firstDateToShow} second={secondDateToShow}  type={"purchases"}/>
+                       <ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
+                       <ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
+                      </div>
+                  </div>               
+               </div>
+
+               
+               <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
+                  <div className="flex items-start justify-start text-start w-full">
+                     <p className="text-zinc-600 font-bold text-md">Cobros</p>
+                  </div>
+                  <div className="flex items-center justify-between text-start  mt-2  w-full">
+                      <div className="flex flex-col">
+                        <p className="text-zinc-600 font-medium text-sm">Todos los Cobros</p>                   
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="font-medium text-sm text-zinc-600"> {formatePrice(collectionsTotalAmount)}</p>     
+                      </div>
+                      <div>
                              <CollectionsDetail 
                               byAccount={collectionsAgroupByAccount} 
                               byType={collectionsAgroupByType} 
                               allCollections={filteredCollectionsObtained}
                               frist={firstDateToShow}
                               second={secondDateToShow}/>
-                       </div>                  
-                    
-                       <div className="flex items-center gap-12 mt-2">
-                          <p className="font-medium text-sm text-zinc-600">Liquidacion Empleados: </p>
-                          <p className="font-medium text-sm text-zinc-600"><EmployeesLiquidation empployeesData={justEmployeesData} first={firstDateToShow}second={secondDateToShow}/></p>
-                       </div>
-                                                          
-                   </div>
-                   <div className="flex flex-col items-center gap-12 mt-6">
-                          <p className="font-bold text-sm text-zinc-600">Resumen del Cierre: </p>
+                      </div>
+                  </div>               
+               </div>
+
+               <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
+                  <div className="flex items-start justify-start text-start w-full">
+                     <p className="text-zinc-600 font-bold text-md">Empleados</p>
+                  </div>
+                  <div className="flex items-center justify-between text-start  mt-2  w-full">
+                      <div className="flex flex-col">
+                        <p className="text-zinc-600 font-medium text-sm">Liquidacion Empleados:</p>                   
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="font-medium text-sm text-zinc-600"> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>     
+                      </div>
+                      <div>
+                        <EmployeesLiquidation empployeesData={justEmployeesData} first={firstDateToShow}second={secondDateToShow}/>
+                      </div>
+                  </div>               
+               </div>
+
+              </div>
+               
+                <div className="flex flex-col items-cente mt-6">
                          
                         <div className='flex flex-col items-center justify-center '>
                             <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
                                 <div className='w-full bg-green-800'>
                                   <p className='text-sm font-bold text-white'>Resumen Cierre</p>
                                 </div>
-                                <div className='flex flex-col items.start text-start justify-start'>
-                                    <p><b>Total Cobrado en Alquileres:</b>  {formatePrice(filteredPaidOrdersTotalAmount)}</p>
-                                    <p><b>Monto total Gastado:</b> {formatePrice(filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
-                                    <p><b>Monto total Gastado en Compras:</b> {formatePrice(filteredPurchasesTotalAmount)}</p>
-                                    <p><b>Monto total Gastado en Sub Alquileres:</b> {formatePrice(filteredSubletsTotalAmount)}</p>
-                                    <p><b>Gasto total en Empleados:</b> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
-                                    <p><b>Gasto total en Gastos Fijos:</b> {formatePrice(filteredFixedTotalAmount)}</p>
-                                    <p><b>Ganancia Neta:</b> {formatePrice(filteredPaidOrdersTotalAmount - (filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0)))}</p>
+                                <div className='flex flex-col items.start text-start justify-start mt-4'>
+                                    <p className="text-zinc-600 text-md"><b>Total Cobrado en Alquileres:</b>  {formatePrice(filteredPaidOrdersTotalAmount)}</p>
+                                    <p  className="text-zinc-600 text-md"><b>Monto total Gastado:</b> {formatePrice(filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
+                                    <p  className="text-zinc-600 text-md"><b>Monto total Gastado en Compras:</b> {formatePrice(filteredPurchasesTotalAmount)}</p>
+                                    <p  className="text-zinc-600 text-md"><b>Monto total Gastado en Sub Alquileres:</b> {formatePrice(filteredSubletsTotalAmount)}</p>
+                                    <p  className="text-zinc-600 text-md"><b>Gasto total en Empleados:</b> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
+                                    <p  className="text-zinc-600 text-md"><b>Gasto total en Gastos Fijos:</b> {formatePrice(filteredFixedTotalAmount)}</p>
+                                    <p  className="text-zinc-600 text-md"><b>Ganancia Neta:</b> {formatePrice(filteredPaidOrdersTotalAmount - (filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0)))}</p>
                                 </div>                      
                              </div>
                           </div>  
-                       </div>  
-
-                   
-            </div>
+                </div>  
+            
+              </div>
 
           </>
             :
