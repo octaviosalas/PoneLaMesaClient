@@ -1,4 +1,4 @@
-import ReplenishmentsToStock from "../models/ReplenishmentsToStock.js";
+import ReplenishmentsToStock from "../models/replenishmentsToStock.js";
 
 export const saveNewReplenishment = async (req, res) => { 
     console.log(req.body)
