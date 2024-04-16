@@ -21,41 +21,45 @@ const EstadisticsProviders = () => {
   const [expensesData, setExpensesData] = useState([])
 
 
-  const getProvidersData = async () => { 
-    if(yearSelected !== 0 && monthSelected.length > 0) { 
-        setMissedData(false);
-        setWithOutData(false)
-        try {
-            const getExpenses = await axios.get("http://localhost:4000/expenses");
-            const response = getExpenses.data;
-            const filterExpensesByMonthAndByYear = response.filter((resp) => resp.month === monthSelected && resp.year === yearSelected);
-            const agorupExpensesByProviderName = filterExpensesByMonthAndByYear.reduce((acc, el) => { 
-                const providerName = el.providerName;
-                if(acc[providerName]) { 
-                    acc[providerName].push(el);
-                } else { 
-                    acc[providerName] = [el];
-                }
-                return acc;
-            }, {});
-            const transformData = Object.entries(agorupExpensesByProviderName).map(([providerName, data]) => { 
-               return { 
-                providerName: providerName,
-                quantityExpenses: data.length,
-                totalAmountInverted: data.map((d) => d.expenseDetail).flat().reduce((acc, el) => acc + el.value, 0) 
-               }
-            });
-            console.log(transformData);
-            if(transformData.length > 0) { 
-                setExpensesData(transformData);
-            } else { 
-                setWithOutData(true)
-            }
-         } catch (error) {
-             console.log(error);
-         }       
-    }
-}
+        const getProvidersData = async () => { 
+          if(yearSelected !== 0 && monthSelected.length > 0) { 
+              setMissedData(false);
+              setWithOutData(false)
+              try {
+                  const getExpenses = await axios.get("http://localhost:4000/expenses");
+                  const response = getExpenses.data;
+                  const filterExpensesByMonthAndByYear = response.filter((resp) => resp.month === monthSelected && resp.year === yearSelected);
+                  const agorupExpensesByProviderName = filterExpensesByMonthAndByYear.reduce((acc, el) => { 
+                      const providerName = el.providerName;
+                      if(acc[providerName]) { 
+                          acc[providerName].push(el);
+                      } else { 
+                          acc[providerName] = [el];
+                      }
+                      return acc;
+                  }, {});
+                  const transformData = Object.entries(agorupExpensesByProviderName).map(([providerName, data]) => { 
+                    return { 
+                      providerName: providerName,
+                      quantityExpenses: data.length,
+                      totalAmountInverted: data.map((d) => d.expenseDetail).flat().reduce((acc, el) => acc + el.value, 0) 
+                    }
+                  });
+                  console.log(transformData);
+                  if(transformData.length > 0) { 
+                      setExpensesData(transformData);
+                  } else { 
+                      setWithOutData(true)
+                  }
+              } catch (error) {
+                  console.log(error);
+              }       
+          }
+        }
+
+        useEffect(() => {
+          getProvidersData()
+       }, [monthSelected, yearSelected]); 
 
         useEffect(() => { 
             console.log("sisi")

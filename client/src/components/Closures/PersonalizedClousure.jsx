@@ -43,6 +43,8 @@ const PersonalizedClousure = () => {
   const [collectionsAgroupByType, setCollectionsAgroupByType] = useState([])
   const [collectionsTotalAmount, setCollectionsTotalAmount] = useState(0)
   const [collectionsAgroupByAccount, setCollectionsAgroupByAccount] = useState([])
+  const [missedData, setMissedData] = useState(false)
+
 
   const navigate = useNavigate()
 
@@ -88,45 +90,53 @@ const PersonalizedClousure = () => {
    };
    
    const getOrdersData = async () => {
-    const firstDateObj = new Date(firstDate);
-    const secondDateObj = new Date(secondDate);
+    if(firstDate !== "" && secondDate !== "") { 
+      const firstDateObj = new Date(firstDate);
+      const secondDateObj = new Date(secondDate);
+     
+      const [ordersData, expensesData, collectionsData, shiftsData] = await Promise.all([
+         getResource("http://localhost:4000/orders"),
+         getResource("http://localhost:4000/expenses"), 
+         getResource("http://localhost:4000/collections"), 
+         getResource("http://localhost:4000/employees/everyShifts")
+      ]);
+     
+      const filterDataByDate = (data) => data.filter(item => {
+         const itemDate = new Date(item.date);
+         return itemDate >= firstDateObj && itemDate <= secondDateObj;
+      });
+     
+      const filteredOrders = filterDataByDate(ordersData);
+      const filteredOrdersTotalAmount = filteredOrders.reduce((acc, el) => acc + el.total, 0)
+      setFilteredOrdersTotalAmount(filteredOrdersTotalAmount)
+  
+      const filteredExpenses = filterDataByDate(expensesData);
+      const filteredCollections = filterDataByDate(collectionsData);
+      const filteredShifts = filterDataByDate(shiftsData);
+     
+      console.log("Ordenes", filteredOrders);
+      console.log("Gastos", filteredExpenses);
+      console.log("Cobros", filteredCollections);
+      console.log("Turnos", filteredShifts);
+     
+      setFilteredOrdersObtained(filteredOrders);
+      setFiltredExpensesObtained(filteredExpenses);
+      setFilteredCollections(filteredCollections);
+      setFilteredShiftsObtained(filteredShifts);
+      setDataAvailable(true);
+      agroupExpensesByType(filteredExpenses)
+      agroupOrderByPaidOrNoPaid(filteredOrders)
+      agroupCollectionByType(filteredCollections)
+      agroupCollectionByAccount(filteredCollections)
+      getEmployeesShiftsDataAmount(filteredShifts)
+      setLoad(false)
+    } else { 
+      setMissedData(true)
+      setTimeout(() => { 
+        setMissedData(false)
+      }, 2500)
+    }
    
-    const [ordersData, expensesData, collectionsData, shiftsData] = await Promise.all([
-       getResource("http://localhost:4000/orders"),
-       getResource("http://localhost:4000/expenses"), 
-       getResource("http://localhost:4000/collections"), 
-       getResource("http://localhost:4000/employees/everyShifts")
-    ]);
-   
-    const filterDataByDate = (data) => data.filter(item => {
-       const itemDate = new Date(item.date);
-       return itemDate >= firstDateObj && itemDate <= secondDateObj;
-    });
-   
-    const filteredOrders = filterDataByDate(ordersData);
-    const filteredOrdersTotalAmount = filteredOrders.reduce((acc, el) => acc + el.total, 0)
-    setFilteredOrdersTotalAmount(filteredOrdersTotalAmount)
-
-    const filteredExpenses = filterDataByDate(expensesData);
-    const filteredCollections = filterDataByDate(collectionsData);
-    const filteredShifts = filterDataByDate(shiftsData);
-   
-    console.log("Ordenes", filteredOrders);
-    console.log("Gastos", filteredExpenses);
-    console.log("Cobros", filteredCollections);
-    console.log("Turnos", filteredShifts);
-   
-    setFilteredOrdersObtained(filteredOrders);
-    setFiltredExpensesObtained(filteredExpenses);
-    setFilteredCollections(filteredCollections);
-    setFilteredShiftsObtained(filteredShifts);
-    setDataAvailable(true);
-    agroupExpensesByType(filteredExpenses)
-    agroupOrderByPaidOrNoPaid(filteredOrders)
-    agroupCollectionByType(filteredCollections)
-    agroupCollectionByAccount(filteredCollections)
-    getEmployeesShiftsDataAmount(filteredShifts)
-    setLoad(false)
    };
 
    const agroupExpensesByType = (filtredExpensesObtained) => { 
@@ -280,6 +290,8 @@ const PersonalizedClousure = () => {
     const comeBackAndChooseOtherDate = () => { 
       setShowData(false)
       setDataAvailable(false)
+      setFirstDate("")
+      setSecondDate("")
     }
 
 
@@ -288,32 +300,35 @@ const PersonalizedClousure = () => {
         <NavBarComponent/>
         <div className="w-full flex flex-col items-center mt-36">
              <div> 
-                  {dataAvailable && showData ? <p className="text-sm font-medium text-black">Reporte desde: {firstDateToShow} al {secondDateToShow}</p> : null}
+                  {dataAvailable && showData ? <p className="text-lg font-medium text-black">Reporte desde: {firstDateToShow} al {secondDateToShow}</p> : null}
 
                   {showData ? null :
                   <>
-                    <Input className="w-96" type="date" onChange={handleDateChange} />
-                    <Input className="w-96" type="date" onChange={handleSecondDateChange} />
+                    <Input className="w-96" type="date" variant="underlined" onChange={handleDateChange} />
+                    <Input className="w-96" type="date" variant="underlined" onChange={handleSecondDateChange} />
                   </>}
 
              </div>
              <div>
              {dataAvailable ? (
-                  showData ?
-                    <Button className="bg-green-800 font-medium text-white text-sm w-96 mt-4" onClick={() => comeBackAndChooseOtherDate()}>Modificar Fecha</Button>
+                  showData ? null
                     : 
                    <Button className="bg-green-800 font-medium text-white text-sm w-96 mt-4" onClick={() => nowShowClousureData()}>Ver Datos</Button>
                   ) : (
                   <>
                       <div className="flex flex-col items-center justify-center">
                         <div className="flex items-center gap-2">
-                          <Button className="bg-green-800 text-white font-medium text-sm w-96 mt-4" onClick={() => getOrdersData()}>
+                          <Button className="bg-green-800 text-white font-medium text-sm w-72 mt-4" onClick={() => getOrdersData()}>
                             Siguiente
                           </Button>
-                          <Button className="bg-green-800 text-white font-medium text-sm w-96 mt-4">
+                          <Button className="bg-green-800 text-white font-medium text-sm w-72 mt-4">
                             Cerrar
                           </Button>
                         </div>
+                       {missedData ? 
+                        <div className="mt-4">
+                            <p className="font-medium text-sm text-green-800">Debes elegir ambas fechas</p>
+                        </div> : null}
                         <div className="flex items-center">
                           {load ? <Loading/> : null}
                         </div>
@@ -325,120 +340,125 @@ const PersonalizedClousure = () => {
 
           {showData ? 
           <> 
-            <div className="flex gap-24 items-center justify-between mt-12"> 
-              <div className="flex flex-col">
+            <div className="flex gap-24 items-start justify-between mt-12 h-auto "> 
 
-               <div className="flex flex-col items-center justify-start text-start w-[500px] ">
-                  <div className="flex items-start justify-start text-start w-full">
-                     <p className="text-zinc-600 font-bold text-md">Pedidos</p>
-                  </div>
-                  <div className="flex items-center text-start justify-between mt-2 w-full">
-                      <div className="flex flex-col">
-                        <p className="text-zinc-600 font-medium text-sm mt-1">Todos los pedidos</p>
-                        <p className="text-zinc-600 font-medium text-sm mt-1">Pendientes</p>
-                        <p className="text-zinc-600 font-medium text-sm mt-1">Cobrados</p>
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredOrdersTotalAmount)}</p>
-                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredNoPaidOrdersTotalAmount)}</p>
-                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredPaidOrdersTotalAmount)}</p>
-                      </div>
-                      <div>
-                        <EveryOrdersDetails ordersData={filteredOrdersObtained} first={firstDateToShow} second={secondDateToShow} type={"all"}/>
-                        <EveryOrdersDetails ordersData={justNoPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"noPaid"}/>
-                        <EveryOrdersDetails ordersData={justPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"paid"}/>
-                      </div>
-                  </div>               
-               </div>
+                <div className="flex flex-col ">
 
-               <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
-                  <div className="flex items-start justify-start text-start w-full">
-                     <p className="text-zinc-600 font-bold text-md">Gastos</p>
-                  </div>
-                  <div className="flex items-center justify-between text-start  mt-2  w-full">
-                      <div className="flex flex-col">
-                        <p className="text-zinc-600 font-medium text-sm  mt-1">Todos los Gastos</p>
-                        <p className="text-zinc-600 font-medium text-sm  mt-1">Compras</p>
-                        <p className="text-zinc-600 font-medium text-sm  mt-1">Gastos Fijos</p>
-                        <p className="text-zinc-600 font-medium text-sm  mt-1">Sub Alquileres</p>
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="font-medium text-sm text-zinc-600  mt-1">  {formatePrice(filteredExpensesTotalAmount)}</p>
-                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredPurchasesTotalAmount)}</p>
-                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredFixedTotalAmount)}</p>
-                        <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredSubletsTotalAmount)}</p>
-                      </div>
-                      <div>
-                       <ExpensesDetail expensesData={justAllExpenses} first={firstDateToShow} second={secondDateToShow} type={"all"}/>
-                       <ExpensesDetail expensesData={justPurchases} first={firstDateToShow} second={secondDateToShow}  type={"purchases"}/>
-                       <ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
-                       <ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
-                      </div>
-                  </div>               
-               </div>
+                    <div className="flex flex-col items-center justify-start text-start w-[500px] ">
+                        <div className="flex items-start justify-start text-start w-full">
+                          <p className="text-zinc-600 font-bold text-md">Pedidos</p>
+                        </div>
+                        <div className="flex items-center text-start justify-between mt-2 w-full">
+                            <div className="flex flex-col">
+                              <p className="text-zinc-600 font-medium text-sm mt-1">Todos los pedidos</p>
+                              <p className="text-zinc-600 font-medium text-sm mt-1">Pendientes</p>
+                              <p className="text-zinc-600 font-medium text-sm mt-1">Cobrados</p>
+                            </div>
+                            <div className="flex flex-col">
+                              <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredOrdersTotalAmount)}</p>
+                              <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredNoPaidOrdersTotalAmount)}</p>
+                              <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredPaidOrdersTotalAmount)}</p>
+                            </div>
+                            <div>
+                              <EveryOrdersDetails ordersData={filteredOrdersObtained} first={firstDateToShow} second={secondDateToShow} type={"all"}/>
+                              <EveryOrdersDetails ordersData={justNoPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"noPaid"}/>
+                              <EveryOrdersDetails ordersData={justPaidOrder} first={firstDateToShow} second={secondDateToShow} type={"paid"}/>
+                            </div>
+                        </div>               
+                    </div>
 
+                    <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
+                        <div className="flex items-start justify-start text-start w-full">
+                          <p className="text-zinc-600 font-bold text-md">Gastos</p>
+                        </div>
+                        <div className="flex items-center justify-between text-start  mt-2  w-full">
+                            <div className="flex flex-col">
+                              <p className="text-zinc-600 font-medium text-sm  mt-1">Todos los Gastos</p>
+                              <p className="text-zinc-600 font-medium text-sm  mt-1">Compras</p>
+                              <p className="text-zinc-600 font-medium text-sm  mt-1">Gastos Fijos</p>
+                              <p className="text-zinc-600 font-medium text-sm  mt-1">Sub Alquileres</p>
+                            </div>
+                            <div className="flex flex-col">
+                              <p className="font-medium text-sm text-zinc-600  mt-1">  {formatePrice(filteredExpensesTotalAmount)}</p>
+                              <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredPurchasesTotalAmount)}</p>
+                              <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredFixedTotalAmount)}</p>
+                              <p className="font-medium text-sm text-zinc-600  mt-1"> {formatePrice(filteredSubletsTotalAmount)}</p>
+                            </div>
+                            <div>
+                            <ExpensesDetail expensesData={justAllExpenses} first={firstDateToShow} second={secondDateToShow} type={"all"}/>
+                            <ExpensesDetail expensesData={justPurchases} first={firstDateToShow} second={secondDateToShow}  type={"purchases"}/>
+                            <ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
+                            <ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
+                            </div>
+                        </div>               
+                    </div>
+
+                    
+                    <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
+                        <div className="flex items-start justify-start text-start w-full">
+                          <p className="text-zinc-600 font-bold text-md">Cobros</p>
+                        </div>
+                        <div className="flex items-center justify-between text-start  mt-2  w-full">
+                            <div className="flex flex-col">
+                              <p className="text-zinc-600 font-medium text-sm">Todos los Cobros</p>                   
+                            </div>
+                            <div className="flex flex-col">
+                              <p className="font-medium text-sm text-zinc-600"> {formatePrice(collectionsTotalAmount)}</p>     
+                            </div>
+                            <div>
+                                  <CollectionsDetail 
+                                    byAccount={collectionsAgroupByAccount} 
+                                    byType={collectionsAgroupByType} 
+                                    allCollections={filteredCollectionsObtained}
+                                    frist={firstDateToShow}
+                                    second={secondDateToShow}/>
+                            </div>
+                        </div>               
+                    </div>
+
+                    <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
+                        <div className="flex items-start justify-start text-start w-full">
+                          <p className="text-zinc-600 font-bold text-md">Empleados</p>
+                        </div>
+                        <div className="flex items-center justify-between text-start  mt-2  w-full">
+                            <div className="flex flex-col">
+                              <p className="text-zinc-600 font-medium text-sm">Liquidacion Empleados:</p>                   
+                            </div>
+                            <div className="flex flex-col">
+                              <p className="font-medium text-sm text-zinc-600"> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>     
+                            </div>
+                            <div>
+                              <EmployeesLiquidation empployeesData={justEmployeesData} first={firstDateToShow}second={secondDateToShow}/>
+                            </div>
+                        </div>               
+                    </div>
+
+                </div>
                
-               <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
-                  <div className="flex items-start justify-start text-start w-full">
-                     <p className="text-zinc-600 font-bold text-md">Cobros</p>
-                  </div>
-                  <div className="flex items-center justify-between text-start  mt-2  w-full">
-                      <div className="flex flex-col">
-                        <p className="text-zinc-600 font-medium text-sm">Todos los Cobros</p>                   
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="font-medium text-sm text-zinc-600"> {formatePrice(collectionsTotalAmount)}</p>     
-                      </div>
-                      <div>
-                             <CollectionsDetail 
-                              byAccount={collectionsAgroupByAccount} 
-                              byType={collectionsAgroupByType} 
-                              allCollections={filteredCollectionsObtained}
-                              frist={firstDateToShow}
-                              second={secondDateToShow}/>
-                      </div>
-                  </div>               
-               </div>
-
-               <div className="flex flex-col items-center justify-start text-start  w-[500px]  mt-6">
-                  <div className="flex items-start justify-start text-start w-full">
-                     <p className="text-zinc-600 font-bold text-md">Empleados</p>
-                  </div>
-                  <div className="flex items-center justify-between text-start  mt-2  w-full">
-                      <div className="flex flex-col">
-                        <p className="text-zinc-600 font-medium text-sm">Liquidacion Empleados:</p>                   
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="font-medium text-sm text-zinc-600"> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>     
-                      </div>
-                      <div>
-                        <EmployeesLiquidation empployeesData={justEmployeesData} first={firstDateToShow}second={secondDateToShow}/>
-                      </div>
-                  </div>               
-               </div>
-
-              </div>
-               
-                <div className="flex flex-col items-cente mt-6">
+                <div className="flex flex-col items-center h-full ">
                          
                         <div className='flex flex-col items-center justify-center '>
-                            <div className='flex flex-col w-96 max-h-[300px] overflow-y-auto mt-2 border rounded-lg shadow-lg'>
+                            <div className='flex flex-col w-96  mt-2  rounded-lg '>
                                 <div className='w-full bg-green-800'>
                                   <p className='text-sm font-bold text-white'>Resumen Cierre</p>
                                 </div>
-                                <div className='flex flex-col items.start text-start justify-start mt-4'>
-                                    <p className="text-zinc-600 text-md"><b>Total Cobrado en Alquileres:</b>  {formatePrice(filteredPaidOrdersTotalAmount)}</p>
-                                    <p  className="text-zinc-600 text-md"><b>Monto total Gastado:</b> {formatePrice(filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
-                                    <p  className="text-zinc-600 text-md"><b>Monto total Gastado en Compras:</b> {formatePrice(filteredPurchasesTotalAmount)}</p>
-                                    <p  className="text-zinc-600 text-md"><b>Monto total Gastado en Sub Alquileres:</b> {formatePrice(filteredSubletsTotalAmount)}</p>
-                                    <p  className="text-zinc-600 text-md"><b>Gasto total en Empleados:</b> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
-                                    <p  className="text-zinc-600 text-md"><b>Gasto total en Gastos Fijos:</b> {formatePrice(filteredFixedTotalAmount)}</p>
-                                    <p  className="text-zinc-600 text-md"><b>Ganancia Neta:</b> {formatePrice(filteredPaidOrdersTotalAmount - (filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0)))}</p>
+                                <div className='flex flex-col items-start text-start justify-start mt-4'>
+                                    <p className="text-zinc-600 mt-2 text-md"><b>Total Cobrado en Alquileres:</b>  {formatePrice(filteredPaidOrdersTotalAmount)}</p>
+                                    <p  className="text-zinc-600 mt-2 text-md"><b>Monto total Gastado:</b> {formatePrice(filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
+                                    <p  className="text-zinc-600 mt-2 text-md"><b>Monto total Gastado en Compras:</b> {formatePrice(filteredPurchasesTotalAmount)}</p>
+                                    <p  className="text-zinc-600 mt-2 text-md"><b>Monto total Gastado en Sub Alquileres:</b> {formatePrice(filteredSubletsTotalAmount)}</p>
+                                    <p  className="text-zinc-600 mt-2 text-md"><b>Gasto total en Empleados:</b> {formatePrice(justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
+                                    <p  className="text-zinc-600 mt-2 text-md"><b>Gasto total en Gastos Fijos:</b> {formatePrice(filteredFixedTotalAmount)}</p>
+                                    <p  className="text-zinc-600 mt-2 text-md"><b>Ganancia Neta:</b> {formatePrice(filteredPaidOrdersTotalAmount - (filteredExpensesTotalAmount + justEmployeesData.reduce((acc, el) => acc + el.totalAmountToPaid, 0)))}</p>
                                 </div>                      
                              </div>
                           </div>  
                 </div>  
             
+              </div>
+
+              <div className="mt-4">
+                 <Button className="bg-green-800 font-medium text-white text-sm w-96 mt-4" onClick={() => comeBackAndChooseOtherDate()}>Modificar Fecha</Button>
               </div>
 
           </>

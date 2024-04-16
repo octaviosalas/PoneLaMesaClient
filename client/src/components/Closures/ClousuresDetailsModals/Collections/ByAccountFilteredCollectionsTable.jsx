@@ -10,7 +10,7 @@ const ByAccountFilteredCollectionsTable = ({byAccountCollectionsData}) => {
     const [showTable, setShowTable] = useState(false);
 
 
-    console.log(byAccountCollectionsData)
+    
 
     useEffect(() => {
         console.log("fuera del if")
@@ -70,7 +70,7 @@ const ByAccountFilteredCollectionsTable = ({byAccountCollectionsData}) => {
                  </TableRow>
                 )}
             </TableBody>
-         </Table> : <p>aa</p>}
+         </Table> : <p className='font-medium text-zinc-600 text-sm'>No hay cobros en las fechas elegidas</p>}
     </div>
   )
 }

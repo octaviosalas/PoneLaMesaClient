@@ -7,8 +7,10 @@ import Loading from "../Loading/Loading"
 
 import { useState, useEffect } from "react";
 import MarkDebtAsPaid from "../Modals/MarkDebtAsPaid";
+import ClientHistoricOrdersTable from "./ClientHistoricOrdersTable";
 
 const HistoricClient = ({clientData, updateClientData}) => {
+
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [successMessage, setSuccessMessage] = useState(false);
@@ -73,31 +75,6 @@ const HistoricClient = ({clientData, updateClientData}) => {
       }
     };
 
-    useEffect(() => {
-      if (ordersProducts.length > 0) {
-        console.log("me ejecuto")
-        const firstDetail = ordersProducts[0];
-        const properties = Object.keys(firstDetail);
-        const filteredProperties = properties.filter(property => property !== 'productOrderDetail' && property !== 'orderId'  && property !== 'quantity');
-      
-        const columnLabelsMap = {
-          month: 'Mes',
-          year: 'Año',
-          total: 'Facturacion',
-          orderNumber: 'Orden',
-        };
-      
-        const tableColumns = filteredProperties.map(property => ({
-          key: property,
-          label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
-        }));
-      
-        setColumns(tableColumns);
-        console.log(tableColumns);
-      } else { 
-        setError(true)
-      }
-    }, [ordersProducts]);
 
     const closeModalWhenMarktTheDebtAsPaid = () => { 
       onClose()
@@ -157,41 +134,7 @@ const HistoricClient = ({clientData, updateClientData}) => {
                     ) : (
                       ordersProducts.length > 0 ? (
                         <div className="mt-4 flex flex-col">
-                          <input type="text" className="w-72 border border-gray-200  focus:border-gray-300 focus:ring-0 rounded-lg text-sm ml-2 h-7" placeholder="Buscador.."/>                         
-                          <Table                          
-                           columnAutoWidth={true} 
-                           columnSpacing={10}  
-                           aria-label="Selection behavior table example with dynamic content"   
-                           selectionBehavior={selectionBehavior} 
-                           className="w-[780px] 2xl-w-[550px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto xl:max-h-[200px] 2xl:max-h-[450px] border rounded-xl">
-                            <TableHeader columns={columns}>
-                              {(column) => (
-                                <TableColumn key={column.key} className="text-xs gap-6">
-                                  {column.label}
-                                </TableColumn>
-                              )}
-                            </TableHeader>
-                            <TableBody items={ordersProducts}>
-                              {(item) => (
-                                <TableRow key={item.orderId}>
-                                  {columns.map(column => (
-                                     <TableCell key={column.key}  className='text-left' >
-                                      {column.cellRenderer ? (
-                                        column.cellRenderer({ row: { original: item } })
-                                      ) : (
-                                        (column.key === "total") ? (
-                                          formatePrice(item[column.key])
-                                        ) : (
-                                          item[column.key]
-                                        )
-                                      )}
-                                    </TableCell>
-                                  ))}
-                                </TableRow>
-                              )}
-                            </TableBody>
-                          </Table>
-                        
+                          <ClientHistoricOrdersTable ordersProducts={ordersProducts}/>                  
                         </div>
                       ) : (
                         <div className="flex flex-col items-cemnter justify-center">
@@ -201,9 +144,6 @@ const HistoricClient = ({clientData, updateClientData}) => {
                       )
                     )}
           
-              
-
-
               </ModalBody>
               <ModalFooter className="flex items-center justify-center mt-2">
                 <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button>

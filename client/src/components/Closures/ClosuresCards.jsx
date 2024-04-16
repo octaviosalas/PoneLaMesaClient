@@ -21,19 +21,19 @@ const ClousureMonth = () =>  {
   
   return (
     <>
-      <Button onPress={onOpen} className="h-[305px]">
-        <Card className="w-full h-full cursor-pointer">
+           <Card className="w-auto h-full cursor-pointer">
               <CardHeader className="absolute z-10 top-1 flex-col !items-start">
-                <p className="text-tiny text-black uppercase font-bold">Cierre del Mes</p>
+                <p className="text-tiny text-black uppercase font-bold">Cierre Mes</p>
               </CardHeader>
               <Image
+              onClick={onOpen}
                 removeWrapper
                 alt="Card background"
-                className="z-0 w-full h-full object-cover"
+                className="z-0 w-[400px] h-[400px] object-cover"
                 src="https://www.gerencie.com/wp-content/uploads/asiente-cierre-contable.png"
               />
-          </Card>
-      </Button>
+            </Card>
+          
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

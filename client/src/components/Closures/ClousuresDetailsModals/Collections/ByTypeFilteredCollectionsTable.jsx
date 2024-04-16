@@ -70,7 +70,7 @@ const ByTypeFilteredCollectionsTable = ({byTypeCollections}) => {
                  </TableRow>
                 )}
             </TableBody>
-         </Table> : <p>aa</p>}
+            </Table> : <p className='font-medium text-zinc-600 text-sm'>No hay cobros en las fechas elegidas</p>}
     </div>
   )
 }

@@ -54,16 +54,16 @@ const CreateProvider = ({updateList}) => {
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-medium">Crear Proveedor</ModalHeader>
               <ModalBody>
                 <div className="flex flex-col items-center justify-center"> 
-                   <Input type="text" label="Nombre" value={name} variant="bordered" className="w-72" onChange={(e) => setName(e.target.value)}/>
-                   <Input type="text" label="Telefono" value={telephone} variant="bordered" className="w-72 mt-2" onChange={(e) => setTelephone(e.target.value)}/>
-                   <Input type="text" label="Email" value={email} variant="bordered" className="w-72 mt-2" onChange={(e) => setEmail(e.target.value)}/>                 
+                   <Input type="text" label="Nombre" value={name} variant="underlined" className="w-72" onChange={(e) => setName(e.target.value)}/>
+                   <Input type="text" label="Telefono" value={telephone} variant="underlined" className="w-72 mt-2" onChange={(e) => setTelephone(e.target.value)}/>
+                   <Input type="text" label="Email" value={email} variant="underlined" className="w-72 mt-2" onChange={(e) => setEmail(e.target.value)}/>                 
                 </div>             
               </ModalBody>
               <ModalFooter className="flex gap-6 items-center justify-center">
-                <Button  className="bg-green-600 font-bold text-white text-sm"  onClick={() => createProvider()}>
+                <Button  className="bg-green-800 font-bold text-white text-sm w-52"  onClick={() => createProvider()}>
                   Confirmar
                 </Button>
-                <Button  className="bg-green-600 font-bold text-white text-sm" onPress={onClose}>
+                <Button  className="bg-green-800 font-bold text-white text-sm w-52" onPress={onClose}>
                   Cancelar
                 </Button>
               </ModalFooter>

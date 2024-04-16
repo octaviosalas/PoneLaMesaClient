@@ -2,7 +2,7 @@ import React,  { useState, useEffect, useRef }  from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import axios from 'axios'
 import { Card, CardBody, CardHeader } from '@nextui-org/react'
-import { formatePrice, getMonth, getYear, getEveryOrders, everyMonthsOfTheYear, everyYears } from '../../functions/gralFunctions';
+import { formatePrice, getMonth, getYear, getEveryOrders, everyMonthsOfTheYear, everyYears, months } from '../../functions/gralFunctions';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Input} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
@@ -16,59 +16,66 @@ const EstadisticsClientsModal = () => {
   const [clientsRanking, setClientsRanking] = useState([])
   const [withOutOrders, setWithOutOrders] = useState(false)
   const [monthSelected, setMonthSelected] = useState("Todos")
-  const [yearSelected, setYearSelected] = useState(getYear())
+  const [yearSelected, setYearSelected] = useState("Todos")
   const [everyMonths, setVeryMonths] = useState(everyMonthsOfTheYear)
   const [availableYears, setAvailableYears] = useState(everyYears)
   const [size, setSize] = useState("4xl")
   const [loading, setLoading] = useState(true)
+  
+      const handleOpen = async () => { 
+        onOpen()
+        await getRankingBy()
+      }
+
+        const getRankingBy = async () => { 
+          try {
+            const ordersData = await getEveryOrders();
+            console.log(ordersData)
+            if(monthSelected === "Todos" && yearSelected === "Todos") { 
+              if(ordersData.length !== 0) { 
+                setAllOrders(ordersData);
+                setWithOutOrders(false)
+              } else { 
+                setWithOutOrders(true)
+              }
+
+
+            } else if (yearSelected !== "Todos" && monthSelected !== "Todos") { 
+              const filterDataByMonthAndYearSelected = ordersData.filter((orders) => orders.month === monthSelected && orders.year === yearSelected)
+              if(filterDataByMonthAndYearSelected.length !== 0) { 
+                  setAllOrders(filterDataByMonthAndYearSelected);
+                  setWithOutOrders(false)
+              } else { 
+                setWithOutOrders(true)
+              }     
+
+            } else if (yearSelected !== "Todos" && monthSelected === "Todos") { 
+              const filterDataByYear = ordersData.filter((orders) => orders.year === yearSelected)
+              if(filterDataByYear.length !== 0) { 
+                setAllOrders(filterDataByYear);
+                setWithOutOrders(false)
+              } else { 
+                setWithOutOrders(true)
+              }      
+
+            } else if (yearSelected === "Todos" && monthSelected !== "Todos") { 
+              const filterDataByMonth = ordersData.filter((orders) => orders.month === monthSelected)
+              if(filterDataByMonth.length !== 0) { 
+                setAllOrders(filterDataByMonth);
+                setWithOutOrders(false)
+              } else { 
+                setWithOutOrders(true)
+              }      
+            }
+          } catch (error) {
+            console.error("Error fetching orders:", error);
+
+          }
+        }
 
 
         useEffect(() => {
-          const fetchData = async () => {
-            try {
-              const ordersData = await getEveryOrders();
-              console.log(ordersData)
-              if(monthSelected === "Todos" && yearSelected === "Todos") { 
-                if(ordersData.length !== 0) { 
-                  setAllOrders(ordersData);
-                  setWithOutOrders(false)
-                } else { 
-                  setWithOutOrders(true)
-                }
-        
-
-              } else if (yearSelected !== "Todos" && monthSelected !== "Todos") { 
-                const filterDataByMonthAndYearSelected = ordersData.filter((orders) => orders.month === monthSelected && orders.year === yearSelected)
-                if(filterDataByMonthAndYearSelected.length !== 0) { 
-                    setAllOrders(filterDataByMonthAndYearSelected);
-                    setWithOutOrders(false)
-                } else { 
-                  setWithOutOrders(true)
-                }     
-
-              } else if (yearSelected !== "Todos" && monthSelected === "Todos") { 
-                const filterDataByYear = ordersData.filter((orders) => orders.year === yearSelected)
-                if(filterDataByYear.length !== 0) { 
-                  setAllOrders(filterDataByYear);
-                  setWithOutOrders(false)
-                } else { 
-                  setWithOutOrders(true)
-                }      
-
-              } else if (yearSelected === "Todos" && monthSelected !== "Todos") { 
-                const filterDataByMonth = ordersData.filter((orders) => orders.month === monthSelected)
-                if(filterDataByMonth.length !== 0) { 
-                  setAllOrders(filterDataByMonth);
-                  setWithOutOrders(false)
-                } else { 
-                  setWithOutOrders(true)
-                }      
-              }
-            } catch (error) {
-              console.error("Error fetching orders:", error);
-            }
-          };
-          fetchData();
+           getRankingBy()
         }, [monthSelected, yearSelected]); 
 
         const orderOrdersByClient = () => { 
@@ -96,6 +103,8 @@ const EstadisticsClientsModal = () => {
         }
 
         useEffect(() => { 
+          console.log("voyyyy")
+
           if(allOrders.length >= 0) { 
               console.log(orderOrdersByClient())
               orderOrdersByClient()
@@ -104,7 +113,7 @@ const EstadisticsClientsModal = () => {
 
      
         useEffect(() => {
-          setLoading(true)
+        
           if (clientsRanking.length > 0) {
              console.log(clientsRanking);
              const firstData = clientsRanking[0];
@@ -135,14 +144,7 @@ const EstadisticsClientsModal = () => {
 
             let rowIndex = 0; // Inicializa un contador fuera del método de renderizado
 
-          tableColumns.unshift({
-          key: 'puesto',
-          label: 'Puesto',
-          cellRenderer: (cell) => {
-              rowIndex++; // Incrementa el contador cada vez que se renderiza una fila
-              return `${rowIndex}`;
-          },
-          });
+        
          
              setColumns(tableColumns);
              if(columns.length > 0) { 
@@ -156,7 +158,7 @@ const EstadisticsClientsModal = () => {
 
   return (
     <>
-      <p className="text-sm font-medium text-black cursor-pointer" onClick={onOpen}>Estadisticas Clientes</p>
+      <p className="text-sm font-medium text-black cursor-pointer" onClick={handleOpen}>Estadisticas Clientes</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
         <ModalContent>
           {(onClose) => (
@@ -172,14 +174,14 @@ const EstadisticsClientsModal = () => {
                   <div className='flex gap-4 items-center justify-center mt-4 mb-2'>
                    <Select variant={"faded"} label="Selecciona un Mes" className="max-w-xs" value={monthSelected}>          
                         {everyMonths.map((month) => (
-                          <SelectItem key={month.value} value={month.label} textValue={month.value} onClick={() => setMonthSelected(month.value)}>
+                          <SelectItem key={month.value} value={month.value} textValue={monthSelected} onClick={() => setMonthSelected(month.value)}>
                             {month.label}
                           </SelectItem>
                         ))}
                     </Select>
                     <Select variant={"faded"} label="Selecciona un Año" className="max-w-xs" value={yearSelected}>          
                         {availableYears.map((year) => (
-                           <SelectItem key={year.value} value={year.label} textValue={year.value} onClick={() => setYearSelected(year.value)}>
+                           <SelectItem key={year.value} value={year.value} textValue={yearSelected} onClick={() => setYearSelected(year.value)}>
                               {year.label}
                            </SelectItem>
                         ))}
