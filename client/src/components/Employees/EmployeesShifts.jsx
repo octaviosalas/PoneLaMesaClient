@@ -3,6 +3,7 @@ import NavBarComponent from '../Navbar/Navbar'
 import {Input, Select, SelectItem, Button} from "@nextui-org/react";
 import {everyMonthsOfTheYear, everyYears, formatePrice} from "../../functions/gralFunctions"
 import axios from 'axios';
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 
     const EmployeesShifts = () => {
  
@@ -21,9 +22,13 @@ import axios from 'axios';
     const [responseDataEstadisticsOperatives, setResponseDataEstadisticsOperatives] = useState("")
     const [coastCleaningEmployees, setCoastCleaningEmployees] = useState(0)
     const [coastByArticle, setCoastByArticle] = useState([])
-    
+    const [firstTableData, setFirstTableData] = useState([])
+    const [columns, setColumns] = useState([])
+    const [showTable, setShowTable] = useState(false)
+    const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
+
+
       const agroupShiftsByEmployeeName = (shifts) => { 
-        console.log("AGROUOPBYEMPLOYEES", shifts)
         const agroup = shifts.reduce((acc, el) => { 
           const employeeName = el.employeeName
           if(acc[employeeName]) { 
@@ -41,7 +46,6 @@ import axios from 'axios';
         })
         const quantityEmployees = transformData.length
         const getTotalAmount = transformData.reduce((acc, el) => acc + el.totalAmountToPaid, 0)
-        console.log("ACA", getTotalAmount)
         return {
           getTotalAmount,
           quantityEmployees
@@ -73,6 +77,7 @@ import axios from 'axios';
           return  { 
             time: time,
             totalHours: data.reduce((acc, el) => acc + el.hours, 0),
+            totalAmountEmployeesShifts: employee.reduce((acc, el) => acc + el.totalAmount, 0),
             employeesData: employee,
             detail: time === "Mañana" ? getMorning : time === "Tarde" ? getEvening : null
           }
@@ -81,19 +86,28 @@ import axios from 'axios';
            return { 
               turno: tr.time,
               horasTotales: tr.totalHours,
+              montoTotalAPagarEnEsteTurno: tr.totalAmountEmployeesShifts,
               empleados: tr.employeesData,
               articulos: tr.detail.map((tt) => { 
                 return { 
                   nombre: tt.productName,
                   id: tt.productId,
                   cantidadLavada: tt.quantity,
-                  tiempoIdeal: tt.quantity * tt.estimatedWashTime
+                  tiempoIdeal: tt.quantity * tt.estimatedWashTime,
+                  costoDelosArticuloLavado: formatePrice(tr.totalAmountEmployeesShifts / tt.quantity),
+                  turno: tr.time,
+                  empleados: tr.employeesData.length,
+                  horasDelTurno: tr.totalHours,
+                  costoDelTurnoEnEmpleados:  formatePrice(tr.totalAmountEmployeesShifts),
+
                 }
               })
            }
         })
-        console.log("POR ACA HEY!", transformFinalData)
-        return getFinalData
+        if(transformFinalData.length > 0) { 
+          setFirstTableData(transformFinalData)
+        }
+        return transformFinalData
       }
 
       const agroupReplacementsByArticles = (items) => { 
@@ -148,29 +162,26 @@ import axios from 'axios';
       }
 
       const getShifts = async () => { 
-        
       const dayReseted = Number(daySelected)
       if (monthSelected.length > 0 && yearSelected > 0 && daySelected > 0) { 
           try {
               const { data: responseShifts, status: shiftsStatus } = await axios.get(`http://localhost:4000/employees/getShifsByMonth/${monthSelected}`)
-              const filterData = responseShifts.filter((res) => res.day === dayReseted && res.year === yearSelected)       
+              const filterData = responseShifts.filter((res) => res.day === dayReseted && res.year === yearSelected)  // filtro los turnos por fecha     
               console.log(`Turnos realizados el dia ${daySelected} de ${monthSelected}`, filterData)
-              console.log("Turnos agrupados por empleado", agroupShiftsByEmployeeName(filterData))
-              const totalCashToPaidToEmployees = filterData.reduce((acc, el) => acc + el.totalAmountPaidShift, 0)
-              console.log("MONTO REAL PARA PAGARLE A LOS EMPLEADOS", totalCashToPaidToEmployees)
+              console.log("Turnos agrupados por empleado", agroupShiftsByEmployeeName(filterData)) //agrupo los turnos por empleado
+              const totalCashToPaidToEmployees = filterData.reduce((acc, el) => acc + el.totalAmountPaidShift, 0) // sumo los totales a pagar para saber el gasto en empleados del dia
+              console.log("MONTO REAL PARA PAGARLE A LOS EMPLEADOS", totalCashToPaidToEmployees) // muestro por consola el monto total a pagar a empleados
               const result = agroupShiftsByEmployeeName(filterData);
-              const quantityEmployees = result.quantityEmployees
-              console.log("CANTIDAD DE EMPLEADOS", quantityEmployees)
-              setCoastCleaningEmployees(totalCashToPaidToEmployees)
+              const quantityEmployees = result.quantityEmployees // La funcion que me agrupa a los empleados, me devuelve la cantidad total de empleados
+              console.log("CANTIDAD DE EMPLEADOS", quantityEmployees) // muestro por consola la cantidad total de empleados
+              setCoastCleaningEmployees(totalCashToPaidToEmployees) // seteo el estado coastCleaningEmployees por el monto total a pagar en empleados del dia
                 let getTotalHours = 0;
                 let getTotalMinutes = 0;
                 if(filterData.length > 0) { 
-                  setShiftsPerformed(filterData)
-                  setWithOutShiftsPerformed(false)
-                  getTotalHours = filterData.reduce((acc, el) => acc + el.hours, 0);
-                  getTotalMinutes = filterData.reduce((acc, el) => acc + el.minutes, 0);
-                  console.log("Total de Horas realizadas este dia", getTotalHours)
-                  console.log("Total de Minutos realizadas este dia", getTotalMinutes)
+                  setShiftsPerformed(filterData) // seteo los turnos realizados por la respuesta del backend
+                  setWithOutShiftsPerformed(false) // aclaro que hay turnos
+                  getTotalHours = filterData.reduce((acc, el) => acc + el.hours, 0); //obtengo el total de horas en turnos
+                  getTotalMinutes = filterData.reduce((acc, el) => acc + el.minutes, 0); //obtengo el total de minutos en turnos
                   const totalHoursFromMinutes = Math.floor(getTotalMinutes / 60);
                   console.log(totalHoursFromMinutes)
                   getTotalHours += totalHoursFromMinutes;
@@ -179,24 +190,23 @@ import axios from 'axios';
                 }
                
               if (shiftsStatus === 200) { 
-                  const { data: responseReplenishment } = await axios.get(`http://localhost:4000/replenishment/${monthSelected}`)
-                  const filterDataReplenishment = responseReplenishment.filter((res) => res.day === dayReseted && res.year === yearSelected)       
-                  console.log(`Reposiciones realizadas el dia ${daySelected} de ${monthSelected}`, filterDataReplenishment)
+                  const { data: responseReplenishment } = await axios.get(`http://localhost:4000/replenishment/${monthSelected}`)// consulto reposiciones
+                  const filterDataReplenishment = responseReplenishment.filter((res) => res.day === dayReseted && res.year === yearSelected)// filtro reposiciones por fecha
+                  console.log(`Reposiciones realizadas el dia ${daySelected} de ${monthSelected}`, filterDataReplenishment) // muestro x consola las reposiciones
                   if(filterDataReplenishment.length > 0) { 
                     setWithOutReplacementsPerformed(false)
-                    setReplacementsPerformed(filterDataReplenishment)
-                    console.log("TURNOS AGRUPADOS POR HORARIO, EMPLEADOS QUE LO TRABAJARON, PRODUCTOS QUE SE REPUSIERON, CANTIDADES, TIEMPO ESTIMADO", agroupShiftsByTime(filterData, filterDataReplenishment))
-                      const getJustDetails = filterDataReplenishment.map((filt) => filt.replenishDetail).flat()
-                      console.log("DETALLE DE LAS REPOSICIONES REALIZADAS", getJustDetails)
-                      console.log(agroupReplacementsByArticles(getJustDetails))
+                    setReplacementsPerformed(filterDataReplenishment) // seteo al estado ReplacementsPerformed por todas las reposiciones
+                      console.log("TURNOS AGRUPADOS POR HORARIO, EMPLEADOS  PRODUCTOS, CANTIDADES, TIEMPO", agroupShiftsByTime(filterData, filterDataReplenishment)) //Le paso a la funcion agroupShiftsByTime los turnos y las reposiciones, para que agrupe todo en un array
+                      const getJustDetails = filterDataReplenishment.map((filt) => filt.replenishDetail).flat() //Uno todos los articulos repuestos
+                      console.log("Articulos Repuestos", getJustDetails) // muestro por consola todos los articulos repuestos
+                      console.log(agroupReplacementsByArticles(getJustDetails)) //A la funcion agroupReplacementsByArticles le paso los articulos repuestos, y esta me devuelve el total de minutos por los articulos lavados y el total de todo el lavado junto
                       const transformShiftsHoursToMinutes = 60 * getTotalHours; 
                       console.log("Horas del turno transformadas a minutos", transformShiftsHoursToMinutes)
                       const result = agroupReplacementsByArticles(getJustDetails);
-                      console.log(result.getFinalData)
                       console.log(`Segun los articulos lavados y las horas de turnos realizadas, se deberian haber lavado los articulos en un tiempo de ${result.totalEstimatedWashTime} minutos y la carga horaria total entre todos los empleados fue de  ${transformShiftsHoursToMinutes} minutos`)
                       setShowTableData(true)
                       setResponseDataEstadisticsOperatives(`Segun los articulos lavados y las horas de turnos realizadas, se deberian haber lavado los articulos en un tiempo de ${result.totalEstimatedWashTime} minutos y la carga horaria total entre todos los empleados fue de  ${transformShiftsHoursToMinutes} minutos`)
-                      console.log(getAverage(quantityEmployees, totalCashToPaidToEmployees, agroupReplacementsByArticles(getJustDetails), transformShiftsHoursToMinutes))
+                      getAverage(quantityEmployees, totalCashToPaidToEmployees, agroupReplacementsByArticles(getJustDetails), transformShiftsHoursToMinutes)
                   } else { 
                     setWithOutReplacementsPerformed(true)
                     setShowTableData(false)
@@ -221,7 +231,41 @@ import axios from 'axios';
       useEffect(() => {
        console.log(coastByArticle)
       }, [coastByArticle])
+
+      const createTable = (firstTableData) => { 
+         const articles = firstTableData.map((f) => f.articulos).flat()
+         console.log(articles)
+         const properties = Object.keys(articles[0]);
+         console.log("Propiedad", properties)
+         if(articles.length > 0 ) { 
+          console.log(articles)
+          const firstDetail = articles[0];
+          const properties = Object.keys(firstDetail);
+          const filteredProperties = properties.filter(property => property !== 'id' && property !== 'tiempoIdeal');
+        
+          const columnLabelsMap = {
+            turno: 'Turno',
+            nombre: 'Articulo',
+            horasDelTurno: 'Cantidad de Horas',
+            costoDelTurnoEnEmpleados: 'Gasto Empleados',
+          };
+        
+          const tableColumns = filteredProperties.map(property => ({
+            key: property,
+            label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+          }));
+        
+          setColumns(tableColumns);
+          console.log(tableColumns);
+          setShowTable(true)  
+         } else { 
+          console.log("First table length 0!")
+         }
+          
+      }
+
     
+      
 
   return (
     <div>
@@ -285,6 +329,48 @@ import axios from 'axios';
                       ))}
                     </div>
                 </div>
+                <p onClick={() =>createTable(firstTableData)}>asgsdiaJ</p>
+
+                {showTable ? 
+                <>
+                <div className='flex items-start justify-start'>
+                  <p className='text-sm font-medium text-zinc-600'>El monto total gastado en empleados en este dia, es de: {formatePrice(coastCleaningEmployees)}</p>
+                </div>
+                 <Table                          
+                    columnAutoWidth={true} 
+                    columnSpacing={10}  
+                    aria-label="Selection behavior table example with dynamic content"   
+                    selectionBehavior={selectionBehavior} 
+                    className="w-[780px] 2xl-w-[550px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto xl:max-h-[150px] 2xl:max-h-[250px] border rounded-xl">
+                        <TableHeader columns={columns}>
+                  {(column) => (
+                  <TableColumn key={column.key} className="text-xs gap-6">
+                    {column.label}
+                  </TableColumn>
+                      )}
+                  </TableHeader>
+                    <TableBody items={firstTableData.map((f) => f.articulos).flat()}>
+                                  {(item) => (
+                    <TableRow key={item.nombre}>
+                        {columns.map(column => (
+                        <TableCell key={column.key}  className='text-left' >
+                            {column.cellRenderer ? (
+                            column.cellRenderer({ row: { original: item } })
+                            ) : (
+                            (column.key === "total") ? (
+                              formatePrice(item[column.key])
+                                ) : (
+                              item[column.key]
+                            )
+                            )}
+                        </TableCell>
+                        ))}
+                    </TableRow>
+                    )}
+                </TableBody>
+            </Table>
+                </> : null}
+
             </>
               : null}
     </div>
