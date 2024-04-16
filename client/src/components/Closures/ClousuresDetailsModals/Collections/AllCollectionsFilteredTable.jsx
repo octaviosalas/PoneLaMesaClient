@@ -26,7 +26,6 @@ const AllCollectionsFilteredTable = ({everyCollections}) => {
             amount: 'Monto',
             collectionType: 'Razon',
             client: 'Cliente',
-            collectionType: 'Razon',
           };
       
           const tableColumns = filteredProperties.map(property => ({

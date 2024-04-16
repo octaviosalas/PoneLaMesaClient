@@ -48,7 +48,7 @@ import axios from 'axios';
         }
       }
 
-      const agroupShiftsByTime = (shifts) => { 
+      const agroupShiftsByTime = (shifts, replenishments) => { 
         console.log(shifts)
         const agroupThem = shifts.reduce((acc, el) => { 
           const time = el.shift;
@@ -59,14 +59,40 @@ import axios from 'axios';
           }
           return acc
         }, {})
+        const getMorning = replenishments.filter((rep) => rep.shift === "Mañana").map((dd) => dd.replenishDetail).flat()
+        const getEvening = replenishments.filter((rep) => rep.shift === "Tarde").map((dd) => dd.replenishDetail).flat()
         const getFinalData = Object.entries(agroupThem).map(([time, data]) => { 
-          const estimatedTime = data.map((dat) => dat.estimatedWashTime)[0];
-          const quantity = data.map((d) => d.quantity)[0];
+          const employee = data.map((ee) => { 
+            return  { 
+              name: ee.employeeName,
+              amountHour: ee.hourAmountPaid,
+              totalAmount: ee.totalAmountPaidShift,
+              workedHours: ee.hours
+            }
+          })
           return  { 
             time: time,
-            totalHours: data.reduce((acc, el) => acc + el.hours, 0)
+            totalHours: data.reduce((acc, el) => acc + el.hours, 0),
+            employeesData: employee,
+            detail: time === "Mañana" ? getMorning : time === "Tarde" ? getEvening : null
           }
         })
+        const transformFinalData = getFinalData.map((tr) => { 
+           return { 
+              turno: tr.time,
+              horasTotales: tr.totalHours,
+              empleados: tr.employeesData,
+              articulos: tr.detail.map((tt) => { 
+                return { 
+                  nombre: tt.productName,
+                  id: tt.productId,
+                  cantidadLavada: tt.quantity,
+                  tiempoIdeal: tt.quantity * tt.estimatedWashTime
+                }
+              })
+           }
+        })
+        console.log("POR ACA HEY!", transformFinalData)
         return getFinalData
       }
 
@@ -129,7 +155,6 @@ import axios from 'axios';
               const { data: responseShifts, status: shiftsStatus } = await axios.get(`http://localhost:4000/employees/getShifsByMonth/${monthSelected}`)
               const filterData = responseShifts.filter((res) => res.day === dayReseted && res.year === yearSelected)       
               console.log(`Turnos realizados el dia ${daySelected} de ${monthSelected}`, filterData)
-              console.log("Turnos agrupados por horario", agroupShiftsByTime(filterData))
               console.log("Turnos agrupados por empleado", agroupShiftsByEmployeeName(filterData))
               const totalCashToPaidToEmployees = filterData.reduce((acc, el) => acc + el.totalAmountPaidShift, 0)
               console.log("MONTO REAL PARA PAGARLE A LOS EMPLEADOS", totalCashToPaidToEmployees)
@@ -160,7 +185,9 @@ import axios from 'axios';
                   if(filterDataReplenishment.length > 0) { 
                     setWithOutReplacementsPerformed(false)
                     setReplacementsPerformed(filterDataReplenishment)
+                    console.log("TURNOS AGRUPADOS POR HORARIO, EMPLEADOS QUE LO TRABAJARON, PRODUCTOS QUE SE REPUSIERON, CANTIDADES, TIEMPO ESTIMADO", agroupShiftsByTime(filterData, filterDataReplenishment))
                       const getJustDetails = filterDataReplenishment.map((filt) => filt.replenishDetail).flat()
+                      console.log("DETALLE DE LAS REPOSICIONES REALIZADAS", getJustDetails)
                       console.log(agroupReplacementsByArticles(getJustDetails))
                       const transformShiftsHoursToMinutes = 60 * getTotalHours; 
                       console.log("Horas del turno transformadas a minutos", transformShiftsHoursToMinutes)
