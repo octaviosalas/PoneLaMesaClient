@@ -203,10 +203,6 @@ const MonthlyClousure = () => {
         fetchData();
       }, []); 
 
-      useEffect(() => { 
-        console.log(loadingData)
-      }, [loadingData])
-
 
     return (
     <div>
