@@ -33,6 +33,8 @@ import MainExpenses from './components/Expenses/MainExpenses'
 import PendingReplacements from "./components/PendingReplacements/PendingReplacements"
 import EmployeesShifts from './components/Employees/EmployeesShifts'
 import PersonalizedClousure from './components/Closures/PersonalizedClousure'
+import Chan from "./components/Closures/Chan"
+import ClousureOfTheMonth from './components/Closures/ClousureOfTheMonth'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -74,9 +76,11 @@ function App() {
             <Route path="/Estadisticas/Alquileres" element={<EstadisticsOrders />}/> 
             <Route path="/Estadisticas/Clientes" element={<EstadisticsClients />}/> 
             <Route path="/Estadisticas/Cobros" element={<EstadisticsCollections />}/> 
-            <Route path="/Cierre/:year/:month" element={<MonthlyClousure />} /> 
+            <Route path="/Cierre/:year/:month" element={<ClousureOfTheMonth />} /> 
             <Route path="/Cierre/Personalizado" element={<PersonalizedClousure />} /> 
             <Route path="/Empleados/Turnos" element={<EmployeesShifts />} /> 
+            <Route path="/cc" element={<Chan />} /> 
+
           </Routes>
      </UserProvider>
 
