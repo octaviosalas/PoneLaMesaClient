@@ -47,8 +47,9 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
                 const filaActual = cell.row;
                 const productId = filaActual.original.productId;
                 const productName = filaActual.original.productName;
-                const quantity = filaActual.original.quantity
-                const item = { productId, productName, quantity};
+                const quantity = filaActual.original.quantity;
+                const productPrice = filaActual.original.productPrice;
+                const item = { productId, productName, quantity, productPrice};
                 return (
                    <MarkWashedArticlesAsFinished washedData={item} updateNumbers={updateNumbers}/>
                 );

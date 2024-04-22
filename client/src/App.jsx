@@ -34,7 +34,6 @@ import PendingReplacements from "./components/PendingReplacements/PendingReplace
 import EmployeesShifts from './components/Employees/EmployeesShifts'
 import PersonalizedClousure from './components/Closures/PersonalizedClousure'
 
-
 function App() {
   const [count, setCount] = useState(0)
 

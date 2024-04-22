@@ -70,7 +70,7 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
         year: Number(shiftChoosenYear),
         date: actualDate,
         shift: shiftChoosen,
-        replenishDetail: [{productName: washedData.productName, productId: washedData.productId, quantity: formatedNewQuantity, estimatedWashTime: productEstimatedTime}]
+        replenishDetail: [{productName: washedData.productName, productPrice: washedData.productPrice, productId: washedData.productId, quantity: formatedNewQuantity, estimatedWashTime: productEstimatedTime}]
       }) 
   
        try {

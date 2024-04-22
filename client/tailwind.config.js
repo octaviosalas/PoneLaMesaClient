@@ -24,6 +24,5 @@ export default {
   plugins: [nextui()]
 };
 
-/* 
-/** @type {import('tailwindcss').Config} */
+
 

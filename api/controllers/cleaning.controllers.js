@@ -21,7 +21,8 @@ export const addNewArticlesToWash = async (req, res) => {
                 const newProduct = new Cleaning({
                     productId: product.productId,
                     productName: product.productName,
-                    quantity: product.quantity 
+                    quantity: product.quantity,
+                    productPrice: product.productPrice  
                 });
                 await newProduct.save();
             }

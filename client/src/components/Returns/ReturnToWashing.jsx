@@ -25,6 +25,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
       setWithOutMissedArticles(true)
       setWithMissedArticles(false)
       const dataToWash = orderData.orderDetail.filter((prod) => prod.choosenProductCategory === "local") //productos de local
+      console.log("jejeje", dataToWash)
       unifiedLocalArticlesByQuantity(dataToWash)    
       const findDeposit = orderData.orderDetail.some((ord) => ord.choosenProductCategory === "deposito")  //verifico si hay productos de deposito
           if(findDeposit) { 
@@ -52,6 +53,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
           quantityToWash: original.quantity -  detectMissed.map((missed) => missed.missedQuantity)[0],
           productName:  original.productName,
           productId: original.productId,
+          productPrice: original.price,
           productCategory: original.choosenProductCategory
         }
       })
@@ -61,7 +63,8 @@ export const ReturnToWashing = ({orderData, updateList}) => {
         productName: prod.productName,
         productId: prod.productId,
         quantity: prod.missedQuantity !== undefined ? prod.quantityToWash : prod.originalOrderQuantity,
-        productCategory: prod.productCategory
+        productCategory: prod.productCategory,
+        productPrice: prod.productPrice
       }
     })
 
@@ -71,6 +74,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
         productName: dep.productName,
         quantity: dep.quantity,
         productId: dep.productId,
+        productPrice: dep.productPrice,
       }
     })
     console.log("Array para enviar al backend de LAVADO", transformDataLocalArticles)
@@ -81,7 +85,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
       return { 
         productName: dep.productName,
         quantity: dep.quantity,
-        productId: dep.productId,
+        productId: dep.productId
       }
     })
     console.log("Array para enviar al backend de DEPOSITO", transformDataDepositArticles)
@@ -99,23 +103,26 @@ export const ReturnToWashing = ({orderData, updateList}) => {
   
 
   const unifiedLocalArticlesByQuantity = async (item) => { 
+    console.log("ITEMMM", item)
     try {
         const agroupArticlesByName = await item.reduce((acc, el) => { 
           const articleName = el.productName
           if(acc[articleName]) { 
-            acc[articleName].push({quantity: el.quantity, productId: el.productId});
+            acc[articleName].push({quantity: el.quantity, productId: el.productId, productPrice: el.price});
           } else { 
-            acc[articleName] = [{quantity: el.quantity, productId: el.productId}];
+            acc[articleName] = [{quantity: el.quantity, productId: el.productId, productPrice: el.price}];
           }
         return acc
         }, {})
         const transformDataInArray = Object.entries(agroupArticlesByName).map(([productName, items]) => {
           const quantityToWash = items.reduce((acc, item) => acc + item.quantity, 0);
           const productId = items[0].productId;
+          const productPrice = items[0].productPrice;
           return {
              productName: productName,
              quantity: quantityToWash,
-             productId: productId
+             productId: productId,
+             productPrice: productPrice
           };
          });
          console.log("RESPUESTA DE unifiedLocalArticlesByQuantity", transformDataInArray)

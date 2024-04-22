@@ -10,6 +10,9 @@ const cleaningSchema = mongoose.Schema({
     }, 
     quantity: { 
         type: Number
+    },
+    productPrice: { 
+        type: Number
     }
 })
 
