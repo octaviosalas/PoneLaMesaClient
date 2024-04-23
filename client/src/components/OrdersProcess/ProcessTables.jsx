@@ -252,7 +252,7 @@ const ProcessTables = ({orderStatus}) => {
                     <div className='flex w-full '>
                      {orderStatus === "A Confirmar" &&
                             <div className='flex items-center w-full justify-between'> 
-                              <p className='font-bold cursor-pointer ml-4'>Pedidos {orderStatus}</p>
+                              <p className='font-bold cursor-pointer ml-4'>Pedidos A confirmar</p>
                               <CreateSublet/>
                             </div>
                        }
