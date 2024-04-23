@@ -21,7 +21,7 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
 
      const getDataAndCreateTable = () => { 
         if(data.length !== 0) { 
-        const propiedades = Object.keys(washData[0]).filter(propiedad =>  propiedad !== 'productId' &&  propiedad !== '__v'  &&  propiedad !== '_id');
+        const propiedades = Object.keys(washData[0]).filter(propiedad =>  propiedad !== 'productId' &&  propiedad !== '__v'  &&   propiedad !== 'productPrice'  && propiedad !== '_id');
         const columnObjects = propiedades.map(propiedad => ({
             key: propiedad,
             label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),

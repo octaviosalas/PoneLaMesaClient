@@ -203,7 +203,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
                             : null}
                        </div>
                        <div className='flex justify-end items-center mr-2 w-full'>
-                          <p className='font-medium text-zinc-600 text-sm'>Total Gastado: {formatePrice(data.reduce((acc, el) => acc + el.amount, 0))}</p>
+                          <p className='font-bold text-zinc-600 text-md'>Total Invertido: {formatePrice(data.reduce((acc, el) => acc + el.amount, 0))}</p>
                        </div>
                    
                     </div>                 

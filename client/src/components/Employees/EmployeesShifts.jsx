@@ -25,10 +25,13 @@ import {Card} from "@tremor/react"
     const [coastByArticle, setCoastByArticle] = useState([])
     const [firstTableData, setFirstTableData] = useState([])
     const [columns, setColumns] = useState([])
+    const [operativeColumns, setOperativeColumns] = useState([])
     const [showTable, setShowTable] = useState(false)
+    const [showOperativeTable, setShowOperativeTable] = useState(false)
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [articlesAgroupedQuantityGains, setArticlesAgroupedQuantityGains] = useState(0)
-
+    const [operativeDataFinished, setOperativeDataFinished] = useState([])
+     const [showTheLastTable, setShowTheLastTable] = useState(false)
 
       const agroupShiftsByEmployeeName = (shifts) => { 
         const agroup = shifts.reduce((acc, el) => { 
@@ -78,15 +81,11 @@ import {Card} from "@tremor/react"
             totalAmountFacturedByArticle: price * quantityArticles
            }
         })
-
+       console.log(transformDataToGetValue)
        const getTotal = transformDataToGetValue.reduce((acc, el) => acc + el.totalAmountFacturedByArticle, 0)
        console.log(getTotal)
        setArticlesAgroupedQuantityGains(getTotal)
       
-
-
-
-
         const agroupThem = shifts.reduce((acc, el) => { 
           const time = el.shift;
           if(acc[time]) { 
@@ -160,13 +159,17 @@ import {Card} from "@tremor/react"
            }
         })
         if(transformFinalData.length > 0) { 
+          console.log("TRANSFORM FINAL DATA", transformFinalData)
           setFirstTableData(transformFinalData)
           createTable(transformFinalData)
+          createOperativeData(transformFinalData)
+         
         }
         return transformFinalData
       }
 
       const agroupReplacementsByArticles = (items) => { 
+        console.log("Mirame aca", items)
         const agroupThem = items.reduce((acc, el) => { 
           const article = el.productName;
           if(acc[article]) { 
@@ -186,7 +189,10 @@ import {Card} from "@tremor/react"
             assumedWashTime: quantity * estimatedTime
           }
         })
+
         const totalEstimatedWashTime = getFinalData.reduce((sum, item) => sum + item.assumedWashTime, 0);
+
+
 
         return { 
           getFinalData,
@@ -223,21 +229,19 @@ import {Card} from "@tremor/react"
           try {
               const { data: responseShifts, status: shiftsStatus } = await axios.get(`http://localhost:4000/employees/getShifsByMonth/${monthSelected}`)
               const filterData = responseShifts.filter((res) => res.day === dayReseted && res.year === yearSelected)  // filtro los turnos por fecha     
-             // console.log(`Turnos realizados el dia ${daySelected} de ${monthSelected}`, filterData)
-             // console.log("Turnos agrupados por empleado", agroupShiftsByEmployeeName(filterData)) //agrupo los turnos por empleado
               const totalCashToPaidToEmployees = filterData.reduce((acc, el) => acc + el.totalAmountPaidShift, 0) // sumo los totales a pagar para saber el gasto en empleados del dia
              // console.log("MONTO REAL PARA PAGARLE A LOS EMPLEADOS", totalCashToPaidToEmployees) // muestro por consola el monto total a pagar a empleados
               const result = agroupShiftsByEmployeeName(filterData);
               const quantityEmployees = result.quantityEmployees // La funcion que me agrupa a los empleados, me devuelve la cantidad total de empleados
-             // console.log("CANTIDAD DE EMPLEADOS", quantityEmployees) // muestro por consola la cantidad total de empleados
-              setCoastCleaningEmployees(totalCashToPaidToEmployees) // seteo el estado coastCleaningEmployees por el monto total a pagar en empleados del dia
+     
+              setCoastCleaningEmployees(totalCashToPaidToEmployees) 
                 let getTotalHours = 0;
                 let getTotalMinutes = 0;
                 if(filterData.length > 0) { 
-                  setShiftsPerformed(filterData) // seteo los turnos realizados por la respuesta del backend
-                  setWithOutShiftsPerformed(false) // aclaro que hay turnos
-                  getTotalHours = filterData.reduce((acc, el) => acc + el.hours, 0); //obtengo el total de horas en turnos
-                  getTotalMinutes = filterData.reduce((acc, el) => acc + el.minutes, 0); //obtengo el total de minutos en turnos
+                  setShiftsPerformed(filterData) 
+                  setWithOutShiftsPerformed(false) 
+                  getTotalHours = filterData.reduce((acc, el) => acc + el.hours, 0);
+                  getTotalMinutes = filterData.reduce((acc, el) => acc + el.minutes, 0);
                   const totalHoursFromMinutes = Math.floor(getTotalMinutes / 60);
                   console.log(totalHoursFromMinutes)
                   getTotalHours += totalHoursFromMinutes;
@@ -248,21 +252,17 @@ import {Card} from "@tremor/react"
               if (shiftsStatus === 200) { 
                   const { data: responseReplenishment } = await axios.get(`http://localhost:4000/replenishment/${monthSelected}`)// consulto reposiciones
                   const filterDataReplenishment = responseReplenishment.filter((res) => res.day === dayReseted && res.year === yearSelected)// filtro reposiciones por fecha
-               //   console.log(`Reposiciones realizadas el dia ${daySelected} de ${monthSelected}`, filterDataReplenishment) // muestro x consola las reposiciones
                   if(filterDataReplenishment.length > 0) { 
                     setWithOutReplacementsPerformed(false)
                     setReplacementsPerformed(filterDataReplenishment) // seteo al estado ReplacementsPerformed por todas las reposiciones
                       console.log("TURNOS AGRUPADOS POR HORARIO, EMPLEADOS  PRODUCTOS, CANTIDADES, TIEMPO", agroupShiftsByTime(filterData, filterDataReplenishment)) //Le paso a la funcion agroupShiftsByTime los turnos y las reposiciones, para que agrupe todo en un array
                       const getJustDetails = filterDataReplenishment.map((filt) => filt.replenishDetail).flat() //Uno todos los articulos repuestos
-                 //     console.log("Articulos Repuestos", getJustDetails) // muestro por consola todos los articulos repuestos
-                   //   console.log(agroupReplacementsByArticles(getJustDetails)) //A la funcion agroupReplacementsByArticles le paso los articulos repuestos, y esta me devuelve el total de minutos por los articulos lavados y el total de todo el lavado junto
                       const transformShiftsHoursToMinutes = 60 * getTotalHours; 
-                     // console.log("Horas del turno transformadas a minutos", transformShiftsHoursToMinutes)
                       const result = agroupReplacementsByArticles(getJustDetails);
-                     // console.log(`Segun los articulos lavados y las horas de turnos realizadas, se deberian haber lavado los articulos en un tiempo de ${result.totalEstimatedWashTime} minutos y la carga horaria total entre todos los empleados fue de  ${transformShiftsHoursToMinutes} minutos`)
                       setShowTableData(true)
                       setResponseDataEstadisticsOperatives(`Segun los articulos lavados y las horas de turnos realizadas, se deberian haber lavado los articulos en un tiempo de ${result.totalEstimatedWashTime} minutos y la carga horaria total entre todos los empleados fue de  ${transformShiftsHoursToMinutes} minutos`)
                       getAverage(quantityEmployees, totalCashToPaidToEmployees, agroupReplacementsByArticles(getJustDetails), transformShiftsHoursToMinutes)
+                      setShowTheLastTable(true)
                   } else { 
                     setWithOutReplacementsPerformed(true)
                     setShowTableData(false)
@@ -284,7 +284,6 @@ import {Card} from "@tremor/react"
       }
       }    
  
-
       const createTable = (firstTableData) => { 
          const articles = firstTableData.map((f) => f.articulos).flat()
          console.log(articles)
@@ -317,12 +316,90 @@ import {Card} from "@tremor/react"
           
       }
 
-    
+      const createOperativeData = (data) => { 
+
+        const getState = (first, second) => { 
+          if(first > second) { 
+            return false
+          } else { 
+            return true
+          }
+        }
+
+        console.log(data)
+          const createTheResult = data.map((dd) => { 
+            const getTotalTime = data.map((d) => d.articulos).flat()
+            const getMorning = getTotalTime.filter((fil) => fil.turno === "Mañana")
+            const getEvening =  getTotalTime.filter((fil) => fil.turno === "Tarde")
+            const totalMinutessMornignShift = dd.horasTotales * 60
+            const totalMinutesEveningShift =  dd.horasTotales * 60
+            const cantidadTotalLavada = dd.articulos.map((art) => art.cantidadLavada).reduce((acc, el) => acc + el, 0)
+             return { 
+                turno: dd.turno,   
+                cantidadTotalLavada: cantidadTotalLavada,          
+                tiempoIdealTotal: dd.turno === "Mañana" ? getMorning.reduce((acc, el) => acc + el.tiempoIdeal, 0) :  getEvening.reduce((acc, el) => acc + el.tiempoIdeal, 0),
+                horasTotalDelTurno: dd.horasTotales * 60,
+                estado: dd.turno === "Mañana" ? getState(totalMinutessMornignShift, getMorning.reduce((acc, el) => acc + el.tiempoIdeal, 0)) : getState(totalMinutesEveningShift,  getEvening.reduce((acc, el) => acc + el.tiempoIdeal, 0)),
+               
+             }
+          }) 
+          console.log(createTheResult)
+          if(createTheResult.length > 0) { 
+            setOperativeDataFinished(createTheResult)
+            console.log("Setee al estado de la tabla operativa por", createTheResult)
+          } else { 
+            console.log("No llegue a setear el estado")
+
+          }
+          createOperativeTable(createTheResult)
+
+          return createTheResult
+      }
+
+      const createOperativeTable = (operativeData) => { 
+        console.log("OPERATIVE DATA TABLA", operativeData)
+         const properties = Object.keys(operativeData[0]);
+         console.log("Propiedad", properties)
+         if(operativeData.length > 0 ) { 
+          const firstDetail = operativeData[0];
+          const properties = Object.keys(firstDetail);
+          const filteredProperties = properties.filter(property => property !== 'id' && property !== 'tiempoIdeal' && property !== 'porcentajeDelArticuloLavadoEnBaseAlTotal');
+          console.log(properties)
+          const columnLabelsMap = {
+            turno: 'Turno',
+            cantidadTotalLavada: 'Articulos Lavados',
+            horasTotalDelTurno: 'Tiempo Realizado',
+            tiempoIdealTotal: 'Tiempo ideal',
+          };
+        
+          const tableColumns = filteredProperties.map(property => ({
+            key: property,
+            label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+          }));
+
+        
+          setOperativeColumns(tableColumns);
+          console.log(tableColumns);
+          setShowOperativeTable(true)  
+         } else { 
+          console.log("First table length 0!")
+         }
+      }
       
+
+    
+   
+
+    
 
   return (
     <div>
          <NavBarComponent/>
+
+         <div>
+              
+         </div>
+
          <div className='flex flex-col items-center justify-center rounded-lg w-full '>
             <Input type="number" variant="bordered" className='w-96 mt-2' label="Dia" onChange={(e) => setDaySelected(e.target.value)}/>
 
@@ -360,16 +437,16 @@ import {Card} from "@tremor/react"
             {showTableData ?
             <>
                 <div className='flex flex-col text-start justify-start items-start border shadow-xl'>
-                  <h5 className='text-md text-zinc-700 font-medium'>Estadistica Operativa: </h5>
-                  <div className='flex items-center justify-center'>
-                    <p className='text-sm font-medium text-zinc-600'>{responseDataEstadisticsOperatives}</p>
-                  </div>
+                    
                 </div> 
                
                 {showTable ? 
                 <>
                 <div className='flex flex-col items-start justify-start mt-12'>
-                    <Card className="mx-auto h-auto w-[750px] 2xl:[950px] mt-4" decoration="top"  decorationColor="green-800" >                   
+                  <div className='flex justify-start items-start ml-2'>
+                    <p className='text-zinc-600 font-medium text-sm'>Informacion del dia: </p>
+                  </div>
+                    <Card className="mx-auto h-auto w-[750px] 2xl:w-full mt-1" decoration="top"  decorationColor="green-800" >                   
                         <div className='flex justify-between items-center mt-4'>
                           <div className='flex flex-col items-center justify-enter'>
                               <p className='text-zinc-500 text-xs font-medium'>Monto total Gastado en Empleados:</p>
@@ -386,12 +463,15 @@ import {Card} from "@tremor/react"
                         </div>
                     </Card>
                 </div>
+                  <div className='flex justify-start items-start mt-8 ml-2'>
+                    <p className='text-zinc-600 font-medium text-sm'>Estadistica financiera:</p>
+                  </div>
                  <Table                          
                     columnAutoWidth={true} 
                     columnSpacing={10}  
                     aria-label="Selection behavior table example with dynamic content"   
                     selectionBehavior={selectionBehavior} 
-                    className="w-full flex items-center justify-center mt-2 shadow-2xl overflow-y-auto xl:max-h-[150px] 2xl:max-h-[250px] border rounded-xl">
+                    className="w-full flex items-center justify-center shadow-2xl overflow-y-auto xl:max-h-[350px] 2xl:max-h-[450px]  border rounded-xl">
                         <TableHeader columns={columns}>
                   {(column) => (
                   <TableColumn key={column.key} className="text-xs gap-6">
@@ -423,7 +503,57 @@ import {Card} from "@tremor/react"
 
             </>
               : null}
+
+
+              {showTheLastTable ? 
+              <>
+                   <div className='flex justify-start items-start mt-8 ml-2'>
+                    <p className='text-zinc-600 font-medium text-sm'>Estadistica Operativa:</p>
+                  </div>
+                <Table                          
+                  columnAutoWidth={true} 
+                  columnSpacing={10}  
+                  aria-label="Selection behavior table example with dynamic content"   
+                  selectionBehavior={selectionBehavior} 
+                  className="w-full flex items-center justify-center shadow-2xl overflow-y-auto xl:max-h-[350px] 2xl:max-h-[450px] border rounded-xl mt-2">
+                      <TableHeader columns={operativeColumns}>
+                {(column) => (
+                <TableColumn key={column.key} className="text-xs gap-6">
+                  {column.label}
+                </TableColumn>
+                    )}
+                </TableHeader>
+                <TableBody items={operativeDataFinished}>
+                    {(item) => (
+                        <TableRow key={item.turno}>
+                          {operativeColumns.map(column => (
+                            <TableCell key={column.key} className='text-left'>
+                              {column.cellRenderer ? (
+                                column.cellRenderer({ row: { original: item } })
+                              ) : (
+                                column.key === "estado" ? (
+                                  item[column.key] ? "En tiempo" : "Atrasado"
+                                ) : (
+                                  column.key === "costoLavadoArticulo" ? (
+                                    formatePrice(item[column.key])
+                                  ) : (
+                                    item[column.key]
+                                  )
+                                )
+                              )}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                    )}
+                    </TableBody>
+                  </Table>
+              </>
+                
+              : null}
+
+              
     </div>
+    
   )
 }
 
