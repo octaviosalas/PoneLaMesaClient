@@ -45,3 +45,16 @@ export const getMonthlyExpenses = async (req, res) => {
     console.log(error)
   }
 }
+
+
+export const createNewTypeFixed = async (req, res) => { 
+  console.log(req.body)
+  try {
+    const newTypeFixedExpense = new typeFixedExpenses(req.body);
+    const newTypeSaved = await newTypeFixedExpense.save();
+    res.status(200).json(newTypeSaved);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al crear el tipo de gasto fijo' });
+    console.log(error)
+  }
+}

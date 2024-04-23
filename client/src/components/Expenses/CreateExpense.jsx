@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import {formatePrice, getDate, getDay, getMonth, getYear} from "../../functions/gralFunctions"
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
+import AddNewFixedType from "./AddNewFixedType";
 
 const CreateExpense = ({updateList}) => {
   
@@ -20,11 +21,19 @@ const CreateExpense = ({updateList}) => {
    const [succes, setSucces] = useState(false)
    const userCtx = useContext(UserContext)
 
+   const getTypes = async () => { 
+     try {
+      const typesOfExpenses = await axios.get("http://localhost:4000/expenses/typeFixed")
+      const response = typesOfExpenses.data
+      console.log(response)
+      setTypesOfExpenses(response)
+     } catch (error) {
+       console.log(error)
+     }
+   }
+
    const handleOpen = async () => { 
-    const typesOfExpenses = await axios.get("http://localhost:4000/expenses/typeFixed")
-    const response = typesOfExpenses.data
-    console.log(response)
-    setTypesOfExpenses(response)
+    getTypes()
     onOpen()
    }
 
@@ -86,6 +95,7 @@ const CreateExpense = ({updateList}) => {
                       </SelectItem>
                       ))}
                   </Select>
+                   <AddNewFixedType updateSelectData={getTypes}/>
                   <Input type="text" variant="underlined" className="w-72" value={amount}
                    onChange={(e) => setAmount(e.target.value)}
                    startContent={
