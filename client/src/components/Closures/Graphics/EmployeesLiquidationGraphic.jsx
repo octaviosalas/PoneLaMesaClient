@@ -52,9 +52,9 @@ const EmployeesLiquidationGraphic = ({monthSelected, yearSelected}) => {
 
   return (
     <div>
-        <Card className="mx-auto  w-[800px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl bg-green-100">
+        <Card className="mx-auto  w-[800px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl">
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Cobros - Tipo de Cobros</h3>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Liquidacion Empleados</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(employeesReport.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
             </div>
               <List className="mt-2">

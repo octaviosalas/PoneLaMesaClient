@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import {getMonthlyOrder, formatePrice} from "../../../functions/gralFunctions"
 import { Card, List, ListItem, Title } from '@tremor/react';
+import OrdersByClientGraphic from '../ClousuresDetailsModals/OrdersByClientGraphic';
 
 const OrdersListGraphic = ({yearSelected, monthSelected}) => {
 
@@ -52,9 +53,13 @@ const OrdersListGraphic = ({yearSelected, monthSelected}) => {
       getData()
     }, [])
 
+
   return (
     <div className='flex items-center gap-4'>
         <Card className="mx-auto  w-[600px] h-[350px] max-h-[350px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+            <div className='flex justify-end items-center'>
+                <OrdersByClientGraphic ordersData={allOrders}/>
+            </div>
             <div className='flex items-center justify-between'>
                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Alquileres Mes</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrders)}</p>

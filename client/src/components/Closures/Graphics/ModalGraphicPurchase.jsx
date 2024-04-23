@@ -40,14 +40,8 @@ const ModalGraphicPurchase = ({data}) => {
         onOpen()
     }
 
-    useEffect(() => { 
-        console.log("data frafico", data)
-    }, [])
 
-    useEffect(() => { 
-        console.log("graficoooooooo", graphicData)
-    }, [graphicData])
-
+ 
 
     const dataFormatte = (number) =>
     Intl.NumberFormat('us').format(number).toString();

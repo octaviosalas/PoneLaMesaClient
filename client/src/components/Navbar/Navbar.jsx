@@ -93,7 +93,6 @@ const NavBarComponent = () =>  {
                         <DropdownItem key="Compras" onClick={() => goTo("compras")}>Compras</DropdownItem>
                         <DropdownItem key="Cierres" onClick={() => goTo("cierres")}>Cierres</DropdownItem>
                         <DropdownItem key="Cierres" onClick={() => goTo("gastos")}>Gastos</DropdownItem>                 
-                        <DropdownItem key="EstadisticasCompras" onClick={() => goTo("Estadisticas/Compras")}>Estadisticas Compras</DropdownItem>    
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>

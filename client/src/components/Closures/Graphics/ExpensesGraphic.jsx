@@ -143,7 +143,7 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
                   </div>}
         </Card>
     </div>
-    <div className='mt-8'>
+    <div className='mt-8 flex items-center justify-center'>
       <Card className=" w-[700px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
               <div className='flex items-center justify-between'>
                 <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Gastos Fijos</h3>
