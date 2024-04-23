@@ -35,7 +35,7 @@ const DepositList = ({depositData, updateNumbers}) => {
             } else if (column.key === 'productName') {
                 return { ...column, label: 'Articulo' };
             } else if (column.key === 'quantity') {
-                return { ...column, label: 'Cantidad para Lavar' };
+                return { ...column, label: 'Cantidad' };
             } else {
                 return column;
             }

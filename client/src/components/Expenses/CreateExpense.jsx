@@ -72,6 +72,9 @@ const CreateExpense = ({updateList}) => {
       } 
     } else { 
       setMissedData(true)
+      setTimeout(() => { 
+        setMissedData(false)
+      }, 2000)
     }
    
    }
@@ -88,6 +91,7 @@ const CreateExpense = ({updateList}) => {
             <>
               <ModalHeader className="flex flex-col gap-1">Crear Gasto Fijo</ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">
+               <AddNewFixedType updateSelectData={getTypes}/>
                 <Select variant={"faded"} label="Selecciona el Gasto" className="w-72" value={typeExpenseSelected}>          
                       {typesOfExpenses.map((typeExpense) => (
                         <SelectItem key={typeExpense.name} value={typeExpense.name} textValue={typeExpense.name} onClick={() => setTypeExpenseSelected(typeExpense.name)}>
@@ -95,7 +99,6 @@ const CreateExpense = ({updateList}) => {
                       </SelectItem>
                       ))}
                   </Select>
-                   <AddNewFixedType updateSelectData={getTypes}/>
                   <Input type="text" variant="underlined" className="w-72" value={amount}
                    onChange={(e) => setAmount(e.target.value)}
                    startContent={

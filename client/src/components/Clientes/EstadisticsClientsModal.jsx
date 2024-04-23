@@ -163,13 +163,14 @@ const EstadisticsClientsModal = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Estadisticas Clientes
-                <p className='underline font-medium text-sm text-zinc-600'>Ranking de clientes ordenados de mayor a menor</p>
-                </ModalHeader>
+              <ModalHeader className="flex flex-col gap-1"> Estadisticas Clientes</ModalHeader>
               <ModalBody>
               <div>
                   <div className='flex flex-col justify-start items-start'>                            
+                  </div>
+                  <div className="flex justify-center items-center gap-2">
+                     <p className='underline font-medium text-md text-zinc-600'>Ranking de clientes ordenados de mayor a menor</p>
+                     <p className="text-lg">⭐</p>
                   </div>
                   <div className='flex gap-4 items-center justify-center mt-4 mb-2'>
                    <Select variant={"faded"} label="Selecciona un Mes" className="max-w-xs" value={monthSelected}>          

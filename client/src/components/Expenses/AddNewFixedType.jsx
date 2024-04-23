@@ -29,7 +29,7 @@ const AddNewFixedType = ({updateSelectData}) => {
 
   return (
     <>
-    <p className="mt-2 font-medium text-xs text-green-800 underline cursor-pointer" onClick={onOpen}>Crear nuevo tipo de Gasto</p>
+    <p className="mt-2 mb-2 font-medium text-xs text-green-800 underline cursor-pointer" onClick={onOpen}>Crear nuevo tipo de Gasto</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

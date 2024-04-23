@@ -139,7 +139,7 @@ const EstadisticsEmployees = () => {
                       {withOutData ? <p className="mt-4 font-medium text-sm text-zinc-600">No hay turnos asentados en este mes</p> : null}
 
                       {employeesDataResolved.length > 0 && columns.length > 0  ? ( 
-                            <div className="mt-4 mb-4 flex items-center justify-center">
+                            <div className="mt-4 mb-4 flex flex-col items-center justify-center">
                                 <Table aria-label="Example table with dynamic content" className="w-[780px] shadow-xl flex items-center justify-center mt-2 max-h-[300px] overlfow-y-auto">
                                   <TableHeader columns={columns} className="">
                                     {(column) => (
@@ -168,6 +168,9 @@ const EstadisticsEmployees = () => {
                                   )}
                                 </TableBody>
                               </Table>
+                              <div className="flex items-center justify-center mt-4 mb-2">
+                                <p className="text-md font-medium text-green-800">Monto Total: {formatePrice(employeesDataResolved.reduce((acc, el) => acc + el.totalAmountToPaid, 0))}</p>
+                              </div>
                           </div>
                       ) : monthSelected.length === 0 && yearSelected === 0 ? ( 
                         <p className="mt-4 font-medium text-sm text-zinc-600">Debes elegir un mes y año</p>

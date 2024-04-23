@@ -151,7 +151,7 @@ const ArticlesTable = ({}) => {
         <div className='flex flex-col items-center justify-start  lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
             <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
               <div className='flex gap-5 items-center '>
-                   <p className='font-medium text-black    text-md cursor-pointer ml-4' > Articulos Clientes </p>
+                   <p className='font-medium text-black    text-md cursor-pointer ml-4' > Articulos  </p>
               </div>
               <div className='flex gap-6 mr-2'>
                 <EstadisticsArticles/>

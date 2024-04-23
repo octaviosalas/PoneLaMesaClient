@@ -11,7 +11,11 @@ export default {
 
   ],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '98': '28rem',  
+      }
+    },
     screens: {
       "2xs": "1px",
       'xxxs': '360px',
@@ -27,7 +31,7 @@ export default {
     current: 'currentColor',
     extend: {
       colors: {
-        // light mode
+        miColor: "#123456",
         tremor: {
           brand: {
             faint: colors.blue[50],

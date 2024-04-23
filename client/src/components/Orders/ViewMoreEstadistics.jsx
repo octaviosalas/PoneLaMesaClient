@@ -1,12 +1,11 @@
 import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { accounts, everyMonthsOfTheYear, formatePrice, getYear, everyYears, getMonth } from '../../functions/gralFunctions';
-import { Card, CardBody, CardHeader } from '@nextui-org/react';
-import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Select, SelectItem } from '@nextui-org/react';
+import { everyMonthsOfTheYear, formatePrice, getYear, everyYears, getMonth } from '../../functions/gralFunctions';
+import { Select, SelectItem } from '@nextui-org/react';
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import viewMore from "../../images/viewMore.png"
-import arrowDown from "../../images/arrowDown.png"
+import { Card } from '@tremor/react';
 
 
 const ViewMoreEstadistics = () => { 
@@ -94,10 +93,7 @@ const ViewMoreEstadistics = () => {
             <>
               <ModalHeader className="flex flex-col gap-1">
                 Estadisticas Alquileres
-                <div className='flex flex-col justify-start items-start'>
-                    <p className='font-medium text-sm text-zinc-600'> Mes Elegido: {monthSelected}</p>
-                    <p className='font-medium text-sm text-zinc-600'> Año Elegido: {yearSelected}</p>
-                 </div>
+              
               </ModalHeader>
               <ModalBody>
            
@@ -126,10 +122,30 @@ const ViewMoreEstadistics = () => {
                                 {withOutOrdersMonth ?
                                 <p className='font-medium text-sm text-red-600 mt-4'>No hubo pedidos en {monthSelected} de {yearSelected}</p>
                                 :
-                                <div>
-                                  <p className='font-medium text-sm text-green-800 mt-2'>El Monto total facturado  es: <b>{formatePrice(monthAmountFactured)}</b> </p>
-                                  <p className='font-medium text-sm text-green-800 mt-2'>Cantidad de Alquileres: {selectedMonthOrdersData.length}</p>
+                                <div className='flex items-center justify-center mt-4 mb-4 gap-6'>
+                                   <Card className="mx-auto h-auto w-[450px]" decoration="top"  decorationColor="green-800" > 
+                                       <div className='flex flex-col'>
+                                            <div className='flex justify-center items-center gap-6'>
+                                                <p className='font-medium text-sm text-zinc-600'> Mes Elegido:  <span className='text-green-800'>{monthSelected}</span></p>
+                                                <p className='font-medium text-sm text-zinc-600'> Año Elegido: <span className='text-green-800'>{yearSelected}</span></p>
+                                            </div>
+                                       </div>
+                                       <div className='flex justify-between items-center mt-4'>
+                                           <div className='flex flex-col items-center justify-enter'>
+                                               <p className='text-zinc-500 text-xs font-medium'>Monto total Facturado:</p>
+                                               <p className='font-medium text-2xl text-black'>{formatePrice(monthAmountFactured)}</p>
+                                           </div>
+                                           <div className='flex flex-col items-center justify-enter'>
+                                               <p className='text-zinc-500 text-xs font-medium'>Cantidad de Alquileres:</p>
+                                               <p className='font-medium text-2xl text-black'>{selectedMonthOrdersData.length}</p>
+                                           </div>
+                                       </div>
+                                     
+                                  </Card>
+                                 
                                 </div>
+
+                            
                                 }
                                 </div>
                         </div>

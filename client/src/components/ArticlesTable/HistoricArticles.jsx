@@ -4,7 +4,7 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyV
 import { formatePrice } from "../../functions/gralFunctions";
 import axios from "axios";
 import Loading from "../Loading/Loading"
-
+import { Card} from '@tremor/react';
 import { useState, useEffect } from "react";
 
 const HistoricArticles = ({articleData}) => {
@@ -14,6 +14,7 @@ const HistoricArticles = ({articleData}) => {
     const [ordersProducts, setOrdersProducts] = useState([])
     const [error, setError] = useState(false)
     const [loadingData, setLoadingData] = useState(true)
+    const [size, setSize] = useState("xl")
 
     const handleOpen = async () => { 
       onOpen();
@@ -92,13 +93,12 @@ const HistoricArticles = ({articleData}) => {
   return (
     <>
       <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Historico</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black'>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} className='max-w-max bg-white text-black' size={size}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 <p  className="text-zinc-600 font-bold text-md">Historico de Pedidos</p>
-                <p  className="text-zinc-600 font-medium text-sm">Articulo: {articleData.articleName}</p>
               </ModalHeader>
               <ModalBody className="flex flex-col justify-center items-center">   
              {loadingData ? (
@@ -108,6 +108,24 @@ const HistoricArticles = ({articleData}) => {
                     ) : (
                       ordersProducts.length > 0 ? (
                         <div className="mt-4 flex flex-col  ">
+                            <div className="mt-2 mb-2">
+                              <Card className="mx-auto h-auto w-[450px]" decoration="top"  decorationColor="green-800" > 
+                                 <div className="flex items-center justify-between">
+                                      <div className="flex flex-col items-center">
+                                          <p className="text-xs text-green-800 font-medium">MTF: {articleData.articleName}</p>
+                                          <p className="text-xl font-bold text-black">{formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
+                                      </div>
+                                      <div className="flex flex-col items-center">
+                                          <p className="text-xs text-green-800 font-bold">Cantidad de Alquileres</p>
+                                          <p className="text-xl font-bold text-black">{ordersProducts.length}</p>
+                                      </div>
+                                      <div className="flex flex-col items-center">
+                                          <p className="text-xs text-green-800 font-medium">Unidades Alquiladas</p>
+                                          <p className="text-xl font-medium text-black">{ordersProducts.reduce((acc, el) => acc + el.quantity, 0)}</p>
+                                      </div>
+                                 </div>
+                              </Card>
+                            </div>
                           <Table aria-label="Example table with dynamic content" className="w-[480px] 2xl-w-[950px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto max-h-[200px] ">
                             <TableHeader columns={columns} >
                               {(column) => (
@@ -136,11 +154,7 @@ const HistoricArticles = ({articleData}) => {
                               )}
                             </TableBody>
                           </Table>
-                          <div className="flex flex-col justify-end items-end  mt-4">
-                            <p className="text-zinc-600 font-medium text-xs">Total facturado de {articleData.articleName}:  {formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
-                            <p className="text-zinc-600 font-medium text-xs">Cantidad de Pedidos: {ordersProducts.length}</p>
-                            <p className="text-zinc-600 font-medium text-xs">Unidades Alquiladas: {ordersProducts.reduce((acc, el) => acc + el.quantity, 0)}</p>
-                          </div>
+                       
                         </div>
                       ) : (
                         <div className="flex flex-col items-cemnter justify-center">

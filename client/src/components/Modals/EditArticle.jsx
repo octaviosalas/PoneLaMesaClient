@@ -41,7 +41,7 @@ const EditArticle = ({articleData, closeModalNow, updateChanges}) => {
                     <Input type="text" className="mt-2 w-60" label="Articulo" value={newProductName} onChange={(e) => setNewProductName(e.target.value)}/>
                     <Input type="text" className="mt-2 w-60" label="Precio Clientes" value={formateInputPrice(newProductClientsValue)} onChange={(e) => setNewProductClientsValue(e.target.value)}/>
                     <Input type="text" className="mt-2 w-60" label="Precio Clientes Bonificados" value={formateInputPrice(newProductBonusClientsValue)} onChange={(e) => setNewProductBonusClientsValue(e.target.value)}/>
-                    <Input type="text" className="mt-2 w-60" label="Precio Reposicion" value={newProductReplacementValue} onChange={(e) => setNewProductReplacementValue(e.target.value)}/>
+                    <Input type="text" className="mt-2 w-60" label="Precio Reposicion" value={formateInputPrice(newProductReplacementValue)} onChange={(e) => setNewProductReplacementValue(e.target.value)}/>
                     <div className="flex items-center justify-center gap-4 mt-4 mb-4">
                       <Button className="font-bold text-white bg-green-800 text-sm w-52" onClick={() => changeProductData()}>Confirmar Cambios</Button>
                       <Button className="font-bold text-white bg-green-600 text-sm w-52" onPress={closeModalNow}>Cancelar</Button>
