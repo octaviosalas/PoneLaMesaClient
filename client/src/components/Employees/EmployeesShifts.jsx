@@ -4,6 +4,7 @@ import {Input, Select, SelectItem, Button} from "@nextui-org/react";
 import {everyMonthsOfTheYear, everyYears, formatePrice} from "../../functions/gralFunctions"
 import axios from 'axios';
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
+import {Card} from "@tremor/react"
 
     const EmployeesShifts = () => {
  
@@ -160,6 +161,7 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyV
         })
         if(transformFinalData.length > 0) { 
           setFirstTableData(transformFinalData)
+          createTable(transformFinalData)
         }
         return transformFinalData
       }
@@ -282,9 +284,6 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyV
       }
       }    
  
-      useEffect(() => {
-       console.log(coastByArticle)
-      }, [coastByArticle])
 
       const createTable = (firstTableData) => { 
          const articles = firstTableData.map((f) => f.articulos).flat()
@@ -367,15 +366,25 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyV
                   </div>
                 </div> 
                
-              
-                <p onClick={() =>createTable(firstTableData)}>asgsdiaJ</p>
-
                 {showTable ? 
                 <>
                 <div className='flex flex-col items-start justify-start mt-12'>
-                  <p className='text-sm font-medium text-zinc-600'>El monto total gastado en empleados en este dia, es de: {formatePrice(coastCleaningEmployees)}</p>
-                  <p  className='text-sm font-medium text-zinc-600'>El monto total facturado correspondiente a estos articulos fue de {formatePrice(articlesAgroupedQuantityGains)}</p>
-                  <p  className='text-sm font-medium text-zinc-600'>La Rentabilidad de este dia, fue de:{formatePrice(articlesAgroupedQuantityGains - coastCleaningEmployees)}</p>
+                    <Card className="mx-auto h-auto w-[750px] 2xl:[950px] mt-4" decoration="top"  decorationColor="green-800" >                   
+                        <div className='flex justify-between items-center mt-4'>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Monto total Gastado en Empleados:</p>
+                              <p className='font-medium text-xl text-black'>{formatePrice(coastCleaningEmployees)}</p>
+                          </div>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Monto total Facturado por estos Articulos:</p>
+                              <p className='font-medium text-xl text-black'>{formatePrice(articlesAgroupedQuantityGains)}</p>
+                          </div>
+                            <div className='flex flex-col items-center justify-enter'>
+                                <p className='text-zinc-500 text-xs font-medium'>Rentabilidad del Dia:</p>
+                                <p className='font-medium text-xl text-black'>{formatePrice(articlesAgroupedQuantityGains - coastCleaningEmployees)}</p>
+                            </div>
+                        </div>
+                    </Card>
                 </div>
                  <Table                          
                     columnAutoWidth={true} 

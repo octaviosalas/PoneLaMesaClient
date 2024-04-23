@@ -1,13 +1,12 @@
 import React from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 import { formatePrice } from "../../functions/gralFunctions";
 import axios from "axios";
 import Loading from "../Loading/Loading"
-
 import { useState, useEffect } from "react";
 import MarkDebtAsPaid from "../Modals/MarkDebtAsPaid";
 import ClientHistoricOrdersTable from "./ClientHistoricOrdersTable";
+import { Card } from '@tremor/react';
 
 const HistoricClient = ({clientData, updateClientData}) => {
 
@@ -88,14 +87,27 @@ const HistoricClient = ({clientData, updateClientData}) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                <p  className="text-zinc-600 font-bold text-md">Historico de Pedidos</p>
-                <p  className="text-zinc-600 font-medium text-sm">Cliente: {clientData.name}</p>
-               {loadingData ? null :
+              <ModalHeader className="flex flex-col gap-1"><p  className="text-zinc-600 font-bold text-md">Historico de Pedidos</p>
+           {loadingData ? null :
                 <div>
-                    <p className="text-zinc-600 font-medium text-xs">Facturacion total:  {formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
-                    <p className="text-zinc-600 font-medium text-xs mt-1">Cantidad de Alquileres:  {ordersProducts.length}</p>
-                      {debtorClient ? <p className="text-red-600 font-bold underline cursor-pointer text-xs mt-1" onClick={() => setViewDebt(prevState => !prevState)}>Este Cliente posee {clientDebtDetail.length} deudas</p> 
+                    <Card className="mx-auto h-auto w-[550px] 2xl:[650px] mt-4" decoration="top"  decorationColor="green-800" >                   
+                        <div className='flex justify-between items-center mt-4'>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Cliente</p>
+                              <p className='font-medium text-xl text-black'>{clientData.name}</p>
+                          </div>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Facturacion Total:</p>
+                              <p className='font-medium text-xl text-black'>{formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
+                          </div>
+                            <div className='flex flex-col items-center justify-enter'>
+                                <p className='text-zinc-500 text-xs font-medium'>Cantidad de Alquileres:</p>
+                                <p className='font-medium text-xl text-black'>{ordersProducts.length}</p>
+                            </div>
+                        </div>
+                    </Card>
+                   
+                      {debtorClient ? <p className="text-red-600 font-bold underline cursor-pointer text-xs mt-4" onClick={() => setViewDebt(prevState => !prevState)}>Este Cliente posee {clientDebtDetail.length} deudas</p> 
                       : 
                       <p className="text-green-800 font-medium text-xs">Este cliente no posee deudas</p>
                       }
@@ -133,7 +145,7 @@ const HistoricClient = ({clientData, updateClientData}) => {
                     </div>       
                     ) : (
                       ordersProducts.length > 0 ? (
-                        <div className="mt-4 flex flex-col">
+                        <div className="flex flex-col">
                           <ClientHistoricOrdersTable ordersProducts={ordersProducts}/>                  
                         </div>
                       ) : (

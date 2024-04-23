@@ -4,6 +4,7 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyV
 import { formatePrice } from "../../functions/gralFunctions";
 import axios from "axios";
 import Loading from "../Loading/Loading"
+import { Card } from '@tremor/react';
 
 import { useState, useEffect } from "react";
 
@@ -95,14 +96,32 @@ const HistoricProviders = ({providerData, updateList}) => {
             <>
               <ModalHeader className="flex flex-col gap-1">
                 <p  className="text-zinc-600 font-bold text-md">Historico de Proveedor</p>
-                <p  className="text-zinc-600 font-medium text-sm">{providerData.name}</p>
                  {loadingData ? null :
-                  <div className="flex flex-col justify-start items-start">
-                      <p className="text-zinc-600 font-medium text-xs">   <b>Gastado</b>:  {formatePrice(providerExpenses.reduce((acc, el) => acc + el.total, 0))}</p>
-                      <p className="text-zinc-600 font-medium text-xs mt-1"><b>Sub Alquileres: </b>{providerExpenses.filter((prov) => prov.razon === "Sub Alquiler").length}</p>
-                      <p className="text-zinc-600 font-medium text-xs mt-1"><b>Compras: </b> {providerExpenses.filter((prov) => prov.razon === "Compra").length}</p>
-                      <p className="text-zinc-600 font-medium text-xs mt-1"><b>Gastos: </b> {providerExpenses.length}</p>       
-                  </div>}
+                  <Card className="mx-auto h-auto w-[750px] mt-3" decoration="top"  decorationColor="green-800" > 
+                      <div className='flex justify-between items-center mt-4'>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Proveedor</p>
+                              <p className='font-medium text-xl text-black'>{providerData.name}</p>
+                          </div>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Total Invertido:</p>
+                              <p className='font-medium text-xl text-black'>{formatePrice(providerExpenses.reduce((acc, el) => acc + el.total, 0))}</p>
+                          </div>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Sub Alquileres:</p>
+                              <p className='font-medium text-xl text-black'>{providerExpenses.filter((prov) => prov.razon === "Sub Alquiler").length}</p>
+                          </div>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Compras: </p>
+                              <p className='font-medium text-xl text-black'> {providerExpenses.filter((prov) => prov.razon === "Compra").length}</p>
+                          </div>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Total de Gastos</p>
+                              <p className='font-medium text-xl text-black'> {providerExpenses.length}</p>
+                          </div>
+                      </div>
+                 </Card>
+                }
               </ModalHeader>
               <ModalBody className="flex flex-col justify-center items-center">   
              {loadingData ? (
@@ -111,7 +130,7 @@ const HistoricProviders = ({providerData, updateList}) => {
                     </div>       
                     ) : (
                       providerExpenses.length > 0 ? (
-                        <div className="mt-4 flex flex-col  ">
+                        <div className="mt-2 flex flex-col  ">
                           <div className="flex justify-start items-start ml-2 mb-1">
                            <input 
                            type="text" 

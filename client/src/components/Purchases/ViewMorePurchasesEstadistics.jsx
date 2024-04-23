@@ -2,11 +2,11 @@ import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { accounts, everyMonthsOfTheYear, formatePrice, getYear, everyYears, getMonth, getEveryPurchases } from '../../functions/gralFunctions';
-import { Card, CardBody, CardHeader } from '@nextui-org/react';
 import { Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react';
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Select, SelectItem} from "@nextui-org/react";
 import viewMore from "../../images/viewMore.png"
 import arrowDown from "../../images/arrowDown.png"
+import { Card } from '@tremor/react';
 
 
 const ViewMorePurchasesEstadistics = () => {
@@ -82,13 +82,7 @@ const ViewMorePurchasesEstadistics = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">
-                Estadisticas de Compras
-                <div className='flex flex-col justify-start items-start mt-4'>
-                  <p className='font-medium text-sm text-zinc-600'> Mes Elegido: <b>{monthSelected}</b></p>
-                  <p className='font-medium text-sm text-zinc-600'> Año Elegido: <b>{yearSelected}</b></p>
-              </div>
-                </ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Estadisticas de Compras </ModalHeader>
               <ModalBody>
               <div>
        
@@ -118,10 +112,26 @@ const ViewMorePurchasesEstadistics = () => {
               </div>
               :
                <div className='flex flex-col items-center justify-center mt-2'> 
-                   <div className='flex justify-start items-start flex-col'>
-                      <p className='font-medium text-sm text-green-800 mt-2'>Cantidad de Compras: <b className='font-medium text-zinc-600'>{allPurchases.length} compras</b></p>
-                      <p className='font-medium text-sm text-green-800 mt-1'>Monto Gastado:<b className='font-medium text-zinc-600'> {formatePrice(allPurchases.reduce((acc, el) => acc + el.total, 0))}</b> </p>
-                   </div>
+                 
+
+                   <Card className="mx-auto h-auto w-[400px] 2xl:[450px] mt-4" decoration="top"  decorationColor="green-800" > 
+                        <div className='flex flex-col'>
+                              <div className='flex justify-center items-center gap-6'>
+                                   <p className='font-medium text-sm text-zinc-600'> Mes Elegido:  <span className='text-green-800'>{monthSelected}</span></p>
+                                   <p className='font-medium text-sm text-zinc-600'> Año Elegido: <span className='text-green-800'>{yearSelected}</span></p>
+                               </div>
+                          </div>
+                          <div className='flex justify-between items-center mt-4'>
+                             <div className='flex flex-col items-center justify-enter'>
+                                 <p className='text-zinc-500 text-xs font-medium'>Cantidad de Compras</p>
+                                 <p className='font-medium text-2xl text-black'>{allPurchases.length}</p>
+                             </div>
+                              <div className='flex flex-col items-center justify-enter'>
+                                  <p className='text-zinc-500 text-xs font-medium'>Monto Invertido:</p>
+                                  <p className='font-medium text-2xl text-black'>{formatePrice(allPurchases.reduce((acc, el) => acc + el.total, 0))}</p>
+                              </div>
+                          </div>
+                 </Card>
                    
                </div>
                    
