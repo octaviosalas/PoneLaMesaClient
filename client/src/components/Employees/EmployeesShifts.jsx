@@ -324,8 +324,8 @@ import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyV
   return (
     <div>
          <NavBarComponent/>
-         <div className='flex flex-col items-center justify-center rounded-lg w-full border'>
-            <Input type="number" variant="underlined" className='w-96 mt-2' label="Dia" onChange={(e) => setDaySelected(e.target.value)}/>
+         <div className='flex flex-col items-center justify-center rounded-lg w-full '>
+            <Input type="number" variant="bordered" className='w-96 mt-2' label="Dia" onChange={(e) => setDaySelected(e.target.value)}/>
 
             <Select variant={"faded"} label="Selecciona un Mes" className="w-96 mt-2" value={monthSelected}>          
               {months.map((month) => (

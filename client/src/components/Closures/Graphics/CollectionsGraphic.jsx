@@ -73,7 +73,7 @@ const CollectionsGraphic = ({monthSelected, yearSelected}) => {
 
   return (
     <div className='flex items-center gap-6'>
-       <Card className="mx-auto  w-[400px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+       <Card className="mx-auto  w-[400px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Cobros - Tipo de Cobros</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {totalAmountCollections}</p>
@@ -89,7 +89,7 @@ const CollectionsGraphic = ({monthSelected, yearSelected}) => {
                 </List>
         </Card>
 
-        <Card className="mx-auto  w-[800px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+        <Card className="mx-auto  w-[800px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Cobros - Tipo de Cobros</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {totalAmountCollections}</p>

@@ -133,11 +133,7 @@ const EstadisticsEmployees = () => {
                             ))}
                         </Select>
                    </div>
-                   {monthSelected.length > 0 && yearSelected !== 0 ?
-                      <div className="flex flex-col mt-2 mb-2 ml-4 items-start justify-start w-full ">
-                          <p className="font-medium text-green-800 text-sm">Mes Elegido: {monthSelected}</p>
-                          <p  className="font-medium text-green-800 text-sm">Año Elegido:{yearSelected}</p>
-                      </div> : null}
+                 
                    <div>
 
                       {withOutData ? <p className="mt-4 font-medium text-sm text-zinc-600">No hay turnos asentados en este mes</p> : null}

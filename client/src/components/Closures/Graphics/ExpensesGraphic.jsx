@@ -83,7 +83,7 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
   return (
     <>
        <div className='flex items-center gap-10'>
-       <Card className=" w-[700px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+       <Card className=" w-[700px] h-[250px] max-h-[250px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
              <div className='w-full flex justify-end'>
               <ModalGraphicAllExpenses data={allExpenses}/>
             </div>
@@ -104,7 +104,7 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
         </Card>
 
           
-        <Card className="w-[700px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+        <Card className="w-[700px] h-[250px] max-h-[250px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='w-full flex justify-end'>
               <ModalGraphicPurchase data={allPurchases}/>
             </div>
@@ -123,11 +123,12 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
                 </List>
         </Card>
 
-        <Card className=" w-[700px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+        <Card className=" w-[700px] h-[250px] max-h-[250px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Sub Alquileres</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountSublets)}</p>
             </div>
+             {allSublets.length > 0 ?
               <List className="mt-2 text-left">
                   {allSublets.map((item, index) => (
                       <ListItem key={item._id} className='flex justify-between items-center'>
@@ -136,10 +137,13 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
                         <span>{formatePrice(item.amount)}</span>
                       </ListItem>
                   ))}
-                </List>
+                </List> :
+                  <div className='flex justify-center items-center text-center mt-12'>
+                     <p className='font-medium text-zinc-600 text-sm'>No hay Subalquileres</p>
+                  </div>}
         </Card>
     </div>
-    <div className='mt-3'>
+    <div className='mt-8'>
       <Card className=" w-[700px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
               <div className='flex items-center justify-between'>
                 <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Gastos Fijos</h3>

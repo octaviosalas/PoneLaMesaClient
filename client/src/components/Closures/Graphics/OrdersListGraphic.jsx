@@ -54,7 +54,7 @@ const OrdersListGraphic = ({yearSelected, monthSelected}) => {
 
   return (
     <div className='flex items-center gap-4'>
-        <Card className="mx-auto  w-[600px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+        <Card className="mx-auto  w-[600px] h-[350px] max-h-[350px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Alquileres Mes</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrders)}</p>
@@ -70,7 +70,7 @@ const OrdersListGraphic = ({yearSelected, monthSelected}) => {
                 </List>
         </Card>
 
-        <Card className="mx-auto  w-[600px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+        <Card className="mx-auto  w-[600px] h-[350px] max-h-[350px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Alquileres Cobrados</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrdersPaid)}</p>
@@ -86,7 +86,7 @@ const OrdersListGraphic = ({yearSelected, monthSelected}) => {
                 </List>
         </Card>
 
-        <Card className="mx-auto  w-[600px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+        <Card className="mx-auto  w-[600px] h-[350px] max-h-[350px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Alquileres Sin Cobrar</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrdersWithOutPaid)}</p>
