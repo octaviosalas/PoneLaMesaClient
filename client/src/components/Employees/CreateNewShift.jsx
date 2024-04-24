@@ -168,7 +168,7 @@ const CreateNewShift = () => {
 
   return (
     <>
-    <div onClick={() => onOpen()} className="w-[400px] h-52 2xl:w-[600px] 2xl:h-80">
+    <div onClick={() => onOpen()} className="h-96 w-96 ">
         <Card className=" cursor-pointer">
             <CardHeader className="absolute z-10 top-1 flex-col !items-start">
               <p className="text-tiny text-black uppercase font-bold">Turnos</p>
