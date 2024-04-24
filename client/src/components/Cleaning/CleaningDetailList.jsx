@@ -96,7 +96,7 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
                  
                       
                    
-              {data.length >0 && columns.length > 0 ? 
+              {data.length > 0 && columns.length > 0 ? 
                    <Table
                      columnAutoWidth={true}
                      columnSpacing={10}
@@ -131,7 +131,7 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
                          </TableRow>
                        )}
                      </TableBody>
-          </Table> : <p>Cargando...</p>}
+          </Table> : <p className='font-medium text-zinc-600 font-sm 2xl:font-md'>En este momento, no hay articulos en Lavado</p>}
     </div>
   )
 }

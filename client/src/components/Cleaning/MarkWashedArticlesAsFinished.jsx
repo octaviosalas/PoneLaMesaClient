@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem} from "@nextui-org/react";
 import axios from "axios";
 import {getDay, getMonth, getDate, getYear, shiftsSchedules, everyMonthsOfTheYear} from "../../functions/gralFunctions"
@@ -16,15 +16,16 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
   const [everyMonths, setEveryMonths] = useState(everyMonthsOfTheYear)
   const [actualDate, setActualDate] = useState(getDate())
   const [shiftChoosen, setShiftChoosen] = useState("")
-  const [shiftChoosenDay, setShiftChoosenDay] = useState("")
-  const [shiftChoosenMonth, setShiftChoosenMonth] = useState("")
-  const [shiftChoosenYear, setShiftChoosenYear] = useState(0)
+  const [shiftChoosenDay, setShiftChoosenDay] = useState(getDay())
+const [shiftChoosenMonth, setShiftChoosenMonth] = useState(() => getMonth());
+  const [shiftChoosenYear, setShiftChoosenYear] = useState(getYear())
   const [secondStep, setSecondStep] = useState(false)
   const [yearError, setYearError] = useState(false)
   const [productEstimatedTime, setProductEstimatedTime] = useState(0)
 
 
   const getTimeEstimatedWashedd = () => { 
+ 
     axios.get(`http://localhost:4000/products/${washedData.productId}`)
          .then((res) => { 
           console.log(res.data)
@@ -50,6 +51,10 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
       setMissedData(false)
     }
   }
+
+  useEffect(() => { 
+    console.log(shiftChoosenMonth)
+  }, [shiftChoosenMonth])
 
   const updateArticleStock = async () => { 
     console.log(typeof newQuantity)
@@ -142,11 +147,11 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
                         }} 
                         />
                     
-                    <Select variant="faded" label="Mes" className="w-72 mt-2 border border-none" value={shiftChoosenMonth}>          
+                    <Select variant="faded" label="Mes" className="w-72 mt-2 border border-none"   defaultSelectedKeys={[shiftChoosenMonth]} value={shiftChoosenMonth}>          
                         {everyMonths.map((month) => (
-                        <SelectItem key={month.value} value={month.label} textValue={month.value} onClick={() => setShiftChoosenMonth(month.value)}>
-                          {month.label}
-                        </SelectItem>
+                            <SelectItem key={month.value} value={month.value} textValue={month.value} onClick={() => setShiftChoosenMonth(month.value)}>
+                              {month.label}
+                            </SelectItem>
                             ))}
                      </Select>
 
@@ -155,6 +160,7 @@ const MarkWashedArticlesAsFinished = ({washedData, updateNumbers}) => {
                         variant="faded"
                         className="w-72 mt-4"
                         label="Año"
+                        value={shiftChoosenYear}
                         onChange={(e) => {
                             const value = e.target.value;
                             if (value === '' || (value >= actualYear && !isNaN(value))) {

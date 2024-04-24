@@ -106,13 +106,12 @@ const CreateNewShift = () => {
     };
 
     const addNewActivitie = (item) => { 
-      console.log(item)
-      if(item.length > 0) { 
-        setActivities([...activities, item])
-        setNewNameActivitie("")
+      console.log(item);
+      if(item.length > 0 && !activities.includes(item)) { 
+         setActivities([...activities, item]);
+         setNewNameActivitie("");
       }
-    }
-
+     }
     const createShift = async () => { 
       if(employeeName.length > 0 && employeeId.length > 0 && startTime.length > 0 && shiftChoosen.length > 0 && closingHour.length > 0 && activities.length > 0 && employeeHourAmount !== 0) { 
         try {
@@ -158,10 +157,10 @@ const CreateNewShift = () => {
       } 
     }
 
-    useEffect(() => { 
-     console.log(activities)
-    }, [activities])
-
+   const cancelShift = () => { 
+    onClose()
+    setActivities([])
+   }
 
 
 
@@ -190,7 +189,7 @@ const CreateNewShift = () => {
               <ModalHeader className="flex flex-col gap-1">Crear Turno</ModalHeader>
               <ModalBody>
                 <Input type="time" variant="underlined" label="Horario de entrada" id="horaEntrada" name="horaEntrada" onChange={(e) => setStartTime(e.target.value)}/>
-                <Input type="time" variant="underlined" label="Horario de entrada" id="horaEntrada" name="horaEntrada" className="mt-2" onChange={(e) => setClosingHour(e.target.value)}/>
+                <Input type="time" variant="underlined" label="Horario de salida" id="horaSalida" name="horaSalida" className="mt-2" onChange={(e) => setClosingHour(e.target.value)}/>
                 
 
                 {showFirstData && !showSecondData ? 
@@ -264,7 +263,7 @@ const CreateNewShift = () => {
                         <Button className="bg-green-800 font-medium text-sm w-52 text-white" onPress={createShift}>
                           Crear Turno
                         </Button>
-                        <Button className="bg-green-800 font-medium text-sm w-52 text-white" onPress={onClose}>
+                        <Button className="bg-green-800 font-medium text-sm w-52 text-white" onPress={cancelShift}>
                           Cancelar
                         </Button>
                     </ModalFooter>

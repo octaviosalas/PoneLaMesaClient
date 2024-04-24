@@ -23,6 +23,7 @@ export const productsBonusClientsData = async (req, res) => {
       }
 }
 
+
 export const getProductById = async (req, res) => { 
   const {productId} = req.params
   console.log("ID RECIBIDO", productId)
@@ -58,13 +59,13 @@ export const createProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   const { productId } = req.params;
   const {articulo, precioUnitarioAlquiler, precioUnitarioAlquilerBonificados, precioUnitarioReposicion} = req.body
-
+  console.log(req.body)
 
   try {
           ProductsClients.findByIdAndUpdate({ _id: productId }, { 
           articulo: articulo,
           precioUnitarioAlquiler: precioUnitarioAlquiler,
-          precioUnitarioAlquilerBonificados: precioUnitarioAlquilerBonificados,
+          precioUnitarioBonificados: precioUnitarioAlquilerBonificados,
           precioUnitarioReposicion: precioUnitarioReposicion,
           })
           .then((newProduct) => {                                      

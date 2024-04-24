@@ -7,6 +7,7 @@ import { getDate, getMonth, getYear, getDay, formatePrice } from "../../function
 import CreateNewClient from "../Clientes/CreateNewClient";
 import getBackendData from '../../Hooks/GetBackendData';
 import OrderNeedsSublet from "./OrderNeedsSublet";
+import { List, ListItem } from '@tremor/react';
 
 const CreateNewOrder = ({updateList}) => {
 
@@ -235,29 +236,50 @@ const CreateNewOrder = ({updateList}) => {
       }
 
       const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock, choosenProductCategory) => {
-        console.log("STOCK DEL PRODUCTO", choosenProductStock)
-        console.log("CANTIDAD ELEGIDA", quantity)
-        if(quantity < choosenProductStock && productDoesNotExist === false) { 
-          const choosenProductTotalPrice = price * quantity
-          const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice, choosenProductCategory };
-          setProductsSelected([...productsSelected, newProduct]);
-          setChoosenProductId("")
-          setChoosenProductName("")
-          setChoosenProductQuantity("")
-          setChoosenProductPriceReplacement("")
-          setChoosenProductPrice("")
-          setChoosenProductCategory("")
-          setChoosenProductStock(0)
-        } else if (quantity > choosenProductStock && productDoesNotExist === false){ 
-          setInsufficientStock(true)
-          setTimeout(() => { 
-            setInsufficientStock(false)
-          }, 1500)
-        } else if (quantity < choosenProductStock && productDoesNotExist === true) { 
-          setProductDoesNotExist(true)
+        console.log("STOCK DEL PRODUCTO", choosenProductStock);
+        console.log("CANTIDAD ELEGIDA", quantity);
+    
+        // Buscar si el producto ya existe en el array
+        const existingProductIndex = productsSelected.findIndex(product => product.productId === productId);
+    
+        if (existingProductIndex !== -1) {
+            // Si el producto ya existe, actualizar la cantidad y el precio total
+            const updatedProduct = {
+                ...productsSelected[existingProductIndex],
+                quantity: productsSelected[existingProductIndex].quantity + quantity,
+                choosenProductTotalPrice: productsSelected[existingProductIndex].choosenProductTotalPrice + (price * quantity),
+            };
+    
+            // Actualizar el producto existente en el array
+            setProductsSelected(productsSelected.map((product, index) => index === existingProductIndex ? updatedProduct : product))
+            setChoosenProductId("");
+            setChoosenProductName("");
+            setChoosenProductQuantity("");
+            setChoosenProductPriceReplacement("");
+            setChoosenProductPrice("");
+            setChoosenProductCategory("");
+            setChoosenProductStock(0);
+        } else if (quantity <= choosenProductStock && productDoesNotExist === false) {
+           
+            const choosenProductTotalPrice = price * quantity;
+            const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice, choosenProductCategory };
+            setProductsSelected([...productsSelected, newProduct]);
+            setChoosenProductId("");
+            setChoosenProductName("");
+            setChoosenProductQuantity("");
+            setChoosenProductPriceReplacement("");
+            setChoosenProductPrice("");
+            setChoosenProductCategory("");
+            setChoosenProductStock(0);
+        } else if (quantity > choosenProductStock && productDoesNotExist === false) {
+            setInsufficientStock(true);
+            setTimeout(() => {
+                setInsufficientStock(false);
+            }, 1500);
+        } else if (quantity < choosenProductStock && productDoesNotExist === true) {
+            setProductDoesNotExist(true);
         }
-      
-      };
+    };
 
       const handleRemoveProduct = (productIdToDelete) => {
         setProductsSelected((prevProducts) =>
@@ -529,9 +551,9 @@ const CreateNewOrder = ({updateList}) => {
                               {productsSelected.map((prod) => ( 
                                 <div className="flex justify-between gap-4 items-center mt-1" key={prod.productId}>
                                   <div className="flex gap-2 items-center">
-                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
-                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>
-                                    <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Unitario Alquiler: </b>{formatePrice(prod.price)}</p>
+                                      <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
+                                      <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>
+                                      <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Unitario: </b>{formatePrice(prod.price)}</p>                                   
                                   </div>
                                   <div>
                                     <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
