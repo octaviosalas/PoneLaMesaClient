@@ -8,30 +8,31 @@ import {Card} from "@tremor/react"
 
     const EmployeesShifts = () => {
  
-    const [daySelected, setDaySelected] = useState(0)
-    const [months, setMonths] = useState(everyMonthsOfTheYear)
-    const [monthSelected, setMonthSelected] = useState("")
-    const [years, setYears] = useState(everyYears)
-    const [yearSelected, setYearSelected] = useState("")
-    const [missedData, setMissedData] = useState(false)
-    const [shiftsPerformed, setShiftsPerformed] = useState([])
-    const [withOutShiftsPerformed, setWithOutShiftsPerformed] = useState(false)
-    const [replacementsPerformed, setReplacementsPerformed] = useState([])
-    const [withOutReplacementsPerformed, setWithOutReplacementsPerformed] = useState(false)
-    const [showTableData, setShowTableData] = useState(false)
-    const [shiftsTotalHours, setShiftsTotalHours] = useState(0)
-    const [responseDataEstadisticsOperatives, setResponseDataEstadisticsOperatives] = useState("")
-    const [coastCleaningEmployees, setCoastCleaningEmployees] = useState(0)
-    const [coastByArticle, setCoastByArticle] = useState([])
-    const [firstTableData, setFirstTableData] = useState([])
-    const [columns, setColumns] = useState([])
-    const [operativeColumns, setOperativeColumns] = useState([])
-    const [showTable, setShowTable] = useState(false)
-    const [showOperativeTable, setShowOperativeTable] = useState(false)
-    const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
-    const [articlesAgroupedQuantityGains, setArticlesAgroupedQuantityGains] = useState(0)
-    const [operativeDataFinished, setOperativeDataFinished] = useState([])
-     const [showTheLastTable, setShowTheLastTable] = useState(false)
+      const [daySelected, setDaySelected] = useState(0)
+      const [months, setMonths] = useState(everyMonthsOfTheYear)
+      const [monthSelected, setMonthSelected] = useState("")
+      const [years, setYears] = useState(everyYears)
+      const [yearSelected, setYearSelected] = useState("")
+      const [missedData, setMissedData] = useState(false)
+      const [shiftsPerformed, setShiftsPerformed] = useState([])
+      const [withOutShiftsPerformed, setWithOutShiftsPerformed] = useState(false)
+      const [replacementsPerformed, setReplacementsPerformed] = useState([])
+      const [withOutReplacementsPerformed, setWithOutReplacementsPerformed] = useState(false)
+      const [showTableData, setShowTableData] = useState(false)
+      const [shiftsTotalHours, setShiftsTotalHours] = useState(0)
+      const [responseDataEstadisticsOperatives, setResponseDataEstadisticsOperatives] = useState("")
+      const [coastCleaningEmployees, setCoastCleaningEmployees] = useState(0)
+      const [coastByArticle, setCoastByArticle] = useState([])
+      const [firstTableData, setFirstTableData] = useState([])
+      const [columns, setColumns] = useState([])
+      const [operativeColumns, setOperativeColumns] = useState([])
+      const [showTable, setShowTable] = useState(false)
+      const [showOperativeTable, setShowOperativeTable] = useState(false)
+      const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
+      const [articlesAgroupedQuantityGains, setArticlesAgroupedQuantityGains] = useState(0)
+      const [operativeDataFinished, setOperativeDataFinished] = useState([])
+      const [showTheLastTable, setShowTheLastTable] = useState(false)
+      const [showDateInputs, setShowDateInputs] = useState(true)
 
       const agroupShiftsByEmployeeName = (shifts) => { 
         const agroup = shifts.reduce((acc, el) => { 
@@ -263,6 +264,7 @@ import {Card} from "@tremor/react"
                       setResponseDataEstadisticsOperatives(`Segun los articulos lavados y las horas de turnos realizadas, se deberian haber lavado los articulos en un tiempo de ${result.totalEstimatedWashTime} minutos y la carga horaria total entre todos los empleados fue de  ${transformShiftsHoursToMinutes} minutos`)
                       getAverage(quantityEmployees, totalCashToPaidToEmployees, agroupReplacementsByArticles(getJustDetails), transformShiftsHoursToMinutes)
                       setShowTheLastTable(true)
+                      setShowDateInputs(false)
                   } else { 
                     setWithOutReplacementsPerformed(true)
                     setShowTableData(false)
@@ -344,6 +346,9 @@ import {Card} from "@tremor/react"
              }
           }) 
           console.log(createTheResult)
+          const turnoMañana = createTheResult.filter((cr) => cr.turno === "Mañana")//.map((shiftData) => shiftData.tiempoIdeal - shiftData.horasDelTurno)
+          const turnoTarde = createTheResult.filter((cr) => cr.turno === "Tarde")//.map((shiftData) => shiftData.tiempoIdeal - shiftData.horasDelTurno)
+          console.log(turnoMañana, turnoTarde)
           if(createTheResult.length > 0) { 
             setOperativeDataFinished(createTheResult)
             console.log("Setee al estado de la tabla operativa por", createTheResult)
@@ -385,6 +390,14 @@ import {Card} from "@tremor/react"
           console.log("First table length 0!")
          }
       }
+
+     const chooseOtherDate = () => {
+      setShowDateInputs(true)
+      setShowTable(false)
+      setShowTableData(false)
+      setShowTheLastTable(false)
+      setShowOperativeTable(false)
+     }
       
 
     
@@ -400,7 +413,9 @@ import {Card} from "@tremor/react"
               
          </div>
 
+        {showDateInputs ? 
          <div className='flex flex-col items-center justify-center rounded-lg w-full '>
+
             <Input type="number" variant="bordered" className='w-96 mt-2' label="Dia" onChange={(e) => setDaySelected(e.target.value)}/>
 
             <Select variant={"faded"} label="Selecciona un Mes" className="w-96 mt-2" value={monthSelected}>          
@@ -420,7 +435,9 @@ import {Card} from "@tremor/react"
             </Select>
 
             <Button className='bg-green-800 text-white font-medium text-sm w-96 mt-4' onClick={() => getShifts()}>Buscar</Button>
-         </div>
+
+         </div> : null}
+
          <div className='mt-2 flex items-center jsutify-center'>
                 {(withOutReplacementsPerformed && !withOutShiftsPerformed) ? (
                     <p>No hubo reposiciones asignada a turnos de la fecha elegida</p>
@@ -547,6 +564,10 @@ import {Card} from "@tremor/react"
                     )}
                     </TableBody>
                   </Table>
+
+                  <div className='flex items-center justify-center mt-6 mb-2'>
+                        <Button className='bg-green-800 text-white font-medium text-sm w-96' onClick={() => chooseOtherDate()}>Elegir otra fecha</Button>
+                  </div>
               </>
                 
               : null}

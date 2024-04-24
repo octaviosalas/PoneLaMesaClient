@@ -34,23 +34,23 @@ const [shiftChoosenMonth, setShiftChoosenMonth] = useState(() => getMonth());
          .catch((err) => { 
           console.log(err)
          })
-  }
+     }
 
-  const handleOpen =  () => { 
-    console.log(washedData)
-    console.log(washedData.productId)
-    getTimeEstimatedWashedd()
-    onOpen()
-  }
+      const handleOpen =  () => { 
+        console.log(washedData)
+        console.log(washedData.productId)
+        getTimeEstimatedWashedd()
+        onOpen()
+      }
 
-  const verifyData = () => { 
-    if(newQuantity === 0) { 
-      setMissedData(true)
-    } else { 
-      setSecondStep(true)
-      setMissedData(false)
-    }
-  }
+      const verifyData = () => { 
+        if(newQuantity === 0) { 
+          setMissedData(true)
+        } else { 
+          setSecondStep(true)
+          setMissedData(false)
+        }
+      }
 
   useEffect(() => { 
     console.log(shiftChoosenMonth)

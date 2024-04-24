@@ -5,6 +5,7 @@ import PostPayment from '../Orders/PostPayment'
 import RegisterMissingItems from './RegisterMissingItems'
 import MarkOrderLikeReturnedWithOutMissedArticles from './MarkOrderLikeReturnedWithOutMissedArticles'
 import VaucherModal from '../Collections/VaucherModal'
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 
 const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, comeBack, closeModalNow}) => {
 
@@ -15,6 +16,9 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
     const [markAsReturnedWithOutProductsMissed, setMarkAsReturnedWithOutProductsMissed] = useState(false)
     const [orderHasDownPayment, setOrderHasDownPayment] = useState(false)
     const [downPaymentAmount, setDownPaymentAmount] = useState(0)
+    const [columns, setColumns] = useState([]);
+    const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
+
 
     useEffect(() => { 
         console.log(orderData)
@@ -62,6 +66,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
     const cancelarMarkMissedArticles = () => { 
         setOrderHasBrokenArticles(false)       
     }
+
 
   return (
     <div>
