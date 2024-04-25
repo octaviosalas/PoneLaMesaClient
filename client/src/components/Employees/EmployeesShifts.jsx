@@ -489,7 +489,7 @@ import ModalCardEmployeesShifts from './ModalCardEmployeesShifts';
                         <div className='flex justify-start items-start ml-2'>
                           <p className='text-zinc-600 font-medium text-sm'>Informacion Financiera del dia: </p>
                         </div>   
-                            <Card className="mx-auto h-auto w-[750px] 2xl:w-full mt-1" decoration="top"  decorationColor="green-800" >                   
+                            <Card className="h-32 w-[750px] 2xl:w-full mt-1" decoration="top"  decorationColor="green-800" >                   
                                 <div className='flex gap-8 items-center mt-4'>
                                   <div className='flex flex-col items-center justify-enter'>
                                       <p className='text-zinc-500 text-xs font-medium'>Total Gastado en Empleados:</p>
@@ -510,7 +510,7 @@ import ModalCardEmployeesShifts from './ModalCardEmployeesShifts';
                         <div className='flex justify-start items-start ml-2'>
                           <p className='text-zinc-600 font-medium text-sm'>Informacion operativa del dia: </p>
                         </div>
-                        <Card className="mx-auto h-auto w-[750px] 2xl:w-full mt-1" decoration="top"  decorationColor="green-800" >                   
+                        <Card className="h-32 w-[750px] 2xl:w-full mt-1" decoration="top"  decorationColor="green-800" >                   
                         <div className='flex  gap-28  items-center mt-4'>
                           <div className='flex flex-col items-center justify-enter'>
                               <p className='text-zinc-500 text-xs font-medium'>Turno Mañana Efectividad:</p>

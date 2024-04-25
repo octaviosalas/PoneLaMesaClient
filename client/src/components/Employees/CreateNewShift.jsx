@@ -141,6 +141,13 @@ const CreateNewShift = () => {
                         setSuccesMessage(true)
                           setTimeout(() => { 
                           setSuccesMessage(false)
+                          setEmployeeName("")
+                          setEmployeeId("")
+                          setStartTime("")
+                          setShiftChoosen("")
+                          setClosingHour("")
+                          setActivities([])
+                          setEmployeeHourAmount(0)
                           onClose()
                           setShowSecondData(false)
                           setShowFirstData(false)

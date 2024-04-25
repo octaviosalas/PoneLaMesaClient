@@ -8,6 +8,7 @@ import CreateNewClient from "../Clientes/CreateNewClient";
 import getBackendData from '../../Hooks/GetBackendData';
 import OrderNeedsSublet from "./OrderNeedsSublet";
 import { List, ListItem } from '@tremor/react';
+import AddShippingCost from "./AddShippingCost";
 
 const CreateNewOrder = ({updateList}) => {
 
@@ -53,7 +54,8 @@ const CreateNewOrder = ({updateList}) => {
   const [returnDateError, setReturnDateError] = useState(false)
   const [productDoesNotExist, setProductDoesNotExist] = useState(false)
   const [errorInQuantity, setErrorInQuantity] = useState(false)
-
+  const [shippingCost, setShippingCost] = useState(0)
+  const [missingShippingCost, setMissingShippingCost] = useState(false)
 
       const knowWichNumerOfOrder = () => { 
         axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
@@ -73,7 +75,6 @@ const CreateNewOrder = ({updateList}) => {
             .catch((err) => console.log(err))
       }
        
-  
       const typeOfClients = [
         {
           label: "No Bonificado",
@@ -184,7 +185,8 @@ const CreateNewOrder = ({updateList}) => {
       const executeFunctionDependsTypeOfClient = () => { 
         console.log(choosenClientName)
         console.log(choosenClientId)
-          if(orderNumber.length === 0  || choosenClientName.length === 0 || typeOfClient.length === 0 || placeOfDelivery.length === 0 || dateOfDelivery.length === 0 || returnDate.length === 0) { 
+          if(orderNumber.length === 0  || choosenClientName.length === 0 || typeOfClient.length === 0 || placeOfDelivery.length === 0 || 
+             dateOfDelivery.length === 0 || returnDate.length === 0  ) { 
             setMissedData(true)
             setTimeout(() => { 
               setMissedData(false)
@@ -195,9 +197,16 @@ const CreateNewOrder = ({updateList}) => {
               setAlertMessageClientError(false)
               setChoosenClientName("")
               setNameClientDoesNotExist(false)
+              setMissingShippingCost(false)
+            }, 2000)
+          } else if (shippingCost === 0 ) { 
+            setMissingShippingCost(true)
+            setTimeout(() => { 
+              setMissingShippingCost(false)
             }, 2000)
           } else { 
             changeState(true, false)
+            setMissingShippingCost(false)
             getClientsProductsData()   
           }
 
@@ -300,7 +309,6 @@ const CreateNewOrder = ({updateList}) => {
       }
 
       const sendNewOrder = (statusOfTheOrder) => { 
-        console.log(statusOfTheOrder)
         if(productsSelected.length === 0) { 
           setMissedProducts(true)
           setTimeout(() => {
@@ -319,12 +327,13 @@ const CreateNewOrder = ({updateList}) => {
             returnDate: returnDate,
             returnPlace: returnPlace,
             orderDetail: productsSelected,
-            total: productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0),
+            total: productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) + (Number(shippingCost) > 0 ? Number(shippingCost) : 0),
             date: actualDate,
             month:  actualMonth,
             year: actualYear,
             day: actualDay,
-            paid: false
+            paid: false,
+            ...(Number(shippingCost) > 0 ? { shippingCost: Number(shippingCost) } : {})
           })
           console.log("ENVIO", orderData)
           axios.post("http://localhost:4000/orders/create", orderData)
@@ -336,6 +345,7 @@ const CreateNewOrder = ({updateList}) => {
                   closeModal()
                   knowWichNumerOfOrder()
                   updateList()
+                  setShippingCost(0)
                 }, 2000)
               })
               .catch((err) => { 
@@ -344,6 +354,10 @@ const CreateNewOrder = ({updateList}) => {
         }
       
 
+      }
+
+      const setCostOfTheShipping = (value) => { 
+        setShippingCost(value)
       }
 
   return (
@@ -446,16 +460,26 @@ const CreateNewOrder = ({updateList}) => {
                                 }, 2000)
                               }
                           }}/>
+                          
 
                    {returnDateError ? <p className="text-zinc-600 text-xs font-medium mt-1">La fecha ingresada es anterior a la actual</p> : null}
 
                  </div> 
                  <div className="flex flex-col items-center justify-center mt-6">
-                     <Button color="success" className="font-medium text-white" onClick={() => executeFunctionDependsTypeOfClient()}>Armar Pedido</Button>
+                      
+                      <div className="flex items-center justify-center gap-4">
+                        <Button className="font-medium text-white text-sm bg-green-800 w-44" onClick={() => executeFunctionDependsTypeOfClient()}>Armar Pedido</Button>
+                        {placeOfDelivery === "Local" || placeOfDelivery.length === 0 ? null : <AddShippingCost addCost={setCostOfTheShipping}/>}
+                      </div>
+                     
+
+
                      {clientHasDebt ? <p className="mt-4 text-sm font-medium text-white bg-red-600">Este cliente posee una deuda pendiente de Pago</p> : null}
                      {clientHasntDebt ? <p className="mt-4 text-sm font-medium text-green-600">Este cliente no posee una deuda pendiente de Pago ✔</p> : null}
                      {missedData ? <p className="mt-4 text-sm font-medium text-green-800">Debes completar todos los campos</p> : null}
                      {alertMessageClientError ? <p className="mt-4 text-sm font-medium text-green-800">Debes seleccionar un cliente existente</p> : null}
+                     {missingShippingCost ? <p className="mt-4 text-sm font-medium text-green-800">Debes indicar el costo de Envio</p> : null}
+
                  </div>
               </div>       
                 : null}
@@ -494,7 +518,7 @@ const CreateNewOrder = ({updateList}) => {
                      <Input 
                         type="number"
                         value={choosenProductQuantity} 
-                        variant="bordered" 
+                        variant="underlined" 
                         label="Cantidad" 
                         className="mt-2 w-64 2xl:w-72"  
                         onChange={(e) => {
@@ -546,24 +570,30 @@ const CreateNewOrder = ({updateList}) => {
                       }  
 
                       {productsSelected.length !== 0 ? 
-                         <div className="flex flex-col">
-                          <div className="flex flex-col mt-6">
+                         <div className="flex flex-col  w-full">
+                          <div className="flex flex-col mt-6 h-auto max-h-[200px] overflow-y-auto max-w-lg overflow-x-auto">
                               {productsSelected.map((prod) => ( 
-                                <div className="flex justify-between gap-4 items-center mt-1" key={prod.productId}>
+                                <div className="flex justify-between gap-4 items-center mt-2 border-0 border-b-1 border-b-gray-400" key={prod.productId}>
                                   <div className="flex gap-2 items-center">
-                                      <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Producto: </b> {prod.productName}</p>
-                                      <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Cantidad: </b>{prod.quantity}</p>
-                                      <p className="text-zinc-500 text-xs"><b className="text-zinc-600 text-xs font-bold">Precio Unitario: </b>{formatePrice(prod.price)}</p>                                   
+                                      <p className="text-zinc-500 text-sm"><b className="text-zinc-600 text-sm font-medium">Producto: </b> {prod.productName}</p>
+                                      <p className="text-zinc-500 text-sm"><b className="text-zinc-600 text-sm font-medium">Cantidad: </b>{prod.quantity}</p>
+                                      <p className="text-zinc-500 text-sm"><b className="text-zinc-600 text-sm font-medium">Precio Unitario: </b>{formatePrice(prod.price)}</p>                                   
                                   </div>
                                   <div>
-                                    <p className="text-xs cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
-                                  </div>
-                                  
+                                    <p className="text-sm cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
+                                  </div>                          
                                 </div>
                               ))}
                           </div>
-                          <div className="flex flex-col mt-2">
-                            <p className="text-zinc-500 text-xs"> <b>Total: </b>{formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))} ARS</p> 
+                          <div className="flex flex-col mt-4">
+                            <p className="text-zinc-500 text-xs"> <b>Total Articulos: </b>{formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))} ARS</p> 
+                            {shippingCost > 0 ? 
+                              <div className="flex flex-col items-start justify-start">
+                                 <p className="text-zinc-500 text-xs mt-1"> <b>Costo Envio: </b>{formatePrice(shippingCost)} ARS</p> 
+                                 <p className="text-zinc-500 text-xs mt-1"> <b>Total Final: </b>{formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) + Number(shippingCost))} ARS</p>
+                              </div> : null
+                             }
+                             
                           </div>
                         </div>  
                         :

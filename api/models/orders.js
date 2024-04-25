@@ -70,6 +70,10 @@ const ordersSchema = mongoose.Schema({
     },
     downPaymentData: { 
         type: Array
+    },
+    shippingCost: { 
+        type: Number,
+        required: false
     }
 
 })
