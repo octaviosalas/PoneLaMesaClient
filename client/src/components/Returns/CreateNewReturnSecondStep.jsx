@@ -18,6 +18,8 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
     const [downPaymentAmount, setDownPaymentAmount] = useState(0)
     const [columns, setColumns] = useState([]);
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
+    const [showTable, setShowTable] = useState(false)
+    const [error, setError] = useState(false)
 
 
     useEffect(() => { 
@@ -67,6 +69,36 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
         setOrderHasBrokenArticles(false)       
     }
 
+    useEffect(() => {      
+             if(orderData.length > 0) { 
+                console.log("me ejecuto")
+                const firstDetail = orderData.map((ord) => ord.orderDetail).flat()[0];
+                console.log(firstDetail)
+                const properties = Object.keys(firstDetail);
+                console.log(properties)
+                const filteredProperties = properties.filter(property => property !== 'choosenProductCategory' && property !== 'productId' && property !== 'price' && property !== 'replacementPrice' 
+                && property !== "choosenProductEstimativeWashedTime");
+              
+                const columnLabelsMap = {
+                  quantity: 'Cantidad',
+                  productName: 'Articulo',
+                  choosenProductTotalPrice: 'Monto Total',
+                  price: "Precio"
+                };
+              
+                const tableColumns = filteredProperties.map(property => ({
+                  key: property,
+                  label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+                }));
+              
+                setColumns(tableColumns);
+                console.log(tableColumns);
+                setShowTable(true)
+              } else { 
+              setError(true)
+            }
+    }, [orderData])
+
 
   return (
     <div>
@@ -93,14 +125,40 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
 
                     <div className='mt-2'>
                       <h5 className='font-bold text-green-800'>Detalle de la orden:</h5>
-                        <div className='flex flex-col items-start justify-start '>
-                            {orderData.map((ord) => ord.orderDetail.map((c) => ( 
-                                <div className='flex items-center justify-center gap-2' key={c.productName}>
-                                    <p className='text-sm font-medium text-zinc-600'>Articulo: {c.productName}</p>
-                                    <p className='text-sm font-medium text-zinc-600'>Cantidad: {c.quantity}</p>
-                                </div>
-                            )))}
-                        </div>
+                      {showTable ?
+                                <Table                          
+                                    columnAutoWidth={true} 
+                                    columnSpacing={10}  
+                                    aria-label="Selection behavior table example with dynamic content"   
+                                    selectionBehavior={selectionBehavior} 
+                                    className="w-[400px] 2xl:w-[600px] flex items-center justify-center mt-2 shadow-2xl overflow-y-auto xl:max-h-[150px] 2xl:max-h-[250px] border rounded-xl">
+                                        <TableHeader columns={columns}>
+                                        {(column) => (
+                                        <TableColumn key={column.key} className="text-xs gap-6">
+                                        {column.label}
+                                        </TableColumn>
+                                            )}
+                                        </TableHeader>
+                                        <TableBody items={orderData.map((ord) => ord.orderDetail).flat()}>
+                                                    {(item) => (
+                                        <TableRow key={item.productName}>
+                                            {columns.map(column => (
+                                            <TableCell key={column.key}  className='text-left' >
+                                                {column.cellRenderer ? (
+                                                column.cellRenderer({ row: { original: item } })
+                                                ) : (
+                                                (column.key === "choosenProductTotalPrice") ? (
+                                                formatePrice(item[column.key])
+                                                    ) : (
+                                                item[column.key]
+                                                )
+                                                )}
+                                            </TableCell>
+                                            ))}
+                                        </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table> : <p>Aguardando datos...</p>}
                     </div>
                     
                     {orderData.some((ord) => ord.subletsDetail.length > 0) ?
@@ -133,9 +191,9 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                              
                             ) : (
                                 orderHasDownPayment !== true && orderPaid !== true ? (
-                                    <div className='flex flex-col'>
-                                       <h5 className='font-bold text-green-800  text-sm underline mt-2'>Monto total del pedido</h5>
-                                       <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total))}</p> 
+                                    <div className='flex items-center justify-center gap-1'>
+                                       <h5 className='font-bold text-green-800  text-sm underline'>Monto total del pedido: </h5>
+                                       <p className='text-sm font-medium text-zinc-600'> {formatePrice(orderData.map((ord) => ord.total))}</p> 
                                 </div>    
                             ) : null
                             )}
@@ -149,7 +207,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                    <VaucherModal orderId={orderId}/>
                     :
                 <div className='flex flex-col items-center justify-center'>
-                <p className='text-sm font-medium text-zinc-600 underline'>Este pedido se encuentra pendiente de pago</p>
+                <p className='text-sm font-medium text-white bg-red-600'>Este pedido se encuentra pendiente de pago</p>
                    {orderHasDownPayment ? 
                      <PostPayment usedIn="CreateNewReturn" withDownPayment={true} valueToPay={formatePrice(orderData.map((ord) => ord.total - downPaymentAmount))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>     
                    : <PostPayment usedIn="CreateNewReturn" withDownPayment={false} valueToPay={formatePrice(orderData.map((ord) => ord.total))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>        

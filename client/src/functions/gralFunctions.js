@@ -325,3 +325,7 @@ export const obtenerMesAnterior = () => {
   return mesAnterior;
  }
  
+
+export const resumeDecimalNum = (num)  => {
+  return parseFloat(num.toFixed(2));
+}

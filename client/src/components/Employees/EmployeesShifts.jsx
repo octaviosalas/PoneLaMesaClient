@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import NavBarComponent from '../Navbar/Navbar'
 import {Input, Select, SelectItem, Button} from "@nextui-org/react";
-import {everyMonthsOfTheYear, everyYears, formatePrice} from "../../functions/gralFunctions"
+import {everyMonthsOfTheYear, everyYears, formatePrice, resumeDecimalNum} from "../../functions/gralFunctions"
 import axios from 'axios';
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 import {Card} from "@tremor/react"
+import ModalCardEmployeesShifts from './ModalCardEmployeesShifts';
+
 
     const EmployeesShifts = () => {
  
@@ -33,6 +35,12 @@ import {Card} from "@tremor/react"
       const [operativeDataFinished, setOperativeDataFinished] = useState([])
       const [showTheLastTable, setShowTheLastTable] = useState(false)
       const [showDateInputs, setShowDateInputs] = useState(true)
+      const [operativeValueMorningShiftForCard, setOperativeValueMorningShiftForCard] = useState(0)
+      const [operativeValueEveningShiftForCard, setOperativeValueEveningShiftForCard] = useState(0)
+      const [employeesMorningDataForModal, setEmployeesMorningDataForModal] = useState([])
+      const [employeesEveningDataForModal, setEmployeesEveningDataForModal] = useState([])
+
+
 
       const agroupShiftsByEmployeeName = (shifts) => { 
         const agroup = shifts.reduce((acc, el) => { 
@@ -161,10 +169,13 @@ import {Card} from "@tremor/react"
         })
         if(transformFinalData.length > 0) { 
           console.log("TRANSFORM FINAL DATA", transformFinalData)
+          const getJustMorningEmployees = transformFinalData.filter((employee) => employee.turno === "Mañana")
+          const getJustEveningEmployees = transformFinalData.filter((employee) => employee.turno === "Tarde")
           setFirstTableData(transformFinalData)
           createTable(transformFinalData)
           createOperativeData(transformFinalData)
-         
+          setEmployeesMorningDataForModal(getJustMorningEmployees)
+          setEmployeesEveningDataForModal(getJustEveningEmployees)
         }
         return transformFinalData
       }
@@ -287,6 +298,8 @@ import {Card} from "@tremor/react"
       }    
  
       const createTable = (firstTableData) => { 
+        console.log("MIRAME ACA LA FIRST TABLE DATA", firstTableData)
+        
          const articles = firstTableData.map((f) => f.articulos).flat()
          console.log(articles)
          const properties = Object.keys(articles[0]);
@@ -308,7 +321,7 @@ import {Card} from "@tremor/react"
             key: property,
             label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
           }));
-        
+     
           setColumns(tableColumns);
           console.log(tableColumns);
           setShowTable(true)  
@@ -346,8 +359,14 @@ import {Card} from "@tremor/react"
              }
           }) 
           console.log(createTheResult)
-          const turnoMañana = createTheResult.filter((cr) => cr.turno === "Mañana")//.map((shiftData) => shiftData.tiempoIdeal - shiftData.horasDelTurno)
-          const turnoTarde = createTheResult.filter((cr) => cr.turno === "Tarde")//.map((shiftData) => shiftData.tiempoIdeal - shiftData.horasDelTurno)
+         
+          const turnoMañana = createTheResult.filter((cr) => cr.turno === "Mañana").map((shiftData) => shiftData.tiempoIdealTotal - shiftData.horasTotalDelTurno);
+          const turnoTarde = createTheResult.filter((cr) => cr.turno === "Tarde").map((shiftData) => shiftData.tiempoIdealTotal - shiftData.horasTotalDelTurno);
+          console.log(turnoTarde)
+          console.log(turnoMañana)
+
+          setOperativeValueEveningShiftForCard(turnoTarde[0])
+          setOperativeValueMorningShiftForCard(turnoMañana[0])
           console.log(turnoMañana, turnoTarde)
           if(createTheResult.length > 0) { 
             setOperativeDataFinished(createTheResult)
@@ -400,7 +419,11 @@ import {Card} from "@tremor/react"
      }
       
 
-    
+     useEffect(() => { 
+      console.log(operativeValueMorningShiftForCard)
+      console.log(operativeValueEveningShiftForCard)
+
+     }, [operativeValueMorningShiftForCard, operativeValueEveningShiftForCard])
    
 
     
@@ -460,25 +483,58 @@ import {Card} from "@tremor/react"
                 {showTable ? 
                 <>
                 <div className='flex flex-col items-start justify-start mt-12'>
-                  <div className='flex justify-start items-start ml-2'>
-                    <p className='text-zinc-600 font-medium text-sm'>Informacion del dia: </p>
-                  </div>
-                    <Card className="mx-auto h-auto w-[750px] 2xl:w-full mt-1" decoration="top"  decorationColor="green-800" >                   
-                        <div className='flex justify-between items-center mt-4'>
-                          <div className='flex flex-col items-center justify-enter'>
-                              <p className='text-zinc-500 text-xs font-medium'>Monto total Gastado en Empleados:</p>
-                              <p className='font-medium text-xl text-black'>{formatePrice(coastCleaningEmployees)}</p>
-                          </div>
-                          <div className='flex flex-col items-center justify-enter'>
-                              <p className='text-zinc-500 text-xs font-medium'>Monto total Facturado por estos Articulos:</p>
-                              <p className='font-medium text-xl text-black'>{formatePrice(articlesAgroupedQuantityGains)}</p>
-                          </div>
-                            <div className='flex flex-col items-center justify-enter'>
-                                <p className='text-zinc-500 text-xs font-medium'>Rentabilidad del Dia:</p>
-                                <p className='font-medium text-xl text-black'>{formatePrice(articlesAgroupedQuantityGains - coastCleaningEmployees)}</p>
-                            </div>
+                 
+                  <div className='flex gap-4 items-center justify-center'>
+                    <div className='flex flex-col'>
+                        <div className='flex justify-start items-start ml-2'>
+                          <p className='text-zinc-600 font-medium text-sm'>Informacion Financiera del dia: </p>
+                        </div>   
+                            <Card className="mx-auto h-auto w-[750px] 2xl:w-full mt-1" decoration="top"  decorationColor="green-800" >                   
+                                <div className='flex gap-8 items-center mt-4'>
+                                  <div className='flex flex-col items-center justify-enter'>
+                                      <p className='text-zinc-500 text-xs font-medium'>Total Gastado en Empleados:</p>
+                                      <p className='font-medium text-xl text-black'>{formatePrice(coastCleaningEmployees)}</p>
+                                  </div>
+                                  <div className='flex flex-col items-center justify-enter'>
+                                      <p className='text-zinc-500 text-xs font-medium'>Total Facturado por estos Articulos:</p>
+                                      <p className='font-medium text-xl text-black'>{formatePrice(articlesAgroupedQuantityGains)}</p>
+                                  </div>
+                                    <div className='flex flex-col items-center justify-enter'>
+                                        <p className='text-zinc-500 text-xs font-medium'>Rentabilidad del Dia:</p>
+                                        <p className='font-medium text-xl text-black'>{formatePrice(articlesAgroupedQuantityGains - coastCleaningEmployees)}</p>
+                                    </div>
+                                </div>
+                          </Card>
+                    </div>
+                    <div  className='flex flex-col'>
+                        <div className='flex justify-start items-start ml-2'>
+                          <p className='text-zinc-600 font-medium text-sm'>Informacion operativa del dia: </p>
                         </div>
-                    </Card>
+                        <Card className="mx-auto h-auto w-[750px] 2xl:w-full mt-1" decoration="top"  decorationColor="green-800" >                   
+                        <div className='flex  gap-28  items-center mt-4'>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Turno Mañana Efectividad:</p>
+                              <p className={operativeValueMorningShiftForCard >= 0 ? 'font-medium text-xl text-black' : "font-medium text-xl text-red-600"}>
+                                {resumeDecimalNum(operativeValueMorningShiftForCard)} <span className='text-xs font-medium text-zinc-600'>min</span>
+                                <ModalCardEmployeesShifts data={employeesMorningDataForModal}/>
+                             </p>
+                             
+                          </div>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Turno Tarde Efectividad:</p>
+                              <p className={operativeValueEveningShiftForCard >= 0 ? 'font-medium text-xl text-black' : "font-medium text-xl text-red-600"}>
+                                  {resumeDecimalNum(operativeValueEveningShiftForCard)} <span className='text-xs font-medium text-zinc-600'>min</span>
+                                  <ModalCardEmployeesShifts data={employeesEveningDataForModal}/>
+                              </p>
+                          </div>                         
+                        </div>
+                      </Card>
+                    </div>
+                     
+                      
+                    
+                  </div>
+                    
                 </div>
                   <div className='flex justify-start items-start mt-8 ml-2'>
                     <p className='text-zinc-600 font-medium text-sm'>Estadistica financiera:</p>

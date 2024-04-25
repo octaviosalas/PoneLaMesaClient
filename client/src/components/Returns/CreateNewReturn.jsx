@@ -20,6 +20,8 @@ const CreateNewReturn = ({updateList}) => {
   const [secondStep, setSecondStep] = useState(false);
   const [orderChoosenData, setOrderChoosenData] = useState(false);
   const [orderChoosenStatus, setOrderChoosenStatus] = useState("");
+  const [size, setSize] = useState("2xl");
+
 
     const handleOpen = async () => { 
       onOpen()
@@ -67,7 +69,7 @@ const CreateNewReturn = ({updateList}) => {
   return (
     <>
       <Button onPress={handleOpen} className="text-white font-medium text-sm cursor-pointer bg-green-800">Asentar Nueva Devolucion</Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
         <ModalContent>
           {(onClose) => (
             <>
