@@ -78,9 +78,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
   ]
 
   const addNewCollection = async () => { 
-    console.log("add new collection")
-    console.log(account)
-    console.log(userCtx.userId)
+   
     if(account.length !== 0 && userCtx.userId !== null) { 
       const collecctionData = ({ 
         orderId: orderData.id,
@@ -113,7 +111,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
              setTimeout(() => { 
               if(usedIn === "CreateNewReturn") { 
                 changeOrderPaid(true)
-              }   
+              } 
              onClose()
              setAccount("")
              setSuccesOperation(false)
@@ -121,7 +119,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
          }
        } 
        } catch (error) {
-         console.log(err)
+         console.log(error)
        }
     } else if (userCtx.userId === null) { 
       console.log("aca")

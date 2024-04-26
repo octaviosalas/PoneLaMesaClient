@@ -130,7 +130,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                 console.log(statusUpdateResponse.data);
                 
                 if(statusUpdateResponse.status === 200) { 
-                    if(account.length !== 0 && payImage.length > 0) { 
+                    if(account.length !== 0 ) { 
                         const collecctionData = ({ 
                             orderId: orderId,
                             collectionType: "replacement",
@@ -151,7 +151,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                         updateList()
                         setTimeout(() => { 
                             setSuccesMessageWithPaidReplacement(false)
-                            comeBack()
+                            closeModalNow()
                         }, 2000)
                     } else { 
                         console.log("no cumplen ambas")

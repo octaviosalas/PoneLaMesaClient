@@ -30,8 +30,7 @@ const DeleteProvider = ({providerData, closeModalNow, updateProviderList}) => {
     <div>
            <div className="flex flex-col items-center justify-center">
                   <div>
-                     <p className="flex flex-col gap-1 text-black font-bold text-md">¿Estas seguro de eliminar el Proveedor?</p>
-                     {providerData.id}
+                     <p className="flex flex-col gap-1 text-zinc-600 font-medium text-sm">¿Estas seguro de eliminar el Proveedor?</p>
                   </div>
                   <div className="flex items-center gap-6 mt-4 mb-4">
                      <Button className="text-sm font-medium text-white bg-green-600" onClick={() => deleteProvider()}>Eliminar</Button>

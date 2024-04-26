@@ -40,6 +40,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
    console.log(orderData)
    if(orderData.downPaymentData.length > 0) { 
     const downPaymentReference = orderData.downPaymentData.map((d) => d.downPaymentId)[0]
+    console.log("ID SEÑA", downPaymentReference)
     setDownPaymentId(downPaymentReference)
    }
   }
@@ -185,29 +186,29 @@ const CreateDownPayment = ({orderData, updateList}) => {
                  <p className="text-zinc-600 text-sm font-medium"><b>Mes : </b>{orderData.month}</p>
                  <p className="text-zinc-600 text-sm font-medium"><b>Monto total de la orden: </b>{formatePrice(orderData.total)}</p>
 
-                 
-                             <Input 
-                              type="number" 
-                              variant="faded" 
-                              placeholder="Ingresa el valor de la seña" 
-                              value={downPaymentAmount}   
-                              onChange={(e) => {
-                              const value = e.target.value;
-                              if (value === '' || (value > 0 && !isNaN(value))) {
-                                setDownPaymentAmount(e.target.value);
-                                setErrorInQuantity(false)
-                              } else {
-                                setErrorInQuantity(true)
-                              }
-                              }} 
-                              startContent={
-                              <div className="pointer-events-none flex items-center">
-                                <span className="text-default-400 text-small">$</span>
-                              </div>
-                              }
-                             />
+                   <Input 
+                      type="numer" 
+                      variant="faded" 
+                      placeholder="Ingresa el valor de la seña" 
+                      value={downPaymentAmount}   
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        const validNumberRegex = /^\d*\.?\d*$/;
+                        if (value === '' || (validNumberRegex.test(value) && parseFloat(value) >= 0)) {
+                          setDownPaymentAmount(value);
+                          setErrorInQuantity(false);
+                        } else {
+                          setErrorInQuantity(true);
+                        }
+                      }} 
+                      startContent={
+                        <div className="pointer-events-none flex items-center">
+                          <span className="text-default-400 text-small">$</span>
+                        </div>
+                      }
+                    />
 
-                             {errorInQuantity ? <p className="text-xs text-zinc-700 font-medium">Debes ingresar un numero mayor a 0</p> : null}
+                             {errorInQuantity ? <p className="text-xs text-zinc-700 font-medium">Debes ingresar un numero valido</p> : null}
 
 
                  <Select variant="faded" label="Selecciona la cuenta de Cobro" className="w-full" onChange={(e) => setAccount(e.target.value)} >

@@ -29,12 +29,11 @@ const HistoricClient = ({clientData, updateClientData}) => {
 
     const getProductOrders = async () => { 
       try {
-        const res = await axios.get("http://localhost:4000/orders");
+        const res = await axios.get(`http://localhost:4000/orders/getByClient/${clientData.id}`);
         const data = res.data;
         console.log(data)
-        const theClientOrders = data.filter((d) => d.clientId === clientData.id)
-        console.log(theClientOrders)
-        const productOrderDetails = theClientOrders
+    
+        const productOrderDetails = data
            .map((ord) => {
             return {
               orderId: ord._id,

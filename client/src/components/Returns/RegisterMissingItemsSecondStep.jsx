@@ -3,6 +3,7 @@ import { formatePrice } from '../../functions/gralFunctions'
 import { Button } from '@nextui-org/react'
 import Loading from '../Loading/Loading'
 import RegisterMissingItemsThirdStep from './RegisterMissingItemsThirdStep'
+import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 
 const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, closeModalNow, updateList}) => {
 
@@ -12,6 +13,11 @@ const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, close
     const [totalToPay, setTotalToPay] = useState("")
     const [load, setLoad] = useState(true)
     const [lastStep, setLastStep] = useState(false)
+    const [columns, setColumns] = useState([])
+    const [showTable, setShowTable] = useState(false)
+    const [errorTable, setErrorTable] = useState(false)
+    const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
+
 
     const getValues = async () => { 
         console.log(dataUpdated)
@@ -22,6 +28,7 @@ const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, close
         const getClientId = orderData.map((ord) => ord.clientId)[0];
         const getTotalToPay = articlesWithMissing.reduce((acc, el) => acc + el.replacementPrice * el.missing, 0);
         setArticlesWithMissedQuantity(articlesWithMissing)
+        createTable(articlesWithMissing)
         setClient(getClient)
         setTotalToPay(getTotalToPay)
         setClientId(getClientId)
@@ -36,6 +43,39 @@ const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, close
            getValues()
        }, [])
 
+
+    
+
+       const createTable = (items) => { 
+            const data = items
+            const properties = Object.keys(data[0]);
+            console.log("Propiedad", properties)
+            if(data.length > 0 ) { 
+             console.log(data)
+             const firstDetail = data[0];
+             const properties = Object.keys(firstDetail);
+             const filteredProperties = properties.filter(property => property !== 'choosenProductCategory' && property !== 'choosenProductTotalPrice'  
+             && property !== 'productId'  && property !== 'price'  && property !== 'quantity'  && property !== 'replacementPrice');
+           
+             const columnLabelsMap = {
+               productName: 'Articulo Faltante',
+               missing: 'Cantidad Faltante'
+             };
+           
+             const tableColumns = filteredProperties.map(property => ({
+               key: property,
+               label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+             }));
+        
+             setColumns(tableColumns);
+             setShowTable(true)  
+            } else { 
+             console.log("First table length 0!")
+             setErrorTable(true)
+            }          
+         
+       }
+
     return (
         <>
       {lastStep === false  ?
@@ -44,16 +84,44 @@ const RegisterMissingItemsSecondStep = ({dataUpdated, orderData, comeBack, close
                     <Loading/>
                 ) : (
                     <div>
-                    <div className='w-full flex flex-col items-start justify-start'>
+                    <div className='w-full flex flex-col items-start justify-start '>
                         <h5 className='text-sm font-medium text-green-800'>Articulos Faltantes</h5>
-                        <div className='mt-2'>
-                            {articlesWithMissedQuantity.map((art) => ( 
-                            <div className='flex items-start justify-start-start gap-4' key={art.productName}>
-                                <p className='font-medium text-sm '><b>Articulo: </b>{art.productName}</p>
-                                <p className='font-medium text-sm '><b>Cantidad faltante: </b>{art.missing}</p>
-                            </div>
-                            ))}
-                        </div>
+                       {showTable ? 
+                        <div className='mt-2 w-full '>
+                          <Table                          
+                                columnAutoWidth={true} 
+                                columnSpacing={10}  
+                                aria-label="Selection behavior table example with dynamic content"   
+                                selectionBehavior={selectionBehavior} 
+                                className=" flex items-center justify-center shadow-2xl overflow-y-auto w-full rounded-xl">
+                                    <TableHeader columns={columns}>
+                            {(column) => (
+                            <TableColumn key={column.key} className="text-xs gap-6">
+                                {column.label}
+                            </TableColumn>
+                                )}
+                            </TableHeader>
+                                  <TableBody items={articlesWithMissedQuantity}>
+                                            {(item) => (
+                                        <TableRow key={item.productName}>
+                                            {columns.map(column => (
+                                            <TableCell key={column.key}  className='text-left' >
+                                                {column.cellRenderer ? (
+                                                column.cellRenderer({ row: { original: item } })
+                                                ) : (
+                                                (column.key === "costoLavadoArticulo") ? (
+                                                formatePrice(item[column.key])
+                                                    ) : (
+                                                item[column.key]
+                                                )
+                                                )}
+                                            </TableCell>
+                                            ))}
+                                        </TableRow>
+                                       )}
+                                  </TableBody>
+                            </Table>
+                        </div> : null}
                     </div>
                     <div className='mt-6 flex flex-col items-start justify-start'>
                         <h5 className='text-sm font-medium text-zinc-600'>Total a pagar por <b className='text-green-800'>{client}</b> para Reposicion: <b className='text-green-800'>{formatePrice(totalToPay)}</b></h5>

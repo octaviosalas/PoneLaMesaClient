@@ -13,6 +13,7 @@ import CreateNewClient from "./CreateNewClient";
 import HistoricClient from './HistoricClient';
 import EstadisticsClientsModal from './EstadisticsClientsModal';
 import EstadisticsClients from './EstadisticsClients';
+import AccountState from './AccountState';
 
 
 const ClientsTable = () => {
@@ -122,6 +123,20 @@ const ClientsTable = () => {
                   );
             },
               }) 
+
+              modifiedColumnObjects.push({
+                key: 'Estado de Cuenta',
+                label: 'Estado de Cuenta',
+                cellRenderer: (cell) => { 
+                  const filaActual = cell.row;
+                  const id = filaActual.original._id;
+                  const name = filaActual.original.name;            
+                  const item = { id, name};
+                  return (
+                     <AccountState clientData={item} updateClientData={getClientsDataAndCreateTable}/>
+                    );
+              },
+                }) 
      
               setColumns(modifiedColumnObjects);
               console.log(modifiedColumnObjects)

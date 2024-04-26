@@ -166,9 +166,9 @@ const OrdersTable = () => {
                 cellRenderer: (cell) => { 
                   const filaActual = cell.row;
                   const id = filaActual.original._id;
-                  const item = {
-                  id: id
-                  };
+                  const paid = filaActual.original.paid;
+                  const downPaymentData = filaActual.original.downPaymentData;
+                  const item = { id, paid, downPaymentData};
                   return (
                      <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                     );

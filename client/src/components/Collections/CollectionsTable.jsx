@@ -37,7 +37,7 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
             if(data.length !== 0) { 
             const propiedades = Object.keys(collections[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v'  
                 && propiedad !== 'orderDetail' &&  propiedad !== 'clientId' && propiedad !== 'loadedBy' && propiedad !== 'voucher'  && propiedad !== 'orderId' && propiedad !== 'orderCreator' && propiedad !== 'year'
-                && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'paymentReferenceId');
+                && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'paymentReferenceId' && propiedad !== 'downPaymentId');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),

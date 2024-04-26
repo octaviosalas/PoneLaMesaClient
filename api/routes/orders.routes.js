@@ -15,11 +15,13 @@ import { getOrderById,
          addArticlesMissed,
          updateMissingArticlesLikePaid,
          createPdf,
-         deleteDownPaymentData } from '../controllers/orders.controllers.js';
+         deleteDownPaymentData,
+         getOrdersByClient } from '../controllers/orders.controllers.js';
 
 
 ordersRoutes.get('/', getOrders);
 ordersRoutes.get('/:orderId', getOrderById);
+ordersRoutes.get('/getByClient/:clientId', getOrdersByClient);
 ordersRoutes.get('/getByMonth/:month', getMonthlyOrders);
 ordersRoutes.post('/create', createOrder);
 ordersRoutes.put('/changeOrderState/:orderId', changeOrderState);

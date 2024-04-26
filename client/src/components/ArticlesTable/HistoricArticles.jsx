@@ -113,10 +113,10 @@ const HistoricArticles = ({articleData}) => {
                                  <div className="flex items-center justify-between">
                                       <div className="flex flex-col items-center">
                                           <p className="text-xs text-green-800 font-medium">MTF: {articleData.articleName}</p>
-                                          <p className="text-xl font-bold text-black">{formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
+                                          <p className="text-xl font-medium text-black">{formatePrice(ordersProducts.reduce((acc, el) => acc + el.total, 0))}</p>
                                       </div>
                                       <div className="flex flex-col items-center">
-                                          <p className="text-xs text-green-800 font-bold">Cantidad de Alquileres</p>
+                                          <p className="text-xs text-green-800 font-medium">Cantidad de Alquileres</p>
                                           <p className="text-xl font-bold text-black">{ordersProducts.length}</p>
                                       </div>
                                       <div className="flex flex-col items-center">

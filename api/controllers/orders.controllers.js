@@ -81,6 +81,20 @@ export const getOrderById = async (req, res) => {
   }   
 }
 
+export const getOrdersByClient = async (req, res) => { 
+  const {clientId} = req.params
+  try {
+    const findClientsOrders = await Orders.find({clientId: clientId})
+    if(!findClientsOrders) { 
+      return res.status(500).json({message: "No encontre ordenes del cliente"});
+    }
+    return res.status(200).json(findClientsOrders);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las ordenes' });
+    console.log(error)
+  }   
+}
+
 export const getMonthlyOrders = async (req, res) => { 
   const {month} = req.params
   console.log(month)
@@ -207,6 +221,7 @@ export const addPaid = async (req, res) => {
     } 
 }
 
+
 export const deleteAndReplenishArticles = async (req, res) => { 
   const { orderId } = req.params;
   try {
@@ -215,6 +230,13 @@ export const deleteAndReplenishArticles = async (req, res) => {
       return res.status(404).json({ mensaje: 'Orden no encontrada' });
     }
     const rentedProducts = order.orderDetail;
+
+    if (order.downPaymentData && order.downPaymentData.length > 0) {
+      const downPaymentId = order.downPaymentData[0].downPaymentId;
+      await DownPayments.findOneAndDelete({ downPaymentId: downPaymentId });
+    }
+
+    
     console.log("ACA MIRA:", rentedProducts)
     await Promise.all(
         rentedProducts.map(async (productRented) => {
@@ -323,13 +345,15 @@ export const addNewProductsToOrderDetail = async (req, res) => {
 
 export const addArticlesMissed = async (req, res) => {
   const { orderId } = req.params;
-  console.log(req.body)
+  console.log("CUERPO DEL POST", req.body)
 
   try {
     const existingOrder = await Orders.findById(orderId);
     if (!existingOrder) {
       return res.status(404).json({ error: 'Orden no encontrada' });
     }
+
+    console.log("LA ORDEN QUE ENCONTRE", existingOrder)
 
     existingOrder.missingArticlesData.push(req.body);
     const updatedOrder = await existingOrder.save();
@@ -411,12 +435,12 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
  export const deleteDownPaymentData = async (req, res) => {
   const { orderId } = req.params;
-  console.log(req.body.downPaymentId)
+
 
   try {
-     await Orders.updateOne({ _id: orderId }, { $set: { downPaymentData: [] } }); //pone vacio el downPaymentData de la orden
-     await DownPayments.deleteOne({ downPaymentId: req.body.downPaymentId }); // elimina la seña del modelo seña
-     await Collections.deleteOne({ downPaymentId: req.body.downPaymentId }); // elimina el pago del modelo de cobros
+     await Orders.updateOne({ _id: orderId }, { $set: { downPaymentData: [] } }); 
+     await DownPayments.deleteOne({ downPaymentId: req.body.downPaymentReference }); 
+     await Collections.deleteOne({ downPaymentId:  req.body.downPaymentReference}); 
  
      res.status(200).send({ message: 'Seña eliminado correctamente.' });
   } catch (error) {

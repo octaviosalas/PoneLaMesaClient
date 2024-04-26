@@ -268,7 +268,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
                         {errorInQuantity ? <p className="text-xs text-zinc-700 font-medium">Debes ingresar un numero mayor a 0</p> : null}
 
                         <Input 
-                        label="Cantidad" 
+                        label="Monto total Gastado" 
                         type="text" 
                         className="mt-2" 
                         value={productChoosenValue} 

@@ -129,7 +129,7 @@ const DepositList = ({depositData, updateNumbers}) => {
                          </TableRow>
                        )}
                      </TableBody>
-          </Table> : <p>Cargando...</p>}
+          </Table> : <p className='font-medium text-zinc-600 font-sm 2xl:font-md'>En este momento, no hay articulos en Deposito</p>}
     </div>
   )
 }
