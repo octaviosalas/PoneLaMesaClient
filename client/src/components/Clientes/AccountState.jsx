@@ -6,10 +6,12 @@ import Loading from "../Loading/Loading";
 import { formatePrice } from "../../functions/gralFunctions";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
 import PostPayment from "../Orders/PostPayment";
+import ViewDebtReplacementsArticles from "./ViewDebtReplacementsArticles";
+import MarkDebtAsPaid from "../Modals/MarkDebtAsPaid";
 
 const AccountState = ({clientData, updateClientData}) => {
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [clientHasReplacementsDebt, setClientHasReplacementsDebt] = useState(false)
   const [clientHasOrdersDebt, setClientHasOrdersDebt] = useState(false)
   const [load, setLoad] = useState(true)
@@ -62,51 +64,89 @@ const AccountState = ({clientData, updateClientData}) => {
   }
 
 
-   const createReplacementsTable = (items) => { 
-      
-        const data = items.map((it) => { 
-            const orderNumber = it.orderCompletedData.map((ord) => ord.orderNumber).shift()
-            const orderMonth = it.orderCompletedData.map((ord) => ord.month).shift()
-            const orderYear = it.orderCompletedData.map((ord) => ord.year).shift()
-            const productName = it.productsMissed.map((ord) => ord.productName).shift()
-            const productQuantity = it.productsMissed.map((ord) => ord.missing).shift()
-            const productReplacementPrice = it.productsMissed.map((ord) => ord.replacementPrice).shift()
-            return { 
-                orderNumber: orderNumber,
-                mes: orderMonth,
-                año: orderYear,
-                articulo: productName,
-                cantidadFaltante: productQuantity,
-                monto: productReplacementPrice
-            }
-        })
+  const createReplacementsTable = (items) => {
+    console.log("Vamos a trabajar aca", items)
 
-        console.log(data)
-        setClientReplacementsDebtDetail(data)
-        const properties = Object.keys(data[0]);
-        console.log("Propiedad", properties)
-        if(data.length > 0 ) { 
+    const data = items.map((it) => { 
+        const orderNumber = it.orderCompletedData.map((ord) => ord.orderNumber).shift()
+        const orderMonth = it.orderCompletedData.map((ord) => ord.month).shift()
+        const orderYear = it.orderCompletedData.map((ord) => ord.year).shift()
+        const replacementData = it.productsMissed
+        const totalAmountDebt = it.amountToPay
+        const debtId = it.debtId
+        const completeDebtData = it
+        
+        return { 
+            orderNumber: orderNumber,
+            mes: orderMonth,
+            año: orderYear,
+            replacementData: replacementData,
+            totalAmountDebt: totalAmountDebt,
+            debtId: debtId,
+            completeDebtData: completeDebtData
+        }
+    })
+
+    console.log("data", data)
+    setClientReplacementsDebtDetail(data)
+    const properties = Object.keys(data[0]);
+    console.log("Propiedad", properties)
+    if(data.length > 0 ) { 
         console.log(data)
         const firstDetail = data[0];
         const properties = Object.keys(firstDetail);
-        const filteredProperties = properties.filter(property => property !== "_id");
+        const filteredProperties = properties.filter(property => property !== "replacementData" && property !== "totalAmountDebt"  && property !== "debtId"  && property !== "completeDebtData");
     
         const columnLabelsMap = {
-        orderNumber: 'Orden',
+            orderNumber: 'Orden',
         };
-    
+
+        // Crear un array para almacenar las columnas de la tabla
         const tableColumns = filteredProperties.map(property => ({
-        key: property,
-        label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+            key: property,
+            label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
         }));
 
+        // Agregar las columnas adicionales al array
+        tableColumns.push({
+            key: 'Ver',
+            label: 'Ver',
+            cellRenderer: (cell) => { 
+                const filaActual = cell.row;
+                const replacementData = filaActual.original.replacementData;
+                const totalAmountDebt = filaActual.original.totalAmountDebt
+                const item = {replacementData, totalAmountDebt};
+                return (
+                    <ViewDebtReplacementsArticles replacementData={item}/>
+                );
+            },
+        });
+
+        tableColumns.push({
+            key: 'Pagar',
+            label: 'Pagar',
+            cellRenderer: (cell) => { 
+                const filaActual = cell.row;
+                const id = filaActual.original.debtId;
+                const completeDebtData = filaActual.original.completeDebtData;
+                const totalAmountDebt = filaActual.original.totalAmountDebt
+
+
+                const item = {id};
+                return (
+                    <MarkDebtAsPaid debtId={item} clientData={clientData} completeDebtData={completeDebtData} debtAmount={totalAmountDebt} updateClientData={getClientData} closeModal={onClose}/>
+                );
+            },
+        });
+
+        console.log("Table columns", tableColumns)
         setColumns(tableColumns);
         setShowTable(true)  
-        } else { 
+    } else { 
         console.log("First table length 0!")
         setErrorTable(true)
-        }          
-    } 
+    }          
+}
 
     const createOrderDebtsTable = (items) => { 
         console.log(items)
@@ -232,7 +272,7 @@ const AccountState = ({clientData, updateClientData}) => {
                       </TableHeader>
                             <TableBody items={clientReplacementsDebtDetail}>
                                       {(item) => (
-                                  <TableRow key={item.articulo}>
+                                  <TableRow key={item.orderNumber}>
                                       {columns.map(column => (
                                       <TableCell key={column.key}  className='text-left' >
                                           {column.cellRenderer ? (
