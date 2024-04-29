@@ -91,21 +91,23 @@ const CollectionsGraphic = ({monthSelected, yearSelected}) => {
 
         <Card className="mx-auto  w-[800px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Cobros - Tipo de Cobros</h3>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Cobros - Cuentas</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {totalAmountCollections}</p>
             </div>
-              <List className="mt-2">
-                  {collectionsAgroupByAccounts.map((item, index) => (
-                      <ListItem key={item.account} className='flex justify-between items-center'>
-                        <span>{item.account}</span>
-                        <span>{item.quantityCollections}</span>
-                        <span>Señas: {item.downPaymentCollections}</span>
-                        <span>Alquileres: {item.ordersCollections}</span>
-                        <span>Reposiciones: {item.replacementeCollections}</span>
-                        <span>{formatePrice(item.totalAmount)}</span>
-                      </ListItem>
-                  ))}
-                </List>
+
+                  <div className='flex justify-center items-center mt-2 gap-24'>  
+                      {collectionsAgroupByAccounts.map((item, index) => (                  
+                          <div key={item.account} className='flex flex-col items-start justify-start'>
+                              <span className="text-md font-medium text-green-800">{item.account}</span>
+                              <span className="text-sm text-zinc-600"><span className='font-medium'>Cobros </span>: {item.quantityCollections}</span>
+                              <span className="text-sm text-zinc-600"><span className='font-medium'>Señas  </span>: {item.downPaymentCollections}</span>
+                              <span className="text-sm text-zinc-600"><span className='font-medium'>Alquileres </span>: {item.ordersCollections}</span>
+                              <span className="text-sm text-zinc-600"><span className='font-medium'>Reposiciones </span>: {item.replacementeCollections}</span>
+                              <span className="text-sm text-zinc-600"><span className='font-medium'>Total </span>: {formatePrice(item.totalAmount)}</span>
+                          </div>                            
+                      ))}
+                 </div>
+        
         </Card>
 
         

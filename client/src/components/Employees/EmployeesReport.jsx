@@ -89,7 +89,7 @@ export const EmployeesReport = ({employeeData}) => {
 
               {secondStep ? 
                 <div className="flex items-center justify-center mt-4 mb-2">
-                    <EmployeesReportSecondStep filteredData={filteredData} closeModal={onClose} monthSelected={monthSelected} hourAmount={employeeData.hourAmount}/>
+                    <EmployeesReportSecondStep filteredData={filteredData} closeModal={onClose} monthSelected={monthSelected} yearSelected={yearSelected} hourAmount={employeeData.hourAmount}/>
                 </div> : null}
 
             </>

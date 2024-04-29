@@ -106,7 +106,11 @@ const HistoricClient = ({clientData, updateClientData}) => {
                         </div>
                     </Card>
                    
-                      {debtorClient ? <p className="text-red-600 font-bold underline cursor-pointer text-xs mt-4" onClick={() => setViewDebt(prevState => !prevState)}>Este Cliente posee {clientDebtDetail.length} deudas</p> 
+                      {debtorClient ?
+                      <div className="flex flex-col items-start justify-start ">
+                         <p className="text-white bg-red-500 font-medium text-sm mt-4">Este Cliente posee {clientDebtDetail.length} deudas</p> 
+                         <p className="text-red-600 cursor-pointer text-xs" onClick={onClose}>Para verlas en detalle, ingresa en su estado de cuenta.</p> 
+                      </div>
                       : 
                       <p className="text-green-800 font-medium text-xs">Este cliente no posee deudas</p>
                       }
@@ -115,28 +119,7 @@ const HistoricClient = ({clientData, updateClientData}) => {
               </ModalHeader>
               <ModalBody className="flex flex-col justify-center items-center">   
                     
-              {viewDebt ? 
-                <div className="flex flex-col items-start justify-start text-start w-full overflow-y-auto max-h-[200px]">
-                  <h5 className="text-md font-medium text-green-800">Detalle de Deuda:</h5>
-                   {clientDebtDetail.map((d) => (
-                    <div className="flex flex-col items-start justify-start mt-2" key={d.debtId}>
-                       <p className="font-medium text-xs text-zinc-600">Tipo de deuda: Reposicion</p>
-                       <p className="font-medium text-xs text-zinc-600">Monto a pagar: {formatePrice(d.amountToPay)}</p>
-                       {d.productsMissed.map((prodMissed) => (
-                        <div className="flex items-center gap-3">
-                          <p className="font-medium text-xs text-zinc-600">Producto: {prodMissed.productName}</p>
-                          <p className="font-medium text-xs text-zinc-600">Cantidad: {prodMissed.missing}</p>
-                        </div>                       
-                       ))}
-                       <p className="font-medium text-xs text-zinc-600">
-                           Correspondiente a la orden: {d.orderCompletedData.map((ord) => ord.orderNumber)} del mes {d.orderCompletedData.map((ord) => ord.month)} del {d.orderCompletedData.map((ord) => ord.year)} 
-                       </p>
-                       <MarkDebtAsPaid debtId={d.debtId} debtAmount={d.amountToPay} completeDebtData={d} clientData={clientData} updateClientData={updateClientData} closeModal={closeModalWhenMarktTheDebtAsPaid}/>
-                    </div>
-                   ))}
-                </div>
-                :
-                null}     
+             
 
              {loadingData ? (
                     <div className="flex flex-col items-center justify-center">

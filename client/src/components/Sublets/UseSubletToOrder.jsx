@@ -16,6 +16,7 @@ const UseSubletToOrder = ({subletData, update}) => {
   const [secondStep, setSecondStep] = useState(false);
   const [orderChoosenData, setOrderChoosenData] = useState(false);
   const [orderChoosenStatus, setOrderChoosenStatus] = useState("");
+  const [errorNumber, setErrorNumber] = useState("");
 
     useEffect(() => { 
         console.log(orderChoosenStatus)
@@ -40,7 +41,7 @@ const UseSubletToOrder = ({subletData, update}) => {
       console.log(typeof orderNumberSelected)
 
 
-        if(yearSelected !== null && monthSelected !== null && orderNumberSelected !== null) { 
+        if(yearSelected !== null && monthSelected !== null && orderNumberSelected !== null && errorNumber !== true) { 
           const filteredOrders = orders.filter((ord) => ord.month === monthSelected && ord.year === yearSelected && ord.orderNumber === orderNumberSelected)
           if(filteredOrders.length > 0) { 
             console.log(filteredOrders)
@@ -69,6 +70,16 @@ const UseSubletToOrder = ({subletData, update}) => {
       setSecondStep(false)
     }
 
+    const preventMinus = (e) => {
+      if (e.key === '-') {
+        e.preventDefault();
+      }
+   };
+  
+
+
+ 
+ 
 
 
 
@@ -110,12 +121,24 @@ const UseSubletToOrder = ({subletData, update}) => {
                         label="Numero de orden" 
                         variant="underlined" 
                         className="w-72" 
+                        onKeyPress={preventMinus}
                         value={orderNumberSelected}
-                        onChange={(e) => setOrderNumberSelected(parseInt(e.target.value, 10))}/>
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === '' || (value > 0 && !isNaN(value)) ) {
+                            setOrderNumberSelected(parseInt(value));
+                            setErrorNumber(false)
+                          } else {
+                            setErrorNumber(true)
+                          }
+                         }} 
+                       />  
+
+                       {errorNumber ? <p className="text-green-800 font-medium text-xs mt-1">Debes ingresar un numero Valido</p> : null}
                         
                         {orderDoesNotExist ?
                           <div className="flex items-center justify-center mt-8">
-                            <p className=" text-green-800 font-medium  text-sm">No existe</p> 
+                            <p className=" text-green-800 font-medium  text-sm">El numero de orden no existe</p> 
                           </div>  
                         : null}
 

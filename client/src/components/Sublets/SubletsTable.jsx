@@ -98,7 +98,8 @@ const SubletsTable = ({sublets, update}) => {
                         const date = filaActual.original.date;
                         const productsDetail = filaActual.original.productsDetail;
                         const amount = filaActual.original.amount;
-                        const item = {id,  provider, month, day, date, productsDetail, amount};
+                        const used = filaActual.original.used;
+                        const item = {id,  provider, month, day, date, productsDetail, amount, used};
                         return (
                         <EditModal type="sublets" subletData={item} updateSubletList={update}/>
                         );

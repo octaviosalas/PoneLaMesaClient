@@ -10,12 +10,13 @@ import axios from "axios";
   const [stock, setStock] = useState("")
   const [replacementPrice, setReplacementPrice] = useState("")
   const [missedData, setMissedData] = useState(false)
+  const [errorInNumberText, setErrorInNumberText] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [errorNumber, setErrorNumber] = useState(false)
 
 
   const createArtcile = () => { 
-    if(name.length > 0 && price.length > 0 && bonusClientsPrice.length > 0 && stock.length > 0 && replacementPrice.length > 0) { 
+    if(name.length > 0 && price.length > 0 && bonusClientsPrice.length > 0 && stock.length > 0 && replacementPrice.length > 0 && errorInNumberText === false) { 
       const newArticle = ({ 
         articulo: name,
         precioUnitarioAlquiler: price,
@@ -36,6 +37,11 @@ import axios from "axios";
            .catch((err) => { 
             console.log(err)
            })
+    } else if (errorInNumberText === true){ 
+      setErrorInNumberText(true)
+      setTimeout(() => {
+        setMissedData(false)
+      }, 1800)
     } else { 
       setMissedData(true)
       setTimeout(() => {
@@ -44,6 +50,14 @@ import axios from "axios";
     }
     
   }
+
+  const preventMinus = (e) => {
+    if (e.key === '-') {
+      e.preventDefault();
+    }
+ };
+
+ 
 
   return (
     <>
@@ -57,7 +71,8 @@ import axios from "axios";
                <div className="flex flex-col items-center justify-center">
                  <Input label="Nombre Articulo" variant="underlined" className="w-72" onChange={(e) => setName(e.target.value)}/>
 
-                 <Input label="Precio Alquiler" variant="underlined" className="w-72 mt-2"
+                 <Input label="Precio Alquiler" type="number" variant="underlined" className="w-72 mt-2"   
+                   onKeyPress={preventMinus}
                    onChange={(e) => {
                     const value = e.target.value;
                     if (value === '' || (value > 0 && !isNaN(value)) ) {
@@ -69,9 +84,42 @@ import axios from "axios";
                    }} 
                 />      
 
-                 <Input label="Precio Alquiler Bonificados" variant="underlined" className="w-72 mt-2" onChange={(e) => setBonusClientsPrice(e.target.value)}/>
-                 <Input label="Precio Reposicion" variant="underlined" className="w-72 mt-2" onChange={(e) => setStock(e.target.value)}/>
-                 <Input label="Cantidad a Agregar" variant="underlined" className="w-72 mt-2" onChange={(e) => setReplacementPrice(e.target.value)}/>        
+                 <Input label="Precio Alquiler Bonificados" type="number" variant="underlined" className="w-72 mt-2"
+                  onKeyPress={preventMinus}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || (value > 0 && !isNaN(value)) ) {
+                      setBonusClientsPrice(value);
+                      setErrorNumber(false)
+                    } else {
+                      setErrorNumber(true)
+                    }
+                   }} 
+                />     
+                 <Input label="Precio Reposicion" type="number" variant="underlined" className="w-72 mt-2"  
+                    onKeyPress={preventMinus}
+                   onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || (value > 0 && !isNaN(value)) ) {
+                      setReplacementPrice(value);
+                      setErrorNumber(false)
+                    } else {
+                      setErrorNumber(true)
+                    }
+                   }} 
+                />     
+                 <Input label="Cantidad a Agregar" type="number" variant="underlined" className="w-72 mt-2"
+                  onKeyPress={preventMinus}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || (value > 0 && !isNaN(value)) ) {
+                      setStock(value);
+                      setErrorNumber(false)
+                    } else {
+                      setErrorNumber(true)
+                    }
+                   }} 
+                />        
                </div>
               </ModalBody>
               <ModalFooter className="flex items-center justify-center gap-6">
@@ -89,6 +137,13 @@ import axios from "axios";
               {missedData ? 
                 <div className="mt-4 mb-4 flex items-center justify-center">
                   <p className="font-medium text-green-700 text-sm">Debes completar todos los campos</p>
+                </div>
+                :
+                null
+              }
+              {errorInNumberText ? 
+                <div className="mt-4 mb-4 flex items-center justify-center">
+                  <p className="font-medium text-green-700 text-sm">Debes completar todos los campos con datos validos</p>
                 </div>
                 :
                 null

@@ -24,6 +24,7 @@ const CreateNewPurchase = ({updateList}) => {
   const [actualDay, setActualDay] = useState(getDay())
   const [actualYear, setActualYear] = useState(getYear())
   const [succesPurchase, setSuccesPurchase] = useState(false)
+  const [errorNumber, setErrorNumber] = useState(false)
   const userCtx = useContext(UserContext)
 
   //Funciones para obtener proveedores
@@ -102,7 +103,7 @@ const CreateNewPurchase = ({updateList}) => {
 
 
   const createNewPurchase = () => { 
-    if(productsSelected.length !== 0 && userCtx.userId !== null && userCtx.userName !== null && productsSelected.reduce((acc, el) => acc + el.value, 0) > 0) {    
+    if(productsSelected.length !== 0 && userCtx.userId !== null && userCtx.userName !== null && productsSelected.reduce((acc, el) => acc + el.value, 0) > 0 && errorNumber !== true) {    
         const newPurchase = ({ 
            date: actualDate,
            day: actualDay,
@@ -158,6 +159,12 @@ const CreateNewPurchase = ({updateList}) => {
   } 
 
   
+  const preventMinus = (e) => {
+    if (e.key === '-') {
+      e.preventDefault();
+    }
+ };
+
   
   
 
@@ -170,6 +177,7 @@ const CreateNewPurchase = ({updateList}) => {
             <>
               <ModalHeader className="flex flex-col text-md text-zinc-600 font-medium gap-1">Crear Compra</ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">
+
                   <Select label="Proveedor" className="w-64 2xl:w-72" variant="underlined">
                         {allProviders.map((prov) => (
                           <SelectItem key={prov._id} value={prov.name} onClick={() => selectProvider(prov.name, prov._id)}>
@@ -177,7 +185,15 @@ const CreateNewPurchase = ({updateList}) => {
                           </SelectItem>
                         ))}
                   </Select> 
-                  <Input type="text" value={choosenProductName} className="w-64 2xl:w-72" variant="underlined" label="Producto" onChange={(e) => handleInputChange(e.target.value)}/>
+
+                  <Input 
+                  type="text" 
+                  value={choosenProductName}
+                  className="w-64 2xl:w-72" 
+                  variant="underlined" 
+                  label="Producto" 
+                  onChange={(e) => handleInputChange(e.target.value)}/>
+
                   <div className="">
                         {
                         filteredNames !== "" ? 
@@ -192,11 +208,47 @@ const CreateNewPurchase = ({updateList}) => {
                         : null
                         }
                     </div> 
-                    <Input type="number" value={choosenProductQuantity} variant="underlined" label="Cantidad" className=" w-64 2xl:w-72" onChange={(e) => setChoosenProductQuantity(e.target.value)}/> 
-                    <Input type="number" value={choosenProductValue} variant="underlined" label="Valor $" className="mt-2 w-64 2xl:w-72"  onChange={(e) => setChoosenProductValue(parseInt(e.target.value, 10))}/> 
+
+                 
+
+                    <Input type="number" 
+                    value={choosenProductQuantity} 
+                    variant="underlined" 
+                    label="Cantidad" 
+                    className=" w-64 2xl:w-72" 
+                    onKeyPress={preventMinus}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || (value > 0 && !isNaN(value)) ) {
+                        setChoosenProductQuantity(parseInt(value));
+                        setErrorNumber(false)
+                      } else {
+                        setErrorNumber(true)
+                      }
+                     }} 
+                  /> 
+                  
+
+                    <Input 
+                    type="number" 
+                    value={choosenProductValue} 
+                    variant="underlined" 
+                    label="Valor $" 
+                    className="mt-2 w-64 2xl:w-72" 
+                    onKeyPress={preventMinus}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || (value > 0 && !isNaN(value)) ) {
+                        setChoosenProductValue(parseInt(value));
+                        setErrorNumber(false)
+                      } else {
+                        setErrorNumber(true)
+                      }
+                     }} 
+                    /> 
                  
                        {
-                        choosenProductName.length !== 0 && choosenProductQuantity.length !== 0  && choosenProductValue.length !== 0?
+                        choosenProductName.length !== 0 && choosenProductQuantity > 0  && choosenProductValue > 0?
                         <Button className="mt-6 w-72 font-medium text-white" color="success" 
                          onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductValue )}>Añadir</Button> 
                         : 
@@ -237,10 +289,17 @@ const CreateNewPurchase = ({updateList}) => {
                 </Button>
           
               </ModalFooter>
+
             {succesPurchase ? 
               <div className="flex items-center justify-center mt-4 mb-4">
-                <p className="font-medium text-green-600 text-sm">Compra realizada con Exito ✔</p>
+                <p className="font-medium text-green-800 text-sm">Compra realizada con Exito ✔</p>
               </div> : null}
+
+              {errorNumber ? 
+              <div className="flex items-center justify-center mt-4 mb-4">
+                <p className="font-medium text-green-800 text-sm">Debes ingresar un numero mayor a 0</p>
+              </div> : null}
+
             </>
           )}
         </ModalContent>
