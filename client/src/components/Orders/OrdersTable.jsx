@@ -143,6 +143,7 @@ const OrdersTable = () => {
 
                       const filaActual = cell.row;
                       const id = filaActual.original._id;
+                      const status = filaActual.original.orderStatus;
                       const client = filaActual.original.client;
                       const clientId = filaActual.original.clientId;
                       const order = filaActual.original.orderNumber;
@@ -153,7 +154,7 @@ const OrdersTable = () => {
                       const returnDate = filaActual.original.returnDate;
                       const returnPlace = filaActual.original.returnPlace;
                       const orderDetail = filaActual.original.orderDetail;
-                      const item = {id, client,order, month, date, dateOfDelivery,returnDate,orderDetail, returnPlace, placeOfDelivery, clientId};
+                      const item = {id, status, client,order, month, date, dateOfDelivery,returnDate,orderDetail, returnPlace, placeOfDelivery, clientId};
                       return (
                         <EditModal type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                       );

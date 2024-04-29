@@ -287,6 +287,7 @@ export const updateOrderDetail = async (req, res) => {
   const { orderId } = req.params;
   const { newOrderDetailData } = req.body;
   console.log(req.body)
+  console.log("NEW TOTAL AMOUNT RECIBIDO", req.body.newTotalAmount)
 
   try {
     if (req.body && req.body.completeNewDetail && req.body.newTotalAmount) {
@@ -307,6 +308,11 @@ export const updateOrderDetail = async (req, res) => {
 
       if(req.body.toIncrementStock.length > 0) { 
         await incrementarStock(req.body.toIncrementStock);
+      }
+
+      if(req.body.newProductToDisscountStock.length > 0) {
+        console.log("NUEVO PRODUCTO PARA DESCONTAR STOCK") 
+        await decrementarStock(req.body.newProductToDisscountStock);
       }
 
 

@@ -92,6 +92,7 @@ export const deleteCollection = async (req, res) => {
        { $set: { "clientDebt.$[debt].paid": false } },
        { arrayFilters: [{ "debt.debtId": req.body.paymentReferenceId }] }
      );
+     
      res.status(200).json({ message: 'Reposicion eliminada'});
 
   } catch (error) {

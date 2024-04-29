@@ -250,7 +250,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
 
                      <Input 
                         label="Cantidad" 
-                        type="text" 
+                        type="number" 
                         className="mt-2" 
                         value={productChoosenQuantity} 
                         variant="underlined" 
@@ -269,20 +269,21 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
 
                         <Input 
                         label="Monto total Gastado" 
-                        type="text" 
+                        type="number" 
                         className="mt-2" 
                         value={productChoosenValue} 
                         variant="underlined" 
                         onChange={(e) => {
-                            const value = e.target.value;
-                            if (value === '' || (value > 0 && !isNaN(value))) {
-                              setProductChoosenValue(value);
-                              setErrorInProductChoosenValue(false)
-                            } else {
-                              setErrorInProductChoosenValue(true)
-                            }
-                        }} 
-                        />
+                          const value = e.target.value;
+                          if (value === '' || (value > 0 && !isNaN(value))) {
+                            setProductChoosenValue(value);
+                            setErrorInProductChoosenValue(false)
+                          } else {
+                            setErrorInProductChoosenValue(true)
+                          }
+                      }} 
+                      />
+                        
 
                         {errorInProductChoosenValue ? <p className="text-xs text-zinc-700 font-medium">Debes ingresar un numero mayor a 0</p> : null}
 

@@ -30,7 +30,8 @@ const AccountState = ({clientData, updateClientData}) => {
     onOpen()
   }
 
-  const getClientData = async () => {  
+    const getClientData = async () => {  
+    console.log("getclientdata")
      try {
         const queryClient = await axios.get(`http://localhost:4000/orders/getByClient/${clientData.id}`)
         const response = queryClient.data
@@ -61,10 +62,9 @@ const AccountState = ({clientData, updateClientData}) => {
      } catch (error) {
          console.log(error)
      }
-  }
+    }
 
-
-  const createReplacementsTable = (items) => {
+    const createReplacementsTable = (items) => {
     console.log("Vamos a trabajar aca", items)
 
     const data = items.map((it) => { 
@@ -95,10 +95,11 @@ const AccountState = ({clientData, updateClientData}) => {
         console.log(data)
         const firstDetail = data[0];
         const properties = Object.keys(firstDetail);
-        const filteredProperties = properties.filter(property => property !== "replacementData" && property !== "totalAmountDebt"  && property !== "debtId"  && property !== "completeDebtData");
+        const filteredProperties = properties.filter(property => property !== "replacementData"  && property !== "debtId"  && property !== "completeDebtData");
     
         const columnLabelsMap = {
             orderNumber: 'Orden',
+            totalAmountDebt: "Total"
         };
 
         // Crear un array para almacenar las columnas de la tabla
@@ -134,7 +135,7 @@ const AccountState = ({clientData, updateClientData}) => {
 
                 const item = {id};
                 return (
-                    <MarkDebtAsPaid debtId={item} clientData={clientData} completeDebtData={completeDebtData} debtAmount={totalAmountDebt} updateClientData={getClientData} closeModal={onClose}/>
+                    <MarkDebtAsPaid debtId={item.id} clientData={clientData} completeDebtData={completeDebtData} debtAmount={totalAmountDebt} updateClientData={getClientData} closeModal={onClose}/>
                 );
             },
         });
@@ -146,7 +147,7 @@ const AccountState = ({clientData, updateClientData}) => {
         console.log("First table length 0!")
         setErrorTable(true)
     }          
-}
+    }
 
     const createOrderDebtsTable = (items) => { 
         console.log(items)
@@ -245,14 +246,14 @@ const AccountState = ({clientData, updateClientData}) => {
   return (
     <>
       <p className="text-xs text-green-700 font-medium cursor-pointer" onClick={handleOpen}>Ver Estado</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size} className={clientHasOrdersDebt || clientHasReplacementsDebt ? "border-2 border-red-600" : "border-2 border-green-800"} >
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">Estado de cuenta: {clientData.name}</ModalHeader>
               <ModalBody>
                   <div className="w-full flex flex-col items-center justify-center">
-                      {showTable ? 
+                      {showTable && clientHasReplacementsDebt ? 
                       <> 
                       <div className="flex justify-start items-start mt-2  w-full">
                         <p className="text-sm text-zinc-600 font-medium">Reposiciones Pendientes de Cobro:</p>
@@ -278,7 +279,7 @@ const AccountState = ({clientData, updateClientData}) => {
                                           {column.cellRenderer ? (
                                           column.cellRenderer({ row: { original: item } })
                                           ) : (
-                                          (column.key === "monto") ? (
+                                          (column.key === "totalAmountDebt") ? (
                                           formatePrice(item[column.key])
                                               ) : (
                                           item[column.key]
@@ -290,9 +291,10 @@ const AccountState = ({clientData, updateClientData}) => {
                                  )}
                             </TableBody>
                       </Table> 
-                      </> : null }
+                      </> : 
+                      null}
 
-                     {showOrderTable ? 
+                     {showOrderTable && clientHasOrdersDebt ? 
                      <>
                       <div className="flex justify-start items-start mt-4 w-full">
                           <p className="text-sm text-zinc-600 font-medium">Alquileres Entregados pendientes de Cobro:</p>
@@ -330,7 +332,11 @@ const AccountState = ({clientData, updateClientData}) => {
                                         )}
                                     </TableBody>
                                 </Table> 
-                                </> : null}
+                                </> : 
+                                null
+                                }
+
+                                {clientHasOrdersDebt === false && clientHasReplacementsDebt === false ? <p className="text-md font-medium text-green-800">Este cliente no posee deudas</p> : null}
 
                   </div>
               </ModalBody>

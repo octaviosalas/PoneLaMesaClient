@@ -11,6 +11,7 @@ import axios from "axios";
   const [replacementPrice, setReplacementPrice] = useState("")
   const [missedData, setMissedData] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
+  const [errorNumber, setErrorNumber] = useState(false)
 
 
   const createArtcile = () => { 
@@ -55,7 +56,19 @@ import axios from "axios";
               <ModalBody>
                <div className="flex flex-col items-center justify-center">
                  <Input label="Nombre Articulo" variant="underlined" className="w-72" onChange={(e) => setName(e.target.value)}/>
-                 <Input label="Precio Alquiler" variant="underlined" className="w-72 mt-2" onChange={(e) => setPrice(e.target.value)}/>      
+
+                 <Input label="Precio Alquiler" variant="underlined" className="w-72 mt-2"
+                   onChange={(e) => {
+                    const value = e.target.value;
+                    if (value === '' || (value > 0 && !isNaN(value)) ) {
+                      setPrice(value);
+                      setErrorNumber(false)
+                    } else {
+                      setErrorNumber(true)
+                    }
+                   }} 
+                />      
+
                  <Input label="Precio Alquiler Bonificados" variant="underlined" className="w-72 mt-2" onChange={(e) => setBonusClientsPrice(e.target.value)}/>
                  <Input label="Precio Reposicion" variant="underlined" className="w-72 mt-2" onChange={(e) => setStock(e.target.value)}/>
                  <Input label="Cantidad a Agregar" variant="underlined" className="w-72 mt-2" onChange={(e) => setReplacementPrice(e.target.value)}/>        
@@ -69,6 +82,10 @@ import axios from "axios";
                   Cancelar
                 </Button>
               </ModalFooter>
+              {errorNumber ?
+              <div className="flex items-center justify-center mt-4 mb-2">
+                  <p className="text-sm font-medium text-green-800">Debes ingresar un numero mayor a 0</p>
+              </div>  : null}
               {missedData ? 
                 <div className="mt-4 mb-4 flex items-center justify-center">
                   <p className="font-medium text-green-700 text-sm">Debes completar todos los campos</p>
