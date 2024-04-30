@@ -4,7 +4,13 @@ import Collections from "../models/collections.js";
 import ProductsClients from "../models/productsClients.js";
 import PDFDocument from "pdfkit";
 import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const imagePath = path.join(__dirname, '..', 'imagesApi', 'logo.png');
 
 export const incrementarStock = async (productosComprados) => { 
   try {
@@ -454,3 +460,44 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   }
  };
 
+
+
+ export const createDetailPdf = async (req, res) => {
+  const { result } = req.body;
+  console.log(result);
+ 
+  const doc = new PDFDocument();
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename=detalle_${result.cliente}.pdf`);
+  doc.pipe(res);
+ 
+  let yPosition = 50;
+
+  const imagePath = path.join(__dirname, '..', 'imagesApi', 'logo.png');
+  doc.image(imagePath, 50, yPosition, { width: 100 }); // Ajusta el tamaño según sea necesario
+  yPosition += 120;
+ 
+  // Imprimir cliente y total fuera de la tabla
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Cliente: ${result.cliente}`, 50, yPosition);
+  yPosition += 20;
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Total: ${result.total}`, 50, yPosition);
+  yPosition += 40; // Aumentar el espacio entre el total y la tabla
+ 
+  // Imprimir encabezados de la tabla
+  doc.font('Helvetica').fontSize(11).fillColor('black').text('Detalle de la Orden:', 50, yPosition);
+  yPosition += 20;
+  doc.font('Helvetica').fontSize(10).fillColor('black').text('Articulo', 50, yPosition);
+  doc.font('Helvetica').fontSize(10).fillColor('black').text('Cantidad', 200, yPosition);
+  doc.font('Helvetica').fontSize(10).fillColor('black').text('Total', 350, yPosition);
+  yPosition += 20;
+ 
+  // Imprimir detalles de los artículos
+  result.articles.forEach((article, index) => {
+     doc.font('Helvetica').fontSize(10).fillColor('black').text(article.articulo, 50, yPosition);
+     doc.font('Helvetica').fontSize(10).fillColor('black').text(article.cantidad.toString(), 200, yPosition);
+     doc.font('Helvetica').fontSize(10).fillColor('black').text(article.total.toString(), 350, yPosition);
+     yPosition += 20;
+  });
+ 
+  doc.end();
+ };

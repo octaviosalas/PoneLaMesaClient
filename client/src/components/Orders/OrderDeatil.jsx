@@ -41,7 +41,8 @@ const OrderDetail = ({orderData, collectionDetail}) => {
          }        
    }
 
-  useEffect(() => {
+   const createTable = (orderData) => { 
+    console.log("SHIPPINGCOST", orderData.shippingCost)
     if (orderData && orderData.detail && Array.isArray(orderData.detail) && orderData.detail.length > 0) {
       const firstDetail = orderData.detail[0];
       const properties = Object.keys(firstDetail);
@@ -62,12 +63,15 @@ const OrderDetail = ({orderData, collectionDetail}) => {
   
       setColumns(tableColumns);
     }
-  }, [orderData]);
+   }
+
+ 
 
   const handleOpen = () => { 
     console.log(orderData)
     onOpen()
     console.log(orderData.paid)
+    createTable(orderData)
     if(orderData.missingArticlesData.length > 0) { 
       setOrderHasMissedArticles(true)
       console.log("ACACACACA", orderData.missingArticlesData)
@@ -84,6 +88,41 @@ const OrderDetail = ({orderData, collectionDetail}) => {
   const closeCollectionOrderDetail = () => { 
     setViewOrderDetail(false)
   }
+
+  
+  const createNewPdf = async (data) => { 
+         console.log(data)       
+            const articulos = data.detail.map((detail) => { 
+              return { 
+                articulo: detail.productName,
+                cantidad: detail.quantity,
+                total:  detail.choosenProductTotalPrice
+              }
+            })
+    
+            const result = { 
+              cliente: data.client,
+              total: formatePrice(data.total),
+              articles: articulos
+            }
+
+          console.log(result)
+          try {
+              const response = await axios.post("http://localhost:4000/orders/createDetailPdf", {result}, {
+                  responseType: 'blob',
+              });
+              const blob = new Blob([response.data], { type: 'application/pdf' });      
+              const link = document.createElement('a');
+              link.href = window.URL.createObjectURL(blob);
+              link.download = 'archivo.pdf';
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+          } catch (error) {
+              console.log(error);
+          } 
+      }; 
+  
 
   return (
     <>
@@ -105,6 +144,7 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                     <p className="text-zinc-600 font-medium text-sm"><b>Pedido cargador por:</b> {orderData.creator}</p>
                     <p className="text-zinc-600 font-medium text-sm"><b>Fecha de creacion:</b> {orderData.day} de {orderData.month} de {orderData.year}</p>
                     <p className="text-zinc-600 font-medium text-sm"><b>Cliente:</b> {orderData.client}</p>
+                    {orderData.shippingCost !== undefined ? <p className="text-zinc-600 font-medium text-sm"><b>Costo de Envio:</b> {formatePrice(orderData.shippingCost)} </p> : null}
 
                     {orderData.downPaymentData.length > 0 && orderData.paid === false ? (
                           <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
@@ -145,7 +185,7 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                           </div> 
                       </div>
                     : null}
-                    {orderHasMissedArticles ? <p  className="text-red-500 underline font-medium text-sm cursor-pointer" onClick={() => setViewMissedData(prevState => !prevState)}>Se registraron Faltantes en este Pedido </p> : null}
+                    {orderHasMissedArticles ? <p  className="text-red-500 underline font-medium text-sm cursor-pointer mt-4" onClick={() => setViewMissedData(prevState => !prevState)}>Se registraron Faltantes en este Pedido </p> : null}
                     {viewMissedData ? 
                     <div>
                        {missedArticlesDetail.map((p) => ( 
@@ -207,7 +247,10 @@ const OrderDetail = ({orderData, collectionDetail}) => {
               <ModalFooter className="flex items-center justify-center mt-2">
 
                {orderData ? 
-               <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button> 
+                <div className="flex gap-4 items-center">
+                 <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button> 
+                 <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onClick={() => createNewPdf(orderData)}> Imprimir </Button> 
+                </div>
                 : 
               
                 <div className="flex items-center justify-center gap-4">
@@ -235,7 +278,7 @@ const OrderDetail = ({orderData, collectionDetail}) => {
 export default OrderDetail
 
 
-/* 
+/*
 import React from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";

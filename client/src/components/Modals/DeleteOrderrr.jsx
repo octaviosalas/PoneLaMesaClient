@@ -30,6 +30,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
 
    useEffect(() => { 
     console.log(orderData)
+    console.log(orderData.downPaymentData)
    }, [orderData])
  
    
@@ -48,7 +49,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
                   </div>
                  {successMessage ?
                   <div className="flex items-center mt-4 mb-2">
-                     <p className="text-green-600 text-md font-medium">Orden Eliminada Correctamente ✔</p>
+                     <p className="text-green-600 text-sm font-medium">Orden Eliminada Correctamente ✔</p>
                   </div>
                   : null}
                </div> : 

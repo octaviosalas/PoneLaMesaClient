@@ -9,6 +9,7 @@ import getBackendData from '../../Hooks/GetBackendData';
 import OrderNeedsSublet from "./OrderNeedsSublet";
 import { List, ListItem } from '@tremor/react';
 import AddShippingCost from "./AddShippingCost";
+import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell} from "@nextui-org/react";
 
 const CreateNewOrder = ({updateList}) => {
 
@@ -56,6 +57,12 @@ const CreateNewOrder = ({updateList}) => {
   const [errorInQuantity, setErrorInQuantity] = useState(false)
   const [shippingCost, setShippingCost] = useState(0)
   const [missingShippingCost, setMissingShippingCost] = useState(false)
+  const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
+  const [columns, setColumns] = useState([])
+  const [showTable, setShowTable] = useState(false)
+  const [size, setSize] = useState("3xl")
+
+
 
       const knowWichNumerOfOrder = () => { 
         axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
@@ -183,8 +190,7 @@ const CreateNewOrder = ({updateList}) => {
       }
  
       const executeFunctionDependsTypeOfClient = () => { 
-        console.log(choosenClientName)
-        console.log(choosenClientId)
+     
           if(orderNumber.length === 0  || choosenClientName.length === 0 || typeOfClient.length === 0 || placeOfDelivery.length === 0 || 
              dateOfDelivery.length === 0 || returnDate.length === 0  ) { 
             setMissedData(true)
@@ -199,7 +205,7 @@ const CreateNewOrder = ({updateList}) => {
               setNameClientDoesNotExist(false)
               setMissingShippingCost(false)
             }, 2000)
-          } else if (shippingCost === 0 ) { 
+          } else if (shippingCost === 0 && returnPlace !== "Local") { 
             setMissingShippingCost(true)
             setTimeout(() => { 
               setMissingShippingCost(false)
@@ -245,22 +251,23 @@ const CreateNewOrder = ({updateList}) => {
       }
 
       const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock, choosenProductCategory) => {
-        console.log("STOCK DEL PRODUCTO", choosenProductStock);
-        console.log("CANTIDAD ELEGIDA", quantity);
-    
-        // Buscar si el producto ya existe en el array
         const existingProductIndex = productsSelected.findIndex(product => product.productId === productId);
     
         if (existingProductIndex !== -1) {
-            // Si el producto ya existe, actualizar la cantidad y el precio total
             const updatedProduct = {
                 ...productsSelected[existingProductIndex],
                 quantity: productsSelected[existingProductIndex].quantity + quantity,
                 choosenProductTotalPrice: productsSelected[existingProductIndex].choosenProductTotalPrice + (price * quantity),
             };
     
-            // Actualizar el producto existente en el array
-            setProductsSelected(productsSelected.map((product, index) => index === existingProductIndex ? updatedProduct : product))
+            setProductsSelected(prevProductsSelected => {
+                const updatedProducts = prevProductsSelected.map((product, index) => index === existingProductIndex ? updatedProduct : product);
+                // Llamada a createTableProductsSelected con el estado actualizado
+                createTableProductsSelected(updatedProducts);
+                return updatedProducts;
+            });
+    
+            // Limpiar campos
             setChoosenProductId("");
             setChoosenProductName("");
             setChoosenProductQuantity("");
@@ -268,11 +275,19 @@ const CreateNewOrder = ({updateList}) => {
             setChoosenProductPrice("");
             setChoosenProductCategory("");
             setChoosenProductStock(0);
+    
         } else if (quantity <= choosenProductStock && productDoesNotExist === false) {
-           
             const choosenProductTotalPrice = price * quantity;
             const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice, choosenProductCategory };
-            setProductsSelected([...productsSelected, newProduct]);
+    
+            setProductsSelected(prevProductsSelected => {
+                const updatedProducts = [...prevProductsSelected, newProduct];
+                // Llamada a createTableProductsSelected con el estado actualizado
+                createTableProductsSelected(updatedProducts);
+                return updatedProducts;
+            });
+    
+            // Limpiar campos
             setChoosenProductId("");
             setChoosenProductName("");
             setChoosenProductQuantity("");
@@ -280,6 +295,7 @@ const CreateNewOrder = ({updateList}) => {
             setChoosenProductPrice("");
             setChoosenProductCategory("");
             setChoosenProductStock(0);
+    
         } else if (quantity > choosenProductStock && productDoesNotExist === false) {
             setInsufficientStock(true);
             setTimeout(() => {
@@ -360,10 +376,57 @@ const CreateNewOrder = ({updateList}) => {
         setShippingCost(value)
       }
 
+      useEffect(() => { 
+        console.log("Array Tabla Prod Selected", productsSelected)
+      }, [productsSelected])
+
+     
+
+      const createTableProductsSelected = (productsSelected) => { 
+        console.log("me llego!!! products selected", productsSelected)
+         if(productsSelected.length > 0 ) { 
+          const firstDetail = productsSelected[0];
+          const properties = Object.keys(firstDetail);
+          const filteredProperties = properties.filter(property => property !== 'choosenProductCategory' && property !== 'replacementPrice' && 
+          property !== 'productId' && property !== 'productId' && property !== 'price');
+          
+          console.log(properties)
+
+          const columnLabelsMap = {
+            productName: 'Articulo',
+            quantity: 'Cantidad',
+            choosenProductTotalPrice: 'Monto Total',
+            };
+        
+          const tableColumns = filteredProperties.map(property => ({
+            key: property,
+            label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
+          }));
+
+          tableColumns.push({
+            key: 'Eliminar',
+            label: 'Eliminar',
+            cellRenderer: (cell) => { 
+                const filaActual = cell.row;
+                const productId = filaActual.original.productId;
+                return (
+                    <p className="cursor-pointer text-green-800 text-sm" onClick={() => handleRemoveProduct(productId)}>Eliminar</p>
+                );
+            },
+        });
+
+        
+          setColumns(tableColumns);
+          setShowTable(true)  
+         } else { 
+          console.log("First table length 0!")
+         }
+      }
+
   return (
     <>
       <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={handleOpen}>Crear Pedido</p>
-      <Modal isOpen={isOpen} autoClose={false} isDismissable={false} onOpenChange={onOpenChange} className="max-w-xl">
+      <Modal isOpen={isOpen} autoClose={false} isDismissable={false} onOpenChange={onOpenChange} size={secondStep !== true ? "xl" : size}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -542,7 +605,7 @@ const CreateNewOrder = ({updateList}) => {
                       {
                         choosenProductName.length !== 0 && choosenProductQuantity.length !== 0 && productDoesNotExist === false ?
                         <Button 
-                         className="mt-6 font-medium text-white w-72" color="success" 
+                         className="bg-green-800 text-sm font-medium text-white w-72"  
                          onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, 
                                         choosenProductPriceReplacement, choosenProductStock, choosenProductCategory)}>
                           Añadir
@@ -569,7 +632,54 @@ const CreateNewOrder = ({updateList}) => {
                         null
                       }  
 
-                      {productsSelected.length !== 0 ? 
+                      {showTable  && productsSelected.length > 0 ? 
+                      <> 
+                       <Table                          
+                       columnAutoWidth={true} 
+                       columnSpacing={10}  
+                       aria-label="Selection behavior table example with dynamic content"   
+                       selectionBehavior={selectionBehavior} 
+                       className=" flex items-center justify-center shadow-lg max-h-[250px] overflow-y-auto rounded-xl w-[600px]">
+                           <TableHeader columns={columns}>
+                               {(column) => (
+                               <TableColumn key={column.key} className="text-xs gap-12">
+                                   {column.label}
+                               </TableColumn>
+                                   )}
+                               </TableHeader>
+                               <TableBody items={productsSelected}>
+                                       {(item) => (
+                                           <TableRow key={item.productId}>
+                                               {columns.map(column => (
+                                                   <TableCell key={column.key} className='text-left'>
+                                                       {column.cellRenderer ? (
+                                                           column.cellRenderer({ row: { original: item } })
+                                                       ) : (
+                                                           (column.key === "choosenProductTotalPrice") ? (
+                                                               formatePrice(item[column.key])
+                                                           ) : (
+                                                               item[column.key]
+                                                           )
+                                                       )}
+                                                   </TableCell>
+                                               ))}
+                                           </TableRow>
+                                       )}
+                                   </TableBody>
+                               </Table> 
+                               
+                               <div className="mt-4 mb-4">
+                                  <p className="font-medium text-md text-zinc-600">Monto total: {formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))}</p>
+                               </div>
+                             </>
+                               : null
+                       
+                      }
+
+                      
+
+
+                      {/* {productsSelected.length !== 0 ? 
                          <div className="flex flex-col  w-full">
                           <div className="flex flex-col mt-6 h-auto max-h-[200px] overflow-y-auto max-w-lg overflow-x-auto">
                               {productsSelected.map((prod) => ( 
@@ -598,20 +708,23 @@ const CreateNewOrder = ({updateList}) => {
                         </div>  
                         :
                         null
-                      }
+                      } */}
+
+
+
                   </div>
                 </div>
                 <div>
                   <ModalFooter className="flex items-center justify-center mt-6">
                      {succesMessage !== true ?
                      <div className="flex items-center gap-6">
-                        <Button className="font-medium text-white bg-green-800  w-40"  variant="light" onPress={() => sendNewOrder(orderStatus)}>
+                        <Button className="font-medium text-white bg-green-800  w-52"  variant="light" onPress={() => sendNewOrder(orderStatus)}>
                           Confirmar Pedido
                         </Button>
-                        <Button className="font-medium text-white bg-green-800  w-40"   variant="light" onPress={setOrderToBeConfirmed}>
+                        <Button className="font-medium text-white bg-green-800  w-52"   variant="light" onPress={setOrderToBeConfirmed}>
                           A Confirmar
                         </Button>
-                        <Button className="font-medium text-white bg-green-800  w-40"  variant="light"  onClick={() => {
+                        <Button className="font-medium text-white bg-green-800  w-52"  variant="light"  onClick={() => {
                             changeState(false, true);
                             setProductsSelected([]);
                             setChoosenClientId("");
