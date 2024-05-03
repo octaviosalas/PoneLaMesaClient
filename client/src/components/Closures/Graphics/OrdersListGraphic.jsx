@@ -61,8 +61,8 @@ const OrdersListGraphic = ({yearSelected, monthSelected}) => {
                 <OrdersByClientGraphic ordersData={allOrders}/>
             </div>
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Alquileres Mes</h3>
-               <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrders)}</p>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium text-lg">Alquileres Mes</h3>
+               <p className='text-md font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrders)}</p>
             </div>
               <List className="mt-2">
                   {allOrders.map((item, index) => (
@@ -77,8 +77,8 @@ const OrdersListGraphic = ({yearSelected, monthSelected}) => {
 
         <Card className="mx-auto  w-[600px] h-[350px] max-h-[350px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Alquileres Cobrados</h3>
-               <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrdersPaid)}</p>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium text-lg">Alquileres Cobrados</h3>
+               <p className='text-md font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrdersPaid)}</p>
             </div>
               <List className="mt-2">
                   {ordersPaid.map((item, index) => (
@@ -93,8 +93,8 @@ const OrdersListGraphic = ({yearSelected, monthSelected}) => {
 
         <Card className="mx-auto  w-[600px] h-[350px] max-h-[350px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Alquileres Sin Cobrar</h3>
-               <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrdersWithOutPaid)}</p>
+               <h3 className="text-tremor-content-strong text-lg dark:text-dark-tremor-content-strong font-medium">Alquileres Sin Cobrar</h3>
+               <p className='text-md font-medium text-zinc-600'>Total: {formatePrice(totalAmountOrdersWithOutPaid)}</p>
             </div>
               <List className="mt-2">
                   {ordersWithOutPaid.map((item, index) => (

@@ -38,7 +38,7 @@ const FiltersPurchases = ({applyFilters, isFilterApplied}) => {
           <ModalContent>
             {(onClose) => (
               <>
-                <ModalHeader className="flex flex-col gap-1">Filtrar Compras</ModalHeader>
+                <ModalHeader className="flex flex-col gap-1">Filtrar Inversiones</ModalHeader>
                 <ModalBody>
                   <div className="flex flex-col items-center justify-center">
                      <Select variant={"faded"} label="Selecciona un año" className="max-w-xs" value={yearSelected}>          

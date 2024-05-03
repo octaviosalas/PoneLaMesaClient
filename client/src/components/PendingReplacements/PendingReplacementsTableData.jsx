@@ -57,7 +57,8 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
           const detail = filaActual.original.replacementeDetail;
           const name = filaActual.original.clientName;
           const id = filaActual.original.clientId;
-          const clientData = {name, id}
+          const telephone = filaActual.original.telephone;
+          const clientData = {name, id, telephone}
           const orderCompletedData = filaActual.original.orderCompletedData;
           const amountToPay = filaActual.original.amountToPay;
           const item = {debtId, detail, orderCompletedData, amountToPay, clientData};

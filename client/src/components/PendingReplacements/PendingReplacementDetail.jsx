@@ -3,6 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import { formatePrice } from "../../functions/gralFunctions";
 import MarkDebtAsPaid from "../Modals/MarkDebtAsPaid";
 import {Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue} from "@nextui-org/react";
+import ClientTelephoneData from "./ClientTelephoneData";
 
 const PendingReplacementDetail = ({data, updateList}) => { 
 
@@ -12,7 +13,7 @@ const PendingReplacementDetail = ({data, updateList}) => {
 
   const handleOpen = () => { 
     onOpen()
-    console.log(data)
+    console.log("ACA", data)
     if (data && data.detail && Array.isArray(data.detail) && data.detail.length > 0) {
       const firstDetail = data.detail[0];
       const properties = Object.keys(firstDetail);
@@ -90,9 +91,7 @@ const PendingReplacementDetail = ({data, updateList}) => {
               </ModalBody>
                 <ModalFooter className="flex items-center justify-center gap-6">
                 <MarkDebtAsPaid type={"pendingReplacements"} debtId={data.debtId} debtAmount={data.amountToPay} completeDebtData={data} clientData={data.clientData} updateClientData={updateList} closeModal={onClose}/>
-                <Button className="bg-green-800 text-white font-medium text-sm w-56" onPress={onClose}>
-                  Cerrar
-                </Button>
+                <ClientTelephoneData clientId={data.clientData.id}  clientName={data.clientData.name}/>
               </ModalFooter>
             </>
           )}

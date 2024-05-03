@@ -113,9 +113,9 @@ const CollectionsGraphic = ({monthSelected, yearSelected}) => {
 
   return (
     <div className='flex items-center gap-6'>
-       <Card className="mx-auto  w-[400px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+       <Card className="mx-auto  w-[700px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Cobros - Tipo de Cobros</h3>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium text-lg">Cobros - Tipo de Cobros</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountCollections)}</p>
             </div>
               <List className="mt-2">
@@ -129,16 +129,16 @@ const CollectionsGraphic = ({monthSelected, yearSelected}) => {
                 </List>
         </Card>
 
-        <Card className="mx-auto  w-[900px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+        <Card className="mx-auto  w-[980px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Cobros - Cuentas</h3>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium  text-lg">Cobros - Cuentas</h3>
                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountCollections)}</p>
             </div>
 
                   <div className='flex justify-center items-center mt-2 gap-24'>  
                       {collectionsAgroupByAccounts.map((item, index) => (                  
                           <div key={item.account} className='flex flex-col items-start justify-start'>
-                              <span className="text-md font-medium text-green-800">{item.account}</span>
+                              <span className="text-md font-medium text-green-800 text-lg">{item.account}</span>
                               <span className="text-sm text-zinc-600"><span className='font-medium'>Cobros </span>: {item.quantityCollections}</span>
                               <span className="text-sm text-zinc-600"><span className='font-medium'>Señas  </span>: {item.downPaymentCollections}</span>
                               <span className="text-sm text-zinc-600"><span className='font-medium'>Alquileres </span>: {item.ordersCollections}</span>
@@ -150,16 +150,16 @@ const CollectionsGraphic = ({monthSelected, yearSelected}) => {
         
         </Card>
 
-        <Card className="mx-auto  w-[700px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
+        <Card className="mx-auto  w-[800px] h-[200px] max-h-[200px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Envios - Estadisticas</h3>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium  text-lg">Envios - Estadisticas</h3>
                <p className='text-sm font-medium text-zinc-600'> {formatePrice(totalAmountFacturedInShipping)}</p>
             </div>
               <List className="mt-2">
                       <ListItem >
-                        <span>Monto total cobrado en envios: {formatePrice(totalAmountFacturedInShipping)}</span>
-                        <span>Cantidad de Alquileres con envio incluido: {ordersWithShipping.length}</span>
-                        <span>Porcentaje de facturación representada por envíos: {formatPercentage(percentage)} %</span>
+                        <span className='flex flex-col'><span className='text-green-800 font-medium text-md'>Cobrado en envios: </span> {formatePrice(totalAmountFacturedInShipping)}</span>
+                        <span className='flex flex-col'><span className='text-green-800 font-medium text-md'>Alquileres con envio:</span> {ordersWithShipping.length}</span>
+                        <span className='flex flex-col'><span className='text-green-800 font-medium text-md'>Porcentaje de facturación en envíos: </span>{formatPercentage(percentage)} %</span>
                       </ListItem>
                 </List>
         </Card>

@@ -88,8 +88,8 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
               <ModalGraphicAllExpenses data={allExpenses}/>
             </div>
             <div className='flex items-center justify-between mt-3'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Todos los gastos</h3>
-               <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountExpenses)}</p>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium text-lg">Todos los gastos</h3>
+               <p className=' font-medium text-zinc-600 text-md'>Total: {formatePrice(totalAmountExpenses)}</p>
             </div>
               <List className="mt-2 text-left">
                   {allExpenses.map((item, index) => (
@@ -109,8 +109,8 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
               <ModalGraphicPurchase data={allPurchases}/>
             </div>
             <div className='flex items-center justify-between mt-3'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Compras</h3>
-               <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountPurchases)}</p>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium text-lg">Compras</h3>
+               <p className=' font-medium text-zinc-600 text-md'>Total: {formatePrice(totalAmountPurchases)}</p>
             </div>
               <List className="mt-2 text-left">
                   {allPurchases.map((item, index) => (
@@ -125,8 +125,8 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
 
         <Card className=" w-[700px] h-[250px] max-h-[250px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
             <div className='flex items-center justify-between'>
-               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Sub Alquileres</h3>
-               <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountSublets)}</p>
+               <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium text-lg">Sub Alquileres</h3>
+               <p className=' font-medium text-zinc-600 text-md'>Total: {formatePrice(totalAmountSublets)}</p>
             </div>
              {allSublets.length > 0 ?
               <List className="mt-2 text-left">
@@ -146,8 +146,8 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
     <div className='mt-8 flex items-center justify-center'>
       <Card className=" w-[700px] max-h-[500px] overflow-y-auto rounded-xl shadow-xl shadow-green-100">
               <div className='flex items-center justify-between'>
-                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium">Gastos Fijos</h3>
-                <p className='text-sm font-medium text-zinc-600'>Total: {formatePrice(totalAmountFixedExpenses)}</p>
+                <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-medium text-lg">Gastos Fijos</h3>
+                <p className=' font-medium text-zinc-600 text-md'>Total: {formatePrice(totalAmountFixedExpenses)}</p>
               </div>
                 <List className="mt-2 text-left">
                     {allFixedExpenses.map((item, index) => (

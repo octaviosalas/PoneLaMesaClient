@@ -21,33 +21,64 @@ const ExpensesEstadistics = () => {
   const getDataAndCreateCollectionEstadisticsTable = async () => { 
     try {
         const expensesData = await getEveryExpenses(); 
-        const filterExpensesByMonth = expensesData.filter((exp) => exp.month === monthSelected && exp.year === yearSelected)
-        console.log("GASTOS MES ESTADISTICAS", filterExpensesByMonth)  
-        const agroupExpensesByType = filterExpensesByMonth.reduce((acc, el) => { 
-          const expenseType = el.typeOfExpense
-            if(acc[expenseType]) { 
-            acc[expenseType].push(el)
-           } else { 
-            acc[expenseType] = [el]
-           }
-           return acc
-        }, {})
-        console.log("AGRUPADOS", agroupExpensesByType)
-        const transformDataInArray = Object.entries(agroupExpensesByType).map(([typeOfExpense, data]) => { 
-          return { 
-            type: typeOfExpense,
-            quantity: typeOfExpense.length,
-            totalAmount: data.reduce((acc, el) => acc + el.amount, 0),            
+        if(monthSelected !== "Todos") { 
+          const filterExpensesByMonth = expensesData.filter((exp) => exp.month === monthSelected && exp.year === yearSelected)
+          console.log("GASTOS MES ESTADISTICAS", filterExpensesByMonth)  
+          const agroupExpensesByType = filterExpensesByMonth.reduce((acc, el) => { 
+            const expenseType = el.typeOfExpense
+              if(acc[expenseType]) { 
+              acc[expenseType].push(el)
+             } else { 
+              acc[expenseType] = [el]
+             }
+             return acc
+          }, {})
+          console.log("AGRUPADOS", agroupExpensesByType)
+          const transformDataInArray = Object.entries(agroupExpensesByType).map(([typeOfExpense, data]) => { 
+            return { 
+              type: typeOfExpense,
+              quantity: typeOfExpense.length,
+              totalAmount: data.reduce((acc, el) => acc + el.amount, 0),            
+            }
+          })
+          console.log("FINAL", transformDataInArray)
+          if(transformDataInArray.length > 0) { 
+            setExpensesGralData(transformDataInArray)
+            setWithOutExpenses(false)
+            setTotalAmountExpenses(filterExpensesByMonth.reduce((acc, el) => acc + el.amount, 0))
+          } else { 
+            setWithOutExpenses(true)
           }
-        })
-        console.log("FINAL", transformDataInArray)
-        if(transformDataInArray.length > 0) { 
-          setExpensesGralData(transformDataInArray)
-          setWithOutExpenses(false)
-          setTotalAmountExpenses(filterExpensesByMonth.reduce((acc, el) => acc + el.amount, 0))
         } else { 
-          setWithOutExpenses(true)
+          const filterExpensesByMonth = expensesData.filter((exp) => exp.year === yearSelected)
+          console.log("GASTOS MES ESTADISTICAS", filterExpensesByMonth)  
+          const agroupExpensesByType = filterExpensesByMonth.reduce((acc, el) => { 
+            const expenseType = el.typeOfExpense
+              if(acc[expenseType]) { 
+              acc[expenseType].push(el)
+             } else { 
+              acc[expenseType] = [el]
+             }
+             return acc
+          }, {})
+          console.log("AGRUPADOS", agroupExpensesByType)
+          const transformDataInArray = Object.entries(agroupExpensesByType).map(([typeOfExpense, data]) => { 
+            return { 
+              type: typeOfExpense,
+              quantity: typeOfExpense.length,
+              totalAmount: data.reduce((acc, el) => acc + el.amount, 0),            
+            }
+          })
+          console.log("FINAL", transformDataInArray)
+          if(transformDataInArray.length > 0) { 
+            setExpensesGralData(transformDataInArray)
+            setWithOutExpenses(false)
+            setTotalAmountExpenses(filterExpensesByMonth.reduce((acc, el) => acc + el.amount, 0))
+          } else { 
+            setWithOutExpenses(true)
+          }
         }
+       
 
     } catch (error) {
         console.log(error)
@@ -116,6 +147,9 @@ const ExpensesEstadistics = () => {
                                     {month.label}
                                 </SelectItem>
                                 ))}
+                                   <SelectItem key="Todos" value="Todos" textValue="Todos" onClick={() => setMonthSelected("Todos")}>
+                                    Todos
+                                  </SelectItem>
                             </Select>
                             <Select variant={"faded"} label="Selecciona un Año" className="w-72" value={yearSelected}>          
                                 {availableYears.map((year) => (

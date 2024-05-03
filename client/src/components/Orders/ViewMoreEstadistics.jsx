@@ -105,6 +105,9 @@ const ViewMoreEstadistics = () => {
                             {month.label}
                           </SelectItem>
                         ))}
+                          <SelectItem key="Todos" value="Todos" textValue="Todos" onClick={() => setMonthSelected("Todos")}>
+                            Todos
+                          </SelectItem>
                     </Select>
                     <Select variant={"faded"} label="Selecciona un Año" className="w-52" value={yearSelected}>          
                         {availableYears.map((year) => (

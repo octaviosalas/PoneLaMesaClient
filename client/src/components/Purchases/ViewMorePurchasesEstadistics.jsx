@@ -82,7 +82,7 @@ const ViewMorePurchasesEstadistics = () => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Estadisticas de Compras </ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">Estadisticas de Inversiones </ModalHeader>
               <ModalBody>
               <div>
        
@@ -94,6 +94,9 @@ const ViewMorePurchasesEstadistics = () => {
                             {month.label}
                           </SelectItem>
                         ))}
+                         <SelectItem key="Todos" value="Todos" textValue="Todos" onClick={() => setMonthSelected("Todos")}>
+                            Todos
+                          </SelectItem>
                     </Select>
                     <Select variant={"faded"} label="Selecciona un Año" className="max-w-full" value={yearSelected}>          
                         {availableYears.map((year) => (
@@ -123,7 +126,7 @@ const ViewMorePurchasesEstadistics = () => {
                           </div>
                           <div className='flex justify-between items-center mt-4'>
                              <div className='flex flex-col items-center justify-enter'>
-                                 <p className='text-zinc-500 text-xs font-medium'>Cantidad de Compras</p>
+                                 <p className='text-zinc-500 text-xs font-medium'>Cantidad de Inversiones</p>
                                  <p className='font-medium text-2xl text-black'>{allPurchases.length}</p>
                              </div>
                               <div className='flex flex-col items-center justify-enter'>

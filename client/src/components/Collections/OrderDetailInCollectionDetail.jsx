@@ -77,8 +77,12 @@ const OrderDetailInCollectionDetail = ({orderDetailData, closeDetail, orderDetai
                    </div>
             </>
              :
-            <p>Cargandoooo</p> 
+             <div className='flex flex-col justify-center text-center'>
+                <p className='font-medium text-md'>No se encontro la orden</p> 
+                <Button className='text-white font-medium bg-green-800 w-72 mt-4 mb-2' onClick={() => closeDetail()}>Cerrar</Button>         
+             </div>
          }
+
     
     </div>
   )

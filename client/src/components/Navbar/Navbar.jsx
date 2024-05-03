@@ -76,7 +76,6 @@ const NavBarComponent = () =>  {
                       </DropdownTrigger>
                         <DropdownMenu aria-label="Static Actions">
                           <DropdownItem key="arm" onClick={() => goTo("proveedores")}>Ver Proveedores</DropdownItem>
-                          <DropdownItem key="ar" onClick={() => goTo("compras")}>Compras</DropdownItem>                          
                         </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
@@ -90,7 +89,7 @@ const NavBarComponent = () =>  {
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions">
                         <DropdownItem key="Cobros" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
-                        <DropdownItem key="Compras" onClick={() => goTo("compras")}>Compras</DropdownItem>
+                        <DropdownItem key="Compras" onClick={() => goTo("compras")}>Inversion</DropdownItem>
                         <DropdownItem key="Cierres" onClick={() => goTo("cierres")}>Cierres</DropdownItem>
                         <DropdownItem key="Cierres" onClick={() => goTo("gastos")}>Gastos</DropdownItem>                 
                       </DropdownMenu>

@@ -170,12 +170,12 @@ const CreateNewPurchase = ({updateList}) => {
 
   return (
     <>
-      <p onClick={onOpen} className="text-zinc-600 font-bold text-sm mr-4 cursor-pointer">Crear Compra</p>
+      <p onClick={onOpen} className="text-zinc-600 font-bold text-sm mr-4 cursor-pointer">Crear Inversion</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col text-md text-zinc-600 font-medium gap-1">Crear Compra</ModalHeader>
+              <ModalHeader className="flex flex-col text-md text-zinc-600 font-medium gap-1">Crear Inversion</ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">
 
                   <Select label="Proveedor" className="w-64 2xl:w-72" variant="underlined">

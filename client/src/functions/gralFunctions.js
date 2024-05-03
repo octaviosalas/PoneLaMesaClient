@@ -108,10 +108,18 @@ export const getProductsBonusClients = async () => {
 
   export const getMonthlyCollections = async (month, year) => {
     try {
-      const response = await axios.get(`http://localhost:4000/collections/getByMonth/${month}`);
-      const data = response.data;
-      const finalResponse = data.filter((cc) => cc.year === Number(year))
-      return finalResponse;
+      if(month !== "Todos") { 
+        const response = await axios.get(`http://localhost:4000/collections/getByMonth/${month}`);
+        const data = response.data;
+        const finalResponse = data.filter((cc) => cc.year === Number(year))
+        return finalResponse;
+      } else { 
+        const response = await axios.get(`http://localhost:4000/collections`);
+        const data = response.data;
+        const finalResponse = data.filter((cc) => cc.year === Number(year))
+        return finalResponse;
+      }
+   
     } catch (error) {
       console.error(error);
       throw error;
