@@ -36,7 +36,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
             console.log("toy")
             const propiedades = Object.keys(expensesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
             propiedad !== '__v'  &&  propiedad !== 'expenseDetail'  &&  propiedad !== 'date'  &&  
-            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&  propiedad !== 'providerName' &&  propiedad !== 'fixedExpenseType');
+            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&  propiedad !== 'providerName' &&  propiedad !== 'subletReferenceId' &&  propiedad !== 'fixedExpenseType');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),

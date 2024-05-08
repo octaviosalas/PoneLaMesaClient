@@ -144,22 +144,21 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
         year: actualYear,
         date: actualDate,
         used: false,
-        observation: observation
+        observation: observation,
+            expenseData: {
+              loadedByName: userCtx.userName,
+              loadedById: userCtx.userId,
+              typeOfExpense: "Sub Alquiler",
+              amount: productsChoosen.reduce((acc, el) => acc + el.value, 0),
+              date: actualDate,
+              day: actualDay,
+              month: actualMonth,
+              year: actualYear,
+              expenseDetail: productsChoosen,
+              providerName: providerChoosen,
+              providerId: providerChoosenId,
+          }
       })
-
-      const newExpense = ({ 
-        loadedByName: userCtx.userName,
-        loadedById: userCtx.userId,
-        typeOfExpense: "Sub Alquiler",
-        amount: productsChoosen.reduce((acc, el) => acc + el.value, 0),
-        date: actualDate,
-        day: actualDay,
-        month: actualMonth,
-        year: actualYear,
-        expenseDetail: productsChoosen,
-        providerName: providerChoosen,
-        providerId: providerChoosenId
-      }) 
 
       if(userCtx.userId.length <= 0) { 
         setMissedData(true)
@@ -193,15 +192,9 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
                 onClose()
               }, 1500)
             })
-        .catch((err) => console.log(err))  
-
-         axios.post("http://localhost:4000/expenses/addNewExpense", newExpense)     
-         .then((res) => { 
-          console.log(res.data)
-         })
-         .catch((err) => { 
+        .catch((err) =>
           console.log(err)
-         })
+        )  
       }   
       
     }

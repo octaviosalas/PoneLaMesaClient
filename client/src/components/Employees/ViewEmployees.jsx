@@ -14,7 +14,7 @@ const ViewEmployees = () => {
 
   return (
     <div onClick={() => goTo()}>
-          <Card className="vh-2 vw-2  2xl:h-80 cursor-pointer">
+          <Card className="w-72 h-72 2xl:w-96 2xl:h-96  cursor-pointer">
             <CardHeader className="absolute z-10 top-1 flex-col !items-start">
               <p className="text-tiny text-black uppercase font-bold">Ver Empleados</p>
             </CardHeader>

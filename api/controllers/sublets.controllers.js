@@ -1,18 +1,33 @@
 import Sublets from "../models/sublets.js";
 import { incrementarStock, decrementarStock } from "./orders.controllers.js";
+import Expenses from "../models/expenses.js"
+
 
 export const createSublet = async (req, res) => { 
-    console.log(req.body)
-   try {
-    const newSubletToBeSaved = new Sublets(req.body)
-    const newSaved = await newSubletToBeSaved.save()
-    await incrementarStock(req.body.productsDetail);
-    res.status(200).json(newSaved)
-   } catch (error) {
-    res.status(500).json({ error: 'Error al crear subAlquiler' });
-    console.log(error)
-   }
+
+  console.log(req.body)
+
+  try {
+      const { expenseData, ...newSubletData } = req.body;
+
+      const newSubletToBeSaved = new Sublets(newSubletData);
+      const newSaved = await newSubletToBeSaved.save();
+
+      expenseData.subletReferenceId = newSaved._id;
+
+      const newExpenseToBeSaved = new Expenses(expenseData);
+      const newExpenseSaved = await newExpenseToBeSaved.save();
+
+      await incrementarStock(req.body.productsDetail);
+
+      res.status(200).json({ newSublet: newSaved, newExpense: newExpenseSaved });
+  } catch (error) {
+      res.status(500).json({ error: 'Error al crear subAlquiler o gasto' });
+      console.log(error);
+  }
 }
+
+
 
 export const getEverySublets = async (req, res) => { 
     try {
@@ -74,18 +89,28 @@ export const updateSubletState = async (req, res) => {
 
 
 export const deleteSublet = async (req, res) => { 
-    const {subletId} = req.params
-    console.log(req.body.subletProductsDetail)
-    try {
-      const deletedSublet = await Sublets.findByIdAndDelete({_id: subletId});
-      if (deletedSublet) {
-        await decrementarStock(req.body.subletProductsDetail); 
-        res.status(200).json({ message: 'SubAlquiler eliminado correctamente', deleted: deletedSublet });
-      } else {
-        res.status(404).json({ message: 'SubAlquiler no encontrado' });
+  const {subletId} = req.params;
+  console.log(req.body.subletProductsDetail);
+  try {
+      const deletedSublet = await Sublets.findByIdAndDelete(subletId);
+
+      if (!deletedSublet) {
+          return res.status(404).json({ message: 'SubAlquiler no encontrado' });
       }
-    } catch (error) {
+
+      await decrementarStock(req.body.subletProductsDetail); 
+
+      const deleteExpense = await Expenses.findOne({subletReferenceId: subletId});
+
+      if (deleteExpense) {
+          await Expenses.findByIdAndDelete(deleteExpense._id);
+          console.log('Gasto asociado eliminado correctamente');
+      }
+
+      res.status(200).json({ message: 'SubAlquiler eliminado correctamente', deleted: deletedSublet });
+
+  } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al eliminar el SubAlquiler' });
-    }
+  }
 }

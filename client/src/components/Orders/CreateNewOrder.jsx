@@ -668,9 +668,21 @@ const CreateNewOrder = ({updateList}) => {
                                    </TableBody>
                                </Table> 
                                
-                               <div className="mt-4 mb-4">
-                                  <p className="font-medium text-md text-zinc-600">Monto total: {formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))}</p>
-                               </div>
+                               <div className="flex gap-8 items-start justify-start mt-4 mb-4">
+                                      <p className="font-medium text-md text-zinc-600">
+                                          Monto: {formatePrice(productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0))}
+                                      </p>
+                                      {shippingCost > 0 && (
+                                          <div className="flex gap-8 items-start justify-start">
+                                            <p className="font-medium text-md text-zinc-600">
+                                              Monto Envio: {formatePrice(parseFloat(shippingCost))}
+                                            </p>
+                                            <p className="font-medium text-md text-zinc-600">
+                                              Monto Total: {formatePrice(productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost))}
+                                            </p>
+                                          </div>
+                                      )}
+                                      </div>
                              </>
                                : null
                        

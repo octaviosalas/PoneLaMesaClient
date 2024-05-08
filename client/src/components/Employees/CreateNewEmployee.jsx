@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input} from "@nextui-org/react";
 import {Card, CardHeader, CardBody, CardFooter, Image} from "@nextui-org/react";
 import axios from "axios";
+import AddLicense from "./AddLicense";
 
 const CreateNewEmployee = ({type, updateList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
@@ -12,13 +13,16 @@ const CreateNewEmployee = ({type, updateList}) => {
   const [numberError, setNumberError] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [missedData, setMissedData] = useState(false)
+  const [showAddLicense, setShowAddLicense] = useState(false)
+  const [licenseImage, setLicenseImage] = useState("")
 
   const createNew = async () => { 
-    if(name.length > 5 && dni.length > 0 && numberError === false) { 
-        const newData = ({ 
+    if(name.length > 1 && dni.length > 0 && numberError === false) { 
+          const newData = ({ 
             name: name,
             dni: dni,
-            hourAmount: hourAmount
+            hourAmount: hourAmount,
+            ...(licenseImage ? { licenseImage: licenseImage } : {})
         })
         try {
             const sendData = await axios.post("http://localhost:4000/employees/create", newData)
@@ -31,6 +35,9 @@ const CreateNewEmployee = ({type, updateList}) => {
                     onClose()
                     setDni("")
                     setName("")
+                    setNumberError(false)
+                    setShowAddLicense(false)
+                    setHourAmount(0)
                 }, 1500)
             }
          } catch (error) {
@@ -45,16 +52,23 @@ const CreateNewEmployee = ({type, updateList}) => {
         }, 2000)
     }  
   }
+
+  const chooseImage = (item) => { 
+    setLicenseImage(item)
+  }
  
+  useEffect(() => { 
+    console.log("chooseimage", licenseImage)
+  }, [licenseImage])
 
 
   return (
     <>
    {type !== "table" ?     
    <div onClick={() => onOpen()} className="h-96 w-96 ">
-        <Card className="h-96 w-96 cursor-pointer">
+        <Card className="w-72 h-72 2xl:w-96 2xl:h-96  cursor-pointer">
             <CardHeader className="absolute z-10 top-1 flex-col !items-start">
-              <p className="text-tiny text-black uppercase font-bold">Crear Empleado +</p>
+              <p className=" text-black uppercase font-bold">Crear Empleado +</p>
             </CardHeader>
             <Image
               removeWrapper
@@ -63,7 +77,7 @@ const CreateNewEmployee = ({type, updateList}) => {
               src="https://cdn-icons-png.flaticon.com/512/5070/5070296.png"
             />
         </Card>
-    </div> : <p className="text-zinc-700 font-medium text-sm cursor-pointer" onClick={() => onOpen()}>Crear empleado +</p>}
+    </div> : <p className="text-black font-medium text-sm cursor-pointer" onClick={() => onOpen()}>Crear empleado +</p>}
      
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
@@ -90,7 +104,16 @@ const CreateNewEmployee = ({type, updateList}) => {
                             }
                         }} />
 
-                {numberError ? <p className="text-xs font-medium text-zinc-600">El numero debe ser mayor a 0 </p> : null}        
+
+                <p className="text-sm font-medium underline text-green-800 mt-2 cursor-pointer" onClick={() => setShowAddLicense(true)}>Agregar foto de licencia</p>
+
+                  {numberError ? <p className="text-xs font-medium text-zinc-600">El numero debe ser mayor a 0 </p> : null}        
+
+                  {showAddLicense ? 
+                          <AddLicense chooseImage={chooseImage}/>
+                   :
+                   null
+                   }
 
                     <div className="flex gap-4 items-center jsutify-center mt-4 mb-4">
                        <Button className="bg-green-800 text-white font-medium text-sm w-48" onClick={() => createNew()}>Guardar</Button>

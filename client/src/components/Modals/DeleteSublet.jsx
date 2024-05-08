@@ -41,10 +41,11 @@ const DeleteSublet = ({subletData, closeModalNow, updateSubletList}) => {
                   <div className="flex flex-col items-center justify-center">
                      <p className="flex flex-col gap-1 text-zinc-600 font-bold text-md">¿Estas seguro de eliminar el Sub Alquiler?</p>
                      <p className="flex flex-col gap-1 text-zinc-500 font-medium text-xs mt-1 underline">Los Articulos asignados se descontaran del stock</p>
+                     <p className="flex flex-col gap-1 text-zinc-500 font-medium text-xs mt-1 underline">Tambien se eliminara el gasto correspondiente</p>
                   </div>
                   <div className="flex items-center gap-6 mt-4 mb-4">
-                     <Button className="text-sm font-medium text-white bg-green-600" onClick={() => deleteSublet()}>Eliminar</Button>
-                     <Button className="text-sm font-medium text-white bg-green-600" onPress={closeModalNow}>Cancelar</Button>
+                     <Button className="text-sm font-medium text-white w-52 bg-green-800" onClick={() => deleteSublet()}>Eliminar</Button>
+                     <Button className="text-sm font-medium text-white w-52 bg-green-800" onPress={closeModalNow}>Cancelar</Button>
                   </div>
                  {messageSuccesDeleteSublet ?
                   <div className="flex items-center mt-4 mb-2">

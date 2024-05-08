@@ -132,7 +132,7 @@ const OrdersTable = () => {
                   const shippingCost = filaActual.original?.shippingCost;
                   const item = { id, detail, creator, orderSublets, day, month, year, total, client, downPaymentData, paid, missingArticlesData, shippingCost};
                   return (
-                     <OrderDetail  orderData={item}/>
+                     <OrderDetail  orderData={item} update={getDataAndCreateTable}/>
                     );
               },
                 }) 

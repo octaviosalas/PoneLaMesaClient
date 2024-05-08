@@ -266,6 +266,18 @@ export const deleteAndReplenishArticles = async (req, res) => {
   }
 } 
 
+
+ 
+
+
+
+
+
+
+
+
+
+
 export const updateOrderData = async (req, res) => { 
   const {orderId} = req.params
   const {newOrderClient, newOrderClientId} = req.body
@@ -448,6 +460,8 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
  export const deleteDownPaymentData = async (req, res) => {
   const { orderId } = req.params;
 
+  console.log("req.params recibido", orderId)
+  console.log("rreq.body.downPaymentReference recibido", req.body.downPaymentReference)
 
   try {
      await Orders.updateOne({ _id: orderId }, { $set: { downPaymentData: [] } }); 

@@ -38,6 +38,10 @@ const expenseSchema = mongoose.Schema({
     fixedExpenseType: {
         type: String,
         required: function() { return this.typeOfExpense === 'Gasto Fijo'; }
+    },
+    subletReferenceId: {
+        type: String,
+        required: function() { return this.typeOfExpense === 'Sub Alquiler'; }
     }
 })
 

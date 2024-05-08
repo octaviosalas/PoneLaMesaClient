@@ -10,6 +10,10 @@ const employeesSchema = mongoose.Schema({
     },
     hourAmount: { 
         type: Number
+    },
+    licenseImage: { 
+        type: String,
+        required: false
     }
 })
 

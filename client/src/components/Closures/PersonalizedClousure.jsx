@@ -10,6 +10,7 @@ import EveryOrdersDetails from "./ClousuresDetailsModals/EveryOrdersDetails";
 import ExpensesDetail from "./ClousuresDetailsModals/ExpensesDetail";
 import CollectionsDetail from "./ClousuresDetailsModals/CollectionsDetail";
 import EmployeesLiquidation from "./ClousuresDetailsModals/EmployeesLiquidation";
+import { parseISO, format } from 'date-fns';
 
 
 const PersonalizedClousure = () => {
@@ -53,24 +54,27 @@ const PersonalizedClousure = () => {
     return meses[mes];
   }
 
-  const handleDateChange = (e) => {
+ const handleDateChange = (e) => {
+    console.log("recibi", e.target.value);
     setFirstDate(e.target.value);
-    const fechaObj = new Date(e.target.value);
-    const dia = fechaObj.getDate();
+    const fechaObj = parseISO(e.target.value);
+    const dia = format(fechaObj, 'dd');
     const mes = obtenerNombreMes(fechaObj.getMonth());
-    const anio = fechaObj.getFullYear();
+    const anio = format(fechaObj, 'yyyy');
     console.log(`mes: ${mes}`);
     console.log(`año: ${anio}`);
     console.log(`dia: ${dia}`);
-    setFirstDateToShow(`${dia} de ${mes} del ${anio}`)
-  };
+    setFirstDateToShow(`${dia} de ${mes} del ${anio}`);
+};
+
 
   const handleSecondDateChange = (e) => {
+    console.log("recibi", e.target.value)
       setSecondDate(e.target.value);
-      const fechaObj = new Date(e.target.value);
-      const dia = fechaObj.getDate();
+      const fechaObj = parseISO(e.target.value);
+      const dia = format(fechaObj, 'dd');
       const mes = obtenerNombreMes(fechaObj.getMonth());
-      const anio = fechaObj.getFullYear();
+      const anio = format(fechaObj, 'yyyy');
       console.log(`mes: ${mes}`);
       console.log(`año: ${anio}`);
       console.log(`dia: ${dia}`);
@@ -293,6 +297,11 @@ const PersonalizedClousure = () => {
       setFirstDate("")
       setSecondDate("")
     }
+
+    useEffect(() => { 
+      console.log(firstDateToShow)
+      console.log(secondDateToShow)
+    }, [firstDateToShow, secondDateToShow])
 
 
   return (

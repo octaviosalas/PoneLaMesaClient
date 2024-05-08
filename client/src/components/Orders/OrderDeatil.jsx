@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import OrderDetailInCollectionDetail from "../Collections/OrderDetailInCollectionDetail";
 
-const OrderDetail = ({orderData, collectionDetail}) => {
+const OrderDetail = ({orderData, collectionDetail, update}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
     const [successMessage, setSuccessMessage] = useState(false);
     const [columns, setColumns] = useState([]);
@@ -19,6 +19,7 @@ const OrderDetail = ({orderData, collectionDetail}) => {
     const [collectionOrderDetailArticles, setCollectionOrderDetailArticles] = useState([])
     const [collectionOrderDetail, setCollectionOrderDetail] = useState([])
     const [missedArticlesDetail, setMissedArticlesDetail] = useState([])
+    const [deleteDownPaymentSuccesMessage, setDeleteDownPaymentSuccesMessage] = useState(false)
     
     const navigate = useNavigate()
 
@@ -69,6 +70,8 @@ const OrderDetail = ({orderData, collectionDetail}) => {
 
   const handleOpen = () => { 
     console.log(orderData)
+    console.log(orderData.downPaymentData)
+
     onOpen()
     console.log(orderData.paid)
     createTable(orderData)
@@ -121,7 +124,24 @@ const OrderDetail = ({orderData, collectionDetail}) => {
           } catch (error) {
               console.log(error);
           } 
-      }; 
+  };
+  
+  const deleteDownPayment = async () => { 
+    const downPaymentReference = orderData.downPaymentData.map((ord) => ord.downPaymentId)[0]
+    try {
+      const deleteDownPaymentData = await axios.delete(`http://localhost:4000/orders/deleteDownPayment/${orderData.id}`, { data: { downPaymentReference } })
+      if(deleteDownPaymentData.status === 200) { 
+        setDeleteDownPaymentSuccesMessage(true)
+        setTimeout(() => { 
+          setDeleteDownPaymentSuccesMessage(false)
+          onClose()
+          update()
+        }, 2100)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
 
   return (
@@ -165,6 +185,7 @@ const OrderDetail = ({orderData, collectionDetail}) => {
                          <p className="font-medium text-zinc-600 text-sm"><b>Fecha de la Seña: </b>{ord.date}</p>
                          <p className="font-medium text-zinc-600 text-sm"><b>Cuenta Destino: </b> {ord.account}</p>
                          <p className="font-medium text-zinc-600 text-sm"><b>Monto Señado: </b> {formatePrice( ord.amount)}</p>
+                         <Button className="bg-red-500 font-medium text-white w-36 text-xs h-7 mt-1" onClick={() => deleteDownPayment()}>Eliminar Seña</Button>
                        </div>
                      ))}
                     </div>
@@ -247,10 +268,22 @@ const OrderDetail = ({orderData, collectionDetail}) => {
               <ModalFooter className="flex items-center justify-center mt-2">
 
                {orderData ? 
-                <div className="flex gap-4 items-center">
-                 <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button> 
-                 <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onClick={() => createNewPdf(orderData)}> Imprimir </Button> 
-                </div>
+
+               <div className="flex flex-col items-center jsutify-center">
+
+                  <div className="flex gap-4 items-center">
+                    <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onPress={onClose}> Cerrar </Button> 
+                    <Button  className="font-bold text-white text-sm bg-green-600 w-56" variant="light" onClick={() => createNewPdf(orderData)}> Imprimir </Button> 
+                  </div>
+
+                  {deleteDownPaymentSuccesMessage ? 
+                  <div className="flex items-center jsutify-center mt-2 mb-2">
+                    <p className="text-green-800 font-medium text-sm">Seña eliminada con exito</p>
+                  </div> 
+                  : null}
+
+               </div>
+               
                 : 
               
                 <div className="flex items-center justify-center gap-4">

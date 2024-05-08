@@ -10,6 +10,7 @@ import Loading from '../Loading/Loading';
 import EmployeesReport from './EmployeesReport';
 import CreateNewEmployee from './CreateNewEmployee';
 import EstadisticsEmployees from './EstadisticsEmployees';
+import ViewLicenseModal from './ViewLicenseModal';
 
 
 const EmployeesTableData = ({employeesData, updateList}) => {
@@ -61,6 +62,22 @@ const EmployeesTableData = ({employeesData, updateList}) => {
                     );
                 },
             })   
+
+            modifiedColumnObjects.push({
+              key: 'Ver Licencia',
+              label: 'Ver Licencia',
+              cellRenderer: (cell) => { 
+
+                  const filaActual = cell.row;
+                  const id = filaActual.original._id;
+                  const name = filaActual.original.name;
+                  const license = filaActual.original.licenseImage;
+                  const item = { id, license, name};
+                  return (
+                      <ViewLicenseModal item={item}/>
+                  );
+              },
+          })   
 
            
 

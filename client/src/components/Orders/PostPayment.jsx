@@ -57,11 +57,6 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
     setOrderTotalItem(total)
   }
 
- 
-
-
-
-
   const availablesAccounts = [
     {
       label: "Cuenta Nacho",
@@ -272,7 +267,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
 
                     {usedIn !== "CreateNewReturn" && orderData.paid === true ? (
                       <div className="mt-4 flex items-center justify-center">
-                        <p className="text-md text-green-800 font-medium">Esta orden ya fue cobrada</p>
+                        <p className="text-md text-black font-medium">Esta orden ya fue cobrada</p>
                       </div>
                     ) : (
                       usedIn === "CreateNewReturn" ? 
@@ -338,11 +333,11 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                       :
                       <div className="flex gap-6 items-center justify-center">
                          {usedIn !== "CreateNewReturn" && orderData.paid === true ? null :
-                          <Button  className="font-bold text-white text-sm bg-green-600 w-32"  onPress={usedIn === "CreateNewReturn" ? addNewCollectionUsedInCreateNewReturn : addNewCollection}>
+                          <Button  className="font-bold text-white text-sm bg-green-800 w-32"  onPress={usedIn === "CreateNewReturn" ? addNewCollectionUsedInCreateNewReturn : addNewCollection}>
                             Asentar Pago
                           </Button>
                           }
-                          <Button  className="font-bold text-white text-sm bg-green-600 w-32" onPress={handleClose}>
+                          <Button  className="font-bold text-white text-sm bg-green-800 w-72" onPress={handleClose}>
                             Cancelar
                           </Button>
                       </div>
