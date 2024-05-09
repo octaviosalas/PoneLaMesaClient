@@ -6,6 +6,7 @@ import PDFDocument from "pdfkit";
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { formatePriceBackend } from "../utils/formatePriceBackend.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -475,43 +476,48 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
  };
 
 
-
  export const createDetailPdf = async (req, res) => {
   const { result } = req.body;
   console.log(result);
- 
+
   const doc = new PDFDocument();
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename=detalle_${result.cliente}.pdf`);
   doc.pipe(res);
- 
+
   let yPosition = 50;
 
+  const pageWidth = doc.page.width;
+  const pageHeight = doc.page.height;
+
+  const imageWidth = 100; 
+  const imageX = (pageWidth - imageWidth) / 2;
+
+  const imageY = yPosition; 
+
   const imagePath = path.join(__dirname, '..', 'imagesApi', 'logo.png');
-  doc.image(imagePath, 50, yPosition, { width: 100 }); // Ajusta el tamaño según sea necesario
-  yPosition += 120;
- 
-  // Imprimir cliente y total fuera de la tabla
-  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Cliente: ${result.cliente}`, 50, yPosition);
+  doc.image(imagePath, imageX, imageY, { width: imageWidth }); 
+  yPosition = imageY + 120; 
+
+
+  doc.font('Helvetica-Bold').fontSize(15).fillColor('black').text(`${result.cliente}`, 50, yPosition);
   yPosition += 20;
   doc.font('Helvetica').fontSize(14).fillColor('black').text(`Total: ${result.total}`, 50, yPosition);
-  yPosition += 40; // Aumentar el espacio entre el total y la tabla
- 
-  // Imprimir encabezados de la tabla
-  doc.font('Helvetica').fontSize(11).fillColor('black').text('Detalle de la Orden:', 50, yPosition);
+  yPosition += 40; 
+
+  doc.font('Helvetica-Bold').fontSize(14).fillColor('black').text('Detalle de Articulos Alquilados:', 50, yPosition);
+  yPosition += 30;
+  doc.font('Helvetica').fontSize(13).fillColor('black').text('Articulo', 50, yPosition);
+  doc.font('Helvetica').fontSize(13).fillColor('black').text('Cantidad', 200, yPosition);
+  doc.font('Helvetica').fontSize(13).fillColor('black').text('Total', 350, yPosition);
   yPosition += 20;
-  doc.font('Helvetica').fontSize(10).fillColor('black').text('Articulo', 50, yPosition);
-  doc.font('Helvetica').fontSize(10).fillColor('black').text('Cantidad', 200, yPosition);
-  doc.font('Helvetica').fontSize(10).fillColor('black').text('Total', 350, yPosition);
-  yPosition += 20;
- 
-  // Imprimir detalles de los artículos
+
   result.articles.forEach((article, index) => {
-     doc.font('Helvetica').fontSize(10).fillColor('black').text(article.articulo, 50, yPosition);
-     doc.font('Helvetica').fontSize(10).fillColor('black').text(article.cantidad.toString(), 200, yPosition);
-     doc.font('Helvetica').fontSize(10).fillColor('black').text(article.total.toString(), 350, yPosition);
+     doc.font('Helvetica').fontSize(12).fillColor('black').text(article.articulo, 50, yPosition);
+     doc.font('Helvetica').fontSize(12).fillColor('black').text(article.cantidad.toString(), 200, yPosition);
+     doc.font('Helvetica').fontSize(12).fillColor('black').text(formatePriceBackend(article.total).toString(), 350, yPosition);
      yPosition += 20;
   });
- 
+
   doc.end();
- };
+};
