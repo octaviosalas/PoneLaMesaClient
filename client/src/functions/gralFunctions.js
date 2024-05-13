@@ -335,3 +335,11 @@ export const obtenerMesAnterior = () => {
 export const resumeDecimalNum = (num)  => {
   return parseFloat(num.toFixed(2));
 }
+
+
+
+export const productCategorys = [
+  { value: "local", label: "local"},
+  { value: "deposito", label: "deposito"},
+
+];

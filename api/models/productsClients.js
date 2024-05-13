@@ -8,7 +8,7 @@ const productsSchema = new mongoose.Schema({
         type: Number
       },
       precioUnitarioReposicion: { 
-        type: mongoose.Schema.Types.Mixed
+        type: Number
       },
       precioUnitarioBonificados: { 
         type: Number,
@@ -18,6 +18,9 @@ const productsSchema = new mongoose.Schema({
       },
       estimatedWashTime: { 
         type: Number
+      },
+      Categoria: { 
+        type: String
       }
   });
   

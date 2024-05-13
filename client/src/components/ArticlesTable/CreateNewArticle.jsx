@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input} from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, SelectItem, Select} from "@nextui-org/react";
 import axios from "axios";
+import { productCategorys } from "../../functions/gralFunctions";
 
  const CreateNewArticle = ({updateList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
@@ -8,15 +9,17 @@ import axios from "axios";
   const [price, setPrice] = useState("")
   const [bonusClientsPrice, setBonusClientsPrice] = useState("")
   const [stock, setStock] = useState("")
+  const [category, setCategory] = useState("")
   const [replacementPrice, setReplacementPrice] = useState("")
   const [missedData, setMissedData] = useState(false)
   const [errorInNumberText, setErrorInNumberText] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [errorNumber, setErrorNumber] = useState(false)
+  const [categoryError, setCategoryError] = useState(false)
 
 
   const createArtcile = () => { 
-    if(name.length > 0 && price.length > 0 && bonusClientsPrice.length > 0 && stock.length > 0 && replacementPrice.length > 0 && errorInNumberText === false) { 
+    if(name.length > 0 && price.length > 0 && bonusClientsPrice.length > 0 && stock.length > 0 && replacementPrice.length > 0 && errorInNumberText === false && category.length > 0) { 
       const newArticle = ({ 
         articulo: name,
         precioUnitarioAlquiler: price,
@@ -57,6 +60,15 @@ import axios from "axios";
     }
  };
 
+ useEffect(() => { 
+  console.log(category)
+ }, [category])
+
+ useEffect(() => { 
+  console.log(category)
+ }, [])
+
+
  
 
   return (
@@ -83,6 +95,7 @@ import axios from "axios";
                     }
                    }} 
                 />      
+                {category}
 
                  <Input label="Precio Alquiler Bonificados" type="number" variant="underlined" className="w-72 mt-2"
                   onKeyPress={preventMinus}
@@ -119,7 +132,16 @@ import axios from "axios";
                       setErrorNumber(true)
                     }
                    }} 
-                />        
+                />    
+
+               <Select label="Categoria" variant="underlined" className="w-72 mt-2" >
+                    {productCategorys.map((prod) => (
+                      <SelectItem key={prod.value} value={prod.value} onClick={() => setCategory(prod.value)}>
+                        {prod.value}
+                      </SelectItem>
+                    ))}
+              </Select>  
+
                </div>
               </ModalBody>
               <ModalFooter className="flex items-center justify-center gap-6">
@@ -141,13 +163,21 @@ import axios from "axios";
                 :
                 null
               }
-              {errorInNumberText ? 
+              {categoryError ? 
                 <div className="mt-4 mb-4 flex items-center justify-center">
-                  <p className="font-medium text-green-700 text-sm">Debes completar todos los campos con datos validos</p>
+                  <p className="font-medium text-green-700 text-sm">La categoria del articulo debe ser "deposito" o "local"</p>
                 </div>
                 :
                 null
               }
+
+              {errorInNumberText ? 
+                  <div className="mt-4 mb-4 flex items-center justify-center">
+                    <p className="font-medium text-green-700 text-sm">Debes ingresar un numero mayor a 0</p>
+                  </div>
+                  :
+                  null
+               }
                {succesMessage ? 
                 <div className="mt-4 mb-4 flex items-center justify-center">
                   <p className="font-medium text-green-700 text-sm">Articulo Creado con exito ✔</p>

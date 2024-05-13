@@ -73,13 +73,17 @@ const ArticlesTable = ({}) => {
                     const articleName = filaActual.original.articulo;
                     const clientsValue = filaActual.original.precioUnitarioAlquiler;
                     const bonusClientsValue = filaActual.original.precioUnitarioBonificados;
-                    const replacementValue = filaActual.original.precioUnitarioReposicion;    
+                    const replacementValue = filaActual.original.precioUnitarioReposicion;   
+                    const category = filaActual.original.Categoria; 
+                    const stock = filaActual.original.stock;         
                     const item = {
                     id: id,
                     productName: articleName,
                     clientsValue: clientsValue,
                     bonusClientsValue: bonusClientsValue,
-                    replacementValue: replacementValue                
+                    replacementValue: replacementValue,
+                    categoryValue: category,
+                    stock: stock   
                     };
                     return (
                       <EditModal type="product" articleData={item} updateChanges={getProductsDataAndCreateTable}/>

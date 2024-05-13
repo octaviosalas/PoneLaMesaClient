@@ -58,7 +58,7 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   const { productId } = req.params;
-  const {articulo, precioUnitarioAlquiler, precioUnitarioAlquilerBonificados, precioUnitarioReposicion} = req.body
+  const {articulo, precioUnitarioAlquiler, precioUnitarioAlquilerBonificados, precioUnitarioReposicion, categoria, stock} = req.body 
   console.log(req.body)
 
   try {
@@ -67,6 +67,8 @@ export const updateProduct = async (req, res) => {
           precioUnitarioAlquiler: precioUnitarioAlquiler,
           precioUnitarioBonificados: precioUnitarioAlquilerBonificados,
           precioUnitarioReposicion: precioUnitarioReposicion,
+          Categoria: categoria,
+          stock: stock
           })
           .then((newProduct) => {                                      
           res.json({message:"Producto actualizado", newProduct})
@@ -147,3 +149,19 @@ export const addEstimatedWashTimeToAllProducts = async (req, res) => {
      console.error(error); // Maneja cualquier error que pueda ocurrir
   }
  }
+
+/*
+
+ export const addCategory = async (req, res) => {
+  try {
+    // Actualiza todos los documentos en la colección ProductsClients
+    await ProductsClients.updateMany({}, { $set: { Categoria: "local" } });
+
+    // Envía una respuesta indicando éxito
+    res.status(200).json({ message: "Categoría agregada exitosamente a todos los productos." });
+  } catch (error) {
+    // Maneja cualquier error que pueda ocurrir durante la operación
+    console.error(error);
+    res.status(500).json({ message: "Error al agregar la categoría.", error: error.message });
+  }
+};*/

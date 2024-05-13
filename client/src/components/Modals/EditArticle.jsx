@@ -1,9 +1,10 @@
 import React from 'react'
-import { Input } from '@nextui-org/react'
+import { Input, Select, SelectItem } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
 import { useState } from 'react'
 import axios from 'axios'
 import { formateInputPrice } from '../../functions/gralFunctions'
+import { productCategorys } from '../../functions/gralFunctions'
 
 const EditArticle = ({articleData, closeModalNow, updateChanges}) => {
 
@@ -11,6 +12,8 @@ const EditArticle = ({articleData, closeModalNow, updateChanges}) => {
     const [newProductClientsValue, setNewProductClientsValue] = useState(articleData.clientsValue)
     const [newProductBonusClientsValue, setNewProductBonusClientsValue] = useState(articleData.bonusClientsValue)
     const [newProductReplacementValue, setNewProductReplacementValue] = useState(articleData.replacementValue)
+    const [newProductCategoryValue, setNewProductCategoryValue] = useState(articleData.categoryValue)
+    const [newProductStockValue, setNewProductStockValue] = useState(articleData.stock)
     const [succesChangesArticle, setSuccesChangesArticle] = useState(false)
 
     const changeProductData = () => { 
@@ -18,7 +21,9 @@ const EditArticle = ({articleData, closeModalNow, updateChanges}) => {
           articulo: newProductName,
           precioUnitarioAlquiler: newProductClientsValue,
           precioUnitarioAlquilerBonificados: newProductBonusClientsValue,
-          precioUnitarioReposicion: newProductReplacementValue
+          precioUnitarioReposicion: newProductReplacementValue,
+          categoria: newProductCategoryValue,
+          stock: newProductStockValue
         })
         axios.put(`http://localhost:4000/products/changeData/${articleData.id}`, newProductData)
              .then((res) => { 
@@ -42,6 +47,14 @@ const EditArticle = ({articleData, closeModalNow, updateChanges}) => {
                     <Input type="text" className="mt-2 w-60" label="Precio Clientes" value={formateInputPrice(newProductClientsValue)} onChange={(e) => setNewProductClientsValue(e.target.value)}/>
                     <Input type="text" className="mt-2 w-60" label="Precio Clientes Bonificados" value={formateInputPrice(newProductBonusClientsValue)} onChange={(e) => setNewProductBonusClientsValue(e.target.value)}/>
                     <Input type="text" className="mt-2 w-60" label="Precio Reposicion" value={formateInputPrice(newProductReplacementValue)} onChange={(e) => setNewProductReplacementValue(e.target.value)}/>
+                    <Input type="number" className="mt-2 w-60" label="Stock Actual" value={newProductStockValue} onChange={(e) => setNewProductStockValue(e.target.value)}/>
+                    <Select label="Categoria" variant="underlined" className="w-60 mt-2" >
+                    {productCategorys.map((prod) => (
+                        <SelectItem key={prod.value} value={prod.value} onClick={() => setNewProductCategoryValue(prod.value)}>
+                          {prod.value}
+                         </SelectItem>
+                          ))}
+                    </Select>  
                     <div className="flex items-center justify-center gap-4 mt-4 mb-4">
                       <Button className="font-bold text-white bg-green-800 text-sm w-52" onClick={() => changeProductData()}>Confirmar Cambios</Button>
                       <Button className="font-bold text-white bg-green-600 text-sm w-52" onPress={closeModalNow}>Cancelar</Button>
