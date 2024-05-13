@@ -33,6 +33,7 @@ const DeleteOrder = ({
   const [successMessage, setSuccessMessage] = useState(false)
   const [messageSuccesDeleteArticle, setMessageSuccesDeleteArticle] = useState(false)
   const [secondStepOfDelete, setSecondStepOfDelete] = useState(false)
+  
 
    return (
     <>

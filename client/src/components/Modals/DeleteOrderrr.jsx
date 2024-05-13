@@ -41,7 +41,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
               <div className="flex flex-col items-center justify-center">
                   <div className="flex flex-col items-center justify-center">
                      <p className="flex flex-col gap-1 text-zinc-700 font-bold text-md">¿Estas seguro de eliminar el pedido?</p>
-                     {orderData.downPaymentData.length > 0 ? <p className="text-sm text-zinc-600">Los articulos se repondran al stock y la seña sera eliminada</p> : <p className="text-sm text-zinc-600">Los articulos se repondran al stock</p>}
+                     {orderData.downPaymentData.length > 0  ? <p className="text-sm text-zinc-600">Los articulos se repondran al stock y la seña sera eliminada</p> : <p className="text-sm text-zinc-600">Los articulos se repondran al stock</p>}
                   </div>
                   <div className="flex items-center gap-6 mt-4 mb-4">
                      <Button className="text-sm font-medium text-white bg-green-800 w-60" onClick={() => deleteOrderAndReplenishStock()}>Eliminar</Button>

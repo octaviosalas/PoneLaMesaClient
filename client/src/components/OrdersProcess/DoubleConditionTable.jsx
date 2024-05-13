@@ -138,7 +138,8 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                     cellRenderer: (cell) => { 
                         const filaActual = cell.row;
                         const id = filaActual.original._id;
-                        const item = {id};
+                        const downPaymentData = filaActual.original.downPaymentData;
+                        const item = {id, downPaymentData};
                         return (
                         <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                         );
