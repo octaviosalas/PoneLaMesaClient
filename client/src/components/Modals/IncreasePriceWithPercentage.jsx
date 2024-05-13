@@ -37,7 +37,7 @@ const IncreasePriceWithPercentage = ({updateList}) => {
 
     return (
         <>
-          <p className="text-zinc-600 font-medium text-sm 2xl:text-md cursor-pointer" onClick={onOpen}>Aplicar aumento de precios</p>
+          <p className="text-black font-medium text-sm 2xl:text-md cursor-pointer" onClick={onOpen}>Aplicar aumento de precios</p>
           <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
             <ModalContent>
               {(onClose) => (
