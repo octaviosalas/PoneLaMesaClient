@@ -40,7 +40,7 @@ const ProviderTable = ({providers, updateProvidersList}) => {
                     } else if (column.key === 'telephone') {
                         return { ...column, label: 'Telefono' };
                     } else if (column.key === 'email') {
-                        return { ...column, label: 'Cuenta' };
+                        return { ...column, label: 'Email' };
                     } else if (column.key === 'orderNumber') {
                         return { ...column, label: 'Orden' };
                     }  else {
