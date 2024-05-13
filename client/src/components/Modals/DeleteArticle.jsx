@@ -29,16 +29,15 @@ const DeleteArticle = ({productData, closeModalNow, updateList}) => {
     <div>
            <div className="flex flex-col items-center justify-center">
                   <div>
-                     <p className="flex flex-col gap-1 text-black font-bold text-md">¿Estas seguro de eliminar el producto?</p>
-                     {productData.id}
+                     <p className="flex flex-col gap-1 text-black font-medium text-md">¿Estas seguro de eliminar el producto?</p>
                   </div>
                   <div className="flex items-center gap-6 mt-4 mb-4">
-                     <Button className="text-sm font-medium text-white bg-green-600" onClick={() => deleteArticle()}>Eliminar</Button>
-                     <Button className="text-sm font-medium text-white bg-green-600" onPress={closeModalNow}>Cancelar</Button>
+                     <Button className="text-sm font-medium text-white w-60 bg-green-800" onClick={() => deleteArticle()}>Eliminar</Button>
+                     <Button className="text-sm font-medium text-white w-60 bg-green-800" onPress={closeModalNow}>Cancelar</Button>
                   </div>
                  {messageSuccesDeleteArticle ?
                   <div className="flex items-center mt-4 mb-2">
-                     <p className="text-green-600 text-md font-medium">Articulo Eliminado Correctamente ✔</p>
+                     <p className="text-green-800 text-sm font-medium">Articulo Eliminado Correctamente ✔</p>
                   </div>
                   : null}
                </div>

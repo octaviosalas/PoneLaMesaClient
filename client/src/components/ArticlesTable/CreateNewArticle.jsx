@@ -25,7 +25,8 @@ import { productCategorys } from "../../functions/gralFunctions";
         precioUnitarioAlquiler: price,
         precioUnitarioReposicion: replacementPrice,
         precioUnitarioBonificados: bonusClientsPrice,
-        stock: stock
+        stock: stock,
+        Categoria: category
        })
       axios.post("http://localhost:4000/products/create", newArticle)
            .then((res) => { 
@@ -95,7 +96,6 @@ import { productCategorys } from "../../functions/gralFunctions";
                     }
                    }} 
                 />      
-                {category}
 
                  <Input label="Precio Alquiler Bonificados" type="number" variant="underlined" className="w-72 mt-2"
                   onKeyPress={preventMinus}
