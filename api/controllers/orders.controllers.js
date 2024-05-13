@@ -462,12 +462,12 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   const { orderId } = req.params;
 
   console.log("req.params recibido", orderId)
-  console.log("rreq.body.downPaymentReference recibido", req.body.downPaymentReference)
+  console.log("req.body.downPaymentReference recibido", req.body.downPaymentId)
 
   try {
      await Orders.updateOne({ _id: orderId }, { $set: { downPaymentData: [] } }); 
-     await DownPayments.deleteOne({ downPaymentId: req.body.downPaymentReference }); 
-     await Collections.deleteOne({ downPaymentId:  req.body.downPaymentReference}); 
+     await DownPayments.deleteOne({ downPaymentId: req.body.downPaymentId }); 
+     await Collections.deleteOne({ downPaymentId:  req.body.downPaymentId}); 
  
      res.status(200).send({ message: 'Seña eliminado correctamente.' });
   } catch (error) {

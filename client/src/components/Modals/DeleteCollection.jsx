@@ -40,10 +40,10 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
          console.log(deleteReplacementeCollectionAndUpdateClientDebt.data)
          if(deleteReplacementeCollectionAndUpdateClientDebt.status === 200) { 
             setSuccesDeleted(true)
+            updateCollections()
             setTimeout(() => { 
                setSuccesDeleted(false)
                closeModalNow()
-               updateCollections()
             }, 1800)
          }
       } catch (error) {
@@ -58,10 +58,10 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
          console.log(deleteDownPaymentData.data)
          if(deleteDownPaymentData.status === 200) { 
           setSuccesDeleted(true)
-             setTimeout(() => { 
+          updateCollections()
+          setTimeout(() => { 
                 setSuccesDeleted(false)
                 closeModalNow()
-                updateCollections()
              }, 1800)
          }
       } catch (error) {

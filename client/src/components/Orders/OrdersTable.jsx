@@ -170,7 +170,8 @@ const OrdersTable = () => {
                   const id = filaActual.original._id;
                   const paid = filaActual.original.paid;
                   const downPaymentData = filaActual.original.downPaymentData;
-                  const item = { id, paid, downPaymentData};
+                  const orderStatus = filaActual.original.orderStatus;
+                  const item = { id, paid, downPaymentData, orderStatus};
                   return (
                      <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                     );
