@@ -6,10 +6,12 @@ import Loading from '../Loading/Loading';
 import OrderDetail from '../Orders/OrderDeatil';
 import CreateNewReturn from '../Returns/CreateNewReturn';
 import ReturnToWashing from '../Returns/ReturnToWashing';
+import { useNavigate } from 'react-router-dom';
 
 const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFetch, updateList}) => {
 
     const tableRef = useRef(null);
+    const navigate = useNavigate()
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [withOutCollections, setWithOutCollections] = useState(false);
@@ -22,27 +24,38 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
         setData(item)
     }
 
-    useEffect(() => { 
+    useEffect(() => {
+      if(everyReturns.length > 0 )  { 
         changeDataValues(everyReturns)
+        console.log("No hay everyReturns")
+      } else if (everyReturns.length === 0 && pendingReturns.length > 0) { 
+        changeDataValues(pendingReturns)
+        console.log("No hay everyReturns")
+      } else if (everyReturns.length === 0 && pendingReturns.length === 0) { 
+        setWithOutOrders(true)
+      }
      }, [todaysReturns, pendingReturns, everyReturns])
 
+     const goToOtherPage = (item) => { 
+      navigate(item)
+     }
 
      useEffect(() => { 
-        console.log("Devoluciones del dia:", todaysReturns)
-        console.log("Pendientes de devolucion:", pendingReturns)
-        console.log("Todas las devoluciones:", everyReturns)
-     }, [todaysReturns, pendingReturns, everyReturns])
+      console.log("pendingReturns", pendingReturns)
+      console.log("everyReturns", everyReturns)
+     }, [everyReturns, pendingReturns])
+
 
         const getDataAndCreateTable = () => { 
             if(data.length !== 0) { 
-            const propiedades = Object.keys(everyReturns[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
-            &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
-            && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'missingArticlesData'  && propiedad !== 'downPaymentData');
-            const columnObjects = propiedades.map(propiedad => ({
-                key: propiedad,
-                label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
-                allowsSorting: true
-            }));
+                const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
+                &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
+                && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'missingArticlesData'  && propiedad !== 'downPaymentData' && propiedad !== 'shippingCost');
+                const columnObjects = propiedades.map(propiedad => ({
+                    key: propiedad,
+                    label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
+                    allowsSorting: true
+                }));
 
                 const modifiedColumnObjects = columnObjects.map(column => {
                     if (column.key === 'orderStatus') {
@@ -215,8 +228,8 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                    {
                    withOutOrders ? 
                     <div className='flex flex-col items-center justify-center'>
-                       <p className='text-black font-medium text-md'>No hay Devoluciones</p> 
-                       <p className='cursor-pointer text-zinc-600 text-sm mt-2 underline' onClick={() => changeDataValues(everyReturns)}>Volver</p>
+                       <p className='text-black font-medium text-md'>No hay devoluciones</p> 
+                       <p className='cursor-pointer text-zinc-600 text-sm mt-3 underline' onClick={() => changeDataValues(pendingReturns)}>Volver a la pagina principal</p>
                     </div>
                     :
                     null

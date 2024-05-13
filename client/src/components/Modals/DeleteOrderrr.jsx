@@ -77,10 +77,10 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
       </div>
     ) : orderData.paid === true? (
       <div className="flex flex-col items-center justify-center">
-        <p className="text-md font-medium text-zinc-600">
+        <p className="text-md font-medium text-white bg-red-600 w-full text-center">
           No puedes eliminar un alquiler que ya se encuentra abonado
         </p>
-        <Button className="bg-green-800 text-white font-medium text-sm w-72 mt-2 mb-2">
+        <Button className="bg-green-800 text-white font-medium text-sm w-72 mt-4 mb-2" onClick={() => closeModal()}>
           Cerrar
         </Button>
       </div>

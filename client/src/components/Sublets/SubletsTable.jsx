@@ -8,11 +8,12 @@ import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
 import UseSubletToOrder from './UseSubletToOrder';
 import SubletDetail from './SubletDetail';
-
+import { useNavigate } from 'react-router-dom';
 
 const SubletsTable = ({sublets, update}) => {
 
     const tableRef = useRef(null);
+    const navigate = useNavigate()
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [withOutCollections, setWithOutCollections] = useState(false);
@@ -20,7 +21,9 @@ const SubletsTable = ({sublets, update}) => {
     const [inputValue, setInputValue] = useState("")
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
 
-
+    const goToCreateSublet = (item) => { 
+      navigate(item)
+    }
 
     useEffect(() => { 
         setData(sublets)
@@ -28,7 +31,7 @@ const SubletsTable = ({sublets, update}) => {
 
         const getDataAndCreateTable = () => { 
             if(data.length !== 0) { 
-            const propiedades = Object.keys(sublets[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'used'  && propiedad !== 'providerId' &&  propiedad !== 'day' && propiedad !== 'month' && propiedad !== 'year'  && propiedad !== 'productsDetail' );
+            const propiedades = Object.keys(sublets[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'used'  && propiedad !== 'providerId' &&  propiedad !== 'day' && propiedad !== 'month' && propiedad !== 'year'  && propiedad !== 'productsDetail'  && propiedad !== 'observation');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -125,30 +128,27 @@ const SubletsTable = ({sublets, update}) => {
                     if (tableRef.current) {
                     tableRef.current.updateColumns(modifiedColumnObjects);
                     }            
-                  } 
-                 }
+            } else { 
+              setWithOutCollections(true)
+            }
+        }
 
-                 const filteredData = data.filter((item) => {
+        const filteredData = data.filter((item) => {
                   return Object.values(item).some((value) => {
                      if (value === null) return false;
                      return value.toString().toLowerCase().includes(inputValue.toLowerCase());
                   });
-                 });
+        });
 
-                useEffect(() => { 
-                    setTimeout(() => { 
-                        setLoadData(false)
-                    }, 2000)
-                }, [columns, data])
+        useEffect(() => { 
+          setTimeout(() => { 
+            setLoadData(false)
+          }, 2000)
+        }, [columns, data])
 
-            useEffect(() => { 
-                if(data.length > 0) { 
-                getDataAndCreateTable()
-                console.log("ejecuto data mas a 0")
-                } else { 
-                    setWithOutCollections(true)
-                }
-            }, [data])
+        useEffect(() => { 
+          getDataAndCreateTable()
+        }, [data])
 
      return (
       <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
@@ -214,7 +214,10 @@ const SubletsTable = ({sublets, update}) => {
                  <div className='flex flex-col items-center justify-center '>
                    {
                    withOutCollections ? 
-                    <p className='text-black font-medium text-md '>No hay SubAlquileres</p> 
+                    <div>
+                      <p className='text-black font-medium text-md '>No hay Sub alquileres en este momento</p> 
+                      <p className='mt-3 underline cursor-pointer text-sm' onClick={() => goToCreateSublet("/articulos")}>Ir a crear un Sub Alquiler</p>
+                    </div>
                     :
                     null
                   }               

@@ -380,7 +380,6 @@ const CreateNewOrder = ({updateList}) => {
         console.log("Array Tabla Prod Selected", productsSelected)
       }, [productsSelected])
 
-     
 
       const createTableProductsSelected = (productsSelected) => { 
         console.log("me llego!!! products selected", productsSelected)
@@ -425,7 +424,7 @@ const CreateNewOrder = ({updateList}) => {
 
   return (
     <>
-      <p className="text-sm font-medium text-zinc-600 cursor-pointer" onClick={handleOpen}>Crear Pedido</p>
+      <p className="text-sm font-medium text-black cursor-pointer" onClick={handleOpen}>Crear Pedido</p>
       <Modal isOpen={isOpen} autoClose={false} isDismissable={false} onOpenChange={onOpenChange} size={secondStep !== true ? "xl" : size}>
         <ModalContent>
           {(onClose) => (

@@ -230,7 +230,7 @@ const OrdersTable = () => {
   return (
     <div>
          <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
-         {columns.length !== 0 && data.length !== 0? 
+         {columns.length !== 0 && data.length !== 0 ? 
          <>
           <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
               <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
@@ -297,12 +297,18 @@ const OrdersTable = () => {
        </Table> 
        <EstadisticsOrders/>
          </> 
-       : 
-       <div className='flex flex-col items-center justify-center'>
-          <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>
-          <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => getDataAndCreateTable()}>Deshacer Filtros</p>
-       </div> 
-       }
+          : columns.length === 0 && data.length === 0 && filterIsOn === true ? (
+            <div className='flex flex-col items-center justify-center'>
+              <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>
+              <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => getDataAndCreateTable()}>Deshacer Filtros</p>
+           </div> 
+          ) : filterIsOn !== true && data.length === 0 ? ( 
+            <div className='flex flex-col items-center justify-center'>
+              <p className='font-medium text-zinc-500 text-md'>No hay ordenes almacenadas</p>
+              <p className='mt-4 text-xs underline font-bold cursor-pointer'><CreateNewOrder updateList={getDataAndCreateTable}/></p>
+           </div> 
+          ) : null
+          }
         </div>
     </div>
   )
