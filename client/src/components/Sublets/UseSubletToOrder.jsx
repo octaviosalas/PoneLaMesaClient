@@ -93,8 +93,8 @@ const UseSubletToOrder = ({subletData, update}) => {
               <ModalHeader className="flex flex-col gap-1">Utilizar SubAlquiler</ModalHeader>
               {subletData.used === true ? 
                 <div className="flex flex-col items-center justify-center m-4">
-                    <p className="font-medium text-zinc-600 text-sm">Este SubAlquiler ya fue utilizado en una orden</p>
-                    <Button className="w-50 mt-4 bg-green-800 text-white font-medium" onPress={onClose}>Volver</Button>
+                    <p className="font-medium text-white bg-green-800 w-full text-md text-center">Este SubAlquiler ya fue utilizado en una orden</p>
+                    <Button className="w-72 mt-6 bg-green-800 text-white font-medium" onPress={onClose}>Volver</Button>
                 </div>
                 :
                <ModalBody className="flex flex-col items-center justify-center">

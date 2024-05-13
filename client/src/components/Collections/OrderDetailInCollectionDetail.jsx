@@ -39,10 +39,10 @@ const OrderDetailInCollectionDetail = ({orderDetailData, closeDetail, orderDetai
          {columns.length > 0 && orderDetailData ?
          <> 
              <div className='flex flex-col justify-start items-start text-start'>
-                <p className='text-zinc-700 font-medium text-sm'><b>Detalle de la orden abonada</b></p>
-                <p className='text-zinc-700 font-medium text-sm'>Numero de Orden: {orderDetail.orderNumber}</p>
-                <p className='text-zinc-700 font-medium text-sm'>Fecha: {orderDetail.day} de {orderDetail.month} del {orderDetail.year}</p>
-                <p className='text-zinc-700 font-medium text-sm'>Cliente: {orderDetail.client}</p>
+                <p className='text-white text-center bg-green-800 w-full font-medium text-md'><b>Detalle de la orden abonada</b></p>
+                <p className='text-zinc-700 font-medium text-md mt-2'>Numero de Orden: {orderDetail.orderNumber}</p>
+                <p className='text-zinc-700 font-medium text-md'>Fecha: {orderDetail.day} de {orderDetail.month} del {orderDetail.year}</p>
+                <p className='text-zinc-700 font-medium text-md'>Cliente: {orderDetail.client}</p>
              </div>
              <Table aria-label="Example table with dynamic content" className="w-[650px] shadow-xl flex items-center justify-center mt-2">
                               <TableHeader columns={columns} className="">

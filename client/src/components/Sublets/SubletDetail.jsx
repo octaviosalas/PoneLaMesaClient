@@ -47,7 +47,7 @@ const SubletDetail = ({subletDetailData}) => {
                  <p className="text-zinc-600 font-medium text-sm">Fecha: {subletDetailData.day} de {subletDetailData.month} del {subletDetailData.year}</p>
                  <p className="text-zinc-600 font-medium text-sm">Proveedor: {subletDetailData.provider}</p>
                  <p className="text-zinc-600 font-medium text-sm">Total: {formatePrice(subletDetailData.amount)}</p>
-                 {subletDetailData.used === true ? <p className="text-green-800 font-medium text-sm">Este Sub Alquiler fue Utilizado</p> : <p className="text-zinc-600 font-medium text-sm">Este Sub Alquiler no fue utilizado</p>}
+                 {subletDetailData.used === true ? <p className="text-white mt-2 bg-green-800 font-medium text-sm">Este Sub Alquiler fue Utilizado</p> : <p className="text-zinc-600 font-medium text-sm">Este Sub Alquiler no fue utilizado</p>}
               </div>
               <ModalBody>
                       <Table aria-label="Example table with dynamic content" className="w-full shadow-xl flex items-center justify-center mt-2">

@@ -4,7 +4,7 @@ import axios from "axios";
 import { formatePrice } from "../../functions/gralFunctions";
 
 const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, updateOrderList})  => {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange, onClosse} = useDisclosure();
   const [load, setLoad] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
 
@@ -65,30 +65,30 @@ const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, upd
                     <ModalBody>
                         <div className='flex flex-col items-center justify-center'>
                                 <div className="flex flex-col items-start justify-start">
-                                    <p className="font-medium text-sm text-green-800">¿Estas seguro de utilizar este SubAlquiler para esta orden?</p>
+                                    <p className="font-medium text-smtext-md text-green-800">¿Estas seguro de utilizar este SubAlquiler para esta orden?</p>
                                     <div className="mt-6">
-                                      <p className="font-medium text-sm text-green-800">Se añadira a tu Orden: </p>
+                                      <p className="font-medium text-md text-green-800">Se añadira a tu Orden: </p>
                                       {subletData.subletProductsDetail.map((sub) => (
                                         <div className="flex items-center gap-3">
-                                            <p className="font-medium text-zinc-600 text-sm">Articulo: {sub.productName}</p>
-                                            <p className="font-medium text-zinc-600 text-sm">Cantidad: {sub.quantity}</p>
+                                            <p className="font-medium text-zinc-600 text-md"><b>Articulo:</b> {sub.productName}</p>
+                                            <p className="font-medium text-zinc-600 text-md"><b>Cantidad:</b> {sub.quantity}</p>
                                         </div>
                                       ))}
                                     </div>
                                     <div className="flex flex-col items-start justify-start mt-4">
-                                         <p className="font-medium text-sm text-green-800">Tu orden tenia un total de: {formatePrice(dataOrder.total)}</p>
-                                         <p className="font-medium text-sm text-green-800">Ahora pasara a tener un total de: {formatePrice(dataOrder.total + subletData.amountToBeAdded)}</p>
+                                         <p className="font-medium text-md text-black">Valor actual de la Orden: {formatePrice(dataOrder.total)}</p>
+                                         <p className="font-medium text-md text-black">Valor con Sub Alquiler: {formatePrice(dataOrder.total + subletData.amountToBeAdded)}</p>
                                     </div>                                                      
                                 </div>
                                 <div className='flex gap-4 items-center justify-center mt-4 mb-4'>
-                                    <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => addSubletToTheOrder()}>Confirmar</Button>
-                                    <Button className='bg-green-800 text-white font-medium text-sm'>Cancelar</Button>
+                                    <Button className='bg-green-800 text-white font-medium text-md' onClick={() => addSubletToTheOrder()}>Confirmar</Button>
+                                    <Button className='bg-green-800 text-white font-medium text-md' onClick={() => onClose()}>Cancelar</Button>
                                 </div>
                             </div>
 
                             {succesMessage ? 
                              <div className="mt-6 mb-4 flex items-center justify-center">
-                               <p className="font-medium text-sm text-green-800">El Sub Alquiler fue añadido a la orden</p>
+                               <p className="font-medium text-md text-green-800">El Sub Alquiler fue añadido a la orden</p>
                             </div> 
                             : null}
                     </ModalBody>

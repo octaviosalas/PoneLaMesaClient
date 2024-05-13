@@ -82,8 +82,8 @@ const ProcessTables = ({orderStatus}) => {
 
                  {orderStatus ===  "A Confirmar" ?
                   modifiedColumnObjects.push({
-                    key: 'Anexar SuAlquiler',
-                    label: 'Anexar SuAlquiler',
+                    key: 'SubAlquiler',
+                    label: 'SubAlquiler',
                     cellRenderer: (cell) => { 
                       const filaActual = cell.row; 
                       const id = filaActual.original._id;    

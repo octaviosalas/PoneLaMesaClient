@@ -6,7 +6,7 @@ import { formatePrice } from "../../functions/gralFunctions";
 
 
 const VaucherModal = ({showingOn, detail, orderId}) => {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [load, setLoad] = useState(false)
   const [orderData, setOrderData] = useState({})
 
@@ -54,7 +54,10 @@ const VaucherModal = ({showingOn, detail, orderId}) => {
                 {showingOn === "table" ? (
                     <div className="m-2">
                       {detail.voucher === "" ?
-                       <p className="font-medium text-sm text-zinc-600">No se ha cargado un Comprobante de Pago</p> 
+                         <div className="flex flex-col items-center justify-center w-full">
+                            <p className="font-medium text-sm text-white bg-red-600 w-full text-center">No se ha cargado un Comprobante de Pago</p> 
+                            <Button className="bg-green-800 text-white font-medium w-72 mt-4 mb-2" onClick={() => onClose()}>Cerrar</Button>       
+                         </div>
                        : 
                        <div className="flex flex-col items-center justify-center w-full ">
                          {load && detail.voucher.length > 0 ?  <img src={detail.voucher} className="w-72 h-72 rounded-2xl "/> : <Loading/>}

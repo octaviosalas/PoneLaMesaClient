@@ -101,13 +101,13 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                         <div>
                          {orderStatus === "Armado" ? 
                               <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">      
+                                  <SelectItem key={"A Confirmar"} value={"A Confirmar"} onClick={() => setStatus("A Confirmar")} >A Confirmar</SelectItem>                                       
                                   <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>         
                                   <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
                                   <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
                               </Select> 
                             : 
                             <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
-                              <SelectItem key={"confirmar"} value={"A Confirmar"} onClick={() => setStatus("A Confirmar")}>A Confirmar</SelectItem>     
                               <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>             
                               <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
                               <SelectItem key={"Devuelto"} value={"Devuelto"} onClick={() => setStatus("Devuelto")} >Devuelto</SelectItem>  
@@ -122,8 +122,8 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                         </div>
 
                       {successMessage ?
-                        <div className="font-medium text-sm text-zinc-600 cursor-pointer mt-4">
-                          <p className="font-medium text-sm text-green-800">Estado de orden Modificado con Exito ✔</p>
+                        <div className="font-medium text-sm text-zinc-600 cursor-pointer mt-6">
+                          <p className="font-medium text-md text-white text-center w-full bg-green-800">Estado de orden Modificado con Exito ✔</p>
                         </div> :
                         null}
 

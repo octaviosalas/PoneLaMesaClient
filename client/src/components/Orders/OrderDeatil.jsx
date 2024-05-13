@@ -161,19 +161,19 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
              {orderData ?
               <ModalBody>
                 <div className="flex flex-col text-start justify-start">
-                    <p className="text-zinc-600 font-medium text-sm"><b>Pedido cargador por:</b> {orderData.creator}</p>
-                    <p className="text-zinc-600 font-medium text-sm"><b>Fecha de creacion:</b> {orderData.day} de {orderData.month} de {orderData.year}</p>
-                    <p className="text-zinc-600 font-medium text-sm"><b>Cliente:</b> {orderData.client}</p>
-                    {orderData.shippingCost !== undefined ? <p className="text-zinc-600 font-medium text-sm"><b>Costo de Envio:</b> {formatePrice(orderData.shippingCost)} </p> : null}
+                    <p className="text-zinc-600 font-medium text-md"><b>Pedido cargador por:</b> {orderData.creator}</p>
+                    <p className="text-zinc-600 font-medium text-md"><b>Fecha de creacion:</b> {orderData.day} de {orderData.month} de {orderData.year}</p>
+                    <p className="text-zinc-600 font-medium text-md"><b>Cliente:</b> {orderData.client}</p>
+                    {orderData.shippingCost !== undefined ? <p className="text-zinc-600 font-medium text-md"><b>Costo de Envio:</b> {formatePrice(orderData.shippingCost)} </p> : null}
 
                     {orderData.downPaymentData.length > 0 && orderData.paid === false ? (
-                          <p className="text-green-800 underline font-medium text-sm mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
+                          <p className="text-green-800 underline font-medium text-md mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
                         ) : (
                           orderData.paid === true ? (
-                            <p className="text-green-800  font-medium text-sm mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
+                            <p className="text-green-800  font-medium text-md mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
                           ) : (
                             orderData.paid === false && orderData.downPaymentData.length === 0 ? (
-                              <p className="text-white bg-red-500  font-medium text-sm mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>
+                              <p className="text-white bg-red-500  font-medium text-md mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>
                             ) : null
                           )
                         )}
@@ -256,12 +256,12 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
               </ModalBody>
                :
               <div className="flex flex-col items-start justify-start text-start w-[500px] ml-6">
-                  <p className="text-sm font-medium text-zinc-600"><b>Cargado por: </b> {collectionDetail.loadedBy}</p>
-                  <p  className="text-sm font-medium text-zinc-600"><b>Fecha de Cobro: </b>{collectionDetail.day} de {collectionDetail.month} del {collectionDetail.year}</p>
-                  <p className="text-sm font-medium text-zinc-600"><b>Monto Cobrado:</b>{formatePrice(collectionDetail.amount)}</p>
+                  <p className="text-md font-medium text-zinc-600"><b>Cargado por: </b> {collectionDetail.loadedBy}</p>
+                  <p  className="text-md font-medium text-zinc-600"><b>Fecha: </b>{collectionDetail.day} de {collectionDetail.month} del {collectionDetail.year}</p>
+                  <p className="text-md font-medium text-zinc-600"><b>Monto: </b>{formatePrice(collectionDetail.amount)}</p>
                   {collectionDetail.account === "Efectivo" ? 
-                     <p className="text-sm font-medium text-zinc-600"><b>Pago realizado en : </b> {collectionDetail.account}</p> : 
-                     <p className="text-sm font-medium text-zinc-600"><b>Pago realizado en :  </b> {collectionDetail.account}</p>
+                     <p className="text-md font-medium text-zinc-600"><b>Cuenta: </b> {collectionDetail.account}</p> : 
+                     <p className="text-md font-medium text-zinc-600"><b>Cuenta:  </b> {collectionDetail.account}</p>
                    }
               </div>      
                }

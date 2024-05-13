@@ -248,26 +248,26 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                     </div>
                   {usedIn !== "CreateNewReturn" ?
                      <div className="flex flex-col text-start justify-start  mt-2">
-                        <p className="text-sm font-medium text-black">Cliente: {orderData.client}</p>
-                        <p className="text-sm font-medium text-black">Cargado el {orderData.day} de {orderData.month} de {orderData.year}</p>
-                        {orderData.downPaymentData.length > 0 ? <p className="text-sm font-medium text-green-800">Esta orden tiene una seña abonada</p> : null}
+                        <p className="text-md font-medium text-black">Cliente: {orderData.client}</p>
+                        <p className="text-md font-medium text-black">Cargado el {orderData.day} de {orderData.month} de {orderData.year}</p>
+                        {orderData.downPaymentData.length > 0 ? <p className="text-md font-medium text-green-800">Esta orden tiene una seña abonada</p> : null}
                         {orderData.downPaymentData.length === 0 ? 
-                         <p className="text-sm font-medium text-black">Monto a cobrar: {formatePrice(orderData.total)}</p> 
+                         <p className="text-md font-medium text-black">Monto a cobrar: {formatePrice(orderData.total)}</p> 
                          : 
-                         <p className="text-sm font-medium text-black">Monto pendiente de cobro: {formatePrice(orderData.total - orderData.downPaymentData.map((down) => down.amount)[0])}</p>
+                         <p className="text-md font-medium text-black">Monto pendiente de cobro: {formatePrice(orderData.total - orderData.downPaymentData.map((down) => down.amount)[0])}</p>
                          }
                        
                       </div>
                      : 
                      <div className="flex flex-col text-start justify-start  mt-2">
-                        <p className="text-sm font-medium text-black">Cliente: {orderData.map((ord) => ord.client)}</p>
-                        <p className="text-sm font-medium text-black">Monto a cobrar: {valueToPay}</p>
+                        <p className="text-md font-medium text-black">Cliente: {orderData.map((ord) => ord.client)}</p>
+                        <p className="text-md font-medium text-black">Monto a cobrar: {valueToPay}</p>
                      </div>
                     }
 
                     {usedIn !== "CreateNewReturn" && orderData.paid === true ? (
                       <div className="mt-4 flex items-center justify-center">
-                        <p className="text-md text-black font-medium">Esta orden ya fue cobrada</p>
+                        <p className="text-md text-white text-center bg-green-800 font-medium w-full">Esta orden ya fue cobrada</p>
                       </div>
                     ) : (
                       usedIn === "CreateNewReturn" ? 
@@ -303,7 +303,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                                       <div className="mt-4 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10" style={{ backgroundImage: `url(${payImage})`, backgroundSize: 'cover' }}>
                                         <div className="text-center">
                                           <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
-                                         <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                                         <div className="mt-4 flex text-md leading-6 text-gray-600">
                                               <label
                                                   htmlFor="file-upload"
                                                   className="relative cursor-pointer rounded-md bg-white font-semibold text-green-800 focus-within:outline-none  "
@@ -333,11 +333,11 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                       :
                       <div className="flex gap-6 items-center justify-center">
                          {usedIn !== "CreateNewReturn" && orderData.paid === true ? null :
-                          <Button  className="font-bold text-white text-sm bg-green-800 w-32"  onPress={usedIn === "CreateNewReturn" ? addNewCollectionUsedInCreateNewReturn : addNewCollection}>
+                          <Button  className="font-bold text-white text-sm bg-green-800 w-40"  onPress={usedIn === "CreateNewReturn" ? addNewCollectionUsedInCreateNewReturn : addNewCollection}>
                             Asentar Pago
                           </Button>
                           }
-                          <Button  className="font-bold text-white text-sm bg-green-800 w-72" onPress={handleClose}>
+                          <Button  className="font-bold text-white text-sm bg-green-800 w-40" onPress={handleClose}>
                             Cancelar
                           </Button>
                       </div>

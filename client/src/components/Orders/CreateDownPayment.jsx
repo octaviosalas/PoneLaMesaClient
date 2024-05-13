@@ -83,7 +83,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
   };
 
   const createNewDownPayment = async () => { 
-    if(account.length > 0 && downPaymentAmount > 0) { 
+    if(account.length > 0 && downPaymentAmount > 0 && !errorInQuantity) { 
       console.log("Valor de la seña enmviado",  downPaymentAmount)
       console.log("tipo de dato seña", typeof downPaymentAmount)
       const collecctionData = ({ 
@@ -172,7 +172,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
 
   return (
     <>
-      <p className="text-green-800 text-xs font-medium cursor-pointer" onClick={handleOpen}>Asentar Seña</p>
+      <p className="text-green-800 text-xs font-medium cursor-pointer" onClick={handleOpen}>Asentar </p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -181,10 +181,10 @@ const CreateDownPayment = ({orderData, updateList}) => {
 
              {orderData.downPaymentData.length === 0 ?
               <ModalBody className="flex flex-col items-start justify-start">
-                 <p className="text-zinc-600 text-sm font-medium"><b>Cliente: </b>{orderData.client}</p>
-                 <p className="text-zinc-600 text-sm font-medium"><b>Orden: </b>{orderData.orderNumber}</p>
-                 <p className="text-zinc-600 text-sm font-medium"><b>Mes : </b>{orderData.month}</p>
-                 <p className="text-zinc-600 text-sm font-medium"><b>Monto total de la orden: </b>{formatePrice(orderData.total)}</p>
+                 <p className="text-zinc-600 text-md font-medium"><b>Cliente: </b>{orderData.client}</p>
+                 <p className="text-zinc-600 text-md font-medium"><b>Orden: </b>{orderData.orderNumber}</p>
+                 <p className="text-zinc-600 text-md font-medium"><b>Mes : </b>{orderData.month}</p>
+                 <p className="text-zinc-600 text-md font-medium"><b>Monto total de la orden: </b>{formatePrice(orderData.total)}</p>
 
                    <Input 
                       type="numer" 
@@ -194,7 +194,7 @@ const CreateDownPayment = ({orderData, updateList}) => {
                       onChange={(e) => {
                         const value = e.target.value;
                         const validNumberRegex = /^\d*\.?\d*$/;
-                        if (value === '' || (validNumberRegex.test(value) && parseFloat(value) >= 0)) {
+                        if (value === '' || (validNumberRegex.test(value) && parseFloat(value) > 0)) {
                           setDownPaymentAmount(value);
                           setErrorInQuantity(false);
                         } else {
@@ -280,8 +280,8 @@ const CreateDownPayment = ({orderData, updateList}) => {
 
              {orderData.downPaymentData.length === 0 ?
               <ModalFooter className="flex justify-center items-center mt-2 mb-2">
-                    <Button className="bg-green-800 font-medium text-white text-sm" onClick={() => createNewDownPayment()}> Confirmar Seña </Button>
-                    <Button className="bg-green-800 font-medium text-white text-sm"  onPress={onClose}>  Cancelar  </Button>
+                    <Button className="bg-green-800 font-medium text-white text-sm w-52" onClick={() => createNewDownPayment()}> Confirmar Seña </Button>
+                    <Button className="bg-green-800 font-medium text-white text-sm w-52"  onPress={onClose}>  Cancelar  </Button>
               </ModalFooter> : null}
 
              {succesMessage?
