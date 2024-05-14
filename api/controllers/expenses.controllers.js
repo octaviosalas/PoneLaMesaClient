@@ -1,5 +1,6 @@
 import Expenses from "../models/expenses.js"
 import typeFixedExpenses from "../models/typeOfFixedExpenses.js";
+import Purchases from "../models/purchases.js";
 
 export const createNewExpense = async (req, res) => { 
     console.log(req.body)
@@ -56,5 +57,22 @@ export const createNewTypeFixed = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Error al crear el tipo de gasto fijo' });
     console.log(error)
+  }
+}
+
+
+export const deleteExpense = async (req, res) => { 
+  const {expenseId} = req.params
+  try {
+    const deleteExpenseNow = await Expenses.findByIdAndDelete(expenseId)
+    if(!deleteExpense) { 
+      res.status(400).json("El gasto no pudo ser eliminado")
+    } else { 
+      res.status(200).json("Gasto eliminado")
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(400).json("Error al eliminar gasto")
+
   }
 }

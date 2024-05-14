@@ -109,7 +109,7 @@ const PurchasesByMonthAndYear = () => {
             </CardHeader>
             {withOutPurchases ? 
               <CardBody>
-                <p>No hay compras</p>
+                <p className='text-white bg-red-600 w-full text-center'>No hay compras</p>
               </CardBody>
               :
               <CardBody>

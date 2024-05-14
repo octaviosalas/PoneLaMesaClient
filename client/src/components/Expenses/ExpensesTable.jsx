@@ -36,7 +36,8 @@ const ExpensesTable = ({expensesData, updateList}) => {
             console.log("toy")
             const propiedades = Object.keys(expensesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
             propiedad !== '__v'  &&  propiedad !== 'expenseDetail'  &&  propiedad !== 'date'  &&  
-            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&  propiedad !== 'providerName' &&  propiedad !== 'subletReferenceId' &&  propiedad !== 'fixedExpenseType');
+            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&  propiedad !== 'providerName' &&  propiedad !== 'subletReferenceId' 
+            &&  propiedad !== 'fixedExpenseType'  && propiedad !== 'purchaseReferenceId');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
                 label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -77,15 +78,20 @@ const ExpensesTable = ({expensesData, updateList}) => {
         modifiedColumnObjects.push({
           key: 'Eliminar',
           label: 'Eliminar',
-          cellRenderer: (cell) => { 
+          cellRenderer: (cell) => {
             const filaActual = cell.row;
             const id = filaActual.original._id;
-            const item = {id};
+            let item = {id, typeOfExpense: filaActual.original.typeOfExpense};
+        
+            if (filaActual.original.typeOfExpense === "Compra") {
+              item.purchaseReferenceId = filaActual.original.purchaseReferenceId;
+            }
+        
             return (
-              <DeleteOrder type="purchase" purchaseData={item} updatePurchasesList={updateList}/>
-              );
-        },
-        }) 
+              <DeleteOrder type="expense" expenseData={item} updateExpenseList={updateList}/>
+            );
+          },
+        });
 
        /* modifiedColumnObjects.push({
         key: 'Detalle',
@@ -185,7 +191,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
                           <FilterExpenses applyMonthFilter={applyFiltersByMonth} applyFiltersByType={applyFiltersByType}  isFilterApplied={isFilterApplied}  getAllDataAgain={updateList}/>
                          </div>
                          <div className='flex justify-end mr-4 gap-4'>
-                           <CreateNewPurchase/>
+                           <CreateNewPurchase updateList={updateList}/>
                            <CreateSublet/>
                            <CreateExpense updateList={updateList}/>  
                            <ExpensesEstadistics/>

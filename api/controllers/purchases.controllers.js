@@ -1,38 +1,55 @@
 import Purchases from "../models/purchases.js";
 import ProductsClients from "../models/productsClients.js";
 import { incrementarStock, decrementarStock } from "./orders.controllers.js";
+import Expenses from "../models/expenses.js";
 
 
 
 export const savePurchase = async (req, res) => {
-    const { purchaseDetail, date, day, month, year, total, creatorPurchase } = req.body;
-    console.log(req.body);
-  
-    try {
-      const newPurchaseToBeSaved = new Purchases({
-        date,
-        day,
-        month,
-        year,
-        total,
-        purchaseDetail,
-        creatorPurchase,
-      });
-  
-      newPurchaseToBeSaved.save()
-        .then((newPurchase) => {
-          res.status(200).json({ message: "Compra guardada", newPurchase });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-  
 
-      await incrementarStock(purchaseDetail);
+    const { purchase, expense } = req.body; 
+
+    try {
+      
+      const newPurchaseToBeSaved = new Purchases({
+        date: purchase.date,
+        day: purchase.day,
+        month: purchase.month,
+        year: purchase.year,
+        total: purchase.total,
+        purchaseDetail: purchase.purchaseDetail,
+        creatorPurchase: purchase.creatorPurchase,
+    });
+
+    await newPurchaseToBeSaved.save();
+    console.log("_ID DE LA COMPRA CREADA", newPurchaseToBeSaved._id)
+    console.log("ID DE LA COMPRA CREADA", newPurchaseToBeSaved.id)
+
+    const newExpenseToBeSaved = new Expenses({
+        loadedByName: expense.loadedByName,
+        loadedById: expense.loadedById,
+        typeOfExpense: expense.typeOfExpense,
+        amount: expense.amount,
+        date: expense.date,
+        day: expense.day,
+        month: expense.month,
+        year: expense.year,
+        expenseDetail: expense.expenseDetail,
+        providerName: expense.providerName,
+        providerId: expense.providerId,
+        purchaseReferenceId: newPurchaseToBeSaved._id 
+    });
+
+    await newExpenseToBeSaved.save();
+    await incrementarStock(purchase.purchaseDetail); 
+
+    res.status(200).json({message: "Almacenado"})
+
     } catch (error) {
       console.log(error);
     }
 };
+
 
 export const getAllPurchases = async (req, res) => { 
   try {
@@ -59,7 +76,6 @@ export const getPurchasesByMonth = async (req, res) => {
 }
 
 
-
 export const getPurchaseById = async (req, res) => { 
   const {purchaseId} = req.params
   try {
@@ -72,6 +88,7 @@ export const getPurchaseById = async (req, res) => {
     res.status(500).json({ error: 'Error al obtener compra' });
   }
 }
+
 
 export const updateCompra = async (req, res) => { 
   const {purchaseId} = req.params
@@ -99,11 +116,12 @@ export const updateCompra = async (req, res) => {
 
 export const deletePurchase = async (req, res) => { 
   const { purchaseId } = req.params;
-
+  
   try {
     const deletedCompra = await Purchases.findByIdAndDelete({_id: purchaseId});
+    const deletedExpense = await Expenses.findByIdAndDelete({purchaseReferenceId: purchaseId})
 
-    if (deletedCompra) {
+    if (deletedCompra && deletedExpense) {
       res.status(200).json({ message: 'Compra eliminada correctamente', deleted: deletedCompra });
     } else {
       res.status(404).json({ message: 'Compra no encontrado' });
@@ -118,6 +136,7 @@ export const deleteAndReplenishShares = async (req, res) => {
   const { purchaseId } = req.params;
   try {
     const compra = await Purchases.findById({_id: purchaseId});
+  
     if (!compra) {
       return res.status(404).json({ mensaje: 'Compra no encontrada' });
     }
@@ -137,6 +156,8 @@ export const deleteAndReplenishShares = async (req, res) => {
     );
 
     await Purchases.findByIdAndDelete(purchaseId);
+    await Expenses.findOneAndDelete({ purchaseReferenceId: purchaseId });
+   
 
     res.status(200).json({ mensaje: 'Compra eliminada y stock repuesto' });
   } catch (error) {
@@ -187,3 +208,39 @@ export const updatePurchaseDetail = async (req, res) => {
      res.status(500).json({ message: 'Error interno del servidor' });
   }
 }
+
+
+
+/* 
+
+export const savePurchase = async (req, res) => {
+    const { purchaseDetail, date, day, month, year, total, creatorPurchase } = req.body;
+    console.log(req.body);
+  
+    try {
+      const newPurchaseToBeSaved = new Purchases({
+        date,
+        day,
+        month,
+        year,
+        total,
+        purchaseDetail,
+        creatorPurchase,
+      });
+  
+      newPurchaseToBeSaved.save()
+        .then((newPurchase) => {
+          res.status(200).json({ message: "Compra guardada", newPurchase });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+  
+
+      await incrementarStock(purchaseDetail);
+    } catch (error) {
+      console.log(error);
+    }
+};
+
+*/

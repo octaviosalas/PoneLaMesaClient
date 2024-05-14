@@ -18,6 +18,7 @@ import CollectionsEstadisticsModal from './CollectionsEstadisticsModal';
 const CollectionsTable = ({collections, updateCollectionList}) => {
 
     const tableRef = useRef(null);
+    const navigate = useNavigate()
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [withOutCollections, setWithOutCollections] = useState(false);
@@ -301,19 +302,24 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                      </TableBody>
                    </Table>
                  </>
-               ) : (
+               ) : data.length === 0 && filterIsOn === false  ? (
                  <div className='flex flex-col items-center justify-center '>
                    {
                    withOutCollections ? 
                    <div>
-                      <p className='text-black font-medium text-md '>No hay Cobros</p> 
-                      <p className='text-black cursor-pointer font-medium text-xs underline mt-2'onClick={() => comeBack(collections)}>Volver</p>
+                      <p className='text-black font-medium text-md '>No hay Cobros almacenados en el sistema</p> 
+                      <p className='text-black cursor-pointer font-medium text-xs underline mt-2'onClick={() => navigate("/pedidos")}>Ir a asentar un nuevo cobro</p>
                     </div>
                     :
                     null
                   }               
                  </div>
-           )
+           ) : data.length === 0 && filterIsOn === true  ? ( 
+              <div className='flex flex-col items-center justify-center'>
+                  <p className='text-black font-medium text-md '>No hay Cobros para los filtros aplicados</p> 
+                  <p className='text-black cursor-pointer font-medium text-xs underline mt-4'onClick={() => comeBack(collections)}>Volver</p>
+                </div>
+           ) : null
          )}
            </div>
      )

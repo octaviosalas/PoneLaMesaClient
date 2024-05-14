@@ -4,10 +4,12 @@ import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Inpu
 import axios from "axios";
 import Loading from "../Loading/Loading"
 import MarkWashedArticlesAsFinished from './MarkWashedArticlesAsFinished';
+import { useNavigate } from 'react-router-dom';
 
 const CleaningDetailList = ({washData, updateNumbers}) => {
 
     const tableRef = useRef(null);
+    const navigate = useNavigate()
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [inputValue, setInputValue] = useState("")
@@ -80,6 +82,10 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
     });
    });
 
+   const goToOtherPage = (item) => { 
+    navigate(item)
+  }
+
   return (
            <div className='flex flex-col items-center justify-center 2xl:mt-12'>
                 <div className='flex flex-col items-start justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
@@ -131,7 +137,10 @@ const CleaningDetailList = ({washData, updateNumbers}) => {
                          </TableRow>
                        )}
                      </TableBody>
-          </Table> : <p className='font-medium text-zinc-600 font-sm 2xl:font-md'>En este momento, no hay articulos en Lavado</p>}
+          </Table> :  <div>
+                <p className='font-medium text-zinc-600 font-sm 2xl:font-md'>En este momento, no hay articulos en Lavado</p>
+                <p className='text-sm underline cursor-pointer'  onClick={() => goToOtherPage("/articulos")}>Volver a la pagina principal</p>
+            </div> }
     </div>
   )
 }

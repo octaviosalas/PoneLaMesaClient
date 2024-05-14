@@ -69,13 +69,13 @@ export const deleteClient = async (req, res) => {
 export const updateClientData = async (req, res) => { 
   console.log(req.params)
   const { clientId } = req.params;
-  const {client, telephone, clientEmail, home, typeOfClient} = req.body
+  const {client, telephone, clientDni, home, typeOfClient} = req.body
 
     try {
         Clients.findByIdAndUpdate({ _id: clientId }, { 
         name: client,
         telephone: telephone,
-        email: clientEmail,
+        dni: clientDni,
         home: home,
         typeOfClient: typeOfClient         
         })

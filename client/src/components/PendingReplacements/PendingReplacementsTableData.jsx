@@ -2,18 +2,16 @@ import React from 'react'
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Input} from "@nextui-org/react";
 import { useEffect } from "react";
 import { useState } from "react";
-import axios from "axios"
 import { useRef } from "react";
 import { formatePrice } from '../../functions/gralFunctions';
-import DeleteOrder from '../Modals/DeleteOrder';
-import EditModal from '../Modals/EditModal';
 import Loading from '../Loading/Loading';
-import PurchaseDetail from '../Purchases/PurchaseDetail';
 import PendingReplacementDetail from './PendingReplacementDetail';
+import { useNavigate } from 'react-router-dom';
 
 const PendingReplacementsTableData = ({replacementes, updateList}) => {
 
     const tableRef = useRef(null);
+    const navigate = useNavigate()
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
@@ -26,6 +24,10 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
     useEffect(() => { 
         setData(replacementes)
       }, [replacementes])
+
+      const goToOtherPage = (item) => { 
+        navigate(item)
+      }
 
       const createTableData = () => { 
 
@@ -160,8 +162,8 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
            </>
          ) : data.length === 0 ? (
              <div>
-                <p className='font-medium text-zinc-600'>No hay compras para los Filtros aplicados.</p>
-             
+                <p className='font-medium text-zinc-600'>No hay reposiciones pendientes de cobro en este momento</p>
+                <p className='text-sm underline cursor-pointer'  onClick={() => goToOtherPage("/articulos")}>Volver a la pagina principal</p>
              </div>
          ) : (
            <Loading/>

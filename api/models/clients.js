@@ -8,7 +8,7 @@ const clientsSchema = mongoose.Schema({
     telephone: { 
         type: Number
     }, 
-    email: { 
+    dni: { 
         type: String
     },    
     typeOfClient: { 

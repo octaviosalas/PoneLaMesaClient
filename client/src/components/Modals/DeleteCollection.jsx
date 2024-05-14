@@ -3,7 +3,6 @@ import axios from 'axios'
 import { useState } from 'react'
 import { Button } from '@nextui-org/react'
 
-//2 - Eliminar cobro de reposicion + Actualizar la deuda del cliente a false el paid. Para eliminar esto, obtengo el paymentReferenceId, con el cual puedo actualizar deuda el cliente + documento de collections
 
 
 const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) => {
@@ -33,6 +32,7 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
 
        }
     }
+    
 
     const deleteReplacementCollection =  async () => { 
       try {
@@ -110,7 +110,7 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
                   
                  {succesDeleted ?
                   <div className="flex items-center mt-4 mb-2">
-                     <p className="text-green-600 text-md font-medium">Cobro Eliminado Correctamente ✔</p>
+                     <p className="text-green-800 text-sm font-medium">Cobro Eliminado Correctamente ✔</p>
                   </div>
                   : null}
                </div>

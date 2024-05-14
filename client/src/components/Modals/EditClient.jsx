@@ -7,7 +7,7 @@ const EditClient = ({clientData, updateChanges, closeModalNow}) => {
 
     const [newClientName, setNewClientName] = useState(clientData.name)
     const [newClientTelephone, setNewClientTelephone] = useState(clientData.telephone)
-    const [newClientEmail, setNewClientEmail] = useState(clientData.email)
+    const [newClientDni, setNewClientDni] = useState(clientData.dni)
     const [newClientHome, setNewClientHome] = useState(clientData.home)
     const [newClientTypeOf, setNewClientTypeOf] = useState(clientData.typeOfClient)
     const [succesChangesClient, setSuccesChangesClient] = useState(false)
@@ -16,7 +16,7 @@ const EditClient = ({clientData, updateChanges, closeModalNow}) => {
         const newData = ({ 
             client: newClientName,
             telephone: newClientTelephone,
-            clientEmail: newClientEmail,
+            clientDni: newClientDni,
             home: newClientHome,
             typeOfClient: newClientTypeOf
         })
@@ -41,7 +41,7 @@ const EditClient = ({clientData, updateChanges, closeModalNow}) => {
         <div className="flex flex-col items-center justify-center">
               <Input type="text" className="mt-2 w-60" label="Cliente" value={newClientName} onChange={(e) => setNewClientName(e.target.value)}/>
               <Input type="text" className="mt-2 w-60" label="Telefono" value={newClientTelephone} onChange={(e) => setNewClientTelephone(e.target.value)}/>
-              <Input type="text" className="mt-2 w-60" label="Email" value={newClientEmail} onChange={(e) => setNewClientEmail(e.target.value)}/>
+              <Input type="text" className="mt-2 w-60" label="DNI" value={newClientDni} onChange={(e) => setNewClientDni(e.target.value)}/>
               <Input type="text" className="mt-2 w-60" label="Direccion" value={newClientHome} onChange={(e) => setNewClientHome(e.target.value)}/>
               <Select label="Tipo de Cliente" value={newClientTypeOf} variant="underlined" className="w-60 mt-2 rounded-xl">
                       <SelectItem onClick={() => setNewClientTypeOf("Bonificado")}>Bonificado</SelectItem>

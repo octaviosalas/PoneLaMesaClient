@@ -36,8 +36,7 @@ const PurchasesTable = ({purchasesData, updateList}) => {
         }, [purchasesData])
 
         const getPurchasesDataAndCreateTable = () => { 
-
-                      if(data.length !== 0) { 
+          if(data.length !== 0) { 
                         const propiedades = Object.keys(purchasesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
                         propiedad !== '__v'  &&  propiedad !== 'day'  &&  propiedad !== 'date'  &&  
                         propiedad !== 'year' &&  propiedad !== 'purchaseDetail'  &&  propiedad !== 'providerId'  &&  propiedad !== 'providerName');
@@ -115,13 +114,10 @@ const PurchasesTable = ({purchasesData, updateList}) => {
                       if (tableRef.current) {
                           tableRef.current.updateColumns(modifiedColumnObjects);
                       }            
-                      } else { 
-                        console.log("VACIO")
-                        setWaitingData(true)
-                      }
-
-                  
-                    
+          } else { 
+              console.log("VACIO")
+             setWaitingData(true)
+          }                        
         }
 
         useEffect(() => { 
@@ -230,14 +226,21 @@ const PurchasesTable = ({purchasesData, updateList}) => {
                   </Table> 
                   <EstadisticsPurchases/>
                 </>
-              ) : data.length === 0 ? (
+              ) : data.length === 0 && filterIsOn === true ? (
                   <div>
-                     <p className='font-medium text-zinc-600'>No hay compras para los Filtros aplicados.</p>
+                     <p  className='font-medium text-zinc-600'>No hay compras para los Filtros aplicados.</p>
                      <p  className='font-medium text-zinc-600 underline mt-2 cursor-pointer' onClick={() => { setData(purchasesData); setFilterIsOn(false); }}>Volver</p>
                   </div>
-              ) : (
-                <Loading/>
-              )}
+              ) : data.length === 0 && filterIsOn === false ? (
+                  <div className='flex flex-col items-center justify-center'>
+                     <p className='font-medium text-black text-md'>No hay Inversiones registradas en el sistema</p>
+                     <div className='mt-4'>
+                         <CreateNewPurchase updateList={updateList} type="withOut"/>
+                      </div>                 
+                  </div>
+              ) : 
+              <Loading/>
+              }
         </div>
       )
 }

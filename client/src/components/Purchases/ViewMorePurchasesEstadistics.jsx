@@ -111,7 +111,7 @@ const ViewMorePurchasesEstadistics = () => {
           
             {withOutPurchases ? 
               <div className='flex items-center justify-center mt-4'>
-                <p className='text-sm font-medium text-red-600'>No hay compras</p>   
+                <p className='text-sm font-medium text-white w-full text-center bg-red-600'>No hay compras</p>   
               </div>
               :
                <div className='flex flex-col items-center justify-center mt-2'> 

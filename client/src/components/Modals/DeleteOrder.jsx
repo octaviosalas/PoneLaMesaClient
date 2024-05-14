@@ -9,6 +9,7 @@ import DeleteProvider from "./DeleteProvider"
 import DeleteSublet from "./DeleteSublet";
 import DeleteCollection from "./DeleteCollection";
 import DeleteEmployee from "./DeleteEmployee";
+import DeleteExpense from "./DeleteExpense";
 
 const DeleteOrder = ({
                         type, 
@@ -27,7 +28,9 @@ const DeleteOrder = ({
                         collectionData, 
                         updateCollectionList,
                         employeeData,
-                        updateEmployee}) => {
+                        updateEmployee,
+                        expenseData,
+                        updateExpenseList}) => {
  
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [successMessage, setSuccessMessage] = useState(false)
@@ -131,6 +134,20 @@ const DeleteOrder = ({
               <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar cobro de {collectionData.collectionType}</ModalHeader>
               <ModalBody>
                 <DeleteCollection collectionData={collectionData} closeModalNow={onClose} updateCollections={updateCollectionList}/>
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+        :
+        null}   
+
+     {type === "expense" ? 
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Gasto</ModalHeader>
+              <ModalBody>
+                <DeleteExpense expenseData={expenseData} closeModalNow={onClose} updateExpenseList={updateExpenseList}/>
               </ModalBody>
             </>
           )}

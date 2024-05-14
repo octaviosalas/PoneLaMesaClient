@@ -81,7 +81,7 @@ export const deleteCollection = async (req, res) => {
   console.log(req.body.clientName);
  
   try {
-     const firstDeleteCollectionReplacement = await Collections.findByIdAndDelete({_id: collectionId});
+      await Collections.findByIdAndDelete({_id: collectionId});
      const secondUpdateDebtClient = await Clients.find({name: req.body.clientName});
      console.log("Encontre al cliente", secondUpdateDebtClient);
  

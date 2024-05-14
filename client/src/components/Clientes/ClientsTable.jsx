@@ -50,8 +50,8 @@ const ClientsTable = () => {
                     return { ...column, label: 'Direccion' };
                 }   else if (column.key === 'typeOfClient') {
                   return { ...column, label: 'Cliente' };
-                }  else if (column.key === 'email') {
-                    return { ...column, label: 'Email' };
+                }  else if (column.key === 'dni') {
+                    return { ...column, label: 'Dni' };
                 }else {
                         return column;
                     }
@@ -65,13 +65,13 @@ const ClientsTable = () => {
                       const id = filaActual.original._id;   
                       const name = filaActual.original.name;      
                       const telephone = filaActual.original.telephone;
-                      const email = filaActual.original.email;
+                      const dni = filaActual.original.dni;
                       const home = filaActual.original.home;
                       const typeOfClient = filaActual.original.typeOfClient;
                       const item = {
                       id,
                       telephone,
-                      email,
+                      dni,
                       typeOfClient,
                       name,
                       home
