@@ -20,14 +20,8 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [withOutOrders, setWithOutOrders] = React.useState("toggle");
 
-        const changeDataValues = () => { 
-            if(everyReturns.length > 0) { 
-              setData(everyReturns)
-            } else if (everyReturns.length === 0 && pendingReturns.length > 0) { 
-              setData(pendingReturns)
-            } else { 
-              navigate("/pedidos")
-            }
+        const changeDataValues = (item) => { 
+            setData(item)
         }
 
         useEffect(() => {
@@ -229,7 +223,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                    withOutOrders ? 
                     <div className='flex flex-col items-center justify-center'>
                        <p className='text-black font-medium text-md'>No hay devoluciones</p> 
-                       <p className='cursor-pointer text-zinc-600 text-sm mt-3 underline' onClick={() => changeDataValues()}>Volver a la pagina principal</p>
+                       <p className='cursor-pointer text-zinc-600 text-sm mt-3 underline' onClick={() => changeDataValues(pendingReturns)}>Volver a la pagina principal</p>
                     </div>
                     :
                     null
