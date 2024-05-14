@@ -223,7 +223,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                    withOutOrders ? 
                     <div className='flex flex-col items-center justify-center'>
                        <p className='text-black font-medium text-md'>No hay devoluciones</p> 
-                       <p className='cursor-pointer text-zinc-600 text-sm mt-3 underline' onClick={() => changeDataValues(pendingReturns)}>Volver a la pagina principal</p>
+                       <p className='cursor-pointer text-zinc-600 text-sm mt-3 underline' onClick={() => changeDataValues(everyReturns)}>Volver a la pagina principal</p>
                     </div>
                     :
                     null
