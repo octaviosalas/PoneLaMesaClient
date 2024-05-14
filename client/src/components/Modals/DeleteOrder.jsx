@@ -47,7 +47,7 @@ const DeleteOrder = ({
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Pedido</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1 text-zinc-600 font-bold text-md">Eliminar Pedido {orderData.orderStatus} </ModalHeader>
               <ModalBody>
                 <DeleteOrderrr update={updateList} orderData={orderData} closeModal={onClose}/>
               </ModalBody>

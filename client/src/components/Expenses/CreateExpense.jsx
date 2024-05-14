@@ -7,7 +7,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import AddNewFixedType from "./AddNewFixedType";
 
-const CreateExpense = ({updateList}) => {
+const CreateExpense = ({updateList, type}) => {
   
    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
    const [actualDay, setActualDay] = useState(getDay())
@@ -84,7 +84,10 @@ const CreateExpense = ({updateList}) => {
 
   return (
     <>
-      <p className="text-zinc-600 font-bold text-sm" onClick={handleOpen}>Crear Gasto Fijo</p>
+     {type === "withOut" ? 
+       <Button className='bg-green-800 text-white font-medium text-sm' onClick={handleOpen}>Crear Nuevo Gasto Fijo</Button>
+       :
+      <p className="text-zinc-600 font-bold text-sm" onClick={handleOpen}>Crear Gasto Fijo</p>   }
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
         <ModalContent>
           {(onClose) => (

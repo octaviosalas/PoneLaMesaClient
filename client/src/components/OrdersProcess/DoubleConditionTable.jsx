@@ -11,7 +11,6 @@ import {Link} from "react-router-dom"
 import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
 import { useNavigate } from 'react-router-dom';
 import impresora from "../../images/impresora.png"
-import { useCallback } from 'react';
 
 const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries, ordersToRepartToday, futuresReparts}) => {
 
@@ -28,29 +27,23 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
         useEffect(() => { 
           if(tableData.length > 0) { 
            setData(tableData)
-          } else if (tableData.length === 0 && typeOfOrders === "entregas") { 
+          } else if (typeOfOrders === "entregas" && everyDeliveries.length > 0 && tableData.length === 0) { 
             setData(everyDeliveries)
-          } 
-        }, [tableData])
-
-        useEffect(() => { 
-         console.log(data)
-        }, [data])
+          } else if (typeOfOrders === "entregas" && futuresReparts.length > 0 && everyDeliveries.length === 0) { 
+            setData(futuresReparts)
+          } else { 
+           setWithOutOrders(true)
+          }
+        }, [tableData, ordersToRepartToday, futuresReparts ])
 
         const changeTypeOfData = (item) => { 
           setData(item)
-          console.log(item)
           return data
         }
 
-    
-
-        useEffect(() => { 
-            console.log(data)
-        }, [data])
-        
         const getDataAndCreateTable = () => { 
                 if(data.length !== 0) { 
+                  setWithOutOrders(false)
                 const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
                     && propiedad !== 'orderDetail'&&  propiedad !== 'clientId'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'month' && propiedad !== 'year'
                     && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== "missingArticlesData"  && propiedad !== 'downPaymentData'  && propiedad !== 'shippingCost');
@@ -152,7 +145,9 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                     if (tableRef.current) {
                     tableRef.current.updateColumns(modifiedColumnObjects);
                     }            
-                } 
+                } else { 
+                  setWithOutOrders(true)
+                }
         }
 
         const filteredData = data.filter((item) => {
@@ -163,7 +158,6 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
          });
 
         useEffect(() => { 
-          console.log("LA DATA QUE LLEGA A DOUBLE CONDITION", data)
             setTimeout(() => { 
                 setLoadData(false)
             }, 2000)
@@ -206,7 +200,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
           } catch (error) {
               console.log(error);
           }
-      };
+        };
 
 
   return (
@@ -301,9 +295,15 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                 {
                 withOutOrders ? 
                 <div className='flex flex-col'>
-
+                   <div>
+                      <p className='font-medium text-white bg-red-600 text-center w-full'>No hay ningun pedido entregado en este momento</p>
+                      <p className='underline text-sm mt-4 cursor-pointer' onClick={() => navigate("/pedidos")}>Volver</p>
+                   </div>
                 {data === everyDeliveries ? (
-                  <p className='text-black font-medium text-md'>No hay pedidos entregados</p>
+                  <div className='flex flex-col items-center justify-center'>
+                    <p className='text-black font-medium text-md'>No hay pedidos entregados</p>
+                    <p className='underline text-sm mt-4 cursor-pointer' onClick={() => navigate("/pedidos")}>Volver</p>
+                  </div>
                 ) : data === tableData ? (
                   <p className='text-black font-medium text-md'>No Hay pedidos para entrega de Local con fecha de Hoy</p>
                 ) : data === futuresReparts ? (
@@ -311,8 +311,6 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                 ) : data === ordersToRepartToday ? (
                   <p className='text-black font-medium text-md'>No Hay pedidos para repartir hoy</p>
                 ) : null}
-
-                  <p className='underline text-sm cursor-pointer mt-2' onClick={() => setData(everyDeliveries)}>Volver</p>
                 </div>
                  :
                  null

@@ -71,7 +71,8 @@ const OrdersTable = () => {
       getDataAndCreateTable()
     }
 
-    const getDataAndCreateTable = () => { 
+    const getDataAndCreateTable = () => {
+      setFilterIsOn(false)
       axios.get("http://localhost:4000/orders")
             .then((res) => { 
               const allOrders = res.data.reverse()
@@ -297,7 +298,7 @@ const OrdersTable = () => {
        </Table> 
        <EstadisticsOrders/>
          </> 
-          : columns.length === 0 && data.length === 0 && filterIsOn === true ? (
+          :  data.length === 0 && filterIsOn === true ? (
             <div className='flex flex-col items-center justify-center'>
               <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>
               <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => getDataAndCreateTable()}>Deshacer Filtros</p>

@@ -170,7 +170,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                           <p className="text-green-800 underline font-medium text-md mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
                         ) : (
                           orderData.paid === true ? (
-                            <p className="text-green-800  font-medium text-md mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
+                            <p className="text-white bg-green-800 w-full text-center  font-medium text-md mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
                           ) : (
                             orderData.paid === false && orderData.downPaymentData.length === 0 ? (
                               <p className="text-white bg-red-500  font-medium text-md mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>

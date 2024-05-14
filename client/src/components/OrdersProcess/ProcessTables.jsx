@@ -201,7 +201,8 @@ const ProcessTables = ({orderStatus}) => {
                     const filaActual = cell.row;
                     const id = filaActual.original._id;
                     const downPaymentData = filaActual.original.downPaymentData;
-                    const item = {downPaymentData, id};
+                    const orderStatus = filaActual.original.orderStatus;
+                    const item = {downPaymentData, id, orderStatus};
                     return (
                        <DeleteOrder type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                       );

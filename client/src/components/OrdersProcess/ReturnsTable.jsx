@@ -20,31 +20,31 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [withOutOrders, setWithOutOrders] = React.useState("toggle");
 
-    const changeDataValues = (item) => { 
-        setData(item)
-    }
+        const changeDataValues = () => { 
+            if(everyReturns.length > 0) { 
+              setData(everyReturns)
+            } else if (everyReturns.length === 0 && pendingReturns.length > 0) { 
+              setData(pendingReturns)
+            } else { 
+              navigate("/pedidos")
+            }
+        }
 
-    useEffect(() => {
-      if(everyReturns.length > 0 )  { 
-        changeDataValues(everyReturns)
-        console.log("No hay everyReturns")
-      } else if (everyReturns.length === 0 && pendingReturns.length > 0) { 
-        changeDataValues(pendingReturns)
-        console.log("No hay everyReturns")
-      } else if (everyReturns.length === 0 && pendingReturns.length === 0) { 
-        setWithOutOrders(true)
-      }
-     }, [todaysReturns, pendingReturns, everyReturns])
+        useEffect(() => {
+          if(everyReturns.length > 0 )  { 
+            changeDataValues(everyReturns)
+            console.log("No hay everyReturns")
+          } else if (everyReturns.length === 0 && pendingReturns.length > 0) { 
+            changeDataValues(pendingReturns)
+            console.log("No hay everyReturns")
+          } else if (everyReturns.length === 0 && pendingReturns.length === 0) { 
+            setWithOutOrders(true)
+          }
+        }, [todaysReturns, pendingReturns, everyReturns])
 
-     const goToOtherPage = (item) => { 
-      navigate(item)
-     }
-
-     useEffect(() => { 
-      console.log("pendingReturns", pendingReturns)
-      console.log("everyReturns", everyReturns)
-     }, [everyReturns, pendingReturns])
-
+        const goToOtherPage = (item) => { 
+          navigate(item)
+        }
 
         const getDataAndCreateTable = () => { 
             if(data.length !== 0) { 
@@ -149,13 +149,13 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
             }, 2000)
         }, [columns, data])
 
-    useEffect(() => { 
-        if(data.length > 0) { 
-        getDataAndCreateTable()
-        } else { 
-            setWithOutOrders(true)        
-        }
-    }, [data]) 
+        useEffect(() => { 
+            if(data.length > 0) { 
+            getDataAndCreateTable()
+            } else { 
+                setWithOutOrders(true)        
+            }
+        }, [data]) 
 
     return (
       <div className='flex flex-col items-center justify-center 2xl:mt-12'>
@@ -229,7 +229,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                    withOutOrders ? 
                     <div className='flex flex-col items-center justify-center'>
                        <p className='text-black font-medium text-md'>No hay devoluciones</p> 
-                       <p className='cursor-pointer text-zinc-600 text-sm mt-3 underline' onClick={() => changeDataValues(pendingReturns)}>Volver a la pagina principal</p>
+                       <p className='cursor-pointer text-zinc-600 text-sm mt-3 underline' onClick={() => changeDataValues()}>Volver a la pagina principal</p>
                     </div>
                     :
                     null

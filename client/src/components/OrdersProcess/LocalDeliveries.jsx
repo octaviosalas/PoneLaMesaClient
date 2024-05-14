@@ -73,7 +73,7 @@ const LocalDeliveries = () => {
   return (
     <div>
          <NavBarComponent/>
-         <DoubleConditionTable tableData={localDeliveryOrders} everyDeliveries={everyDeliveries} ordersToRepartToday={ordersToRepartToday} futuresReparts={futuresReparts} typeOfOrders={"entregas"}/> 
+         <DoubleConditionTable tableData={localDeliveryOrders} everyDeliveries={everyDeliveries} ordersToRepartToday={ordersToRepartToday} futuresReparts={futuresReparts} typeOfOrders="entregas"/> 
     </div>
   )
 }

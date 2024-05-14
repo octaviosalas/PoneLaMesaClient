@@ -13,11 +13,12 @@ import CreateNewPurchase from '../Purchases/CreateNewPurchase';
 import CreateSublet from '../ArticlesTable/CreateSublet';
 import ExpensesEstadistics from './ExpensesEstadistics';
 import FilterExpenses from './FilterExpenses';
-
+import { useNavigate } from 'react-router-dom';
 
 const ExpensesTable = ({expensesData, updateList}) => {
 
     const tableRef = useRef(null);
+    const navigate = useNavigate()
     const [data, setData] = useState([]);
     const [columns, setColumns] = useState([]);
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
@@ -28,7 +29,6 @@ const ExpensesTable = ({expensesData, updateList}) => {
 
     useEffect(() => { 
         setData(expensesData.reverse())
-        console.log(expensesData)
       }, [expensesData])
 
       const getExpensesDataAndCreateTable = () => { 
@@ -93,27 +93,6 @@ const ExpensesTable = ({expensesData, updateList}) => {
           },
         });
 
-       /* modifiedColumnObjects.push({
-        key: 'Detalle',
-        label: 'Detalle',
-        cellRenderer: (cell) => { 
-          const filaActual = cell.row;
-          const id = filaActual.original._id;
-          const date = filaActual.original.date;
-          const day = filaActual.original.day;
-          const month = filaActual.original.month;
-          const year = filaActual.original.year;
-          const detail = filaActual.original.purchaseDetail;
-          const creator = filaActual.original.creatorPurchase;
-          const total = filaActual.original.total;
-          const item = {
-          id: id, detail,  date, day, month, year, creator, total};
-          return (
-            <PurchaseDetail purchaseData={item}/>
-            );
-      },
-        }) */
-
         setColumns(modifiedColumnObjects);
         console.log(modifiedColumnObjects)
         if (tableRef.current) {
@@ -123,9 +102,6 @@ const ExpensesTable = ({expensesData, updateList}) => {
           console.log("VACIO")
       
         }
-
-     
-      
       }
 
       useEffect(() => { 
@@ -135,14 +111,10 @@ const ExpensesTable = ({expensesData, updateList}) => {
     }, [columns, data])
 
     useEffect(() => { 
-        console.log("me ejecuto")
       if(data.length > 0) { 
         getExpensesDataAndCreateTable()
-        console.log("mnado")
       } else { 
         setWithOutExpenses(true)
-        console.log("n omando")
-
       }
     }, [data])
 
@@ -259,11 +231,21 @@ const ExpensesTable = ({expensesData, updateList}) => {
                     </TableBody>
                   </Table>                         
                 </>
-              :  
-              <div className='flex flex-col items-center justify-center'>
-              <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>
-              <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => updateList()}>Deshacer Filtros</p>
-            </div>
+              :data.length === 0 && filterIsOn === true ? (
+                <div className='flex flex-col items-center justify-center'>
+                  <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>
+                  <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => updateList()}>Deshacer Filtros</p>
+                </div>
+              ) : data.length === 0 && columns.length === 0 && filterIsOn === false ? ( 
+                <div className='flex flex-col items-center justify-center'>
+                  <p className='font-medium text-black text-md underline'>No tenes gastos guardados en este momento</p>
+                    <div className='flex items-center gap-6 mt-6'> 
+                        <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => navigate("/compras")}>Ir a crear Inversion</Button>
+                        <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => navigate("/articulos")}>Ir a crear Sub Alquiler</Button>
+                        <CreateExpense type="withOut" updateList={updateList}/>
+                    </div>
+                </div>
+              ) : null
           }
         </div>
     </div>
