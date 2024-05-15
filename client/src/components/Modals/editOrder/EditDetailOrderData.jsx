@@ -49,9 +49,12 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
     const handleQuantityChange = (index, newQuantity, productId) => {
       console.log(productId)
       const updateOrderDetail = [...newOrderDetailWithChanges];
+      const priceOfItem = updateOrderDetail[index].price;
       updateOrderDetail[index] = {
         ...updateOrderDetail[index],
         quantity: Number(newQuantity),
+        choosenProductTotalPrice: Number(newQuantity * priceOfItem)
+       
       };
       setNewOrderDetailWithChanges(updateOrderDetail);
       const checkIfProducChangedtIsNew = newProductsAddedToIncrementStock.some((prod) => prod.productId === productId)

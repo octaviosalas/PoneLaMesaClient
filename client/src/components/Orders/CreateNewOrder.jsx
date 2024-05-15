@@ -7,9 +7,10 @@ import { getDate, getMonth, getYear, getDay, formatePrice } from "../../function
 import CreateNewClient from "../Clientes/CreateNewClient";
 import getBackendData from '../../Hooks/GetBackendData';
 import OrderNeedsSublet from "./OrderNeedsSublet";
-import { List, ListItem } from '@tremor/react';
+import moment from 'moment';
 import AddShippingCost from "./AddShippingCost";
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell} from "@nextui-org/react";
+import ApplyDiscount from "./ApplyDiscount";
 
 const CreateNewOrder = ({updateList}) => {
 
@@ -61,6 +62,8 @@ const CreateNewOrder = ({updateList}) => {
   const [columns, setColumns] = useState([])
   const [showTable, setShowTable] = useState(false)
   const [size, setSize] = useState("3xl")
+  const [discount, setDiscount] = useState(0)
+  const [hasDiscount, setHasDiscount] = useState(false)
 
 
 
@@ -112,7 +115,8 @@ const CreateNewOrder = ({updateList}) => {
         setReturnPlace("")
         setDateOfDelivery("")
         setPlaceOfDelivery("")
-
+        setDiscount(0)
+        setHasDiscount(false)
       }
 
       const getClientsData = () => { 
@@ -148,12 +152,12 @@ const CreateNewOrder = ({updateList}) => {
         }
        }
 
-       const chooseClient = async (name, id, home) => { 
-         console.log("recibi", id, name)
+       const chooseClient = async (name, id, home, typeOfClient) => { 
          setPlaceOfDelivery(home)
          setReturnPlace(home)
          setChoosenClientId(id)
          setChoosenClientName(name)
+         setTypeOfClient(typeOfClient)
          setFilteredClientsNames([])
          const response = axios.get(`http://localhost:4000/clients/${id}`)
          const data = await response
@@ -331,7 +335,11 @@ const CreateNewOrder = ({updateList}) => {
             setMissedProducts(false)
           }, 1500);
         } else { 
-          const orderData = ({ 
+
+          let totalWithDiscount = (productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) - 
+                                ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) * (discount / 100));
+  
+          const orderData = ({
             orderCreator: userCtx.userName,
             orderNumber: orderNumber,
             orderStatus: statusOfTheOrder,
@@ -343,33 +351,32 @@ const CreateNewOrder = ({updateList}) => {
             returnDate: returnDate,
             returnPlace: returnPlace,
             orderDetail: productsSelected,
-            total: productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) + (Number(shippingCost) > 0 ? Number(shippingCost) : 0),
+            total: totalWithDiscount,
             date: actualDate,
-            month:  actualMonth,
+            month: actualMonth,
             year: actualYear,
             day: actualDay,
             paid: false,
-            ...(Number(shippingCost) > 0 ? { shippingCost: Number(shippingCost) } : {})
-          })
-          console.log("ENVIO", orderData)
-          axios.post("http://localhost:4000/orders/create", orderData)
-              .then((res) => { 
-                console.log(res.data)
-                updateList()
-                setSuccesMessage(true)
-                setTimeout(() => { 
-                  closeModal()
-                  knowWichNumerOfOrder()
-                  updateList()
-                  setShippingCost(0)
-                }, 2000)
-              })
-              .catch((err) => { 
-                console.log(err)
-              })
-        }
+           ...(Number(shippingCost) > 0? { shippingCost: Number(shippingCost) } : {})
+          });
       
-
+          console.log("ENVIO", orderData);
+          axios.post("http://localhost:4000/orders/create", orderData)
+           .then((res) => { 
+              console.log(res.data);
+              updateList();
+              setSuccesMessage(true);
+              setTimeout(() => { 
+                closeModal();
+                knowWichNumerOfOrder();
+                updateList();
+                setShippingCost(0);
+              }, 2000);
+            })
+           .catch((err) => { 
+              console.log(err);
+            });
+        }
       }
 
       const setCostOfTheShipping = (value) => { 
@@ -422,6 +429,18 @@ const CreateNewOrder = ({updateList}) => {
          }
       }
 
+   
+      const chooseDiscount = (value) => { 
+        setHasDiscount(true)
+        setDiscount(value)
+     }
+
+      useEffect(() => { 
+        console.log(typeof discount)
+        console.log(discount)
+      }, [discount])
+
+
   return (
     <>
       <p className="text-sm font-medium text-black cursor-pointer" onClick={handleOpen}>Crear Pedido</p>
@@ -447,7 +466,7 @@ const CreateNewOrder = ({updateList}) => {
                             <div className='absolute  rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
                                 {filteredClientsNames.map((cc) => (
                                     <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 ml-2" key={cc._id} 
-                                        onClick={() => chooseClient(cc.name, cc._id, cc.home)}>
+                                        onClick={() => chooseClient(cc.name, cc._id, cc.home, cc.typeOfClient)}>
                                         {cc.name}
                                     </p>
                                 ))}
@@ -458,7 +477,7 @@ const CreateNewOrder = ({updateList}) => {
                     {nameClientDoesNotExist ? <p className="text-xs font-medium text-zinc-600 mt-1">El cliente debe estar registrado</p> : null}
 
 
-                    <Select style={{ border: 'none' }} variant="underlined"  label="Tipo de Cliente" className="max-w-xs border border-none mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
+                    <Select style={{ border: 'none' }} selectedKeys={[typeOfClient]} variant="underlined"  label="Tipo de Cliente" className="max-w-xs border border-none mt-2" onChange={(e) => setTypeOfClient(e.target.value)}>
                       {typeOfClients.map((client) => (
                         <SelectItem key={client.value} value={client.value}>
                           {client.label}
@@ -478,42 +497,44 @@ const CreateNewOrder = ({updateList}) => {
                   
 
 
-                           <Input
-                              type="date"
-                              variant="underlined"
-                              classNames={{label: "-mt-5"}}
-                              value={dateOfDelivery}
-                              label="Fecha Entrega"
-                              className="mt-2 w-64 2xl:w-72"
-                              onChange={(e) => {
-                                  const selectedDate = new Date(e.target.value);
-                                  const currentDate = new Date();
-                                  currentDate.setHours(0, 0, 0, 0); 
-                                  if (selectedDate >= currentDate) {
-                                    setDateOfDelivery(e.target.value);
-                                  } else {
-                                    setDeliveryDateError(true)
-                                    setTimeout(() => { 
-                                      setDeliveryDateError(false)
-                                    }, 2000)
-                                  }
-                              }}
-                              />
+                    <Input
+                      type="date"
+                      variant="underlined"
+                      classNames={{label: "-mt-5"}}
+                      value={dateOfDelivery}
+                      label="Fecha Entrega"
+                      className="mt-2 w-64 2xl:w-72"
+                      onChange={(e) => {
+                        const selectedDate = moment(e.target.value, 'YYYY-MM-DD');
+                        const currentDate = moment().startOf('day'); // Asegurarse de que la fecha actual sea al inicio del día
+
+                        if (selectedDate.isSameOrAfter(currentDate)) {
+                          setDateOfDelivery(e.target.value);
+                        } else {
+                          setDeliveryDateError(true);
+                          setTimeout(() => {
+                            setDeliveryDateError(false);
+                          }, 2000);
+                        }
+                      }}
+                    />
+
+
+
+
                               {deliveryDateError ? <p className="text-zinc-600 text-xs font-medium mt-1">La fecha ingresada es anterior a la actual</p> : null}
 
                             <Input  
                             type="date" 
                             variant="underlined"  
                             classNames={{label: "-mt-5"}} 
-                            placeholder="" 
                             value={returnDate} 
                             label="Fecha Devolucion" 
                             className="mt-2 w-64 2xl:w-72"  
                             onChange={(e) => {
-                              const selectedDate = new Date(e.target.value);
-                              const currentDate = new Date();
-                              currentDate.setHours(0, 0, 0, 0); 
-                              if (selectedDate >= currentDate) {
+                              const selectedDate = moment(e.target.value, 'YYYY-MM-DD');
+                              const currentDate = moment().startOf('day');
+                              if (selectedDate.isSameOrAfter(currentDate)) { 
                                 setReturnDate(e.target.value);
                               } else {
                                 setReturnDateError(true)
@@ -667,61 +688,40 @@ const CreateNewOrder = ({updateList}) => {
                                    </TableBody>
                                </Table> 
                                
-                               <div className="flex gap-8 items-start justify-start mt-4 mb-4">
-                                      <p className="font-medium text-md text-zinc-600">
-                                          Monto: {formatePrice(productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0))}
-                                      </p>
-                                      {shippingCost > 0 && (
-                                          <div className="flex gap-8 items-start justify-start">
-                                            <p className="font-medium text-md text-zinc-600">
-                                              Monto Envio: {formatePrice(parseFloat(shippingCost))}
-                                            </p>
-                                            <p className="font-medium text-md text-zinc-600">
-                                              Monto Total: {formatePrice(productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost))}
-                                            </p>
-                                          </div>
-                                      )}
+                               <div className="flex gap-8 items-start justify-start mt-4 mb-4"> 
+                   
+                                     {shippingCost === 0 ?
+                                        <div className="flex flex-col items-center justify-center">
+                                              <p className="font-medium text-md text-zinc-600"> 
+                                                  Monto:    {formatePrice(productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) - 
+                                                            ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0)) * (discount / 100)))}
+                                              </p> 
+                                              {hasDiscount === true ? <p className="text-white bg-red-600 text-center w-72 text-sm mt-2">Incluye el {discount}% de descuento</p> : null}                            
+                                        </div>
+                                      : 
+                                    <div className="flex flex-col justify-center items-center">
+                                       <div className="flex gap-8 items-start justify-start">
+                                          <p className="font-medium text-md text-zinc-600">
+                                            Monto Envio: {formatePrice(parseFloat(shippingCost))}
+                                          </p>                        
+                                          <p className="font-medium text-md text-zinc-600">
+                                            Monto Total:
+                                            {formatePrice(productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost) - 
+                                             ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) * (discount / 100)))}
+                                           </p>                                                                                 
+                                       </div>
+                                        <div>
+                                            {hasDiscount === true ? <p className="text-white bg-red-600 text-center w-72 text-sm mt-2">Incluye el {discount}% de descuento</p> : null}
+                                        </div>
                                       </div>
-                             </>
-                               : null
-                       
-                      }
-
-                      
-
-
-                      {/* {productsSelected.length !== 0 ? 
-                         <div className="flex flex-col  w-full">
-                          <div className="flex flex-col mt-6 h-auto max-h-[200px] overflow-y-auto max-w-lg overflow-x-auto">
-                              {productsSelected.map((prod) => ( 
-                                <div className="flex justify-between gap-4 items-center mt-2 border-0 border-b-1 border-b-gray-400" key={prod.productId}>
-                                  <div className="flex gap-2 items-center">
-                                      <p className="text-zinc-500 text-sm"><b className="text-zinc-600 text-sm font-medium">Producto: </b> {prod.productName}</p>
-                                      <p className="text-zinc-500 text-sm"><b className="text-zinc-600 text-sm font-medium">Cantidad: </b>{prod.quantity}</p>
-                                      <p className="text-zinc-500 text-sm"><b className="text-zinc-600 text-sm font-medium">Precio Unitario: </b>{formatePrice(prod.price)}</p>                                   
+                                      }                                                           
+                                 </div>
+                                 <div>
+                                     <ApplyDiscount apply={chooseDiscount}/>
                                   </div>
-                                  <div>
-                                    <p className="text-sm cursor-pointer" onClick={() => handleRemoveProduct(prod.productId)}>X</p>
-                                  </div>                          
-                                </div>
-                              ))}
-                          </div>
-                          <div className="flex flex-col mt-4">
-                            <p className="text-zinc-500 text-xs"> <b>Total Articulos: </b>{formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))} ARS</p> 
-                            {shippingCost > 0 ? 
-                              <div className="flex flex-col items-start justify-start">
-                                 <p className="text-zinc-500 text-xs mt-1"> <b>Costo Envio: </b>{formatePrice(shippingCost)} ARS</p> 
-                                 <p className="text-zinc-500 text-xs mt-1"> <b>Total Final: </b>{formatePrice(productsSelected.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) + Number(shippingCost))} ARS</p>
-                              </div> : null
-                             }
-                             
-                          </div>
-                        </div>  
-                        :
-                        null
-                      } */}
-
-
+                             </>
+                               : null             
+                      }
 
                   </div>
                 </div>

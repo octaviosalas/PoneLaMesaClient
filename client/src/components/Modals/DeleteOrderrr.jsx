@@ -69,7 +69,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
         </div>
         {successMessage? (
           <div className="flex items-center mt-4 mb-2">
-            <p className="text-green-600 text-sm font-medium">
+            <p className="text-green-800 text-sm font-medium">
               Orden Eliminada Correctamente ✔
             </p>
           </div>

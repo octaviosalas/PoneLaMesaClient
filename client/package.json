@@ -22,6 +22,7 @@
     "dropzone": "^6.0.0-beta.2",
     "framer-motion": "^11.0.3",
     "heroicons": "^2.1.1",
+    "moment": "^2.30.1",
     "postcss": "^8.4.35",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

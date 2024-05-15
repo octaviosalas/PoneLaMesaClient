@@ -18,25 +18,10 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
     const [allArticles, setAallArticles] = useState([])
     
 
-    //Funciones para agregar nuevos articulos a la Orden 
-      const getClientsProductsData = () => { 
-      axios.get("http://localhost:4000/products/productsClients")
-            .then((res) => { 
-              console.log(res.data)
-              setAallArticles(res.data);
-            })
-            .catch((err) => { 
-              console.log(err)
-            })
-      }
 
-      useEffect(() => { 
-        getClientsProductsData()
-      }, [])
 
       
 
-     //Funciones para editar datos de la orden - Cantidad de cada Producto Elegido
       const changeOrderState = () => { 
         if(status === "Selecciona un Estado ↓") { 
           setErrorMessage(true)
@@ -73,13 +58,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                 <p className="font-bold text-md text-zinc-600">Editar Pedido </p>
               </div>
 
-                  {step === 0 ? 
-                    <div className="flex flex-col justify-start items-start ml-4">
-                      <p className="text-sm font-medium mt-2">Numero de Orden: {orderData.order}</p>
-                      <p className="text-sm font-medium ">Mes: {orderData.month}</p>
-                      <p className="text-sm font-medium ">Cliente: {orderData.client}</p>
-                    </div>
-                  : null}
+                
                            
                 <div className="mt-4 mb-4 w-full">
                   {step === 0 ?
