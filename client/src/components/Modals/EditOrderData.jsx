@@ -134,8 +134,15 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                         </div>
 
                       ) : step === 2 && modifyData !== true && modifyOrderDetailData === true ? 
-                         <EditDetailOrderData  closeModalNow={closeModalNow} orderStatus={orderData.status} updateChanges={updateList} newOrderDetailArray={orderData.orderDetail} orderId={orderData.id} comeBack={()=> setModifyOrderDetailData(false)}/>
-                       : null}
+                            <EditDetailOrderData
+                            closeModalNow={closeModalNow}
+                            orderStatus={orderData.status}
+                            updateChanges={updateList}
+                            newOrderDetailArray={orderData.orderDetail}
+                            shippingCost={orderData.shippingCost || 0} 
+                            orderId={orderData.id}
+                            comeBack={() => setModifyOrderDetailData(false)}
+                          />                       : null}
                                       
                 </div>           
               </div>

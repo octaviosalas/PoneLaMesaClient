@@ -3,7 +3,7 @@ import { Input, Button } from '@nextui-org/react'
 import { formatePrice } from '../../../functions/gralFunctions'
 import axios from 'axios'
 
-const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBack, closeModalNow, updateChanges}) => {
+const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBack, closeModalNow, updateChanges, shippingCost}) => {
 
     const [productsSelected, setProductsSelected] = useState("")
     const [filteredNames, setFilteredNames] = useState("")
@@ -78,14 +78,14 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
    
     };
 
-    useEffect(() => { 
-      console.log(newOrderDetailWithChanges)
-  }, [newOrderDetailWithChanges])
+     useEffect(() => { 
+        console.log(newOrderDetailWithChanges)
+     }, [newOrderDetailWithChanges])
 
-  useEffect(() => { 
-    getClientsProductsData()
-    console.log("NEW PPRODUCTS ADDED", newProductsAddedToIncrementStock)
-}, [newProductsAddedToIncrementStock])
+      useEffect(() => { 
+      getClientsProductsData()
+      console.log("NEW PPRODUCTS ADDED", newProductsAddedToIncrementStock)
+     }, [newProductsAddedToIncrementStock])
 
     const handleInputChange = (e) => { 
         setChoosenProductName(e);
@@ -118,11 +118,18 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
         setFilteredNames("")
     }
 
-    const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock) => {
+    const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock, param) => {
         const newProductsAdded = []
         if(errorInArticle === false && errorInQuantity === false) { 
             if(quantity < choosenProductStock) { 
-              const choosenProductTotalPrice = price * quantity
+              let choosenProductTotalPrice;
+                if(param === "withPrice") {
+                  choosenProductTotalPrice = price * quantity;
+                  console.log("withPrice")
+                } else {
+                  choosenProductTotalPrice = 0
+                  console.log("withOutPrice")
+                }
               const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice };
               const checkIfProductIsNew = newOrderDetailWithChanges.some((prod) => prod.productId === newProduct.productId)
               console.log(checkIfProductIsNew)
@@ -193,8 +200,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
           const updatedNewProductsAddedToIncrementStock = newProductsAddedToIncrementStock.filter(prod => prod.productId !== productIdToDelete);
           setNewProductsAddedToIncrementStock(updatedNewProductsAddedToIncrementStock);
         }
-      }
-
+    }
 
     const cancelAddProduct = () => { 
         setAddNewProductToOrder(false)
@@ -206,8 +212,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
         comeBack()
     }
 
-     
-     const changePurchaseDetail = async () => {  
+    const changePurchaseDetail = async () => {  
        try {
             const sumarStock = [];
             const disminuirStock = [];
@@ -234,7 +239,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
             console.log("SUMAR STOCK POR DIFERENCIA POSITIVA", sumarStock)
             console.log("DESCONTAR STOCK POR DIFERENCIA NEGATIVA", disminuirStock) 
 
-            const newTotalOrderAmount = newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)
+            const newTotalOrderAmount = newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) + shippingCost
 
             console.log(formatePrice(newTotalOrderAmount))
              
@@ -268,7 +273,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
               console.log(error) 
             }
 
-       };
+    };
     
 
 
@@ -349,10 +354,16 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
                       {showError ? <p className='text-zinc-600 font-medium text-sm'>La cantidad Ingresado o el Articulo Ingresado no es valido</p> : null}
 
                       {choosenProductName.length !== 0 && choosenProductQuantity.length !== 0 ?
-                          <Button className="mt-6 w-60 font-medium text-white bg-green-800"  
-                                  onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, choosenProductPriceReplacement, choosenProductStock )}>
+                        <div className='flex gap-4 items-center'>
+                          <Button className="mt-6 w-44 font-medium text-white bg-green-800"  
+                                  onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, choosenProductPriceReplacement, choosenProductStock, "withPrice" )}>
                               Añadir
                           </Button> 
+                          <Button className="mt-6 w-44 font-medium text-white bg-green-800"  
+                                  onClick={() => addProductSelected(choosenProductName, choosenProductId, choosenProductQuantity, choosenProductPrice, choosenProductPriceReplacement, choosenProductStock, "withOutPrice" )}>
+                              Añadir sin Cargo
+                          </Button> 
+                        </div>
                           : 
                           null
                       }
@@ -372,7 +383,9 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
               {!addNewProductToOrder ? <Button className="bg-green-800 font-bold text-white  w-56" onClick={() => setAddNewProductToOrder(true)}>Agregar Nuevo Producto</Button>
               :null}
               
-              {addNewProductToOrder ? <Button className="bg-green-800 font-bold text-white  w-56" onClick={() => cancelAddProduct()}>Cancelar Agregados</Button> :
+              {addNewProductToOrder ?
+               <Button className="bg-green-800 font-bold text-white  w-56" onClick={() => cancelAddProduct()}>Cancelar Agregados</Button>
+                :
               <Button className="bg-green-800 font-bold text-white  w-56" onClick={() => cancelAddProduct()}>Cancelar</Button>}
               
               </div>

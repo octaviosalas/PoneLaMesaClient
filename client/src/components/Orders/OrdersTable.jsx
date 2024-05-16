@@ -156,7 +156,8 @@ const OrdersTable = () => {
                       const returnDate = filaActual.original.returnDate;
                       const returnPlace = filaActual.original.returnPlace;
                       const orderDetail = filaActual.original.orderDetail;
-                      const item = {id, status, client,order, month, date, dateOfDelivery,returnDate,orderDetail, returnPlace, placeOfDelivery, clientId};
+                      const shippingCost = filaActual.original?.shippingCost;
+                      const item = {id, status, client,order, month, date, dateOfDelivery,returnDate,orderDetail, returnPlace, placeOfDelivery, clientId, shippingCost};
                       return (
                         <EditModal type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                       );
