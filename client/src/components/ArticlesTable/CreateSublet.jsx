@@ -160,9 +160,10 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
           }
       })
 
-      if(userCtx.userId.length <= 0) { 
+      if(userCtx.userId === null) { 
         setMissedData(true)
         setErrorText("Debes iniciar Sesion para almacenar un SubAlquiler")
+        console.log("null")
         setTimeout(() => { 
           setMissedData(false)
         }, 1500)
@@ -190,6 +191,12 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
               setTimeout(() => { 
                 setSuccesMessage(false)
                 onClose()
+                setProductChoosenName("")
+                setProductChoosenPrice("")
+                setProductChoosenQuantity("")
+                setProductChoosenValue("")
+                setProductChoosenReplacementPrice("")
+                setProductsChoosen([])
               }, 1500)
             })
         .catch((err) =>
