@@ -3,12 +3,15 @@ import Dropzone from 'react-dropzone';
 import { PhotoIcon } from '@heroicons/react/24/solid'
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import Loading from '../Loading/Loading';
 
 const AddLicense = ({chooseImage}) => {
 
     const [image, setImage] = useState("")
+    const [load, setLoad] = useState("")
 
     const handleDropImage = (files) => {
+        setLoad(true)
         const uploaders = files.map((file) => {
           const formData = new FormData();
           formData.append('file', file);
@@ -27,6 +30,7 @@ const AddLicense = ({chooseImage}) => {
               console.log(fileURL);
               chooseImage(fileURL) 
               setImage(fileURL)
+              setLoad(false)
             });
         });
       };
@@ -56,6 +60,9 @@ const AddLicense = ({chooseImage}) => {
                                  </div> )}
                          </Dropzone>
                     </div> 
+                    <div className='flex flex-col items-center justify-center mt-4'>
+                      {load ? <Loading /> : null}
+                    </div>
     </div>
   )
 }

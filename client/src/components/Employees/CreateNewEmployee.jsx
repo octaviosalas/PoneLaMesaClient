@@ -17,7 +17,7 @@ const CreateNewEmployee = ({type, updateList}) => {
   const [licenseImage, setLicenseImage] = useState("")
 
   const createNew = async () => { 
-    if(name.length > 1 && dni.length > 0 && numberError === false) { 
+    if(name.length > 1 && dni.length > 0 && numberError === false && hourAmount > 0) { 
           const newData = ({ 
             name: name,
             dni: dni,
@@ -60,6 +60,15 @@ const CreateNewEmployee = ({type, updateList}) => {
   useEffect(() => { 
     console.log("chooseimage", licenseImage)
   }, [licenseImage])
+
+  const closeModal = () => { 
+    onClose()
+    setDni("")
+    setName("")
+    setHourAmount(0)
+    setNumberError(false)
+    setShowAddLicense(false)
+  }
 
 
   return (
@@ -117,7 +126,7 @@ const CreateNewEmployee = ({type, updateList}) => {
 
                     <div className="flex gap-4 items-center jsutify-center mt-4 mb-4">
                        <Button className="bg-green-800 text-white font-medium text-sm w-48" onClick={() => createNew()}>Guardar</Button>
-                       <Button className="bg-green-800 text-white font-medium text-sm w-48">Cancelar</Button>
+                       <Button className="bg-green-800 text-white font-medium text-sm w-48" onClick={() => closeModal()}>Cancelar</Button>
                     </div>
                     <div className="flex flex-col items-center jsutify-center">
                         {missedData ? <p className="text-zinc-700 font-medium text-sm mt-4 mb-2">Debes completar todos los campos</p> : null}

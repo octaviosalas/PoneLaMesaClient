@@ -552,7 +552,7 @@ const CreateNewOrder = ({updateList}) => {
                       
                       <div className="flex items-center justify-center gap-4">
                         <Button className="font-medium text-white text-sm bg-green-800 w-44" onClick={() => executeFunctionDependsTypeOfClient()}>Armar Pedido</Button>
-                        {placeOfDelivery === "Local" || placeOfDelivery.length === 0 ? null : <AddShippingCost addCost={setCostOfTheShipping}/>}
+                        {placeOfDelivery === "Local" && returnPlace === "Local" || placeOfDelivery.length === 0 ? null : <AddShippingCost addCost={setCostOfTheShipping}/>}
                       </div>
                      
 
