@@ -23,11 +23,6 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
     const [missedAccount, setMissedAccount] = useState(false)
     const [withOutLogin, setWithOutLogin] = useState(false)
 
-    useEffect(() => { 
-      console.log("tipo de dto debtid", typeof debtId)
-      console.log(" debtid", debtId)
-      console.log("tdebtid.debtid", debtId.id)
-    }, [debtId])
 
 
     const availablesAccounts = [
@@ -45,9 +40,6 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
         },
       ]
 
-      useEffect(() => { 
-        console.log(userCtx.userId)
-      }, [userCtx.userId])
 
     const handleDropImage = (files) => {
         const uploaders = files.map((file) => {

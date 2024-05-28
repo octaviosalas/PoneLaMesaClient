@@ -9,6 +9,7 @@ import Loading from '../Loading/Loading';
 import UseSubletToOrder from './UseSubletToOrder';
 import SubletDetail from './SubletDetail';
 import { useNavigate } from 'react-router-dom';
+import CreateSublet from '../ArticlesTable/CreateSublet';
 
 const SubletsTable = ({sublets, update}) => {
 
@@ -161,6 +162,7 @@ const SubletsTable = ({sublets, update}) => {
                      <div className='h-12 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] flex  bg-green-200 gap-10 rounded-t-lg rounded-b-none'>
                        <div className='flex justify-between w-full items-center ml-4'>                   
                            <p className='text-sm font-bold text-zinc-600'>Sub Alquileres Realizados</p>
+                           <CreateSublet updateTable={update} />
                        </div>
                        <div className='flex justify-start mr-4'></div>
                      </div>

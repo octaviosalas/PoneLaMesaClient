@@ -49,11 +49,8 @@ const NavBarComponent = () =>  {
                       <DropdownMenu aria-label="Static Actions">
                         <DropdownItem textValue="Create New Order" key="confirmed" onClick={() => goTo("AConfirmar")}>A Confirmar</DropdownItem>
                         <DropdownItem textValue="Create New Order" key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
-                        <DropdownItem textValue="Create New Order" key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem> 
-                        <DropdownItem textValue="Create New Order" key="returned" onClick={() => goTo("Deposito")}>En Deposito</DropdownItem> 
                         <DropdownItem textValue="Create New Order" key="rep" onClick={() => goTo("EntregasLocal")}>Entregas</DropdownItem> 
                         <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("Devoluciones")}>Devoluciones</DropdownItem>                      
-                        <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("ReposicionesPendientes")}>Reposiciones Pendientes</DropdownItem>     
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
@@ -65,7 +62,10 @@ const NavBarComponent = () =>  {
                       </DropdownTrigger>
                         <DropdownMenu aria-label="Static Actions">
                           <DropdownItem key="arm" onClick={() => goTo("articulos")}>Stock</DropdownItem>
-                          <DropdownItem key="ar" onClick={() => goTo("subalquileres")}>Sub Alquileres</DropdownItem>                          
+                          <DropdownItem textValue="Create New Order" key="returned" onClick={() => goTo("Lavado")}>En lavado</DropdownItem> 
+                          <DropdownItem textValue="Create New Order" key="returned" onClick={() => goTo("Deposito")}>En Deposito</DropdownItem>              
+                          <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("ReposicionesPendientes")}>Reposiciones Pendientes</DropdownItem>     
+        
                         </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
@@ -89,9 +89,8 @@ const NavBarComponent = () =>  {
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions">
                         <DropdownItem key="Cobros" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
-                        <DropdownItem key="Compras" onClick={() => goTo("compras")}>Inversion</DropdownItem>
                         <DropdownItem key="Cierres" onClick={() => goTo("cierres")}>Cierres</DropdownItem>
-                        <DropdownItem key="Cierres" onClick={() => goTo("gastos")}>Gastos</DropdownItem>                 
+                        <DropdownItem key="gastosFijos" onClick={() => goTo("GastosFijos")}>Gastos Fijos</DropdownItem>                                
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>

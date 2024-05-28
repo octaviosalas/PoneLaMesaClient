@@ -14,10 +14,12 @@ const DeleteExpense = ({expenseData, closeModalNow, updateExpenseList}) => {
       try {
          const deleteExpense = await axios.delete(`http://localhost:4000/expenses/${expenseData.id}`)
          if(deleteExpense.status === 200) { 
+          console.log("succes")
           setSuccesDeleted(true)
+          updateExpenseList()
           setTimeout(() => { 
             closeModalNow()
-            updateExpenseList()
+            console.log("succes settimeouit")
             setSuccesDeleted(false)
           }, 1800)
          }

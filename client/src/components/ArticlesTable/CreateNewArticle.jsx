@@ -3,7 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 import axios from "axios";
 import { productCategorys } from "../../functions/gralFunctions";
 
- const CreateNewArticle = ({updateList}) => {
+ const CreateNewArticle = ({updateList, usedIn}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
@@ -74,7 +74,8 @@ import { productCategorys } from "../../functions/gralFunctions";
 
   return (
     <>
-      <p onClick={onOpen} className="text-black font-medium text-sm 2xl:text-md cursor-pointer">Crear Nuevo Articulo</p>
+      {usedIn === "sublet" ?  <p onClick={onOpen} className="text-green font-medium text-sm 2xl:text-md cursor-pointer">Crear Nuevo Articulo</p> :
+       <p onClick={onOpen} className="text-black font-medium text-sm 2xl:text-md cursor-pointer">Crear Nuevo Articulo</p>}
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -122,16 +123,8 @@ import { productCategorys } from "../../functions/gralFunctions";
                    }} 
                 />     
                  <Input label="Cantidad a Agregar" type="number" variant="underlined" className="w-72 mt-2"
-                  onKeyPress={preventMinus}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    if (value === '' || (value > 0 && !isNaN(value)) ) {
-                      setStock(value);
-                      setErrorNumber(false)
-                    } else {
-                      setErrorNumber(true)
-                    }
-                   }} 
+    
+                  onChange={(e) => setStock(e.target.value)} 
                 />    
 
                <Select label="Categoria" variant="underlined" className="w-72 mt-2" >

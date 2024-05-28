@@ -4,13 +4,11 @@ import { useState, useEffect } from 'react'
 import { getEveryExpenses } from '../../functions/gralFunctions'
 import ExpensesTable from './ExpensesTable'
 import NavBarComponent from '../Navbar/Navbar'
+import FixedExpensesTable from './FixedExpenses'
 
-const MainExpenses = () => {  
+const MainExpenses = ({from}) => {  
  
     const [everyExpenses, setEveryExpenses] = useState([])
-
-   
-
 
        const getEveryExpenses = async () => {
         try {

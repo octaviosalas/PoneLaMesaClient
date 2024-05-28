@@ -13,11 +13,13 @@ import PostPayment from './PostPayment';
 import getBackendData from '../../Hooks/GetBackendData';
 import CreateSublet from "../ArticlesTable/CreateSublet"
 import EstadisticsOrders from './EstadisticsOrders';
+import ChangeState from './ChangeState';
 
 const OrdersTable = () => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
+    const [toBeConfirmed, setToBeConfirmed] = useState([]);
     const [columns, setColumns] = useState([]);
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [inputValue, setInputValue] = useState("")
@@ -73,10 +75,11 @@ const OrdersTable = () => {
 
     const getDataAndCreateTable = () => {
       setFilterIsOn(false)
-      axios.get("http://localhost:4000/orders")
+       axios.get("http://localhost:4000/orders")
             .then((res) => { 
               const allOrders = res.data.reverse()
-              console.log(allOrders)
+              const toBeConfimed = res.data.filter((data) => data.status === "Lavado")
+              setToBeConfirmed(toBeConfimed)
               setData(allOrders)
         if(allOrders.length !== 0) { 
             const propiedades = Object.keys(res.data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
@@ -162,7 +165,33 @@ const OrdersTable = () => {
                         <EditModal type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                       );
                   },
-                })          
+                })  
+                
+                modifiedColumnObjects.push({
+                  key: 'Estado',
+                  label: 'Estado',
+                  cellRenderer: (cell) => { 
+
+                      const filaActual = cell.row;
+                      const id = filaActual.original._id;
+                      const status = filaActual.original.orderStatus;
+                      const client = filaActual.original.client;
+                      const clientId = filaActual.original.clientId;
+                      const order = filaActual.original.orderNumber;
+                      const month = filaActual.original.month;
+                      const date = filaActual.original.date;
+                      const dateOfDelivery = filaActual.original.dateOfDelivery;
+                      const placeOfDelivery = filaActual.original.placeOfDelivery;
+                      const returnDate = filaActual.original.returnDate;
+                      const returnPlace = filaActual.original.returnPlace;
+                      const orderDetail = filaActual.original.orderDetail;
+                      const shippingCost = filaActual.original?.shippingCost;
+                      const item = {id, status, client,order, month, date, dateOfDelivery,returnDate,orderDetail, returnPlace, placeOfDelivery, clientId, shippingCost};
+                      return (
+                        <ChangeState type="orders" orderData={item} updateList={getDataAndCreateTable}/>
+                      );
+                  },
+                })   
                              
                 modifiedColumnObjects.push({
                 key: 'Eliminar',
@@ -227,6 +256,11 @@ const OrdersTable = () => {
            return value.toString().toLowerCase().includes(inputValue.toLowerCase());
         });
        });
+
+      
+       const toto = () => { 
+        setData(toBeConfirmed)
+       }
       
 
   return (
@@ -236,7 +270,7 @@ const OrdersTable = () => {
          <>
           <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
               <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
-                  <div className='flex justify-end'>
+                  <div className='flex justify-end gap-6'>
                         <FiltersOrdersTable 
                         getAllDataAgain={getDataAndCreateTable} 
                         applyMonthFilter={applyFiltersByMonth}
@@ -245,6 +279,10 @@ const OrdersTable = () => {
                         applyOrderStatusFilter={applyFiltersByOrderState}
                         applyFiltersByPaidOrNoPaid={applyFiltersByPaidOrNoPaid}
                         isFilterApplied={isFilterApplied}/> 
+                        <p className='font-medium text-zinc-600 text-sm cursor-pointer'>Todos los pedidos</p>
+                        <p className='font-medium text-zinc-600 text-sm cursor-pointer'>Confirmados</p>
+                        <p className='font-medium text-zinc-600 text-sm cursor-pointer' onClick={() => toto()}>Confirmados a futuro</p>
+                        <p className='font-medium text-zinc-600 text-sm cursor-pointer'>Presupuestos</p>
                   </div>
                   <div className='flex justify-start mr-4 gap-6'>
                       <CreateNewOrder updateList={getDataAndCreateTable}/>

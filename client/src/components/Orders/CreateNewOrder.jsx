@@ -65,8 +65,6 @@ const CreateNewOrder = ({updateList}) => {
   const [discount, setDiscount] = useState(0)
   const [hasDiscount, setHasDiscount] = useState(false)
 
-
-
       const knowWichNumerOfOrder = () => { 
         axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
             .then((res) => { 
@@ -266,12 +264,86 @@ const CreateNewOrder = ({updateList}) => {
     
             setProductsSelected(prevProductsSelected => {
                 const updatedProducts = prevProductsSelected.map((product, index) => index === existingProductIndex ? updatedProduct : product);
+                createTableProductsSelected(updatedProducts);
+                return updatedProducts;
+            });
+    
+            setChoosenProductId("");
+            setChoosenProductName("");
+            setChoosenProductQuantity("");
+            setChoosenProductPriceReplacement("");
+            setChoosenProductPrice("");
+            setChoosenProductCategory("");
+            setChoosenProductStock(0);
+    
+        } else if (quantity <= choosenProductStock && productDoesNotExist === false) {
+            const choosenProductTotalPrice = price * quantity;
+            const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice, choosenProductCategory };
+    
+            setProductsSelected(prevProductsSelected => {
+                const updatedProducts = [...prevProductsSelected, newProduct];
                 // Llamada a createTableProductsSelected con el estado actualizado
                 createTableProductsSelected(updatedProducts);
                 return updatedProducts;
             });
     
             // Limpiar campos
+            setChoosenProductId("");
+            setChoosenProductName("");
+            setChoosenProductQuantity("");
+            setChoosenProductPriceReplacement("");
+            setChoosenProductPrice("");
+            setChoosenProductCategory("");
+            setChoosenProductStock(0);
+    
+        } else if (quantity > choosenProductStock && productDoesNotExist === false) {
+          setInsufficientStock(true);
+          setTimeout(() => { 
+            const choosenProductTotalPrice = price * quantity;
+            const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice, choosenProductCategory };
+    
+            setProductsSelected(prevProductsSelected => {
+                const updatedProducts = [...prevProductsSelected, newProduct];
+                // Llamada a createTableProductsSelected con el estado actualizado
+                createTableProductsSelected(updatedProducts);
+                return updatedProducts;
+            });
+    
+            // Limpiar campos
+            setChoosenProductId("");
+            setChoosenProductName("");
+            setChoosenProductQuantity("");
+            setChoosenProductPriceReplacement("");
+            setChoosenProductPrice("");
+            setChoosenProductCategory("");
+            setChoosenProductStock(0);
+            setInsufficientStock(false)
+          }, 1800)
+
+
+        } else if (quantity < choosenProductStock && productDoesNotExist === true) {
+            setProductDoesNotExist(true);
+        }
+    };
+
+
+    /*
+       const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock, choosenProductCategory) => {
+        const existingProductIndex = productsSelected.findIndex(product => product.productId === productId);
+    
+        if (existingProductIndex !== -1) {
+            const updatedProduct = {
+                ...productsSelected[existingProductIndex],
+                quantity: productsSelected[existingProductIndex].quantity + quantity,
+                choosenProductTotalPrice: productsSelected[existingProductIndex].choosenProductTotalPrice + (price * quantity),
+            };
+    
+            setProductsSelected(prevProductsSelected => {
+                const updatedProducts = prevProductsSelected.map((product, index) => index === existingProductIndex ? updatedProduct : product);
+                createTableProductsSelected(updatedProducts);
+                return updatedProducts;
+            });
+    
             setChoosenProductId("");
             setChoosenProductName("");
             setChoosenProductQuantity("");
@@ -309,6 +381,7 @@ const CreateNewOrder = ({updateList}) => {
             setProductDoesNotExist(true);
         }
     };
+    */
 
       const handleRemoveProduct = (productIdToDelete) => {
         setProductsSelected((prevProducts) =>
@@ -382,10 +455,6 @@ const CreateNewOrder = ({updateList}) => {
       const setCostOfTheShipping = (value) => { 
         setShippingCost(value)
       }
-
-      useEffect(() => { 
-        console.log("Array Tabla Prod Selected", productsSelected)
-      }, [productsSelected])
 
 
       const createTableProductsSelected = (productsSelected) => { 
@@ -636,8 +705,8 @@ const CreateNewOrder = ({updateList}) => {
 
                        {
                        insufficientStock ?
-                       <div className="flex items-center justify-center mt-4">
-                            <p className="font-medium text-sm text-green-800 underline">Stock Insuficiente</p>
+                       <div className="flex flex-col items-center justify-center mt-4">
+                            <p className="font-medium text-sm text-white w-full bg-red-600">No dispones de stock suficiente. La cantidad del stock quedara en negativo</p>
                        </div>
                         : 
                         null

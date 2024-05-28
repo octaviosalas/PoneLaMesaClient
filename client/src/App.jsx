@@ -35,6 +35,7 @@ import EmployeesShifts from './components/Employees/EmployeesShifts'
 import PersonalizedClousure from './components/Closures/PersonalizedClousure'
 import Chan from "./components/Closures/Chan"
 import ClousureOfTheMonth from './components/Closures/ClousureOfTheMonth'
+import FixedExpensesTable from './components/Expenses/FixedExpenses'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -59,6 +60,7 @@ function App() {
             <Route path="/compras" element={<Purchases />} />   
             <Route path="/Cobros" element={<Collections />} />   
             <Route path="/Gastos" element={<MainExpenses />} />   
+            <Route path="/GastosFijos" element={<FixedExpensesTable />} />   
             <Route path="/clientes" element={<Clients />} />  
             <Route path="/Empleados" element={<EmployeesMain />} /> 
             <Route path="/Empleados/ListadoDeEmpleados" element={<EmployeesData />} /> 

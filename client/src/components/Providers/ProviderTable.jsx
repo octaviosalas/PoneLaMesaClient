@@ -9,6 +9,9 @@ import Loading from '../Loading/Loading';
 import HistoricProviders from './HistoricProviders';
 import CreateProvider from './CreateProvider';
 import EstadisticsProviders from './EstadisticsProviders';
+import { useNavigate } from 'react-router-dom';
+import CreateSublet from "../ArticlesTable/CreateSublet"
+import CreateNewPurchase from "../Purchases/CreateNewPurchase"
 
 const ProviderTable = ({providers, updateProvidersList}) => {
 
@@ -19,6 +22,7 @@ const ProviderTable = ({providers, updateProvidersList}) => {
     const [loadData, setLoadData] = useState(true)
     const [inputValue, setInputValue] = useState("")
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
+    const navigate = useNavigate();
 
 
         useEffect(() => { 
@@ -64,8 +68,6 @@ const ProviderTable = ({providers, updateProvidersList}) => {
                     );
                 },
                 }) 
-
-               
 
                 modifiedColumnObjects.push({
                     key: 'Editar',
@@ -134,6 +136,10 @@ const ProviderTable = ({providers, updateProvidersList}) => {
             }
         }, [data])
 
+        const move = (item) => { 
+            navigate(`/${item}`)
+        }
+
 
 
      return (
@@ -146,12 +152,18 @@ const ProviderTable = ({providers, updateProvidersList}) => {
                   <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
                     <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
                        <div className='flex justify-between  w-full items-center ml-4'>         
-                       <div className='flex justify-start'>
-                         <p className='text-sm font-bold text-zinc-600'>Proveedores</p>
+                       <div className='flex justify-start gap-6'>
+                         <p className='text-sm font-bold text-zinc-600 cursor-pointer'>Proveedores</p>
+                         <p className='text-sm font-bold text-zinc-600 cursor-pointer' onClick={() => move("subalquileres")}>Sub Alquileres</p>
+                         <p className='text-sm font-bold text-zinc-600 cursor-pointer' onClick={() => move("gastos")}>Gastos</p>
+                         <p className='text-sm font-bold text-zinc-600 cursor-pointer' onClick={() => move("compras")}>Inversiones</p>
+
                        </div>
                        <div className='flex justify-end gap-6'>            
                           <EstadisticsProviders/>    
-                          <CreateProvider updateList={updateProvidersList}/>       
+                          <CreateProvider updateList={updateProvidersList}/>     
+                          <CreateSublet/>
+                          <CreateNewPurchase type="providerTable"/>
                        </div>          
                  
                        </div>

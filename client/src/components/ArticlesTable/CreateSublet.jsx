@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { formatePrice, getEveryProviders, getProductsClients, getDate, getDay, getMonth, getYear } from "../../functions/gralFunctions";
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
+import CreateNewArticle from "./CreateNewArticle";
 
 const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
 
@@ -36,10 +37,14 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
   const [errorInQuantity, setErrorInQuantity] = useState(false)
   const [errorInProductChoosenValue, setErrorInProductChoosenValue] = useState(false)
 
-    //Funciones para obtener proveedores
     const getProviders = async () => { 
       const data = await getEveryProviders()
       setAllProviders(data)
+    }
+
+    const getProducts = async () => { 
+      const articulos = await getProductsClients()
+      setEveryArticles(articulos)
     }
 
     useEffect(() => { 
@@ -53,14 +58,8 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
 
     const handleOpen = async () => { 
       onOpen();
-      const articulos = await getProductsClients()
-      setEveryArticles(articulos)
+      getProducts()
     }
-
-    useEffect(() => { 
-      console.log(everyArticles)
-    }, [everyArticles])
-
 
     const handleProductChange = (e) => { 
       setProductChoosenName(e)
@@ -75,7 +74,6 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
           console.log(useInputToFindTheArticle)
           setProductDoesNotExist(false)
         } else { 
-          console.log("Agrega al producto")
           setProductDoesNotExist(true)
           setFilteredNames([])
         }
@@ -184,9 +182,10 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
         .then((res) => { 
           console.log(res.data)
           setSuccesMessage(true)
+          updateTable()
               if(usedIn === "withOutSubletsToUse") { 
                 closeBothModals()
-                updateTable()
+
               }
               setTimeout(() => { 
                 setSuccesMessage(false)
@@ -206,9 +205,6 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
       
     }
 
-    useEffect(() => { 
-      console.log(productsChoosen)
-    }, [productsChoosen])
 
   return (
     <>
@@ -217,7 +213,10 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">SubAlquilar Articulos</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                 <p>SubAlquilar Articulos</p>
+                 <CreateNewArticle updateList={getProducts} usedIn="sublet"/>
+                </ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">      
                 <Select label="Proveedor" className="max-w-full" variant="underlined">
                     {allProviders.map((prov) => (

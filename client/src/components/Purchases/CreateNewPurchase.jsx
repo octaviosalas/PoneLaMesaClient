@@ -145,7 +145,7 @@ const CreateNewPurchase = ({updateList, type}) => {
                 console.log(res.data)
                 setSuccesPurchase(true)
                 setProductsSelected([])
-                updateList()
+               {type === "providerTable" ? null : updateList()}
                 setTimeout(() => { 
                   onClose()
                   setSuccesPurchase(false)
@@ -269,7 +269,7 @@ const CreateNewPurchase = ({updateList, type}) => {
                          <div className="flex flex-col">
                           <div className="flex flex-col mt-6">
                               {productsSelected.map((prod) => ( 
-                                <div className="flex justify-between gap-2 items-center mt-1">
+                                <div className="flex justify-between gap-2 items-center mt-1" key={prod._id}>
                                   <div className="flex gap-2 items-center">
                                     <p className="text-zinc-500 text-xs"><b>Producto: </b> {prod.productName}</p>
                                     <p className="text-zinc-500 text-xs"><b>Cantidad: </b>{prod.quantity}</p>
