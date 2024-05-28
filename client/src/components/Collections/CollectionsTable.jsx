@@ -7,7 +7,7 @@ import EditModal from '../Modals/EditModal';
 import OrderDetail from '../Orders/OrderDeatil';
 import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
-import {Link} from "react-router-dom"
+import {Link, Navigate} from "react-router-dom"
 import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
 import { useNavigate } from 'react-router-dom';
 import VaucherModal from './VaucherModal';
@@ -223,6 +223,10 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
         setFilterIsOn(false)
       }
 
+      const changePage = (item) => { 
+        navigate(`/${item}`)
+      }
+
      return (
       <div className='flex flex-col items-center justify-center 2xl:mt-12'>
           {loadData ? (
@@ -235,11 +239,13 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                       <p className='text-zinc-500 font-medium text-md'>Cobros</p>
                   </div>
                   <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none mt-2'>
-                       <div className='flex w-full justify-start items-center ml-1'>                   
+                       <div className='flex w-full justify-start items-center ml-1 gap-9'>                   
                            <CollectionsFilters 
                               applyFilters={applyFilters} 
                               applyFiltersByType={applyFiltersByType}
                               isFilterApplied={isFilterApplied} />
+                              <p className='text-zinc-600 cursor-pointer font-medium text-sm' onClick={() => changePage("cierres")}>Cierres</p>
+                              <p className='text-zinc-600 cursor-pointer font-medium text-sm' onClick={() => changePage("gastosFijos")}>Gastos Fijos</p>
                        </div>
                        <div className='flex justify-end mr-4 w-full'>
                         <CollectionsEstadisticsModal/>

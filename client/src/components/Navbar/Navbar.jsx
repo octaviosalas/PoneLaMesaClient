@@ -38,7 +38,7 @@ const NavBarComponent = () =>  {
        
         <NavbarContent className="hidden md:flex">
           <div className="flex  gap-6">
-          <NavbarItem onClick={() => goTo("Pedidos")} className="text-black font-medium cursor-pointer">
+          <NavbarItem onClick={() => goTo("Pedidos")} className="text-black hover:text-green-600 font-medium cursor-pointer">
                 Pedidos        
           </NavbarItem>
           <NavbarItem>
@@ -76,10 +76,13 @@ const NavBarComponent = () =>  {
                       </DropdownTrigger>
                         <DropdownMenu aria-label="Static Actions">
                           <DropdownItem key="arm" onClick={() => goTo("proveedores")}>Ver Proveedores</DropdownItem>
+                          <DropdownItem key="arm" onClick={() => goTo("subalquileres")}>Sub Alquileres</DropdownItem>
+                          <DropdownItem key="arm" onClick={() => goTo("gastos")}>Gastos</DropdownItem>
+                          <DropdownItem key="arm" onClick={() => goTo("compras")}>Inversiones</DropdownItem>
                         </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
-          <NavbarItem  onClick={() => goTo("clientes")}  className="text-black font-medium cursor-pointer">
+          <NavbarItem  onClick={() => goTo("clientes")}  className="text-black font-medium hover:text-green-600 cursor-pointer">
                 Clientes          
           </NavbarItem>      
           <NavbarItem>
@@ -94,7 +97,7 @@ const NavBarComponent = () =>  {
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>
-          <NavbarItem onClick={() => goTo("Empleados")}  className="text-black font-medium cursor-pointer">
+          <NavbarItem onClick={() => goTo("Empleados")}  className="text-black hover:text-green-600 font-medium cursor-pointer">
               
                 Empleados
    
