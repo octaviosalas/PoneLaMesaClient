@@ -4,6 +4,7 @@ import { getEveryOrders, everyYears, months } from "../../functions/gralFunction
 import UseSubletToOrderSecondStep from "../Sublets/UseSubletToOrderSecondStep";
 import CreateNewReturnSecondStep from "./CreateNewReturnSecondStep";
 import arrowLeft from "../../images/arrowLeft.png"
+import {getDay, getMonth, getDate, getYear, shiftsSchedules, everyMonthsOfTheYear} from "../../functions/gralFunctions"
 
 const CreateNewReturn = ({updateList}) => {
 
@@ -11,8 +12,8 @@ const CreateNewReturn = ({updateList}) => {
   const [orders, setOrders] = useState([])
   const [years, setYears] = useState(everyYears)
   const [everyMonths, setEveryMonths] = useState(months)
-  const [monthSelected, setMonthSelected] = useState("");
-  const [yearSelected, setYearSelected] = useState(null);
+  const [monthSelected, setMonthSelected] = useState(() => getMonth());
+  const [yearSelected, setYearSelected] = useState(() => getYear());
   const [orderNumberSelected, setOrderNumberSelected] = useState(null);
   const [missedData, setMissedData] = useState(false);
   const [orderDoesNotExist, setOrderDoesNotExist] = useState(false);
@@ -21,6 +22,8 @@ const CreateNewReturn = ({updateList}) => {
   const [orderChoosenData, setOrderChoosenData] = useState(false);
   const [orderChoosenStatus, setOrderChoosenStatus] = useState("");
   const [size, setSize] = useState("2xl");
+  const [actualYear, setActualYear] = useState(() => getYear());
+  const [actualMonth, setActualMonth] = useState(() => getMonth());
 
 
     const handleOpen = async () => { 
@@ -31,7 +34,7 @@ const CreateNewReturn = ({updateList}) => {
 
     const getOrderData = async () => { 
         if(yearSelected !== null && monthSelected !== null && orderNumberSelected !== null) { 
-          const filteredOrders = orders.filter((ord) => ord.month === monthSelected && ord.year === yearSelected && ord.orderNumber === orderNumberSelected)
+          const filteredOrders = orders.filter((ord) => ord.month === monthSelected && ord.year === Number(yearSelected) && ord.orderNumber === orderNumberSelected)
           if(filteredOrders.length > 0) { 
             console.log(filteredOrders)
             setOrderChoosenData(filteredOrders)
@@ -77,25 +80,23 @@ const CreateNewReturn = ({updateList}) => {
                   <p>Asentar Devolucion</p>
                   {<img onClick={() => comeBackToFirstStep()} className="h-6 w-6 mt-4 cursor-pointer" src={arrowLeft}/>}
                 </ModalHeader>              
-               <ModalBody className="flex flex-col items-center justify-center">
+               <ModalBody className="flex flex-col items-center justify-center">               
    
                   {firstStep ?
-                    <>            
-                      <Select variant={"faded"} label="Selecciona un año" className="w-72" value={yearSelected}>          
-                            {years.map((year) => (
-                              <SelectItem key={year.value} value={year.label} textValue={year.value} onClick={() => setYearSelected(year.value)}>
-                                {year.label}
-                              </SelectItem>
-                            ))}
-                      </Select>
+                    <>           
+                    {monthSelected}                       
+                      <Input type="number" variant="faded" className="w-72 mt-4"  label="Año"  value={yearSelected}  onChange={(e) => setYearSelected(e.target.value)} 
+                        />
                
-                      <Select variant={"faded"} label="Selecciona un mes" className="w-72" value={monthSelected}>          
-                            {everyMonths.map((month) => (
-                              <SelectItem key={month.label} value={month.value} onClick={() => setMonthSelected(month.value)}>
-                                {month.label}
-                              </SelectItem>
+              
+
+                       <Select variant="faded" label="Mes" className="w-72 mt-2 border border-none"   defaultSelectedKeys={[monthSelected]} value={monthSelected}>          
+                        {everyMonths.map((month) => (
+                            <SelectItem key={month.value} value={month.value} textValue={month.value} onClick={() => setMonthSelected(month.value)}>
+                              {month.label}
+                            </SelectItem>
                             ))}
-                       </Select>
+                     </Select>
                     
                         <Input 
                         type="number" 

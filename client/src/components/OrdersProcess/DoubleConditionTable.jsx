@@ -11,6 +11,8 @@ import {Link} from "react-router-dom"
 import { getDay, getMonth, getYear, getDate } from '../../functions/gralFunctions';
 import { useNavigate } from 'react-router-dom';
 import impresora from "../../images/impresora.png"
+import ChangeState from '../Orders/ChangeState';
+import PostPayment from "../Orders/PostPayment"
 
 const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries, ordersToRepartToday, futuresReparts}) => {
 
@@ -124,6 +126,44 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                             );
                         },
                     })          
+
+                    modifiedColumnObjects.push({
+                      key: 'Estado',
+                      label: 'Estado',
+                      cellRenderer: (cell) => { 
+    
+                          const filaActual = cell.row;
+                          const id = filaActual.original._id;
+                          const status = filaActual.original.orderStatus;
+                          const item = {id, status};
+                          return (
+                            <ChangeState status={status} orderData={item} updateList={getDataAndCreateTable}/>
+                          );
+                      },
+                    })   
+
+                    modifiedColumnObjects.push({
+                      key: 'Pago',
+                      label: 'Pago',
+                      cellRenderer: (cell) => { 
+                        const filaActual = cell.row;
+                        const id = filaActual.original._id;
+                        const detail = filaActual.original.orderDetail;
+                        const paid = filaActual.original.paid;
+                        const creator = filaActual.original.orderCreator;
+                        const client = filaActual.original.client;
+                        const clientId = filaActual.original.clientId;
+                        const day = filaActual.original.day;
+                        const month = filaActual.original.month;
+                        const year = filaActual.original.year;
+                        const total = filaActual.original.total;
+                        const downPaymentData = filaActual.original.downPaymentData
+                        const item = {  id, detail,  paid,  creator,day, month,year, total,client, clientId, downPaymentData};
+                        return (
+                           <PostPayment orderData={item} updateList={getDataAndCreateTable}/>
+                          );
+                    },
+                      }) 
                                 
                     modifiedColumnObjects.push({
                     key: 'Eliminar',

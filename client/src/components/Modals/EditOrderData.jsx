@@ -25,7 +25,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
       const changeOrderState = () => { 
         if(status === "Selecciona un Estado ↓") { 
           setErrorMessage(true)
-          setTimeout(() => { 
+          setTimeout(() => { c
             setErrorMessage(false)
           }, 1500)
         } else { 

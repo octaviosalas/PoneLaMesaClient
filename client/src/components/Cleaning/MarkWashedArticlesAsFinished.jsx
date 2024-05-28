@@ -22,6 +22,7 @@ const [shiftChoosenMonth, setShiftChoosenMonth] = useState(() => getMonth());
   const [secondStep, setSecondStep] = useState(false)
   const [yearError, setYearError] = useState(false)
   const [productEstimatedTime, setProductEstimatedTime] = useState(0)
+  const [size, setSize] = useState("2xl")
 
 
   const getTimeEstimatedWashedd = () => { 
@@ -52,9 +53,6 @@ const [shiftChoosenMonth, setShiftChoosenMonth] = useState(() => getMonth());
         }
       }
 
-  useEffect(() => { 
-    console.log(shiftChoosenMonth)
-  }, [shiftChoosenMonth])
 
   const updateArticleStock = async () => { 
     console.log(typeof newQuantity)
@@ -107,12 +105,17 @@ const [shiftChoosenMonth, setShiftChoosenMonth] = useState(() => getMonth());
     }
   }
 
+  const replaceEveryQuantity = async  () => { 
+    setNewQuantity(washedData.quantity)
+    setSecondStep(true)
+  }
+
   
 
   return (
     <>
       <p className="text-green-800 text-xs font-medium cursor-pointer" onClick={handleOpen}>Reponer Stock</p>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -191,6 +194,10 @@ const [shiftChoosenMonth, setShiftChoosenMonth] = useState(() => getMonth());
                   </div>
 
               <ModalFooter className="flex gap-6 items-center justify-center">
+                {secondStep !== true ?
+                 <Button className="bg-green-800 text-white font-medium w-52" onClick={() => replaceEveryQuantity()}>
+                  Reponer todos
+                </Button> : null}
                 <Button className="bg-green-800 text-white font-medium w-52" onClick={secondStep ? () => updateArticleStock() : () => verifyData()}>
                   Confirmar
                 </Button>

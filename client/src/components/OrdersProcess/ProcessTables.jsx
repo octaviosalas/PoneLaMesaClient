@@ -14,8 +14,8 @@ import CreateSublet from '../ArticlesTable/CreateSublet';
 import FindSublet from '../Sublets/FindSublet';
 import CleaningDetail from '../Modals/CleaningDetail';
 import CreateDownPayment from '../Orders/CreateDownPayment';
-
-
+import ChangeState from "../Orders/ChangeState"
+import PostPayment from "../../components/Orders/PostPayment"
 
 const ProcessTables = ({orderStatus}) => {
 
@@ -171,7 +171,21 @@ const ProcessTables = ({orderStatus}) => {
                     }) 
                   }
 
-                 
+                  
+                  modifiedColumnObjects.push({
+                  key: 'Estado',
+                  label: 'Estado',
+                  cellRenderer: (cell) => { 
+
+                      const filaActual = cell.row;
+                      const id = filaActual.original._id;
+                      const status = filaActual.original.orderStatus;
+                      const item = {id, status};
+                      return (
+                        <ChangeState status={status} orderData={item} updateList={getDataAndCreateTable}/>
+                      );
+                  },
+                   })   
 
                   modifiedColumnObjects.push({
                     key: 'Editar',
@@ -192,7 +206,31 @@ const ProcessTables = ({orderStatus}) => {
                           <EditModal type="orders" statusOrder={orderStatus} orderData={item} updateList={getDataAndCreateTable}/>
                         );
                     },
-                  })          
+                  })   
+                  
+                  modifiedColumnObjects.push({
+                    key: 'Pago',
+                    label: 'Pago',
+                    cellRenderer: (cell) => { 
+                      const filaActual = cell.row;
+                      const id = filaActual.original._id;
+                      const detail = filaActual.original.orderDetail;
+                      const paid = filaActual.original.paid;
+                      const creator = filaActual.original.orderCreator;
+                      const client = filaActual.original.client;
+                      const clientId = filaActual.original.clientId;
+                      const day = filaActual.original.day;
+                      const month = filaActual.original.month;
+                      const year = filaActual.original.year;
+                      const total = filaActual.original.total;
+                      const downPaymentData = filaActual.original.downPaymentData
+                      const item = {  id, detail,  paid,  creator,day, month,year, total,client, clientId, downPaymentData};
+                      return (
+                         <PostPayment orderData={item} updateList={getDataAndCreateTable}/>
+                        );
+                  },
+                    }) 
+  
                                
                   modifiedColumnObjects.push({
                   key: 'Eliminar',

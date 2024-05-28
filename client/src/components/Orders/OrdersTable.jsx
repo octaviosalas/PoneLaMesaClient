@@ -175,23 +175,13 @@ const OrdersTable = () => {
                       const filaActual = cell.row;
                       const id = filaActual.original._id;
                       const status = filaActual.original.orderStatus;
-                      const client = filaActual.original.client;
-                      const clientId = filaActual.original.clientId;
-                      const order = filaActual.original.orderNumber;
-                      const month = filaActual.original.month;
-                      const date = filaActual.original.date;
-                      const dateOfDelivery = filaActual.original.dateOfDelivery;
-                      const placeOfDelivery = filaActual.original.placeOfDelivery;
-                      const returnDate = filaActual.original.returnDate;
-                      const returnPlace = filaActual.original.returnPlace;
-                      const orderDetail = filaActual.original.orderDetail;
-                      const shippingCost = filaActual.original?.shippingCost;
-                      const item = {id, status, client,order, month, date, dateOfDelivery,returnDate,orderDetail, returnPlace, placeOfDelivery, clientId, shippingCost};
+                      const item = {id, status};
                       return (
-                        <ChangeState type="orders" orderData={item} updateList={getDataAndCreateTable}/>
+                        <ChangeState status={status} orderData={item} updateList={getDataAndCreateTable}/>
                       );
                   },
                 })   
+                
                              
                 modifiedColumnObjects.push({
                 key: 'Eliminar',
