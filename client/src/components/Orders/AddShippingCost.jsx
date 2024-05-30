@@ -11,6 +11,12 @@ const AddShippingCost = ({addCost}) => {
     onClose()
     addCost(cost)
   }
+
+  const withOutCost = () => { 
+    onClose()
+    addCost(0)
+  }
+  
   
 
   return (
@@ -42,7 +48,12 @@ const AddShippingCost = ({addCost}) => {
                         }/> 
                 </ModalBody>
                 <ModalFooter className='flex flex-col items-center justify-enter mt-2'>
-                  {error ? null : <Button className='bg-green-800 text-white font-medium cursor-pointer w-96' onClick={() => confirmTheCost()}>Confirmar</Button>}
+                  {error ? null :
+                  <div className='flex items-center justify-center gap-4'>
+                     <Button className='bg-green-800 text-white font-medium cursor-pointer w-40' onClick={() => confirmTheCost()}>Confirmar</Button>
+                     <Button className='bg-green-800 text-white font-medium cursor-pointer w-40' onClick={() => withOutCost()}>Sin Cargo</Button>
+                  </div> 
+                  }
                   {error ? <p className='text-green-800 font-medium text-sm mt-2 mb-2'>El costo de envio debe ser mayor a 0</p> : null}
                 </ModalFooter>
               </>

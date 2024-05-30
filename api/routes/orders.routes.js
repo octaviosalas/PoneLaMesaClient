@@ -17,7 +17,8 @@ import { getOrderById,
          createPdf,
          deleteDownPaymentData,
          getOrdersByClient,
-         createDetailPdf } from '../controllers/orders.controllers.js';
+         createDetailPdf, 
+         nextFiveDaysOrdersWithDelivery} from '../controllers/orders.controllers.js';
 
 
 ordersRoutes.get('/', getOrders);
@@ -39,5 +40,6 @@ ordersRoutes.post('/createPdf/', createPdf);
 ordersRoutes.post('/createDetailPdf/', createDetailPdf);
 ordersRoutes.post('/addDownPaymentToOrder/', createPdf);
 ordersRoutes.delete('/deleteDownPayment/:orderId', deleteDownPaymentData);
+ordersRoutes.get('/ord/nextFiveOrders', nextFiveDaysOrdersWithDelivery);
 
 export default ordersRoutes;

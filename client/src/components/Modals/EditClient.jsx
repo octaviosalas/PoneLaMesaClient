@@ -10,6 +10,7 @@ const EditClient = ({clientData, updateChanges, closeModalNow}) => {
     const [newClientDni, setNewClientDni] = useState(clientData.dni)
     const [newClientHome, setNewClientHome] = useState(clientData.home)
     const [newClientTypeOf, setNewClientTypeOf] = useState(clientData.typeOfClient)
+    const [newClientZone, setNewClientZone] = useState(clientData.zone)
     const [succesChangesClient, setSuccesChangesClient] = useState(false)
 
     const changeClientData = () => { 
@@ -18,7 +19,8 @@ const EditClient = ({clientData, updateChanges, closeModalNow}) => {
             telephone: newClientTelephone,
             clientDni: newClientDni,
             home: newClientHome,
-            typeOfClient: newClientTypeOf
+            typeOfClient: newClientTypeOf,
+            zone: newClientZone
         })
         axios.put(`http://localhost:4000/clients/changeData/${clientData.id}`, newData)
             .then((res) => { 
@@ -43,6 +45,7 @@ const EditClient = ({clientData, updateChanges, closeModalNow}) => {
               <Input type="text" className="mt-2 w-60" label="Telefono" value={newClientTelephone} onChange={(e) => setNewClientTelephone(e.target.value)}/>
               <Input type="text" className="mt-2 w-60" label="DNI" value={newClientDni} onChange={(e) => setNewClientDni(e.target.value)}/>
               <Input type="text" className="mt-2 w-60" label="Direccion" value={newClientHome} onChange={(e) => setNewClientHome(e.target.value)}/>
+              <Input type="text" className="mt-2 w-60" label="Direccion" value={newClientZone} onChange={(e) => setNewClientZone(e.target.value)}/>
               <Select label="Tipo de Cliente" value={newClientTypeOf} variant="underlined" className="w-60 mt-2 rounded-xl">
                       <SelectItem onClick={() => setNewClientTypeOf("Bonificado")}>Bonificado</SelectItem>
                       <SelectItem onClick={() => setNewClientTypeOf("No Bonificado")}>No Bonificado</SelectItem>

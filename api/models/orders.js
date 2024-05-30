@@ -74,6 +74,9 @@ const ordersSchema = mongoose.Schema({
     shippingCost: { 
         type: Number,
         required: false
+    },
+    clientZone: { 
+        type: String
     }
 
 })

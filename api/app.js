@@ -52,5 +52,4 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
      console.log("Servidor de NodeJs/Express - Proyecto poneLaMesa -  Iniciado en el puerto 4000 ✔✔")
      connectDataBase()
-
 })

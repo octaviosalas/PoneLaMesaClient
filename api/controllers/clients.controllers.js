@@ -69,7 +69,7 @@ export const deleteClient = async (req, res) => {
 export const updateClientData = async (req, res) => { 
   console.log(req.params)
   const { clientId } = req.params;
-  const {client, telephone, clientDni, home, typeOfClient} = req.body
+  const {client, telephone, clientDni, home, typeOfClient, zone} = req.body
 
     try {
         Clients.findByIdAndUpdate({ _id: clientId }, { 
@@ -77,7 +77,8 @@ export const updateClientData = async (req, res) => {
         telephone: telephone,
         dni: clientDni,
         home: home,
-        typeOfClient: typeOfClient         
+        typeOfClient: typeOfClient,
+        zone: zone               
         })
         .then((newClientData) => {                                      
         res.json({message:"Cliente Modificado", newClientData})
@@ -138,5 +139,16 @@ export const createClientDebt = async (req, res) => {
        console.error('Error:', error);
        res.status(500).json({ error: "Error interno del servidor" });
    } 
+}
+
+
+export async function addZone() {
+  try {
+      const result = await Clients.updateMany({}, { $set: { zone: 'Centro City Bell' } });
+
+      console.log(`${result.nModified} documentos actualizados.`);
+  } catch (error) {
+      console.error('Error actualizando los documentos:', error);
+  }
 }
 

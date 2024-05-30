@@ -7,6 +7,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { formatePriceBackend } from "../utils/formatePriceBackend.js";
+import { getCurrentDate, getFutureDate } from "../utils/dateFunctios.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -521,3 +522,28 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
   doc.end();
 };
+
+
+
+export const nextFiveDaysOrdersWithDelivery = async (req, res) => {
+  
+  try {
+    const currentDate = getCurrentDate();
+    const futureDate = getFutureDate(5);
+
+    const currentDateObj = new Date(currentDate);
+    const futureDateObj = new Date(futureDate);
+
+    const result = await Orders.find({
+      dateOfDelivery: {
+            $gte: currentDateObj.toISOString().split('T')[0],
+            $lte: futureDateObj.toISOString().split('T')[0]
+        }
+    });
+
+    res.status(200).json(result)
+} catch (error) {
+    console.error('Error obteniendo los documentos:', error);
+}
+ };
+

@@ -8,12 +8,13 @@ const CreateNewClient = ({type, updateList}) => {
   const [telephone, setTelephone] = useState("")
   const [dni, setDni] = useState("")
   const [home, setHome] = useState("")
+  const [zone, setZone] = useState("")
   const [typeOfClient, setTypeOfClient] = useState("")
   const [succesMessage, setSuccesMessage] = useState(false)
   const [missedData, setMissedData] = useState(false)
 
   const createClient = () => { 
-    if(name.length === 0 || telephone.length <= 5 || dni.length === 0 || typeOfClient.length === 0) { 
+    if(name.length === 0 || telephone.length <= 5 || dni.length === 0 || typeOfClient.length === 0 || zone.length === 0) { 
       setMissedData(true)
       setTimeout(() => { 
         setMissedData(false)
@@ -25,6 +26,7 @@ const CreateNewClient = ({type, updateList}) => {
         dni,
         home,
         typeOfClient,
+        zone
       })
       axios.post("http://localhost:4000/clients/createClient", clientData)
            .then((res) => { 
@@ -71,6 +73,7 @@ const CreateNewClient = ({type, updateList}) => {
                    <Input type="text" variant="underlined" label="Telefono" value={telephone} className="w-72 mt-2" onChange={(e) => setTelephone(e.target.value)}/>
                    <Input type="text" variant="underlined" label="Email" value={dni} className="w-72 mt-2" onChange={(e) => setDni(e.target.value)}/>
                    <Input type="text" variant="underlined" label="Direccion" value={home} className="w-72 mt-2" onChange={(e) => setHome(e.target.value)}/>
+                   <Input type="text" variant="underlined" label="Zona" value={zone} className="w-72 mt-2" onChange={(e) => setZone(e.target.value)}/>
                    <Select label="Tipo de Cliente"  variant="underlined" value={typeOfClient} className="w-72 mt-2 "  style={{ border: 'none' }}>
                       <SelectItem onClick={() => setTypeOfClient("Bonificado")}>Bonificado</SelectItem>
                       <SelectItem onClick={() => setTypeOfClient("No Bonificado")}>No Bonificado</SelectItem>

@@ -11,6 +11,7 @@ import moment from 'moment';
 import AddShippingCost from "./AddShippingCost";
 import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell} from "@nextui-org/react";
 import ApplyDiscount from "./ApplyDiscount";
+import Multiply from "./Multiply";
 
 const CreateNewOrder = ({updateList}) => {
 
@@ -38,6 +39,7 @@ const CreateNewOrder = ({updateList}) => {
   const [filteredNames, setFilteredNames] = useState("")
   const [choosenClientName, setChoosenClientName] = useState("")
   const [choosenClientId, setChoosenClientId] = useState("")
+  const [choosenClientZone, setChoosenClientZone] = useState("")
   const [filteredClientsNames, setFilteredClientsNames] = useState([])
   const [choosenProductName, setChoosenProductName] = useState("")
   const [choosenProductQuantity, setChoosenProductQuantity] = useState("")
@@ -61,9 +63,11 @@ const CreateNewOrder = ({updateList}) => {
   const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
   const [columns, setColumns] = useState([])
   const [showTable, setShowTable] = useState(false)
-  const [size, setSize] = useState("3xl")
+  const [size, setSize] = useState("5xl")
   const [discount, setDiscount] = useState(0)
   const [hasDiscount, setHasDiscount] = useState(false)
+  const [multiplyTo, setMultiplyTo] = useState(1)
+
 
       const knowWichNumerOfOrder = () => { 
         axios.get(`http://localhost:4000/orders/getByMonth/${actualMonth}`)
@@ -150,11 +154,12 @@ const CreateNewOrder = ({updateList}) => {
         }
        }
 
-       const chooseClient = async (name, id, home, typeOfClient) => { 
+       const chooseClient = async (name, id, home, typeOfClient, zone) => { 
          setPlaceOfDelivery(home)
          setReturnPlace(home)
          setChoosenClientId(id)
          setChoosenClientName(name)
+         setChoosenClientZone(zone)
          setTypeOfClient(typeOfClient)
          setFilteredClientsNames([])
          const response = axios.get(`http://localhost:4000/clients/${id}`)
@@ -207,7 +212,7 @@ const CreateNewOrder = ({updateList}) => {
               setNameClientDoesNotExist(false)
               setMissingShippingCost(false)
             }, 2000)
-          } else if (shippingCost === 0 && returnPlace !== "Local") { 
+          } else if (shippingCost < 0 && returnPlace !== "Local") { 
             setMissingShippingCost(true)
             setTimeout(() => { 
               setMissingShippingCost(false)
@@ -324,64 +329,7 @@ const CreateNewOrder = ({updateList}) => {
         } else if (quantity < choosenProductStock && productDoesNotExist === true) {
             setProductDoesNotExist(true);
         }
-    };
-
-
-    /*
-       const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock, choosenProductCategory) => {
-        const existingProductIndex = productsSelected.findIndex(product => product.productId === productId);
-    
-        if (existingProductIndex !== -1) {
-            const updatedProduct = {
-                ...productsSelected[existingProductIndex],
-                quantity: productsSelected[existingProductIndex].quantity + quantity,
-                choosenProductTotalPrice: productsSelected[existingProductIndex].choosenProductTotalPrice + (price * quantity),
-            };
-    
-            setProductsSelected(prevProductsSelected => {
-                const updatedProducts = prevProductsSelected.map((product, index) => index === existingProductIndex ? updatedProduct : product);
-                createTableProductsSelected(updatedProducts);
-                return updatedProducts;
-            });
-    
-            setChoosenProductId("");
-            setChoosenProductName("");
-            setChoosenProductQuantity("");
-            setChoosenProductPriceReplacement("");
-            setChoosenProductPrice("");
-            setChoosenProductCategory("");
-            setChoosenProductStock(0);
-    
-        } else if (quantity <= choosenProductStock && productDoesNotExist === false) {
-            const choosenProductTotalPrice = price * quantity;
-            const newProduct = { productName, productId, quantity, price, replacementPrice, choosenProductTotalPrice, choosenProductCategory };
-    
-            setProductsSelected(prevProductsSelected => {
-                const updatedProducts = [...prevProductsSelected, newProduct];
-                // Llamada a createTableProductsSelected con el estado actualizado
-                createTableProductsSelected(updatedProducts);
-                return updatedProducts;
-            });
-    
-            // Limpiar campos
-            setChoosenProductId("");
-            setChoosenProductName("");
-            setChoosenProductQuantity("");
-            setChoosenProductPriceReplacement("");
-            setChoosenProductPrice("");
-            setChoosenProductCategory("");
-            setChoosenProductStock(0);
-    
-        } else if (quantity > choosenProductStock && productDoesNotExist === false) {
-            setInsufficientStock(true);
-            setTimeout(() => {
-                setInsufficientStock(false);
-            }, 1500);
-        } else if (quantity < choosenProductStock && productDoesNotExist === true) {
-            setProductDoesNotExist(true);
-        }
-    };
-    */
+      };
 
       const handleRemoveProduct = (productIdToDelete) => {
         setProductsSelected((prevProducts) =>
@@ -410,7 +358,9 @@ const CreateNewOrder = ({updateList}) => {
         } else { 
 
           let totalWithDiscount = (productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) - 
-                                ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) * (discount / 100));
+                                ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) * (discount / 100)) ;
+
+          let finalTotal = totalWithDiscount * multiplyTo;           
   
           const orderData = ({
             orderCreator: userCtx.userName,
@@ -424,21 +374,22 @@ const CreateNewOrder = ({updateList}) => {
             returnDate: returnDate,
             returnPlace: returnPlace,
             orderDetail: productsSelected,
-            total: totalWithDiscount,
+            total: finalTotal,
             date: actualDate,
             month: actualMonth,
             year: actualYear,
             day: actualDay,
             paid: false,
-           ...(Number(shippingCost) > 0? { shippingCost: Number(shippingCost) } : {})
+            clientZone: choosenClientZone,
+           ...(Number(shippingCost) >= 0 ? { shippingCost: Number(shippingCost) } : {})
           });
       
-          console.log("ENVIO", orderData);
           axios.post("http://localhost:4000/orders/create", orderData)
            .then((res) => { 
               console.log(res.data);
               updateList();
               setSuccesMessage(true);
+              setDiscount(0)
               setTimeout(() => { 
                 closeModal();
                 knowWichNumerOfOrder();
@@ -504,10 +455,9 @@ const CreateNewOrder = ({updateList}) => {
         setDiscount(value)
      }
 
-      useEffect(() => { 
-        console.log(typeof discount)
-        console.log(discount)
-      }, [discount])
+      const multiplyValue = (number) => { 
+        setMultiplyTo(number)
+      }
 
 
   return (
@@ -526,6 +476,7 @@ const CreateNewOrder = ({updateList}) => {
               firstStep ? 
               <div className="flex flex-col items-center justify-center">
                  <div className="flex flex-col items-center justify-center"> 
+  
               
                     <Input type="number" variant="underlined" value={orderNumber} label="Numero de Orden" className="mt-2 w-64 2xl:w-72" readonly />
                     <Input type="text" variant="underlined" value={choosenClientName} label="Cliente" className="mt-2 w-64 2xl:w-72" onChange={(e) => handleInputClientsChange(e.target.value)}/>
@@ -535,7 +486,7 @@ const CreateNewOrder = ({updateList}) => {
                             <div className='absolute  rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' style={{ backdropFilter: 'brightness(100%)' }}>
                                 {filteredClientsNames.map((cc) => (
                                     <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500 ml-2" key={cc._id} 
-                                        onClick={() => chooseClient(cc.name, cc._id, cc.home, cc.typeOfClient)}>
+                                        onClick={() => chooseClient(cc.name, cc._id, cc.home, cc.typeOfClient, cc.zone)}>
                                         {cc.name}
                                     </p>
                                 ))}
@@ -762,8 +713,10 @@ const CreateNewOrder = ({updateList}) => {
                                      {shippingCost === 0 ?
                                         <div className="flex flex-col items-center justify-center">
                                               <p className="font-medium text-md text-zinc-600"> 
-                                                  Monto:    {formatePrice(productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) - 
-                                                            ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0)) * (discount / 100)))}
+                                                  Monto:    {formatePrice(
+                                                        (productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) - 
+                                                        ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0)) * (discount / 100))) * multiplyTo
+                                                    )}
                                               </p> 
                                               {hasDiscount === true ? <p className="text-white bg-red-600 text-center w-72 text-sm mt-2">Incluye el {discount}% de descuento</p> : null}                            
                                         </div>
@@ -775,8 +728,10 @@ const CreateNewOrder = ({updateList}) => {
                                           </p>                        
                                           <p className="font-medium text-md text-zinc-600">
                                             Monto Total:
-                                            {formatePrice(productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost) - 
-                                             ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) * (discount / 100)))}
+                                                    {formatePrice(
+                                                        (productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) - 
+                                                        ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0)) * (discount / 100))) * multiplyTo
+                                                    )}
                                            </p>                                                                                 
                                        </div>
                                         <div>
@@ -798,13 +753,14 @@ const CreateNewOrder = ({updateList}) => {
                   <ModalFooter className="flex items-center justify-center mt-6">
                      {succesMessage !== true ?
                      <div className="flex items-center gap-6">
-                        <Button className="font-medium text-white bg-green-800  w-52"  variant="light" onPress={() => sendNewOrder(orderStatus)}>
+                        <Button className="font-medium text-white bg-green-800  w-52" variant="light" onPress={() => sendNewOrder(orderStatus)}>
                           Confirmar Pedido
                         </Button>
-                        <Button className="font-medium text-white bg-green-800  w-52"   variant="light" onPress={setOrderToBeConfirmed}>
+                        <Button className="font-medium text-white bg-green-800  w-52" variant="light" onPress={setOrderToBeConfirmed}>
                           A Confirmar
                         </Button>
-                        <Button className="font-medium text-white bg-green-800  w-52"  variant="light"  onClick={() => {
+                        <Multiply changeTotal={multiplyValue} />
+                        <Button className="font-medium text-white bg-green-800  w-52" variant="light"  onClick={() => {
                             changeState(false, true);
                             setProductsSelected([]);
                             setChoosenClientId("");

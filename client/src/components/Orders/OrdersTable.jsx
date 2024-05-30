@@ -111,7 +111,9 @@ const OrdersTable = () => {
                     return { ...column, label: 'Tipo de Cliente' };
                 }else if (column.key === 'client') {
                     return { ...column, label: 'Cliente' };
-                }else {
+                }else if (column.key === 'clientZone') {
+                  return { ...column, label: 'Zona' };
+              }else {
                     return column;
                 }
             });

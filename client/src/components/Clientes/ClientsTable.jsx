@@ -52,7 +52,9 @@ const ClientsTable = () => {
                   return { ...column, label: 'Cliente' };
                 }  else if (column.key === 'dni') {
                     return { ...column, label: 'Dni' };
-                }else {
+                } else if (column.key === 'zone') {
+                  return { ...column, label: 'Zona' };
+              }else {
                         return column;
                     }
                 });
@@ -68,13 +70,15 @@ const ClientsTable = () => {
                       const dni = filaActual.original.dni;
                       const home = filaActual.original.home;
                       const typeOfClient = filaActual.original.typeOfClient;
+                      const zone = filaActual.original.zone;
                       const item = {
                       id,
                       telephone,
                       dni,
                       typeOfClient,
                       name,
-                      home
+                      home,
+                      zone
                       };
                       return (
                         <EditModal type="client" updateClientsChanges={getClientsDataAndCreateTable} clientData={item}/>
