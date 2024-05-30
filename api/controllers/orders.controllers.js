@@ -268,18 +268,6 @@ export const deleteAndReplenishArticles = async (req, res) => {
   }
 } 
 
-
- 
-
-
-
-
-
-
-
-
-
-
 export const updateOrderData = async (req, res) => { 
   const {orderId} = req.params
   const {newOrderClient, newOrderClientId} = req.body
@@ -547,3 +535,62 @@ export const nextFiveDaysOrdersWithDelivery = async (req, res) => {
 }
  };
 
+
+ export const nextFiveDaysOrdersConfirmed = async (req, res) => {
+  
+  try {
+    const currentDate = getCurrentDate();
+    const futureDate = getFutureDate(5);
+
+    const currentDateObj = new Date(currentDate);
+    const futureDateObj = new Date(futureDate);
+
+    const result = await Orders.find({
+      dateOfDelivery: {
+            $gte: currentDateObj.toISOString().split('T')[0],
+            $lte: futureDateObj.toISOString().split('T')[0]
+        }
+    });
+
+    const filterResult = result.filter((res) => res.orderStatus === "Armado")
+
+    res.status(200).json(filterResult)
+} catch (error) {
+    console.error('Error obteniendo los documentos:', error);
+}
+ };
+
+
+ export const ordersAfterFiveDays = async (req, res) => {
+  try {
+    const futureDate = getFutureDate(5); // Obtener la fecha 5 días después de hoy
+
+    const futureDateObj = new Date(futureDate);
+
+    const result = await Orders.find({
+      dateOfDelivery: {
+        $gte: futureDateObj.toISOString().split('T')[0]
+      }
+    });
+
+    const filterResult = result.filter((res) => res.orderStatus === "Armado");
+
+    res.status(200).json(filterResult);
+  } catch (error) {
+    console.error('Error obteniendo los documentos:', error);
+    res.status(500).json({ message: 'Error al obtener las órdenes' });
+  }
+};
+
+
+
+export const getOrdersToBeConfirmed = async (req, res) => { 
+    try {
+      const orders = await Orders.find()
+      const toBeConfirmed = orders.filter((ord) => ord.orderStatus === "A Confirmar")
+      res.status(200).json(toBeConfirmed);
+    } catch (error) {
+      res.status(500).json({ error: 'Error al obtener las ordenes' });
+      console.log(error)
+    }
+}

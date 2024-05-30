@@ -163,6 +163,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                 <div className="flex flex-col text-start justify-start">
                     <p className="text-zinc-600 font-medium text-md"><b>Pedido cargador por:</b> {orderData.creator}</p>
                     <p className="text-zinc-600 font-medium text-md"><b>Fecha de creacion:</b> {orderData.day} de {orderData.month} de {orderData.year}</p>
+                    <p className="text-zinc-600 font-medium text-md"><b>Fecha de Entrega:</b> {orderData.dateOfDelivery}</p>
                     <p className="text-zinc-600 font-medium text-md"><b>Cliente:</b> {orderData.client}</p>
                     {orderData.shippingCost !== undefined ? <p className="text-zinc-600 font-medium text-md"><b>Costo de Envio:</b> {formatePrice(orderData.shippingCost)} </p> : null}
 

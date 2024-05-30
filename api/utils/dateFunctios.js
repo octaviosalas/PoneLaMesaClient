@@ -19,3 +19,4 @@ export const getFutureDate = (daysToAdd) => {
     const mesFormateado = mes < 10 ? `0${mes}` : mes;
     return `${año}-${mesFormateado}-${diaFormateado}`;
 }
+

@@ -18,7 +18,10 @@ import { getOrderById,
          deleteDownPaymentData,
          getOrdersByClient,
          createDetailPdf, 
-         nextFiveDaysOrdersWithDelivery} from '../controllers/orders.controllers.js';
+         nextFiveDaysOrdersWithDelivery,
+        nextFiveDaysOrdersConfirmed,
+        ordersAfterFiveDays,
+        getOrdersToBeConfirmed } from '../controllers/orders.controllers.js';
 
 
 ordersRoutes.get('/', getOrders);
@@ -41,5 +44,8 @@ ordersRoutes.post('/createDetailPdf/', createDetailPdf);
 ordersRoutes.post('/addDownPaymentToOrder/', createPdf);
 ordersRoutes.delete('/deleteDownPayment/:orderId', deleteDownPaymentData);
 ordersRoutes.get('/ord/nextFiveOrders', nextFiveDaysOrdersWithDelivery);
+ordersRoutes.get('/ord/nextFiveOrdersConfirmed', nextFiveDaysOrdersConfirmed);
+ordersRoutes.get('/ord/afterFiveDays', ordersAfterFiveDays);
+ordersRoutes.get('/ord/justToBeConfirmed', getOrdersToBeConfirmed);
 
 export default ordersRoutes;
