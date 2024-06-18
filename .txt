@@ -1,0 +1,33 @@
+1 - SECCIONES
+
+- En pedidos, en la barra de la tabla, agregar: 
+       Pedidos Confirmados (solo armado próximos a 5 días) – Pedidos confirmados a futuro (Armado mayores a 5 días) - Presupuestos (a confirmar)       Todos los pedidos (tabla actual) ✔
+
+- Local: Armado – Entregas () – Devoluciones. ✔
+
+- Artículos: Stock, Reposiciones, Lavado, Deposito. ✔
+
+* Proveedores: Sub Alquileres – Gastos – Inversiones. Agregar Funciones: Subalquilar + Crear inversión. ✔
+
+* Finanzas: Cobros – Cierres – Gastos Fijos. ✔
+
+2 - TOMA DE PEDIDOS
+- Al cargar un pedido, se debe poder cargar un artículo aunque no haya stock suficiente, en vez de imposibilitar la carga, se debe poder cargar igual, únicamente mostrando un mensaje de alerta. ✔
+
+- Agregar crear artículo de crear subalquiler, y que se pueda con stock 0, así cuando subalquila se le suma a este stock que arranca en 0. ✔
+
+3 - CAMBIAR ESTADO PEDIDOS
+
+- En todas las tablas, agregar una columna que sea modificar estado. ✔
+- Asentar Pago debe estar accesible en todas las tablas independientemente del proceso. ✔
+
+4 - DEVOLUCIONES LAVADO DEPOSITO
+
+- Los clientes deben tener una propiedad mas llamada “Zona”. Esto es para luego, poder agrupar a los pedidos que se reparten por zona. Por ejemplo: “Centro City Bell”. ✔ FALTA IMPRIMIR + FALTA AGRUPARLOS
+- Año y mes automaticos en asentar deviolucion ✔
+- Agregar reponer todos a stock en Lavado (obligatoriamente se debe hacer articulo por articulo) ✔
+
+5- TOMA DE PEDIDOS
+
+- Podes poner envio sin cargo ✔
+- Poder multiplicar el valor del pedido dependiendo los dias de uso ✔

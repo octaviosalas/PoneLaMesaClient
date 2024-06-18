@@ -35,7 +35,7 @@ const LocalDeliveries = () => {
     } catch (error) {
       console.log(error)
     }
- }
+  }
 
   const getOrdersToRepartToday = async () => { 
     try {
@@ -62,6 +62,13 @@ const LocalDeliveries = () => {
   }
   }
 
+  const unifyFunctions = async () => { 
+    console.log("unify again")
+    await getOrdersToDeliverTodayInLocal()
+    await getEveryDeliveries()
+    await getFuturesOrdersToRepart()
+  }
+
 
   useEffect(() => { 
     getOrdersToDeliverTodayInLocal()
@@ -73,7 +80,9 @@ const LocalDeliveries = () => {
   return (
     <div>
          <NavBarComponent/>
-         <DoubleConditionTable tableData={localDeliveryOrders} everyDeliveries={everyDeliveries} ordersToRepartToday={ordersToRepartToday} futuresReparts={futuresReparts} typeOfOrders="entregas"/> 
+         <DoubleConditionTable 
+         tableData={localDeliveryOrders} everyDeliveries={everyDeliveries} ordersToRepartToday={ordersToRepartToday} 
+         futuresReparts={futuresReparts}  typeOfOrders="entregas" again={unifyFunctions}/> 
     </div>
   )
 }

@@ -62,6 +62,8 @@ const CreateNewReturn = ({updateList}) => {
     const comeBackToFirstStep = () => { 
       setSecondStep(false)
       setFirstStep(true)
+      setMonthSelected(getMonth())
+      setYearSelected(getYear())
     }
 
     const closeModalNow = () => { 
@@ -84,7 +86,7 @@ const CreateNewReturn = ({updateList}) => {
    
                   {firstStep ?
                     <>           
-                    {monthSelected}                       
+                        <p className="w-2/4 text-center text-white font-medium bg-green-800 text-md 2xl:text-lg rounded-md">  {monthSelected.charAt(0).toUpperCase() + monthSelected.slice(1)} </p>                  
                       <Input type="number" variant="faded" className="w-72 mt-4"  label="Año"  value={yearSelected}  onChange={(e) => setYearSelected(e.target.value)} 
                         />
                

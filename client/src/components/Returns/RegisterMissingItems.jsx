@@ -74,10 +74,10 @@ const RegisterMissingItems = ({closeModalNow, orderData, cancel, updateList}) =>
         <div className='flex items-center justify-center'>
            <p className='text-sm font-medium text-zinc-600 underline'>Indica la cantidad de Arituclos que recibiste</p>
         </div>
-        <div>
+        <div className='max-h-[400px] 2xl:max-h-[600px] overflow-y-auto'>
             {allOrderProducts.map((ord, index) => (
               <div key={index} className="flex flex-col">
-                <div className="flex items-center justify-start w-auto gap-4 mt-2">
+                <div className="flex items-center justify-start w-auto gap-4 mt-4">
                     <p className="font-medium text-zinc-500 text-sm flex-shrink-0">{ord.productName}</p>
                     <Input type="number" variant="underlined" label="Cantidad" className="max-w-md min-w-sm flex-grow"   value={newOrderDetailArray[index].quantity} onChange={(e) => handleQuantityChange(index, e.target.value)} /> 
                 </div>

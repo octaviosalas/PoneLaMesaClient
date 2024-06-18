@@ -40,7 +40,7 @@ const EditModal = ({
          {type === "orders" ? 
           <ModalContent>
             {(onClose) => (
-              <EditOrderData orderData={orderData} updateList={updateList} closeModalNow={closeModal} orderStatus={statusOrder}/>
+              <EditOrderData orderData={orderData} updateList={updateList} closeModalNow={closeModal} orderStatus={statusOrder} />
             )}
           </ModalContent>
           :

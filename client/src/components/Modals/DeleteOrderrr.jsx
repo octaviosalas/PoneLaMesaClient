@@ -15,7 +15,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
         const deleteOrderWithReplenishStock = await axios.delete(`http://localhost:4000/orders/replenishStock/${orderData.id}`)
         console.log(deleteOrderWithReplenishStock.data)
         if(deleteOrderWithReplenishStock.status === 200) { 
-          update()
+          update("everyOrders")
           setSuccessMessage(true)
           setTimeout(() => { 
             setSuccessMessage(false)

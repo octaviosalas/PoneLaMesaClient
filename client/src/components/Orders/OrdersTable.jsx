@@ -48,11 +48,11 @@ const OrdersTable = () => {
         setData(filteringByDate);
        };
 
-    const applyFiltersByTypeOfClient =  (typeSelected) => {
-      const filteringByTypeOfClient = filteredData.filter((orders) => orders.typeOfClient === typeSelected);
-      console.log(filteringByTypeOfClient);
-      setData(filteringByTypeOfClient);
-    };
+      const applyFiltersByTypeOfClient =  (typeSelected) => {
+        const filteringByTypeOfClient = filteredData.filter((orders) => orders.typeOfClient === typeSelected);
+        console.log(filteringByTypeOfClient);
+        setData(filteringByTypeOfClient);
+      };
 
     const applyFiltersByOrderState =  (state) => {
       const filteringByTypeOfClient = filteredData.filter((orders) => orders.orderStatus === state);
@@ -75,9 +75,10 @@ const OrdersTable = () => {
       getDataAndCreateTable()
     }
 
+  
       const getDataAndCreateTable = async (type) => { 
-        setFilterIsOn(false)
         setLoad(true)
+        setFilterIsOn(false)
         setWithOutOrders(false)
         try {
             let data, status;
@@ -86,29 +87,35 @@ const OrdersTable = () => {
                 const response = await axios.get("http://localhost:4000/orders/ord/nextFiveOrdersConfirmed");
                 data = response.data;
                 status = response.status;
+                setLoad(false)
                 setTableTypeOfData("confirmado")
 
             } else if (type === "everyOrders") {
+              console.log("Me llego every orders")
                 const response = await axios.get("http://localhost:4000/orders");
                 data = response.data;
                 status = response.status;
+                setLoad(false)
                 setTableTypeOfData("todos")
 
             } else if (type === "afterFiveDays") { 
               const response = await axios.get("http://localhost:4000/orders/ord/afterFiveDays");
               data = response.data;
               status = response.status;
+              setLoad(false)
               setTableTypeOfData("proximosCincoDias")
 
             } else if (type === "aConfirmar") { 
               const response = await axios.get("http://localhost:4000/orders/ord/justToBeConfirmed");
               data = response.data;
               status = response.status;
+              setLoad(false)
               setTableTypeOfData("aConfirmar")            
             }
 
-            if(status === 200) { 
-               setWithOutOrders(false)
+            if (status === 200) { 
+         
+                setWithOutOrders(false)
                 const allOrders = data.reverse()
                 const toBeConfimed = data.filter((data) => data.status === "Lavado")
                 setToBeConfirmed(toBeConfimed)
@@ -260,7 +267,7 @@ const OrdersTable = () => {
           
                         setColumns(modifiedColumnObjects);
                         console.log(modifiedColumnObjects)
-                        setLoad(false)
+                        
                         if (tableRef.current) {
                           tableRef.current.updateColumns(modifiedColumnObjects);
                           }            
@@ -294,8 +301,11 @@ const OrdersTable = () => {
     
    <div>
    <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
-      {load ? <Loading /> : columns.length !== 0 && data.length !== 0 && load === false && withOutOrders === false ?  ( 
-         <>
+    
+      {load ? ( 
+        <Loading /> 
+      ) : columns.length !== 0 && data.length !== 0 && load === false && withOutOrders === false ?  ( 
+          <>
           <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
              <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
                  <div className='flex justify-end gap-6'>
@@ -383,7 +393,7 @@ const OrdersTable = () => {
          </TableBody>
           </Table> 
          <EstadisticsOrders/>
-        </> 
+          </>      
     ) :  data.length === 0 && filterIsOn === true ? ( 
           <div className='flex flex-col items-center justify-center'>
              <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>

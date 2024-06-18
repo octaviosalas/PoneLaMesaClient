@@ -220,7 +220,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                     
                     
                 </div>
-                   <Table aria-label="Example table with dynamic content" className="w-full shadow-xl flex items-center justify-center mt-2">
+                   <Table aria-label="Example table with dynamic content" className="w-full shadow-xl flex items-center justify-center mt-2 max-h-[200px] 2xl:max-h-[350px] overlfow-y-auto">
                               <TableHeader columns={columns} className="">
                                 {(column) => (
                                   <TableColumn key={column.key} className="text-xs gap-6">

@@ -387,13 +387,13 @@ const CreateNewOrder = ({updateList}) => {
           axios.post("http://localhost:4000/orders/create", orderData)
            .then((res) => { 
               console.log(res.data);
-              updateList();
+              updateList("everyOrders");
               setSuccesMessage(true);
               setDiscount(0)
               setTimeout(() => { 
                 closeModal();
                 knowWichNumerOfOrder();
-                updateList();
+           
                 setShippingCost(0);
               }, 2000);
             })

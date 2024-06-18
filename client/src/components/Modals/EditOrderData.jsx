@@ -32,8 +32,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
           const newStatus = status
           axios.put(`http://localhost:4000/orders/changeOrderState/${orderData.id}`,  { newStatus })
                .then((res) => { 
-                console.log(res.data)
-                updateList()
+                updateList("everyOrders");   
                 setSuccesMessage(true)
                 setTimeout(() => { 
                   setSuccesMessage(false)

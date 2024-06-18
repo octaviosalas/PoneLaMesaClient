@@ -106,6 +106,8 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
                              Cancelar
                     </Button>
 
+                    
+
                   </div>
                   
                  {succesDeleted ?

@@ -133,7 +133,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                     if(account.length !== 0 ) { 
                         const collecctionData = ({ 
                             orderId: orderId,
-                            collectionType: "replacement",
+                            collectionType: "Reposicion",
                             client: client,
                             orderDetail: orderData.map((ord) => ord.orderDetail[0]),
                             date: actualDate,

@@ -7,6 +7,7 @@ import { formatePrice } from '../../functions/gralFunctions';
 import Loading from '../Loading/Loading';
 import PendingReplacementDetail from './PendingReplacementDetail';
 import { useNavigate } from 'react-router-dom';
+import CancelPendingReplacement from './CancelPendingReplacement';
 
 const PendingReplacementsTableData = ({replacementes, updateList}) => {
 
@@ -69,6 +70,26 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
             );
       },
         }) 
+
+        modifiedColumnObjects.push({
+          key: 'Cancelar',
+          label: 'Cancelar',
+          cellRenderer: (cell) => { 
+            const filaActual = cell.row;
+            const debtId = filaActual.original.debtId;
+            const detail = filaActual.original.replacementeDetail;
+            const name = filaActual.original.clientName;
+            const id = filaActual.original.clientId;
+            const telephone = filaActual.original.telephone;
+            const clientData = {name, id, telephone}
+            const orderCompletedData = filaActual.original.orderCompletedData;
+            const amountToPay = filaActual.original.amountToPay;
+            const item = {debtId, detail, orderCompletedData, amountToPay, clientData};
+            return (
+              <CancelPendingReplacement data={item} updateList={updateList}/>
+              );
+        },
+          }) 
 
         setColumns(modifiedColumnObjects);
         console.log(modifiedColumnObjects)

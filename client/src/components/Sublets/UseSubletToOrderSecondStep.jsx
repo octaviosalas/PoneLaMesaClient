@@ -75,7 +75,7 @@ const UseSubletToOrderSecondStep = ({orderData, orderDataStatus, dataSublet, com
 
   return (
      <div className='flex flex-col w-full'>
-            {orderDataStatus === "A Confirmar" ?
+     
             <> 
                 <div className='flex flex-col justify-start items-start w-full '>
                   <div className='flex items-center gap-2'>
@@ -126,17 +126,7 @@ const UseSubletToOrderSecondStep = ({orderData, orderDataStatus, dataSublet, com
                   </div> : null}
 
               </> 
-              : 
-              <div className='m-4 flex flex-col items-center justify-center'>
-                  <div className='flex flex-col items-center justify-center text-center'>
-                     <p className='font-medium text-md text-white bg-red-600 w-full text-center'>La orden ya se encuentra en {orderDataStatus}</p>
-                     <p className='font-medium text-xs text-zinc-600 mt-2'>Si deseas añadir un Sub alquiler debe estar en "A Confirmar"</p>
-                  </div>
-                  <div className='mt-4 mb-4'>
-                    <Button className='bg-green-800 text-white font-medium text-sm w-52' onClick={() => comeBack()}>Volver</Button>
-                  </div>
-              </div>
-            }
+             
        </div>
    
   )

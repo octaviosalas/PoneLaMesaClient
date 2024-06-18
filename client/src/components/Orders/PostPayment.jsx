@@ -102,7 +102,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
            if(addNewCollection.status === 200) { 
              setSuccesCollectionSaved(true)
              setSuccesOperation(true)
-             updateList()
+             updateList("everyOrders")
              setTimeout(() => { 
               if(usedIn === "CreateNewReturn") { 
                 changeOrderPaid(true)

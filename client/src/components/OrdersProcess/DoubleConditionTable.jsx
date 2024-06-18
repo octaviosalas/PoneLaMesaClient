@@ -14,7 +14,7 @@ import impresora from "../../images/impresora.png"
 import ChangeState from '../Orders/ChangeState';
 import PostPayment from "../Orders/PostPayment"
 
-const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries, ordersToRepartToday, futuresReparts}) => {
+const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemoves, everyDeliveries, ordersToRepartToday, futuresReparts, again}) => {
 
     const tableRef = useRef(null);
     const [data, setData] = useState([]);
@@ -25,17 +25,23 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
     const [inputValue, setInputValue] = useState("")
     const [loadData, setLoadData] = useState(true)
 
+        const selectWichDataShow = () => {
+          console.log("selectWichOrderDataShow") 
+          if(tableData.length > 0) { 
+            setData(tableData)
+           } else if (typeOfOrders === "entregas" && everyDeliveries.length > 0 && tableData.length === 0) { 
+             setData(everyDeliveries)
+           } else if (typeOfOrders === "entregas" && futuresReparts.length > 0 && everyDeliveries.length === 0) { 
+             setData(futuresReparts)
+           } else { 
+            setWithOutOrders(true)
+           }
+        }
+
 
         useEffect(() => { 
-          if(tableData.length > 0) { 
-           setData(tableData)
-          } else if (typeOfOrders === "entregas" && everyDeliveries.length > 0 && tableData.length === 0) { 
-            setData(everyDeliveries)
-          } else if (typeOfOrders === "entregas" && futuresReparts.length > 0 && everyDeliveries.length === 0) { 
-            setData(futuresReparts)
-          } else { 
-           setWithOutOrders(true)
-          }
+          selectWichDataShow()
+          console.log("ejecutando la misma pero en el useEffect")
         }, [tableData, ordersToRepartToday, futuresReparts ])
 
         const changeTypeOfData = (item) => { 
@@ -44,6 +50,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
         }
 
         const getDataAndCreateTable = () => { 
+                selectWichDataShow()
                 if(data.length !== 0) { 
                   setWithOutOrders(false)
                 const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
@@ -122,7 +129,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                             const orderDetail = filaActual.original.orderDetail;
                             const item = {id, client, status,order,month,  date, dateOfDelivery,returnDate, orderDetail};
                             return (
-                            <EditModal type="orders" statusOrder={status} orderData={item} updateList={getDataAndCreateTable}/>
+                            <EditModal type="orders" statusOrder={status} orderData={item} updateList={again} />
                             );
                         },
                     })          
@@ -335,10 +342,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                 {
                 withOutOrders ? 
                 <div className='flex flex-col'>
-                   <div>
-                      <p className='font-medium text-white bg-red-600 text-center w-full'>No hay ningun pedido entregado en este momento</p>
-                      <p className='underline text-sm mt-4 cursor-pointer' onClick={() => navigate("/pedidos")}>Volver</p>
-                   </div>
+                   
                 {data === everyDeliveries ? (
                   <div className='flex flex-col items-center justify-center'>
                     <p className='text-black font-medium text-md'>No hay pedidos entregados</p>

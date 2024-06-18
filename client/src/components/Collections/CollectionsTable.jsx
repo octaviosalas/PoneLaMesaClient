@@ -31,7 +31,6 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
 
     useEffect(() => { 
         setData(collections.reverse())
-        console.log("LOS COLLECTIONS", collections)
      }, [collections])
 
       const getDataAndCreateTable = () => { 
