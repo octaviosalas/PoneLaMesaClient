@@ -14,7 +14,11 @@ const employeesSchema = mongoose.Schema({
     licenseImage: { 
         type: String,
         required: false
-    }
+    },
+    dniImage: { 
+        type: String,
+        required: false
+    },
 })
 
 const Employees = mongoose.model("Employees", employeesSchema)

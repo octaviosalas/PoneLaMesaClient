@@ -1,7 +1,7 @@
 import React from 'react'
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 
-const ViewLicenseModal = ({item}) => {
+const ViewDniModal = ({item}) => {
 
 
     const {isOpen, onOpen, onOpenChange} = useDisclosure()
@@ -12,20 +12,20 @@ const ViewLicenseModal = ({item}) => {
 
   return (
     <div>
-      <p className='text-green-800 text-xs font-medium cursor-pointer' onClick={onOpen}>Ver Licencia</p>
+      <p className='text-green-800 text-xs font-medium cursor-pointer' onClick={onOpen}>Ver DNI</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Licencia de Conducir {item.name}</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">DNI de {item.name}</ModalHeader>
               <ModalBody>
-                {item.license ? 
+                {item.dni ? 
                    <div className='flex tems-center jsutify-center'>
-                        <img src={item.license} className='w-96 h-96'/> 
+                        <img src={item.dni} className='w-96 h-96'/> 
                    </div>
                  : 
                  <div className='flex items-center justify-center mt-4'>
-                   <p className='text-black text-sm font-medium'>No hay licencia de conducir cargada</p>
+                   <p className='text-black text-sm font-medium'>No hay DNI cargado</p>
                  </div>
                  }
               </ModalBody>
@@ -43,4 +43,4 @@ const ViewLicenseModal = ({item}) => {
   )
 }
 
-export default ViewLicenseModal
+export default ViewDniModal

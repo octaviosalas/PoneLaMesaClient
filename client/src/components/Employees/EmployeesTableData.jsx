@@ -11,6 +11,7 @@ import EmployeesReport from './EmployeesReport';
 import CreateNewEmployee from './CreateNewEmployee';
 import EstadisticsEmployees from './EstadisticsEmployees';
 import ViewLicenseModal from './ViewLicenseModal';
+import ViewDniModal from './ViewDniModal';
 
 
 const EmployeesTableData = ({employeesData, updateList}) => {
@@ -78,6 +79,22 @@ const EmployeesTableData = ({employeesData, updateList}) => {
                   );
               },
           })   
+
+          modifiedColumnObjects.push({
+            key: 'Ver DNI',
+            label: 'Ver DNI',
+            cellRenderer: (cell) => { 
+
+                const filaActual = cell.row;
+                const id = filaActual.original._id;
+                const name = filaActual.original.name;
+                const dni = filaActual.original.dniImage;
+                const item = { id, dni, name};
+                return (
+                    <ViewDniModal item={item}/>
+                );
+            },
+        })   
 
            
 

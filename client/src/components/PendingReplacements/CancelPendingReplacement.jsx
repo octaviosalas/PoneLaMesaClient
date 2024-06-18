@@ -1,5 +1,6 @@
 import React from 'react'
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
+import axios from 'axios';
 
 const CancelPendingReplacement = ({data, updateList}) => {
 
@@ -13,12 +14,18 @@ const CancelPendingReplacement = ({data, updateList}) => {
     }
 
     const deleteReplacement = async () => { 
+        const productsToUpdateStock = ({ 
+          products: data.detail
+        })
         try {
-            
+            const response = await axios.post(`http://localhost:4000/clients/cancelDebt/${data.clientData.id}/${data.debtId}`, productsToUpdateStock)
+            console.log(response.data)
         } catch (error) {
-            
+            console.log(error)
         }
     }
+
+
 
 
   return (
@@ -35,7 +42,7 @@ const CancelPendingReplacement = ({data, updateList}) => {
                  <p className='text-black text-sm font-medium'>La deuda del cliente sera eliminada</p>
               </div>
               <div className='flex gap-6 items-center justify-center mt-4 mb-2'>
-                <Button className='bg-green-800 text-white font-medium text-sm'>Confirmar</Button>
+                <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => deleteReplacement()}>Confirmar</Button>
                 <Button className='bg-green-800 text-white font-medium text-sm'>Cancelar</Button>
               </div>           
             </ModalBody>

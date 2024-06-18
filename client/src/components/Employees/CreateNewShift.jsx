@@ -23,15 +23,17 @@ const CreateNewShift = () => {
   const [employeeId, setEmployeeId] = useState("")
   const [activities, setActivities] = useState([])
   const [observations, setObservations] = useState("")
-  const [actualDay, setActualDay] = useState(getDay())
-  const [actualMonth, setActualMonth] = useState(getMonth())
-  const [actualYear, setActualYear] = useState(getYear())
-  const [actualDate, setActualDate] = useState(getDate())
+  const [actualDay, setActualDay] = useState("")
+  const [actualMonth, setActualMonth] = useState("")
+  const [actualYear, setActualYear] = useState("")
+  const [actualDate, setActualDate] = useState("")
   const [activitiesAvailables, setActivitiesAvailables] = useState(everyActivities)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [missedData, setMissedData] = useState(false)
   const [newNameActivitie, setNewNameActivitie] = useState(false)
   const [shiftChoosen, setShiftChoosen] = useState("")
+  const [dateSelected, setDateSelected] = useState("")
+  const [missedDate, setMissedDate] = useState(false)
 
     useEffect(() => {
       const fetchData = async () => {
@@ -47,8 +49,13 @@ const CreateNewShift = () => {
       console.log(realActualTime)
     }, []);
 
-   
+    const months = [
+      "enero", "febrero", "marzo", "abril", "mayo", "junio", 
+      "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+    ];
+    
 
+   
     function calculateDateDifference(startTime, closingHour) {
 
       var timeStart = new Date("01/01/2007 " + startTime);
@@ -76,8 +83,14 @@ const CreateNewShift = () => {
     })
 
     const continueToNext = () => { 
-      setShowFirstData(false)
-      setShowSecondData(true)
+      if(actualDate.length === 0) { 
+        setMissedDate(true)
+      } else { 
+        setShowFirstData(false)
+        setShowSecondData(true)
+        setMissedDate(false)
+      }
+    
     }
 
     const employeerData = async (id, name) => { 
@@ -98,12 +111,25 @@ const CreateNewShift = () => {
       }
     }
 
+    const handleDateChange = (e) => {
+      const date = e.target.value;
+  
+      const [year, month, day] = date.split("-");
+      
+      setActualDate(e.target.value)
+      setActualDay(Number(day))
+      setActualMonth(months[parseInt(month, 10) - 1])
+      setActualYear(Number(year))
+  
+    };
+
    
     const handleRemoveProduct = (productIdToDelete) => {
         setActivities((prevProducts) =>
         prevProducts.filter((prod) => prod !== productIdToDelete)
       );
     };
+
 
     const addNewActivitie = (item) => { 
       console.log(item);
@@ -113,7 +139,7 @@ const CreateNewShift = () => {
       }
      }
     const createShift = async () => { 
-      if(employeeName.length > 0 && employeeId.length > 0 && startTime.length > 0 && shiftChoosen.length > 0 && closingHour.length > 0 && activities.length > 0 && employeeHourAmount !== 0) { 
+      if(employeeName.length > 0 && employeeId.length > 0 && startTime.length > 0 && shiftChoosen.length > 0 && closingHour.length > 0 && activities.length > 0  && actualDate.length > 0 && employeeHourAmount !== 0) { 
         try {
           const shiftData = ({   
               employeeName: employeeName,
@@ -147,6 +173,7 @@ const CreateNewShift = () => {
                           setShiftChoosen("")
                           setClosingHour("")
                           setActivities([])
+                          setMissedDate(false)
                           setEmployeeHourAmount(0)
                           onClose()
                           setShowSecondData(false)
@@ -167,7 +194,16 @@ const CreateNewShift = () => {
    const cancelShift = () => { 
     onClose()
     setActivities([])
+    setMissedDate(false)
+    setShowSecondData(false)
+    setShowFirstData(false)
    }
+
+   
+
+ 
+
+
 
 
 
@@ -197,6 +233,7 @@ const CreateNewShift = () => {
               <ModalBody>
                 <Input type="time" variant="underlined" label="Horario de entrada" id="horaEntrada" name="horaEntrada" onChange={(e) => setStartTime(e.target.value)}/>
                 <Input type="time" variant="underlined" label="Horario de salida" id="horaSalida" name="horaSalida" className="mt-2" onChange={(e) => setClosingHour(e.target.value)}/>
+                <Input type="date" variant="underlined" label="Fecha del turno" id="fecha" name="fecha" className="mt-2" onChange={handleDateChange}/>
                 
 
                 {showFirstData && !showSecondData ? 
@@ -204,6 +241,12 @@ const CreateNewShift = () => {
                    <p className="text-sm font-medium text-zinc-700"><b className="font-bold text-green-800">Tiempo del Turno:</b> {shiftHours} horas con {shiftMinutes} minutos</p>
                    <Button className="bg-green-800 text-white font-medium text-sm mt-2 w-full mb-2" onClick={() => continueToNext()}>Continuar</Button>
                 </div> : null}
+
+                {missedDate ? 
+                <div className="flex flex-col items-center justify-center mb-2">
+                  <p className="text-white bg-red-600 w-full text-center font-medium text-md">Debes ingresar la fecha</p>
+                </div> 
+                : null}
 
                 {showSecondData ? 
                 <>
@@ -215,9 +258,9 @@ const CreateNewShift = () => {
                           </SelectItem>
                               ))}
                       </Select>
-                    </div>
+                    </div> 
                     <div>
-                      <Select aria-label="Descripción del campo de selección" label="Nombre Empleado" value={employeeName}>
+                      <Select variant="faded" aria-label="Descripción del campo de selección" className="max-w-full border border-none" label="Nombre Empleado" value={employeeName}>
                         {employees.map((em) => (
                           <SelectItem key={em._id} value={em.name} onClick={(e) => employeerData(em._id, em.name)}>
                             {em.name}

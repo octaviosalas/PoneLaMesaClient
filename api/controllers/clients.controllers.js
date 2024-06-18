@@ -1,4 +1,5 @@
 import Clients from "../models/clients.js"
+import { incrementarStock } from "./orders.controllers.js";
 
 export const createNewClient = async (req, res) => { 
     console.log(req.body)
@@ -151,4 +152,34 @@ export async function addZone() {
       console.error('Error actualizando los documentos:', error);
   }
 }
+
+
+export const deleteClientDebt = async (req, res) => { 
+
+  const {clientId, debtId} = req.params;
+
+
+
+  try {
+      const client = await Clients.findById(clientId)
+
+      if (client) {
+
+        client.clientDebt = client.clientDebt.filter((cc) => cc.debtId !== debtId);
+        
+        await client.save();
+        await incrementarStock(req.body.products)
+        
+        res.status(200).json({ message: 'Debt deleted successfully' });
+      } else {
+        res.status(404).json({ message: 'Client no encontrado' });
+      }
+   } catch (error) {
+    res.status(500).json({ message: 'ERROR' });
+
+   } 
+}
+
+
+
 

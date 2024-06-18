@@ -10,7 +10,8 @@ import  {
    updateClientData,
    createClientDebt,
    updateDebtStatus,
-   getClientsByType
+   getClientsByType,
+   deleteClientDebt
 } from '../controllers/clients.controllers.js' 
 
 
@@ -23,6 +24,7 @@ clientesRoutes.delete('/:clientId', deleteClient);
 clientesRoutes.put('/changeData/:clientId', updateClientData);
 clientesRoutes.post("/createClientDebt/:clientId", createClientDebt)
 clientesRoutes.put("/updateDebtStatus/:clientId", updateDebtStatus)
+clientesRoutes.post("/cancelDebt/:clientId/:debtId", deleteClientDebt)
 
 export default clientesRoutes;
 

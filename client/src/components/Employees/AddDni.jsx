@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axios from 'axios';
 import Loading from '../Loading/Loading';
 
-const AddLicense = ({chooseImage}) => {
+const AddDni = ({chooseImage}) => {
 
     const [image, setImage] = useState("")
     const [load, setLoad] = useState("")
@@ -43,7 +43,7 @@ const AddLicense = ({chooseImage}) => {
                           {({ getRootProps, getInputProps }) => (
                               <div {...getRootProps({ className: 'dropzone' })}>
                                    <input {...getInputProps()} />
-                                      <div className="mt-1 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-2 py-2" style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover' }}>
+                                      <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-2 py-2" style={{ backgroundImage: `url(${image})`, backgroundSize: 'cover' }}>
                                         <div className="text-center">
                                           <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
                                          <div className="mt-4 flex text-sm leading-6 text-gray-600">
@@ -67,4 +67,4 @@ const AddLicense = ({chooseImage}) => {
   )
 }
 
-export default AddLicense
+export default AddDni

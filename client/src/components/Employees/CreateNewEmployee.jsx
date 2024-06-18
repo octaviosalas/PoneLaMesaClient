@@ -3,6 +3,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Inpu
 import {Card, CardHeader, CardBody, CardFooter, Image} from "@nextui-org/react";
 import axios from "axios";
 import AddLicense from "./AddLicense";
+import AddDni from "./AddDni";
 
 const CreateNewEmployee = ({type, updateList}) => {
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
@@ -14,7 +15,9 @@ const CreateNewEmployee = ({type, updateList}) => {
   const [succesMessage, setSuccesMessage] = useState(false)
   const [missedData, setMissedData] = useState(false)
   const [showAddLicense, setShowAddLicense] = useState(false)
+  const [showAddDni, setShowAddDni] = useState(false)
   const [licenseImage, setLicenseImage] = useState("")
+  const [dniImage, setDniImage] = useState("")
 
   const createNew = async () => { 
     if(name.length > 1 && dni.length > 0 && numberError === false && hourAmount > 0) { 
@@ -22,23 +25,25 @@ const CreateNewEmployee = ({type, updateList}) => {
             name: name,
             dni: dni,
             hourAmount: hourAmount,
-            ...(licenseImage ? { licenseImage: licenseImage } : {})
+            ...(licenseImage ? { licenseImage: licenseImage } : {}),
+            ...(dniImage ? { dniImage: dniImage } : {})
+
         })
         try {
             const sendData = await axios.post("http://localhost:4000/employees/create", newData)
             console.log(sendData.data)
             if(sendData.status === 200) { 
                 setSuccesMessage(true)
-                updateList()
-                setTimeout(() => { 
+                if(type === "table") { 
+                  updateList()
+                  }           
                     setSuccesMessage(false)
                     onClose()
                     setDni("")
                     setName("")
                     setNumberError(false)
                     setShowAddLicense(false)
-                    setHourAmount(0)
-                }, 1500)
+                    setHourAmount(0)       
             }
          } catch (error) {
             console.log(error)
@@ -55,6 +60,10 @@ const CreateNewEmployee = ({type, updateList}) => {
 
   const chooseImage = (item) => { 
     setLicenseImage(item)
+  }
+
+  const chooseDniImage = (item) => { 
+    setDniImage(item)
   }
  
   useEffect(() => { 
@@ -114,15 +123,19 @@ const CreateNewEmployee = ({type, updateList}) => {
                         }} />
 
 
-                <p className="text-sm font-medium underline text-green-800 mt-2 cursor-pointer" onClick={() => setShowAddLicense(true)}>Agregar foto de licencia</p>
+                <p className="text-sm font-medium underline text-green-800 mt-2 cursor-pointer" onClick={() => setShowAddLicense(prevState => !prevState)}>Agregar foto de licencia</p>
+                <p className="text-sm font-medium underline text-green-800 cursor-pointer"onClick={() => setShowAddDni(prevState => !prevState)}>Agregar foto DNI</p>
+
 
                   {numberError ? <p className="text-xs font-medium text-zinc-600">El numero debe ser mayor a 0 </p> : null}        
 
-                  {showAddLicense ? 
-                          <AddLicense chooseImage={chooseImage}/>
-                   :
-                   null
-                   }
+                    {showAddLicense ? 
+                            <AddLicense chooseImage={chooseImage}/> : null
+                    }
+
+                    {showAddDni ? 
+                          <AddDni chooseImage={chooseDniImage}/> : null
+                    } 
 
                     <div className="flex gap-4 items-center jsutify-center mt-4 mb-4">
                        <Button className="bg-green-800 text-white font-medium text-sm w-48" onClick={() => createNew()}>Guardar</Button>
