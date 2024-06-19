@@ -18,9 +18,7 @@ const UseSubletToOrder = ({subletData, update}) => {
   const [orderChoosenStatus, setOrderChoosenStatus] = useState("");
   const [errorNumber, setErrorNumber] = useState("");
 
-    useEffect(() => { 
-        console.log(orderChoosenStatus)
-    }, [orderChoosenStatus])
+ 
 
 
     const handleOpen = async () => { 
@@ -44,7 +42,6 @@ const UseSubletToOrder = ({subletData, update}) => {
         if(yearSelected !== null && monthSelected !== null && orderNumberSelected !== null && errorNumber !== true) { 
           const filteredOrders = orders.filter((ord) => ord.month === monthSelected && ord.year === yearSelected && ord.orderNumber === orderNumberSelected)
           if(filteredOrders.length > 0) { 
-            console.log(filteredOrders)
             setOrderChoosenData(filteredOrders)
             setOrderChoosenStatus(filteredOrders.map((ord) => ord.orderStatus)[0])
             setYearSelected("")

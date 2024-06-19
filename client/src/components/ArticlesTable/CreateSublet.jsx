@@ -183,13 +183,12 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
           console.log(res.data)
           setSuccesMessage(true)
           updateTable()
+          onClose()
               if(usedIn === "withOutSubletsToUse") { 
                 closeBothModals()
-
               }
               setTimeout(() => { 
                 setSuccesMessage(false)
-                onClose()
                 setProductChoosenName("")
                 setProductChoosenPrice("")
                 setProductChoosenQuantity("")

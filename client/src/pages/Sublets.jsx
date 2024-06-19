@@ -12,7 +12,7 @@ const Sublets = () => {
         try {
             const response = await axios.get("http://localhost:4000/sublets")
             const data = response.data
-            setSubletsData(data)
+            setSubletsData(data.reverse())
             console.log("Subalquileres:", data)
         } catch (error) {
             console.log(error)

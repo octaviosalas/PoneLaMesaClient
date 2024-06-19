@@ -1,12 +1,15 @@
 import React from 'react'
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import axios from 'axios';
+import { useState } from 'react';
+import Loading from '../Loading/Loading';
 
 const CancelPendingReplacement = ({data, updateList}) => {
 
-    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
 
-    console.log(data)
+    const [load, setLoad] = useState(false)
+
 
     const handleOpen = () => { 
         console.log(data)
@@ -14,12 +17,19 @@ const CancelPendingReplacement = ({data, updateList}) => {
     }
 
     const deleteReplacement = async () => { 
+        setLoad(true)
         const productsToUpdateStock = ({ 
           products: data.detail
         })
         try {
             const response = await axios.post(`http://localhost:4000/clients/cancelDebt/${data.clientData.id}/${data.debtId}`, productsToUpdateStock)
             console.log(response.data)
+            if(response.status === 200) { 
+              updateList()
+
+              onClose()
+              setLoad(false)
+            }
         } catch (error) {
             console.log(error)
         }
@@ -30,7 +40,7 @@ const CancelPendingReplacement = ({data, updateList}) => {
 
   return (
     <>
-    <p className='text-green-800 font-medium text-sm' onClick={handleOpen}>Cancelar</p>
+    <p className='text-green-800 font-medium text-sm cursor-pointer' onClick={handleOpen}>Cancelar</p>
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
         {(onClose) => (
@@ -46,7 +56,10 @@ const CancelPendingReplacement = ({data, updateList}) => {
                 <Button className='bg-green-800 text-white font-medium text-sm'>Cancelar</Button>
               </div>           
             </ModalBody>
-           
+            {load ?
+              <div className='mt-4 flex justify-center items-center'>
+                 <Loading/>
+              </div> :  null}
           </>
         )}
       </ModalContent>

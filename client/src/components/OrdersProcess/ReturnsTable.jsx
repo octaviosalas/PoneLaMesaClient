@@ -18,22 +18,30 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
     const [loadData, setLoadData] = useState(true)
     const [inputValue, setInputValue] = useState("")
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
-    const [withOutOrders, setWithOutOrders] = React.useState("toggle");
+    const [withOutOrders, setWithOutOrders] = useState(false);
 
         const changeDataValues = (item) => { 
             setData(item)
         }
 
-        useEffect(() => {
+        const wichTableShow = () => { 
           if(everyReturns.length > 0 )  { 
-            changeDataValues(everyReturns)
+            setData(everyReturns)
+            setWithOutOrders(false)
             console.log("No hay everyReturns")
           } else if (everyReturns.length === 0 && pendingReturns.length > 0) { 
-            changeDataValues(pendingReturns)
-            console.log("No hay everyReturns")
+            setData(pendingReturns)
+            setWithOutOrders(false)
+            console.log("No hay everyReturns pero hay pendings")
           } else if (everyReturns.length === 0 && pendingReturns.length === 0) { 
             setWithOutOrders(true)
+            console.log("sep")
+            console.log("No hay everyReturns ni tampoco hay pendings, sale setWithOutOrders a false")
           }
+        }
+
+        useEffect(() => {
+          wichTableShow()
         }, [todaysReturns, pendingReturns, everyReturns])
 
         const goToOtherPage = (item) => { 
@@ -41,7 +49,8 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
         }
 
         const getDataAndCreateTable = () => { 
-            if(data.length !== 0) { 
+            wichTableShow()
+            if(!withOutOrders) { 
                 const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
                 &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
                 && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'missingArticlesData'  && propiedad !== 'downPaymentData' && propiedad !== 'shippingCost');
@@ -126,7 +135,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                 tableRef.current.updateColumns(modifiedColumnObjects);
                 }            
             } else { 
-                setWithOutOrders(true)
+              setWithOutOrders(true)
             }
         }
 
@@ -156,7 +165,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
       {loadData ? (
               <Loading />
               ) : (
-               data.length > 0 ? (
+               data.length > 0 && withOutOrders === false ? (
                   <>
                   <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
                      <div className='h-12 w-full flex justify-between items-center  bg-green-200 gap-10 rounded-t-lg rounded-b-none lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px]'>

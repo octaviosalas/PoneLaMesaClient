@@ -357,11 +357,12 @@ const CreateNewOrder = ({updateList}) => {
           }, 1500);
         } else { 
 
-          let totalWithDiscount = (productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) - 
-                                ((productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0) + parseFloat(shippingCost)) * (discount / 100)) ;
-
-          let finalTotal = totalWithDiscount * multiplyTo;           
-  
+          let totalProductPrice = productsSelected.reduce((acc, el) => acc + parseFloat(el.choosenProductTotalPrice), 0);
+          let totalWithDiscountWithOutShippingCost = totalProductPrice - (totalProductPrice * (discount / 100));
+          let totalWithDiscount = totalWithDiscountWithOutShippingCost + parseFloat(shippingCost);         
+          let final = totalWithDiscountWithOutShippingCost * multiplyTo;        
+          let finalTotal = final + parseFloat(shippingCost);
+          
           const orderData = ({
             orderCreator: userCtx.userName,
             orderNumber: orderNumber,

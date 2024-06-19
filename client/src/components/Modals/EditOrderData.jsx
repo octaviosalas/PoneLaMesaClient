@@ -84,13 +84,20 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                                   <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setStatus("Reparto")} >Reparto</SelectItem>        
                                   <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
                               </Select> 
-                            : 
-                            <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
-                              <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>             
-                              <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
-                              <SelectItem key={"Devuelto"} value={"Devuelto"} onClick={() => setStatus("Devuelto")} >Devuelto</SelectItem>  
-                              <SelectItem key={"Lavado"} value={"Lavado"} onClick={() => setStatus("Lavado")} >Lavado</SelectItem>                                           
+                            : orderStatus === "Entregado" ? (
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
+                                <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>             
+                                <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
+                                <SelectItem key={"Devuelto"} value={"Devuelto"} onClick={() => setStatus("Devuelto")} >Devuelto</SelectItem>  
                             </Select>
+                            ) : ( 
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
+                                <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>             
+                                <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
+                                <SelectItem key={"Devuelto"} value={"Devuelto"} onClick={() => setStatus("Devuelto")} >Devuelto</SelectItem>  
+                             </Select>
+                            )
+                           
                            }               
                         </div>
                         <div className="flex gap-6 items-center mt-6">

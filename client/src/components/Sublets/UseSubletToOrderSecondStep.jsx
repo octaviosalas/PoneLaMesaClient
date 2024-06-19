@@ -25,9 +25,13 @@ const UseSubletToOrderSecondStep = ({orderData, orderDataStatus, dataSublet, com
     console.log(orderDetail)
   }, [orderDetail])
 
+  console.log(dataSublet, "DATASUBLETSSSSSS")
+
   const getTotalToAdd = (dataSublet) => { 
     const values = dataSublet.productsDetail.map((num) => num.rentalPrice)
+    console.log("los values", values)
     const finalValue = values.reduce((acc, el) => acc + el, 0)
+    console.log("los finalValue", values)
     setTotalToAdd(finalValue)
     console.log(finalValue)
     return finalValue

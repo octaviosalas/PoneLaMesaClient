@@ -41,7 +41,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
       <div className="flex flex-col items-center justify-center">
         <div className="flex flex-col items-center justify-center">
           <p className="flex flex-col gap-1 text-zinc-700 font-bold text-md">
-            ¿Estás seguro de eliminar el pedido? {orderData.orderStatus}
+            ¿Estás seguro de eliminar el pedido? 
           </p>
           {orderData.downPaymentData.length > 0? (
             <p className="text-sm text-zinc-600">
