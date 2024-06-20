@@ -39,7 +39,8 @@ const UserProvider = ({ children }) => {
     
 
 
-  const updateUser = (id) => {                   
+  const updateUser = (id) => {
+    console.log("Seteando a userID por", id)                   
       setUserId(id)
       sessionStorage.setItem('userId', id);     
   };

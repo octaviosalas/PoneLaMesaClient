@@ -17,7 +17,7 @@ const NavBarComponent = () =>  {
   const navigate = useNavigate()
 
   const logOutSession = () => { 
-    userCtx.updateUser("")
+    userCtx.updateUser(null)
     userCtx.updateUserEmail("")
     userCtx.updateUserName("")
     userCtx.updateUserRol("")
