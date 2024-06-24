@@ -195,6 +195,7 @@ const CreateSublet = ({usedIn, updateTable, closeBothModals}) => {
                 setProductChoosenValue("")
                 setProductChoosenReplacementPrice("")
                 setProductsChoosen([])
+                onClose()
               }, 1500)
             })
         .catch((err) =>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem} from "@nextui-org/react";
-import { getEveryOrders, everyYears, months } from "../../functions/gralFunctions";
+import { getEveryOrders, everyYears, months, getYear, getMonth } from "../../functions/gralFunctions";
 import UseSubletToOrderSecondStep from "./UseSubletToOrderSecondStep";
 
 const UseSubletToOrder = ({subletData, update}) => {
@@ -8,8 +8,8 @@ const UseSubletToOrder = ({subletData, update}) => {
   const [orders, setOrders] = useState([])
   const [years, setYears] = useState(everyYears)
   const [everyMonths, setEveryMonths] = useState(months)
-  const [monthSelected, setMonthSelected] = useState("");
-  const [yearSelected, setYearSelected] = useState(null);
+  const [monthSelected, setMonthSelected] = useState(() => getMonth());
+  const [yearSelected, setYearSelected] = useState(() => getYear());
   const [orderNumberSelected, setOrderNumberSelected] = useState(null);
   const [missedData, setMissedData] = useState(false);
   const [orderDoesNotExist, setOrderDoesNotExist] = useState(false);
@@ -17,6 +17,8 @@ const UseSubletToOrder = ({subletData, update}) => {
   const [orderChoosenData, setOrderChoosenData] = useState(false);
   const [orderChoosenStatus, setOrderChoosenStatus] = useState("");
   const [errorNumber, setErrorNumber] = useState("");
+  const [year, setYear] = useState(() => getYear());
+  const [month, setMonth] = useState(() => getMonth());
 
  
 
@@ -26,6 +28,8 @@ const UseSubletToOrder = ({subletData, update}) => {
       const data = await getEveryOrders()
       setOrders(data)
       console.log(subletData)
+      console.log("year selected", yearSelected)
+
     }
 
     const getOrderData = async () => { 
@@ -88,30 +92,24 @@ const UseSubletToOrder = ({subletData, update}) => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">Utilizar SubAlquiler</ModalHeader>
-              {subletData.used === true ? 
-                <div className="flex flex-col items-center justify-center m-4">
-                    <p className="font-medium text-white bg-green-800 w-full text-md text-center">Este SubAlquiler ya fue utilizado en una orden</p>
-                    <Button className="w-72 mt-6 bg-green-800 text-white font-medium" onPress={onClose}>Volver</Button>
-                </div>
-                :
+                {subletData.used === true ? 
+                  <div className="flex flex-col items-center justify-center m-4">
+                      <p className="font-medium text-white bg-green-800 w-full text-md text-center">Este SubAlquiler ya fue utilizado en una orden</p>
+                      <Button className="w-72 mt-6 bg-green-800 text-white font-medium" onPress={onClose}>Volver</Button>
+                  </div>
+                  :
                <ModalBody className="flex flex-col items-center justify-center">
                 {secondStep === false ?
                    <>            
-                      <Select variant={"faded"} label="Selecciona un año" className="w-72" value={yearSelected}>          
-                            {years.map((year) => (
-                              <SelectItem key={year.value} value={year.label} textValue={year.value} onClick={() => setYearSelected(year.value)}>
-                                {year.label}
-                              </SelectItem>
-                            ))}
-                      </Select>
+                      <Input type="number" variant="faded" className="w-72 mt-4"  label="Año"  value={yearSelected}  onChange={(e) => setYearSelected(e.target.value)} />                         
                
-                      <Select variant={"faded"} label="Selecciona un mes" className="w-72" value={monthSelected}>          
+                      <Select variant="faded" label="Selecciona un mes" className="w-72" value={monthSelected} defaultSelectedKeys={[monthSelected]}>          
                             {everyMonths.map((month) => (
                               <SelectItem key={month.label} value={month.value} onClick={() => setMonthSelected(month.value)}>
                                 {month.label}
                               </SelectItem>
                             ))}
-                       </Select>
+                       </Select>               
                     
                         <Input 
                         type="number" 

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, Button, useDisclosure, Input} from "@nextui-org/react";
+import { Button} from "@nextui-org/react";
 import {Select, SelectItem} from "@nextui-org/react";
 import axios from "axios";
-import { formatePrice, everyClients } from "../../functions/gralFunctions";
-import EditArticle from "./EditArticle";
 import EditClientOrderData from "./editOrder/EditClientOrderData";
 import EditDetailOrderData from "./editOrder/EditDetailOrderData";
+import { useNavigate } from "react-router-dom";
 
 const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
 
@@ -16,6 +15,7 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
     const [modifyData, setModifyData] = useState(false)
     const [modifyOrderDetailData, setModifyOrderDetailData] = useState(false)
     const [allArticles, setAallArticles] = useState([])
+    const navigate = useNavigate()
     
 
 
@@ -85,11 +85,11 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                                   <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
                               </Select> 
                             : orderStatus === "Entregado" ? (
-                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
-                                <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>             
-                                <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
-                                <SelectItem key={"Devuelto"} value={"Devuelto"} onClick={() => setStatus("Devuelto")} >Devuelto</SelectItem>  
-                            </Select>
+                              <div className="flex flex-col items-center justify-center mt-3">                            
+                                <div className="flex mt-2">
+                                  <p className="text-md font-medium text-white bg-red-600 w-full text-center cursor-pointer" onClick={() => navigate("/Devoluciones")}>Si deseas asentar la devolucion dirigite al modulo Devoluciones haciendo Click aqui</p>
+                                </div> 
+                              </div> 
                             ) : ( 
                               <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
                                 <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>             

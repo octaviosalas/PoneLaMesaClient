@@ -30,6 +30,7 @@ const CreateNewReturn = ({updateList}) => {
       onOpen()
       const data = await getEveryOrders()
       setOrders(data)
+      console.log("year selected", yearSelected)
     }
 
     const getOrderData = async () => { 
@@ -71,6 +72,8 @@ const CreateNewReturn = ({updateList}) => {
       comeBackToFirstStep()
     }
 
+  
+
   return (
     <>
       <Button onPress={handleOpen} className="text-white font-medium text-sm cursor-pointer bg-green-800">Asentar Nueva Devolucion</Button>
@@ -87,7 +90,7 @@ const CreateNewReturn = ({updateList}) => {
                   {firstStep ?
                     <>           
                         <p className="w-2/4 text-center text-white font-medium bg-green-800 text-md 2xl:text-lg rounded-md">  {monthSelected.charAt(0).toUpperCase() + monthSelected.slice(1)} </p>                  
-                      <Input type="number" variant="faded" className="w-72 mt-4"  label="Año"  value={yearSelected}  onChange={(e) => setYearSelected(e.target.value)} 
+                        <Input type="number" variant="faded" className="w-72 mt-4"  label="Año"  value={yearSelected}  onChange={(e) => setYearSelected(e.target.value)} 
                         />
                
               
@@ -98,7 +101,7 @@ const CreateNewReturn = ({updateList}) => {
                               {month.label}
                             </SelectItem>
                             ))}
-                     </Select>
+                        </Select>
                     
                         <Input 
                         type="number" 

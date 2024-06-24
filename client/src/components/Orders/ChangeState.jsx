@@ -21,7 +21,7 @@ const ChangeState = ({status, orderData, updateList}) =>  {
       const newStatus = newOrderStatus
       axios.put(`http://localhost:4000/orders/changeOrderState/${orderData.id}`,  { newStatus })
            .then((res) => { 
-            updateList()
+            updateList("everyOrders")
             setSuccesMessage(true)
             setTimeout(() => { 
               setSuccesMessage(false)

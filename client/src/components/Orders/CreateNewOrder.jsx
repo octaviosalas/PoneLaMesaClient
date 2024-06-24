@@ -769,6 +769,9 @@ const CreateNewOrder = ({updateList}) => {
                             setDateOfDelivery("")
                             setPlaceOfDelivery("")
                             setReturnPlace("")
+                            setMultiplyTo(1)
+                            setDiscount(0)
+                            setD
                           }}
                         >
                           Volver

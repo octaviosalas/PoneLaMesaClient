@@ -46,7 +46,7 @@ const CleaningBreakups = ({update, reference}) => {
                     <p> 
                      <Input type="text" label="Indica la cantidad de articulos rotos" variant="underlined" className="w-72" value={quantity}  onChange={(e) => {
                          const value = e.target.value;
-                         if (value > reference) {
+                         if (value > reference || value < 0) {
                              setQuantityError(true);
                              setYearError(false);
                          } else {
