@@ -85,9 +85,9 @@ const CreateExpense = ({updateList, type}) => {
   return (
     <>
      {type === "withOut" ? 
-       <Button className='bg-green-800 text-white font-medium text-sm' onClick={handleOpen}>Crear Nuevo Gasto Fijo</Button>
+       <Button className='bg-green-800 text-white font-medium text-sm cursor-pointer' onClick={handleOpen}>Crear Nuevo Gasto Fijo</Button>
        :
-      <p className="text-zinc-600 font-bold text-sm" onClick={handleOpen}>Crear Gasto Fijo</p>   }
+      <p className="text-zinc-600 font-bold text-sm cursor-pointer" onClick={handleOpen}>Crear Gasto Fijo</p>   }
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} isDismissable={false} isKeyboardDismissDisabled={true}>
         <ModalContent>
           {(onClose) => (

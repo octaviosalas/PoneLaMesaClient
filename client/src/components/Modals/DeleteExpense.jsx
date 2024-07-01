@@ -44,7 +44,7 @@ const DeleteExpense = ({expenseData, closeModalNow, updateExpenseList}) => {
                      <p className="flex flex-col mt-2 font-medium text-black  text-md">Dirigite hacia el modulo de Sub Alquileres, para poder eliminarla</p> 
                      : null}  
 
-                      {expenseData.typeOfExpense === "Gasto Fijo" ?
+                      {expenseData.typeOfExpense === "Gasto Fijo" || expenseData.typeOfExpense === "Varios"  ?
                         <div className='flex flex-col items-center justify-center'>
                            <p className="flex flex-col mt-2 font-medium text-black  text-md">¿Estas seguro de eliminar el Gasto?</p> 
                            <div className='mt-4 mb-2 flex items-center gap-4'>

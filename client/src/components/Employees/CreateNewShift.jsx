@@ -34,6 +34,7 @@ const CreateNewShift = () => {
   const [shiftChoosen, setShiftChoosen] = useState("")
   const [dateSelected, setDateSelected] = useState("")
   const [missedDate, setMissedDate] = useState(false)
+  const [holidayShift, setHolidayShift] = useState(false)
 
     useEffect(() => {
       const fetchData = async () => {
@@ -156,10 +157,11 @@ const CreateNewShift = () => {
               activities: activities,
               hours: shiftHours,
               minutes: shiftMinutes,
-              totalAmountPaidShift: shiftHours * employeeHourAmount,
+              totalAmountPaidShift: holidayShift ? (shiftHours * employeeHourAmount * 2) : (shiftHours * employeeHourAmount),
               shift: shiftChoosen
           })
-            const createNewShift = await axios.post("http://localhost:4000/employees/createShift", shiftData)
+          console.log(shiftData)
+           const createNewShift = await axios.post("http://localhost:4000/employees/createShift", shiftData)
             const response = createNewShift.data
                console.log("senddata.data", response)
                  console.log("status sendata", createNewShift.status)
@@ -234,6 +236,9 @@ const CreateNewShift = () => {
                 <Input type="time" variant="underlined" label="Horario de entrada" id="horaEntrada" name="horaEntrada" onChange={(e) => setStartTime(e.target.value)}/>
                 <Input type="time" variant="underlined" label="Horario de salida" id="horaSalida" name="horaSalida" className="mt-2" onChange={(e) => setClosingHour(e.target.value)}/>
                 <Input type="date" variant="underlined" label="Fecha del turno" id="fecha" name="fecha" className="mt-2" onChange={handleDateChange}/>
+              {!holidayShift ? 
+              <p className="text-red-600 font-medium text-sm underline mt-0 cursor-pointer" onClick={() => setHolidayShift(prevState => !prevState)}> Click aqui si el turno corresponde a un dia feriado </p> : 
+              <p className="text-white bg-red-600 font-medium text-sm mt-0 cursor-pointer" onClick={() => setHolidayShift(prevState => !prevState)}> El turno corresponde a un feriado</p>}
                 
 
                 {showFirstData && !showSecondData ? 

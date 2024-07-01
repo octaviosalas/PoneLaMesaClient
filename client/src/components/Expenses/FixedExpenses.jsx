@@ -15,6 +15,7 @@ import ExpensesEstadistics from './ExpensesEstadistics';
 import FilterExpenses from './FilterExpenses';
 import { useNavigate } from 'react-router-dom';
 import NavBarComponent from '../Navbar/Navbar';
+import MiscellaneousExpenses from './MiscellaneousExpenses';
 
 const FixedExpensesTable = ({expensesData, updateList}) => {
 
@@ -36,7 +37,7 @@ const FixedExpensesTable = ({expensesData, updateList}) => {
             try {
                 const query = await axios.get("http://localhost:4000/expenses");
                 const response = query.data
-                const filterResponse = await response.filter((expenses) => expenses.typeOfExpense === "Gasto Fijo")
+                const filterResponse = await response.filter((expenses) => expenses.typeOfExpense === "Gasto Fijo" ||  expenses.typeOfExpense === "Varios")
                 if(filterResponse.length === 0) { 
                     setLoading(false)
                     setWithOutExpenses(true)
@@ -66,22 +67,7 @@ const FixedExpensesTable = ({expensesData, updateList}) => {
                     }
                 });
         
-                modifiedColumnObjects.push({
-                    key: 'Editar',
-                    label: 'Editar',
-                    cellRenderer: (cell) => {     
-                        const filaActual = cell.row;
-                        const id = filaActual.original._id;   
-                        const day = filaActual.original.day;      
-                        const month = filaActual.original.month;
-                        const year = filaActual.original.year;
-                        const detail = filaActual.original.purchaseDetail;
-                        const item = {id, month,year, detail, day };
-                        return (
-                        <EditModal type="purchase" updatePurchaseList={getExpensesDataAndCreateTable} purchaseData={item}/>
-                        );
-                    },
-                })      
+                    
                 
                 modifiedColumnObjects.push({
                 key: 'Eliminar',
@@ -166,6 +152,7 @@ const FixedExpensesTable = ({expensesData, updateList}) => {
                        </div>
                        <div className='flex justify-end mr-4 gap-4'>
                          <CreateExpense updateList={getExpensesDataAndCreateTable}/>  
+                         <MiscellaneousExpenses updateList={getExpensesDataAndCreateTable}/>
                          <ExpensesEstadistics/>
                        </div>          
                   </div>
@@ -205,26 +192,30 @@ const FixedExpensesTable = ({expensesData, updateList}) => {
                       <TableRow key={item._id}>
                       {columns.map((column) => (
                          <TableCell key={column.key} className='text-left'>
-                           {column.cellRenderer ? (
-                             column.cellRenderer({ row: { original: item } })
-                           ) : (
-                             column.key === "typeOfExpense" ? (
-                               item[column.key] === "Gasto Fijo" ? (
-                                 <>
-                                   {item[column.key]} ({item.fixedExpenseType})
-                                 </>
-                               ) : (
-                                 item[column.key]
-                               )
+                         {column.cellRenderer ? (
+                           column.cellRenderer({ row: { original: item } })
+                         ) : (
+                           column.key === "typeOfExpense" ? (
+                             item[column.key] === "Gasto Fijo" ? (
+                               <>
+                                 {item[column.key]} ({item.fixedExpenseType})
+                               </>
+                             ) : item[column.key] === "Varios" ? (
+                               <>
+                                 {item[column.key]} ({item.miscellaneousExpenseName})
+                               </>
                              ) : (
-                               column.key === "amount" ? (
-                                 formatePrice(item[column.key])
-                               ) : (
-                                 item[column.key]
-                               )
+                               item[column.key]
+                             ) 
+                           ) : (
+                             column.key === "amount" ? (
+                               formatePrice(item[column.key])
+                             ) : (
+                               item[column.key]
                              )
-                           )}
-                         </TableCell>
+                           )
+                         )}
+                       </TableCell>
                        ))}
                      </TableRow>
                     )}
