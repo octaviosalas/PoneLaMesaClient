@@ -75,7 +75,7 @@ const EmployeesTableData = ({employeesData, updateList}) => {
                   const license = filaActual.original.licenseImage;
                   const item = { id, license, name};
                   return (
-                      <ViewLicenseModal item={item}/>
+                      <ViewLicenseModal item={item} updateList={updateList}/>
                   );
               },
           })   
@@ -91,7 +91,7 @@ const EmployeesTableData = ({employeesData, updateList}) => {
                 const dni = filaActual.original.dniImage;
                 const item = { id, dni, name};
                 return (
-                    <ViewDniModal item={item}/>
+                    <ViewDniModal item={item} updateList={updateList}/>
                 );
             },
         })   

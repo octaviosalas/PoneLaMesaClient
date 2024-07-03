@@ -81,8 +81,8 @@ const LocalDeliveries = () => {
     <div>
          <NavBarComponent/>
          <DoubleConditionTable 
-         tableData={localDeliveryOrders} everyDeliveries={everyDeliveries} ordersToRepartToday={ordersToRepartToday} 
-         futuresReparts={futuresReparts}  typeOfOrders="entregas" again={unifyFunctions}/> 
+          tableData={localDeliveryOrders} everyDeliveries={everyDeliveries} ordersToRepartToday={ordersToRepartToday} 
+          futuresReparts={futuresReparts}  typeOfOrders="entregas" again={unifyFunctions}/> 
     </div>
   )
 }

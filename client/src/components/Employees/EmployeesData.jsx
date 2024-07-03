@@ -12,7 +12,8 @@ const EmployeesData = () => {
   
 
   
-  const everyEmployees = async () => { 
+  const everyEmployees = async () => {
+    console.log("hola")
       try {
         const getData = await axios.get(`http://localhost:4000/employees`)
         const response = getData.data

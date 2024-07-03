@@ -124,3 +124,43 @@ export const deleteEmployee = async (req, res) => {
     res.status(500).json({ error: 'Error al eliminar el cliente' });
   }
 }
+
+export const addLicense = async (req, res) => { 
+
+  const { id } = req.params;
+  const {license} = req.body
+
+    try {
+       const employee = await Employees.findByIdAndUpdate({ _id: id }, { 
+         licenseImage: license             
+        }, {new: true})
+
+        await employee.save()
+        res.status(200).send("Cmabios guardados")
+       
+      } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+      }
+}
+
+export const addNewDniImage = async (req, res) => { 
+
+  const { id } = req.params;
+  const {dniImage} = req.body
+
+  console.log(req.body)
+
+    try {
+       const employee = await Employees.findByIdAndUpdate({ _id: id }, { 
+        dniImage: dniImage             
+        }, {new: true})
+
+        await employee.save()
+        res.status(200).send("Cmabios guardados")
+       
+      } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+      }
+}

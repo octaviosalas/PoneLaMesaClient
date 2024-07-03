@@ -14,7 +14,8 @@ const MainExpenses = ({from}) => {
         try {
           const query = await axios.get("http://localhost:4000/expenses");
           const response = query.data
-          setEveryExpenses(response)
+          const filter = response.filter((exp) => exp.typeOfExpense === "Sub Alquiler"  || exp.typeOfExpense === "Compra")
+          setEveryExpenses(filter)
           } catch (error) {
           console.error(error);
         }

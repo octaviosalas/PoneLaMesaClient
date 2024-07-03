@@ -42,11 +42,11 @@ const FixedExpensesTable = ({expensesData, updateList}) => {
                     setLoading(false)
                     setWithOutExpenses(true)
                 } else { 
-                    setData(filterResponse)
+                    setData(filterResponse.reverse())
                     const propiedades = Object.keys(filterResponse[0]).filter(propiedad =>  propiedad !== '_id' &&  
                     propiedad !== '__v'  &&  propiedad !== 'expenseDetail'  &&  propiedad !== 'date'  &&  
                     propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&  propiedad !== 'providerName' &&  propiedad !== 'subletReferenceId' 
-                    &&  propiedad !== 'fixedExpenseType'  && propiedad !== 'purchaseReferenceId');
+                    &&  propiedad !== 'fixedExpenseType'  && propiedad !== 'purchaseReferenceId' && propiedad !== "miscellaneousExpenseName");
                     const columnObjects = propiedades.map(propiedad => ({
                         key: propiedad,
                         label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
