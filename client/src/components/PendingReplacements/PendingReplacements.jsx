@@ -11,7 +11,6 @@ const PendingReplacements = () => {
         try {
             const query = await axios.get("http://localhost:4000/clients")
             const response = query.data
-            console.log(response)
             const filterByReplacementes = response.filter((client) => client.clientDebt.length > 0)
             const fi = filterByReplacementes.map((ff) => ff.clientDebt)
             const getWithOutPaid = filterByReplacementes.map((ff) => ff.clientDebt).flat().filter((data) => data.paid === false)

@@ -8,6 +8,8 @@ import Loading from '../Loading/Loading';
 import PendingReplacementDetail from './PendingReplacementDetail';
 import { useNavigate } from 'react-router-dom';
 import CancelPendingReplacement from './CancelPendingReplacement';
+import PayReplacementFree from './PayReplacementFree';
+
 
 const PendingReplacementsTableData = ({replacementes, updateList}) => {
 
@@ -49,6 +51,26 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
                 return column;
             }
             });
+
+            modifiedColumnObjects.push({
+              key: 'Asentar sin Cargo',
+              label: 'Asentar sin Cargo',
+              cellRenderer: (cell) => { 
+                const filaActual = cell.row;
+                const debtId = filaActual.original.debtId;
+                const detail = filaActual.original.replacementeDetail;
+                const name = filaActual.original.clientName;
+                const id = filaActual.original.clientId;
+                const telephone = filaActual.original.telephone;
+                const clientData = {name, id, telephone}
+                const orderCompletedData = filaActual.original.orderCompletedData;
+                const amountToPay = filaActual.original.amountToPay;
+                const item = {debtId, detail, orderCompletedData, amountToPay, clientData};
+                return (
+                    <PayReplacementFree item={item}/>
+                  );
+            },
+              }) 
 
         
         modifiedColumnObjects.push({

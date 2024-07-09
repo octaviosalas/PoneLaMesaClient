@@ -96,7 +96,7 @@ const ProcessTables = ({orderStatus}) => {
                      },
                     }) : null}
 
-                    {orderStatus ===  "Armado" ?
+                    
                       modifiedColumnObjects.push({
                       key: 'Seña',
                       label: 'Seña',
@@ -116,7 +116,7 @@ const ProcessTables = ({orderStatus}) => {
                            <CreateDownPayment orderData={item} updateList={getDataAndCreateTable}/>
                           );
                        },
-                      }) : null}
+                      }) 
            
                  {orderStatus !== "Lavado" ? 
                   modifiedColumnObjects.push({

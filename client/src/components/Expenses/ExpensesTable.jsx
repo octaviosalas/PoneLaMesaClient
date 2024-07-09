@@ -165,7 +165,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
                          <div className='flex justify-end mr-4 gap-4'>
                            <CreateNewPurchase updateList={updateList}/>
                            <CreateSublet/>
-                           <CreateExpense updateList={updateList}/>  
+        
                            <ExpensesEstadistics/>
                          </div>          
                     </div>

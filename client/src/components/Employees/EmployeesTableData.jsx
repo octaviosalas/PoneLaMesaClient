@@ -30,7 +30,7 @@ const EmployeesTableData = ({employeesData, updateList}) => {
 
     const getEmployeesAndCreateTable = () => { 
         if(data.length !== 0) { 
-        const propiedades = Object.keys(employeesData[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'hourAmount' );
+        const propiedades = Object.keys(employeesData[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'hourAmount' && propiedad !== 'licenseImage'  && propiedad !== 'dniImage');
         const columnObjects = propiedades.map(propiedad => ({
             key: propiedad,
             label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
