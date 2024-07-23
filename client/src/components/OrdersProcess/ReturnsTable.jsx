@@ -192,6 +192,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
    
                    <Table
                      columnAutoWidth={true}
+                     isHeaderSticky={true}
                      columnSpacing={10}
                      aria-label="Selection behavior table example with dynamic content"
                      selectionBehavior={selectionBehavior}

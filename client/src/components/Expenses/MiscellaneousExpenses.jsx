@@ -65,7 +65,7 @@ const MiscellaneousExpenses = ({updateList}) => {
 
   return (
     <>
-     <p className="text-zinc-600 font-bold text-sm cursor-pointer" onClick={onOpen}>Crear Gasto Mensual</p>
+     <p className="text-zinc-600 font-bold text-sm cursor-pointer" onClick={onOpen}>Crear Gasto Semanal</p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

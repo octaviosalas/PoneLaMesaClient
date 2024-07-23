@@ -192,6 +192,7 @@ const EmployeesTableData = ({employeesData, updateList}) => {
                      <Table
                        columnAutoWidth={true}
                        columnSpacing={10}
+                       isHeaderSticky={true}
                        aria-label="Selection behavior table example with dynamic content"
                        selectionBehavior={selectionBehavior}
                        className="w-full mt-2  lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
