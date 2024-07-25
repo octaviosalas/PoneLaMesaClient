@@ -264,7 +264,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
               setSuccessAddMessage(true)
                 setTimeout(() => { 
                   closeModalNow()
-                  updateChanges()
+                  updateChanges("everyOrders")
                   setSuccessAddMessage(false)
                 }, 2000)
             }
@@ -281,7 +281,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
   return (
 
     <>
-     {orderStatus === "A Confirmar" || orderStatus === "Armado" ? 
+     {orderStatus === "A Confirmar" || orderStatus === "Armado" || orderStatus === "Entregado"? 
       <div className="flex flex-col justify-center items-center">
               {newOrderDetailWithChanges.map((ord, index) => (
                   <div key={index} className="flex flex-col">

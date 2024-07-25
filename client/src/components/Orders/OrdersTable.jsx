@@ -54,26 +54,26 @@ const OrdersTable = () => {
         setData(filteringByTypeOfClient);
       };
 
-    const applyFiltersByOrderState =  (state) => {
-      const filteringByTypeOfClient = filteredData.filter((orders) => orders.orderStatus === state);
-      console.log(filteringByTypeOfClient);
-      setData(filteringByTypeOfClient);
-    };
+      const applyFiltersByOrderState =  (state) => {
+        const filteringByTypeOfClient = filteredData.filter((orders) => orders.orderStatus === state);
+        console.log(filteringByTypeOfClient);
+        setData(filteringByTypeOfClient);
+      };
 
-    const applyFiltersByPaidOrNoPaid =  (state) => {
-      const filteringByPaidOrNoPaid = filteredData.filter((orders) => orders.paid === state);
-      console.log(filteringByPaidOrNoPaid);
-      setData(filteringByPaidOrNoPaid);
-    };
+      const applyFiltersByPaidOrNoPaid =  (state) => {
+        const filteringByPaidOrNoPaid = filteredData.filter((orders) => orders.paid === state);
+        console.log(filteringByPaidOrNoPaid);
+        setData(filteringByPaidOrNoPaid);
+      };
 
-    const isFilterApplied = (value) => { 
-        setFilterIsOn(value)
-    }
+      const isFilterApplied = (value) => { 
+          setFilterIsOn(value)
+      }
 
-    const undoFilter = () => { 
-      setFilterIsOn(false)
-      getDataAndCreateTable()
-    }
+      const undoFilter = () => { 
+        setFilterIsOn(false)
+        getDataAndCreateTable("everyOrders")
+      }
 
   
       const getDataAndCreateTable = async (type) => { 
@@ -89,6 +89,7 @@ const OrdersTable = () => {
                 status = response.status;
                 setLoad(false)
                 setTableTypeOfData("confirmado")
+                console.log("salgo")
 
             } else if (type === "everyOrders") {
               console.log("Me llego every orders")
@@ -294,7 +295,17 @@ const OrdersTable = () => {
       });
 
       
+      const [selectedKeys, setSelectedKeys] = useState([]);
 
+      const handleSelectionChange = (keys) => {
+        setSelectedKeys(keys);
+        console.log(keys)
+
+        const selectedOrdersData = filteredData.filter((item) =>
+          selectedKeys.includes(item._id)
+        );
+        console.log("aca mira", selectedOrdersData)
+      };
       
 
   return (
@@ -364,8 +375,10 @@ const OrdersTable = () => {
            columnAutoWidth={true} 
            isHeaderSticky={true}
            columnSpacing={10}  
-           aria-label="Selection behavior table example with dynamic content"   
-           selectionBehavior={selectionBehavior} 
+           aria-label="Controlled table example with dynamic content"
+           selectionMode="multiple"
+           selectedKeys={selectedKeys}
+           onSelectionChange={handleSelectionChange}
            className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
            >
          <TableHeader columns={columns} >

@@ -8,6 +8,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { formatePriceBackend } from "../utils/formatePriceBackend.js";
 import { getCurrentDate, getFutureDate } from "../utils/dateFunctios.js";
+import moment from 'moment'; // Asegúrate de tener moment.js instalado para manejar fechas
+import { format, subDays, parse } from 'date-fns';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,6 +76,8 @@ export const getOrders = async (req, res) => {
       console.log(error)
     }
 }
+
+
 
 export const getOrderById = async (req, res) => { 
   const {orderId} = req.params
@@ -516,7 +520,7 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
 
 export const nextFiveDaysOrdersWithDelivery = async (req, res) => {
-  
+  console.log("recibido")
   try {
     const currentDate = getCurrentDate();
     const futureDate = getFutureDate(5);
@@ -539,7 +543,7 @@ export const nextFiveDaysOrdersWithDelivery = async (req, res) => {
 
 
  export const nextFiveDaysOrdersConfirmed = async (req, res) => {
-  
+  console.log("recibido")
   try {
     const currentDate = getCurrentDate();
     const futureDate = getFutureDate(5);

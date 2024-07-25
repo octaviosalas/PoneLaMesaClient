@@ -5,6 +5,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { formateInputPrice } from '../../functions/gralFunctions'
 import { productCategorys } from '../../functions/gralFunctions'
+import PercentageArticlePrice from './PercentageArticlePrice'
 
 const EditArticle = ({articleData, closeModalNow, updateChanges}) => {
 
@@ -40,10 +41,23 @@ const EditArticle = ({articleData, closeModalNow, updateChanges}) => {
              })
       }
 
+      const updatePrice = (item) => { 
+        console.log("Recibi el porcentaje de", item)
+        const newClientPrice = newProductClientsValue * (1 + item / 100);
+        const newBonusClientPrice = newProductBonusClientsValue * (1 + item / 100);
+        const newReplacementPrice = newProductReplacementValue * (1 + item / 100);
+        setNewProductClientsValue(newClientPrice);
+        setNewProductBonusClientsValue(newBonusClientPrice)
+        setNewProductReplacementValue(newReplacementPrice)
+        console.log(newClientPrice)
+        console.log(newBonusClientPrice)
+        console.log(newReplacementPrice)
+     }
   return (
     <div>
           <div className="flex flex-col items-center justify-center">
-                    <Input type="text" className="mt-2 w-60" label="Articulo" value={newProductName} onChange={(e) => setNewProductName(e.target.value)}/>
+                    <PercentageArticlePrice updatePrice={updatePrice}/>
+                    <Input type="text" className="mt-4 w-60" label="Articulo" value={newProductName} onChange={(e) => setNewProductName(e.target.value)}/>
                     <Input type="text" className="mt-2 w-60" label="Precio Clientes" value={formateInputPrice(newProductClientsValue)} onChange={(e) => setNewProductClientsValue(e.target.value)}/>
                     <Input type="text" className="mt-2 w-60" label="Precio Clientes Bonificados" value={formateInputPrice(newProductBonusClientsValue)} onChange={(e) => setNewProductBonusClientsValue(e.target.value)}/>
                     <Input type="text" className="mt-2 w-60" label="Precio Reposicion" value={formateInputPrice(newProductReplacementValue)} onChange={(e) => setNewProductReplacementValue(e.target.value)}/>
