@@ -21,6 +21,7 @@ import { getOrderById,
          nextFiveDaysOrdersWithDelivery,
         nextFiveDaysOrdersConfirmed,
         ordersAfterFiveDays,
+        changeSomeStatus,
         getOrdersToBeConfirmed, 
         } from '../controllers/orders.controllers.js';
 
@@ -49,6 +50,7 @@ ordersRoutes.get('/ord/nextFiveOrdersConfirmed', nextFiveDaysOrdersConfirmed);
 ordersRoutes.get('/ord/afterFiveDays', ordersAfterFiveDays);
 ordersRoutes.get('/ord/justToBeConfirmed', getOrdersToBeConfirmed);
 
+ordersRoutes.post("/updateSomeOrdersStates", changeSomeStatus)
 
 
 export default ordersRoutes;

@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import { useEffect, useState, useRef } from 'react'
-import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Input} from "@nextui-org/react";
+import {Table,TableHeader,TableColumn,TableBody,TableRow,TableCell, Button, Input, select} from "@nextui-org/react";
 import Loading from "../Loading/Loading"
 import DeleteOrder from '../Modals/DeleteOrder';
 import EditModal from '../Modals/EditModal';
@@ -14,6 +14,7 @@ import getBackendData from '../../Hooks/GetBackendData';
 import CreateSublet from "../ArticlesTable/CreateSublet"
 import EstadisticsOrders from './EstadisticsOrders';
 import ChangeState from './ChangeState';
+import ChangeSomeOrderState from './ChangeSomeOrdersState';
 
 const OrdersTable = () => {
 
@@ -295,17 +296,22 @@ const OrdersTable = () => {
       });
 
       
-      const [selectedKeys, setSelectedKeys] = useState([]);
+      const [selectedKeys, setSelectedKeys] = React.useState(new Set(["2"]));
+      const [selectedItems, setSelectedItems] = React.useState([]);
 
       const handleSelectionChange = (keys) => {
         setSelectedKeys(keys);
-        console.log(keys)
-
-        const selectedOrdersData = filteredData.filter((item) =>
-          selectedKeys.includes(item._id)
-        );
-        console.log("aca mira", selectedOrdersData)
+        console.log("keys", keys)
+        const selectedOrder = data.filter((item) => keys.has(item._id));
+        console.log("SelectedOrder", selectedOrder)
+        setSelectedKeys(keys)
+        setSelectedItems(selectedOrder)
       };
+
+     const cleanItems = () => { 
+      setSelectedItems([])
+      setSelectedKeys([])
+     }
       
 
   return (
@@ -369,6 +375,10 @@ const OrdersTable = () => {
                        Deshacer Filtro
                    </p>
                     : null}
+                    {selectedItems.length > 1 ? 
+                      <div>
+                        <ChangeSomeOrderState orders={selectedItems} update={getDataAndCreateTable} cleanItems={cleanItems}/>
+                      </div> : null}
              </div>
          </div>
           <Table 

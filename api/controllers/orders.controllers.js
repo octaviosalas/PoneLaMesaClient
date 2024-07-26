@@ -600,3 +600,26 @@ export const getOrdersToBeConfirmed = async (req, res) => {
       console.log(error)
     }
 }
+
+export const changeSomeStatus = async (req, res) => {
+  try {
+
+    console.log(req.body)
+
+
+    if (!Array.isArray(req.body) || req.body.length === 0) {
+      return res.status(400).json({ error: 'El cuerpo de la solicitud debe contener un array de órdenes con _id' });
+    }
+
+    const updatePromises = req.body.map(order => 
+      Orders.findByIdAndUpdate(order._id, { orderStatus: 'Entregado' }, { new: true })
+    );
+
+    await Promise.all(updatePromises);
+
+    res.status(200).json({ message: 'Todas las órdenes han sido actualizadas a "entregado"' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar las órdenes' });
+    console.error(error);
+  }
+};
