@@ -26,6 +26,7 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
 
     useEffect(() => { 
         setData(replacementes)
+        console.log("Hubo un cambio en los replacementes que recibe PendingReplacementsTableData")
       }, [replacementes])
 
       const goToOtherPage = (item) => { 
@@ -133,6 +134,7 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
             useEffect(() => { 
                 if(data.length > 0) { 
                     createTableData()
+                    console.log("Ejecute de nuevo a createTableData en PendingReplacementsTableData")
                 } else { 
                     setWithOutPendingReplacements(true)
                 }

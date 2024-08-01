@@ -263,7 +263,7 @@ const AccountState = ({clientData, updateClientData}) => {
                           columnSpacing={10}  
                           aria-label="Selection behavior table example with dynamic content"   
                           selectionBehavior={selectionBehavior} 
-                          className=" flex items-center justify-center shadow-lg overflow-y-auto w-full rounded-xl">
+                          className=" flex items-center justify-center shadow-lg overflow-y-auto max-h-[280px] w-full rounded-xl">
                               <TableHeader columns={columns}>
                       {(column) => (
                       <TableColumn key={column.key} className="text-xs gap-6">
@@ -304,7 +304,7 @@ const AccountState = ({clientData, updateClientData}) => {
                         columnSpacing={10}  
                         aria-label="Selection behavior table example with dynamic content"   
                         selectionBehavior={selectionBehavior} 
-                        className=" flex items-center justify-center shadow-lg overflow-y-auto w-full rounded-xl">
+                        className=" flex items-center justify-center shadow-lg overflow-y-auto max-h-[280px] w-full rounded-xl">
                             <TableHeader columns={ordersColumns}>
                                 {(column) => (
                                 <TableColumn key={column.key} className="text-xs gap-12">

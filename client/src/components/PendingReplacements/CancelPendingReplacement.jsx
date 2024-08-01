@@ -26,7 +26,6 @@ const CancelPendingReplacement = ({data, updateList}) => {
             console.log(response.data)
             if(response.status === 200) { 
               updateList()
-
               onClose()
               setLoad(false)
             }

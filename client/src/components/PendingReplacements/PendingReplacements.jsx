@@ -8,6 +8,7 @@ const PendingReplacements = () => {
     const [pendingReplacements, setPendingReplacements] = useState([])
   
     const getPendings = async () => { 
+        console.log("recargando reposiciones pendientes")
         try {
             const query = await axios.get("http://localhost:4000/clients")
             const response = query.data

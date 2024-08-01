@@ -12,7 +12,8 @@ const employeesRoutes = express.Router();
   getEmployeesById,
   getEveryEmployeesShifts,
   addLicense,
-  addNewDniImage
+  addNewDniImage,
+  editLicenseImage
 } from '../controllers/employees.controllers.js' 
 
 
@@ -30,6 +31,8 @@ employeesRoutes.delete('/:shiftId', );
 employeesRoutes.post("/createShift", createShift)
 employeesRoutes.post("/addLicense/:id", addLicense)
 employeesRoutes.post("/addNewImageDni/:id", addNewDniImage)
+employeesRoutes.post("/editLicense/:id", editLicenseImage)
+
 
 export default employeesRoutes;
 
