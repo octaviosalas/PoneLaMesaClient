@@ -497,22 +497,61 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
   doc.font('Helvetica-Bold').fontSize(15).fillColor('black').text(`${result.cliente}`, 50, yPosition);
   yPosition += 20;
-  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Total: ${result.total}`, 50, yPosition);
-  yPosition += 40; 
+ 
+  yPosition += 10;
+  doc.moveTo(50, yPosition).lineTo(pageWidth - 50, yPosition).stroke();
+  yPosition += 10;
 
-  doc.font('Helvetica-Bold').fontSize(14).fillColor('black').text('Detalle de Articulos Alquilados:', 50, yPosition);
+  doc.font('Helvetica-Bold').fontSize(12).fillColor('black').text('Detalle de Articulos Alquilados:', 50, yPosition);
   yPosition += 30;
   doc.font('Helvetica').fontSize(13).fillColor('black').text('Articulo', 50, yPosition);
   doc.font('Helvetica').fontSize(13).fillColor('black').text('Cantidad', 200, yPosition);
-  doc.font('Helvetica').fontSize(13).fillColor('black').text('Total', 350, yPosition);
+  doc.font('Helvetica').fontSize(13).fillColor('black').text('Total', 300, yPosition);
+  doc.font('Helvetica').fontSize(13).fillColor('black').text('Reposicion', 420, yPosition);
   yPosition += 20;
+
 
   result.articles.forEach((article, index) => {
      doc.font('Helvetica').fontSize(12).fillColor('black').text(article.articulo, 50, yPosition);
      doc.font('Helvetica').fontSize(12).fillColor('black').text(article.cantidad.toString(), 200, yPosition);
-     doc.font('Helvetica').fontSize(12).fillColor('black').text(formatePriceBackend(article.total).toString(), 350, yPosition);
+     doc.font('Helvetica').fontSize(12).fillColor('black').text(formatePriceBackend(article.total).toString(), 300, yPosition);
+     doc.font('Helvetica').fontSize(12).fillColor('black').text(formatePriceBackend(article.reposicion).toString(), 420, yPosition);
      yPosition += 20;
   });
+
+  yPosition += 10;
+  doc.moveTo(50, yPosition).lineTo(pageWidth - 50, yPosition).stroke();
+  yPosition += 10;
+
+  yPosition += 10; 
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Direccion de entrega: ${result.lugarDeEntrega}`, 50, yPosition);
+  yPosition += 25
+
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Costo de envio: ${formatePriceBackend(result.envio).toString()}`, 50, yPosition);
+  yPosition += 25; 
+
+
+
+  const pagoMensaje = result.paid ? "Pedido Abonado en su totalidad" : "Pedido pendiente de pago";
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(pagoMensaje, 50, yPosition);
+  yPosition += 25; 
+
+
+  if (result.seña.length > 0) {
+    result.seña.forEach(señaItem => {
+      doc.font('Helvetica').fontSize(14).fillColor('black').text(`Seña: ${señaItem.amount}`, 50, yPosition);
+      yPosition += 25; 
+    });
+  } else {
+    doc.font('Helvetica').fontSize(14).fillColor('black').text('Seña: Sin seña', 50, yPosition);
+    yPosition += 25; 
+  }
+
+
+
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Total: ${result.total}`, 50, yPosition);
+
+ 
 
   doc.end();
 };

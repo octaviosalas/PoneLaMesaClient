@@ -279,7 +279,7 @@ const CreateNewShift = () => {
                       <Select variant={"faded"} label="Elegi una actividad" className="max-w-full mt-3">          
                                 {activitiesAvailables.map((act) => (
                                 <SelectItem key={act.label} value={act.label}  onClick={() => addNewActivitie(act.label)}>
-                                {act.label}
+                                 {act.label}
                                 </SelectItem>))}
                         </Select>               
                       </div>

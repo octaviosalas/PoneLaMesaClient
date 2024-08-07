@@ -30,7 +30,8 @@ const OrdersTable = () => {
     const [load, setLoad] = useState(false);
     const [tableTypeOfData, setTableTypeOfData] = useState("");
     const [withOutOrders, setWithOutOrders] = useState(false);
-
+    const [selectedKeys, setSelectedKeys] = React.useState(new Set(["2"]));
+    const [selectedItems, setSelectedItems] = React.useState([]);
     
 
     const applyFiltersByMonth =  (monthSelected) => {
@@ -169,6 +170,7 @@ const OrdersTable = () => {
                           const orderSublets = filaActual.original.subletsDetail;
                           const creator = filaActual.original.orderCreator;
                           const client = filaActual.original.client;
+                          const placeOfDelivery = filaActual.original.placeOfDelivery;
                           const day = filaActual.original.day;
                           const month = filaActual.original.month;
                           const year = filaActual.original.year;
@@ -178,7 +180,7 @@ const OrdersTable = () => {
                           const missingArticlesData = filaActual.original.missingArticlesData;
                           const shippingCost = filaActual.original?.shippingCost;
                           const dateOfDelivery = filaActual.original.dateOfDelivery;
-                          const item = { id, detail, creator, orderSublets, day, month, year, total, client, downPaymentData, paid, missingArticlesData, shippingCost, dateOfDelivery};
+                          const item = { id, detail, creator, orderSublets, day, month, year, total, client, downPaymentData, paid, missingArticlesData, shippingCost, dateOfDelivery, placeOfDelivery};
                           return (
                             <OrderDetail  orderData={item} update={getDataAndCreateTable}/>
                             );
@@ -296,8 +298,7 @@ const OrdersTable = () => {
       });
 
       
-      const [selectedKeys, setSelectedKeys] = React.useState(new Set(["2"]));
-      const [selectedItems, setSelectedItems] = React.useState([]);
+
 
       const handleSelectionChange = (keys) => {
         setSelectedKeys(keys);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, Input, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import {formatePrice, getDate, getDay, getMonth, getYear} from "../../functions/gralFunctions"
 import axios from "axios";
@@ -11,28 +11,52 @@ const MiscellaneousExpenses = ({updateList}) => {
 
   const [expenseName, setExpenseName] = useState("")
   const [expenseAmount, setExpenseAmount] = useState("")
-  const [actualMonth, setActualMonth] = useState(getMonth())
-  const [actualYear, setActualYear] = useState(getYear())
-  const [actualDate, setActualDate] = useState(getDate())
-  const [actualDay, setActualDay] = useState(getDay())
   const [missedData, setMissedData] = useState(false)
   const [succes, setSucces] = useState(false)
+  const [dateSelected, setDateSelected] = useState('');
+  const [daySelected, setDaySelected] = useState(null);
+  const [monthSelected, setMonthSelected] = useState('');
+  const [yearSelected, setYearSelected] = useState('');
+
+
+  const monthNames = [
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+  ];
+
+  const handleChangeDate = (e) => {
+   const selectedDate = e.target.value;
+   setDateSelected(selectedDate);
+
+   const [year, month, day] = selectedDate.split('-');
+   setDaySelected(Number(day));
+   setMonthSelected(monthNames[Number(month) - 1]);
+   setYearSelected(Number(year));
+ };
+
+ useEffect(() => { 
+     console.log(daySelected)
+     console.log(dateSelected)
+     console.log(monthSelected)
+     console.log(yearSelected)
+
+ }, [dateSelected])
 
 
   const userCtx = useContext(UserContext)
 
   const createNewExpense = async () => { 
-    if(expenseAmount > 0 && userCtx.userId !== null && expenseName.length > 0) { 
+    if(expenseAmount > 0 && userCtx.userId !== null && expenseName.length > 0 && dateSelected.length > 0) { 
       setMissedData(false)
       const expenseData = ({ 
         amount: expenseAmount,
         loadedByName: userCtx.userName,
         loadedById: userCtx.userId,
         typeOfExpense: "Varios",
-        date: actualDate,
-        day: actualDay,
-        month: actualMonth,
-        year: actualYear,
+        date: dateSelected,
+        day: daySelected,
+        month: monthSelected,
+        year: yearSelected,
         expenseDetail: [],
         providerName: "",
         providerId: "",
@@ -72,6 +96,7 @@ const MiscellaneousExpenses = ({updateList}) => {
             <>
               <ModalHeader className="flex flex-col gap-1">Crear Gasto (Varios)</ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">
+                 <Input type="date" classNames={{label: "-mt-5"}} variant="underlined" label="Fecha" className="mt-2 w-full" onChange={handleChangeDate}/>
                  <Input type="text" variant="underlined" label="Nombre del gasto" className="w-full" onChange={(e) => setExpenseName(e.target.value)}/>
                  <Input type="text" variant="underlined" label="Monto Gastado" className="w-full mt-2" onChange={(e) => setExpenseAmount(Number(e.target.value))}/>
               </ModalBody>

@@ -308,7 +308,8 @@ export const everyActivities = [
   { label: 'Armado de Pedidos', value: 'Armado de Pedidos' },
   { label: 'Atencion Local', value: 'Atencion Local' },
   { label: 'Reparto', value: 'Reparto' },
-  { label: 'Horas Extras', value: 'Horas Extras'}
+  { label: 'Horas Extras', value: 'Horas Extras'},
+  { label: 'Deposito', value: 'Deposito'}
 
 ]
 

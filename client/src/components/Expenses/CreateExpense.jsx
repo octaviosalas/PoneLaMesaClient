@@ -10,16 +10,32 @@ import AddNewFixedType from "./AddNewFixedType";
 const CreateExpense = ({updateList, type}) => {
   
    const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
-   const [actualDay, setActualDay] = useState(getDay())
-   const [actualMonth, setActualMonth] = useState(getMonth())
-   const [actualYear, setActualYear] = useState(getYear())
-   const [actualDate, setActualDate] = useState(getDate())
    const [typesOfExpenses, setTypesOfExpenses] = useState([])
    const [typeExpenseSelected, setTypeExpenseSelected] = useState("")
    const [amount, setAmount] = useState(0)
    const [missedData, setMissedData] = useState(false)
    const [succes, setSucces] = useState(false)
+   const [dateSelected, setDateSelected] = useState('');
+   const [daySelected, setDaySelected] = useState(null);
+   const [monthSelected, setMonthSelected] = useState('');
+   const [yearSelected, setYearSelected] = useState('');
    const userCtx = useContext(UserContext)
+
+
+   const monthNames = [
+     "enero", "febrero", "marzo", "abril", "mayo", "junio",
+     "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+   ];
+ 
+   const handleChange = (e) => {
+    const selectedDate = e.target.value;
+    setDateSelected(selectedDate);
+
+    const [year, month, day] = selectedDate.split('-');
+    setDaySelected(Number(day));
+    setMonthSelected(monthNames[Number(month) - 1]);
+    setYearSelected(Number(year));
+  };
 
    const getTypes = async () => { 
      try {
@@ -38,17 +54,17 @@ const CreateExpense = ({updateList, type}) => {
    }
 
    const createNewFixedExpense = async () => { 
-    if(amount > 0 && userCtx.userId !== null && typeExpenseSelected.length > 0) { 
+    if(amount > 0 && userCtx.userId !== null && typeExpenseSelected.length > 0 && dateSelected.length > 0) { 
       setMissedData(false)
       const expenseData = ({ 
         amount: amount,
         loadedByName: userCtx.userName,
         loadedById: userCtx.userId,
         typeOfExpense: "Gasto Fijo",
-        date: actualDate,
-        day: actualDay,
-        month: actualMonth,
-        year: actualYear,
+        date: dateSelected,
+        day: Number(daySelected),
+        month: monthSelected,
+        year: yearSelected,
         expenseDetail: [],
         providerName: "",
         providerId: "",
@@ -95,6 +111,7 @@ const CreateExpense = ({updateList, type}) => {
               <ModalHeader className="flex flex-col gap-1">Crear Gasto Fijo</ModalHeader>
               <ModalBody className="flex flex-col items-center justify-center">
                <AddNewFixedType updateSelectData={getTypes}/>
+               <Input type="date" classNames={{label: "-mt-5"}} variant="underlined" label="Fecha" className="mt-2 w-64 2xl:w-72" onChange={handleChange}/>
                 <Select variant={"faded"} label="Selecciona el Gasto" className="w-72" value={typeExpenseSelected}>          
                       {typesOfExpenses.map((typeExpense) => (
                         <SelectItem key={typeExpense.name} value={typeExpense.name} textValue={typeExpense.name} onClick={() => setTypeExpenseSelected(typeExpense.name)}>

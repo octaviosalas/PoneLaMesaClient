@@ -40,7 +40,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
            console.log(error)
            setError(true)
          }        
-   }
+    }
 
    const createTable = (orderData) => { 
     console.log("SHIPPINGCOST", orderData.shippingCost)
@@ -66,50 +66,54 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
     }
    }
 
- 
+    const handleOpen = () => { 
+      console.log(orderData)
+      console.log(orderData.downPaymentData)
 
-  const handleOpen = () => { 
-    console.log(orderData)
-    console.log(orderData.downPaymentData)
-
-    onOpen()
-    console.log(orderData.paid)
-    createTable(orderData)
-    if(orderData.missingArticlesData.length > 0) { 
-      setOrderHasMissedArticles(true)
-      console.log("ACACACACA", orderData.missingArticlesData)
-      console.log(orderData.missingArticlesData.map((ord) => ord.missedProductsData).map((a) => a.productMissed).flat())
-      setMissedArticlesDetail(orderData.missingArticlesData.map((ord) => ord.missedProductsData).map((a) => a.productMissed).flat())
+      onOpen()
+      console.log(orderData.paid)
+      createTable(orderData)
+      if(orderData.missingArticlesData.length > 0) { 
+        setOrderHasMissedArticles(true)
+        console.log("ACACACACA", orderData.missingArticlesData)
+        console.log(orderData.missingArticlesData.map((ord) => ord.missedProductsData).map((a) => a.productMissed).flat())
+        setMissedArticlesDetail(orderData.missingArticlesData.map((ord) => ord.missedProductsData).map((a) => a.productMissed).flat())
+      }
     }
-  }
 
-  const handleOpenCollectionsDetail = () => { 
-    getOrderOfCollections()
-    onOpen()
-  }
+    const handleOpenCollectionsDetail = () => { 
+      getOrderOfCollections()
+      onOpen()
+    }
 
-  const closeCollectionOrderDetail = () => { 
-    setViewOrderDetail(false)
-  }
+    const closeCollectionOrderDetail = () => { 
+      setViewOrderDetail(false)
+    }
 
   
   const createNewPdf = async (data) => { 
+         console.log("Data que recibo para imprimir orden!", data)
          console.log(data)       
             const articulos = data.detail.map((detail) => { 
               return { 
                 articulo: detail.productName,
                 cantidad: detail.quantity,
-                total:  detail.choosenProductTotalPrice
+                total:  detail.choosenProductTotalPrice,
+                reposicion: detail.replacementPrice,
               }
             })
     
             const result = { 
               cliente: data.client,
               total: formatePrice(data.total),
-              articles: articulos
+              articles: articulos,
+              envio: data.shippingCost,
+              seña: data.downPaymentData,
+              pago: data.paid,
+              lugarDeEntrega: data.placeOfDelivery
             }
 
-          console.log(result)
+          console.log("Esto recibe el backend", result)
           try {
               const response = await axios.post("http://localhost:4000/orders/createDetailPdf", {result}, {
                   responseType: 'blob',

@@ -17,10 +17,10 @@ const CreateNewOrder = ({updateList}) => {
 
   const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const userCtx = useContext(UserContext)
-  const [actualDate, setActualDate] = useState(getDate())
+ // const [actualDate, setActualDate] = useState(getDate())
   const [actualMonth, setActualMonth] = useState(getMonth())
-  const [actualYear, setActualYear] = useState(getYear())
-  const [actualDay, setActualDay] = useState(getDay())
+  //const [actualYear, setActualYear] = useState(getYear())
+  //const [actualDay, setActualDay] = useState(getDay())
   const [firstStep, setFirstStep] = useState(true)
   const [secondStep, setSecondStep] = useState(false)
   const [thirdStep, setThirdStep] = useState(false)
@@ -67,6 +67,34 @@ const CreateNewOrder = ({updateList}) => {
   const [discount, setDiscount] = useState(0)
   const [hasDiscount, setHasDiscount] = useState(false)
   const [multiplyTo, setMultiplyTo] = useState(1)
+  const [dateSelected, setDateSelected] = useState('');
+  const [daySelected, setDaySelected] = useState('');
+  const [monthSelected, setMonthSelected] = useState('');
+  const [yearSelected, setYearSelected] = useState('');
+
+  const monthNames = [
+    "enero", "febrero", "marzo", "abril", "mayo", "junio",
+    "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
+  ];
+
+  const handleChange = (e) => {
+    const selectedDate = e.target.value;
+    setDateSelected(selectedDate);
+
+    const [year, month, day] = selectedDate.split('-');
+    setDaySelected(parseInt(day, 10));
+    setMonthSelected(monthNames[parseInt(month, 10) - 1]);
+    setYearSelected(parseInt(year, 10));
+  };
+
+  useEffect(() => { 
+    console.log(dateSelected)
+    console.log(daySelected)
+    console.log(monthSelected)
+    console.log(yearSelected)
+  }, [dateSelected])
+
+ 
 
 
       const knowWichNumerOfOrder = () => { 
@@ -376,10 +404,10 @@ const CreateNewOrder = ({updateList}) => {
             returnPlace: returnPlace,
             orderDetail: productsSelected,
             total: finalTotal,
-            date: actualDate,
-            month: actualMonth,
-            year: actualYear,
-            day: actualDay,
+            date: dateSelected,
+            month: monthSelected,
+            year: yearSelected,
+            day: daySelected,
             paid: false,
             clientZone: choosenClientZone,
            ...(Number(shippingCost) >= 0 ? { shippingCost: Number(shippingCost) } : {})
@@ -460,6 +488,8 @@ const CreateNewOrder = ({updateList}) => {
         setMultiplyTo(number)
       }
 
+      
+     
 
   return (
     <>
@@ -478,7 +508,7 @@ const CreateNewOrder = ({updateList}) => {
               <div className="flex flex-col items-center justify-center">
                  <div className="flex flex-col items-center justify-center"> 
   
-              
+                    <Input type="date" classNames={{label: "-mt-5"}} variant="underlined" label="Fecha" className="mt-2 w-64 2xl:w-72" onChange={handleChange}/>
                     <Input type="number" variant="underlined" value={orderNumber} label="Numero de Orden" className="mt-2 w-64 2xl:w-72" readonly />
                     <Input type="text" variant="underlined" value={choosenClientName} label="Cliente" className="mt-2 w-64 2xl:w-72" onChange={(e) => handleInputClientsChange(e.target.value)}/>
                     <div className="">

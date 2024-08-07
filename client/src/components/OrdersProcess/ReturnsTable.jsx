@@ -22,6 +22,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
 
         const changeDataValues = (item) => { 
             setData(item)
+            console.log("ejecuto changedatavalues")
         }
 
         const wichTableShow = () => { 
@@ -42,14 +43,21 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
 
         useEffect(() => {
           wichTableShow()
+          console.log("ejecuto useeffect")
         }, [todaysReturns, pendingReturns, everyReturns])
+
+        
+        useEffect(() => {
+
+          console.log(data)
+        }, [data])
 
         const goToOtherPage = (item) => { 
           navigate(item)
         }
 
         const getDataAndCreateTable = () => { 
-            wichTableShow()
+            
             if(!withOutOrders) { 
                 const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
                 &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
