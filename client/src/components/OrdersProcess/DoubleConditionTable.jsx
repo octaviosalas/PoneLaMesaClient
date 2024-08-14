@@ -50,7 +50,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
         }
 
         const getDataAndCreateTable = () => { 
-                selectWichDataShow()
+               
                 if(data.length !== 0) { 
                   setWithOutOrders(false)
                 const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 

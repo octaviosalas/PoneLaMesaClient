@@ -1,8 +1,7 @@
-import React from 'react'
+
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import NavBarComponent from '../Navbar/Navbar'
-import ProcessTables from '../OrdersProcess/ProcessTables'
 import CleaningDetailList from './CleaningDetailList'
 
 const Cleaning = () => {

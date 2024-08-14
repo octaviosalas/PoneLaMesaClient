@@ -56,7 +56,7 @@ const LocalDeliveries = () => {
     const orders = response.data
     const filterOrders = orders.filter((ord) => ord.orderStatus === "Armado" && ord.placeOfDelivery !== "Local") 
     setFuturesReparts(filterOrders)
-    console.log("Ordenes filtradas: ", filterOrders)
+    console.log("Ordenes filtradas ------- FUTUROS REPARTOS: ", filterOrders)
   } catch (error) {
     console.log(error)
   }

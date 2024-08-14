@@ -16,6 +16,7 @@ import cleaningRoutes from "./routes/cleaning.routes.js"
 import depositRoutes from "./routes/deposit.routes.js"
 import employeesRoutes from "./routes/employees.routes.js"
 import replenishmentRoutes from "./routes/replenishment.routes.js"
+import subletsToReturn from "./routes/subletsToReturn.routes.js"
 
 const app = express()
 const PORT = 4000
@@ -40,6 +41,7 @@ app.use("/cleaning", cleaningRoutes)
 app.use("/deposit", depositRoutes)
 app.use("/employees", employeesRoutes)
 app.use("/replenishment", replenishmentRoutes)
+app.use("/subletsToReturn", subletsToReturn)
 
 
 

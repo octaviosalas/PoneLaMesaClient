@@ -11,9 +11,9 @@ const PendingReplacements = () => {
         console.log("recargando reposiciones pendientes")
         try {
             const query = await axios.get("http://localhost:4000/clients")
-            const response = query.data
+            const response = query.data.reverse()
             const filterByReplacementes = response.filter((client) => client.clientDebt.length > 0)
-            const fi = filterByReplacementes.map((ff) => ff.clientDebt)
+      
             const getWithOutPaid = filterByReplacementes.map((ff) => ff.clientDebt).flat().filter((data) => data.paid === false)
             const transformAndShowClient = getWithOutPaid.map((cc) => { 
                 return  { 

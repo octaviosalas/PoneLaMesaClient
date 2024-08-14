@@ -37,6 +37,7 @@ import Chan from "./components/Closures/Chan"
 import ClousureOfTheMonth from './components/Closures/ClousureOfTheMonth'
 import FixedExpensesTable from './components/Expenses/FixedExpenses'
 import ProtectedRoute from './components/ProtectedRoute'
+import SubletsToBeReturned from './components/Sublets/SubletsToBeReturned'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -70,6 +71,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Sublets />
+            </ProtectedRoute>
+          } 
+        />
+         <Route 
+          path="/articulosSubAlquiladosParaDevolver" 
+          element={
+            <ProtectedRoute>
+              <SubletsToBeReturned />
             </ProtectedRoute>
           } 
         />

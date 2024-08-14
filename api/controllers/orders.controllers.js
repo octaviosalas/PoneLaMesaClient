@@ -16,6 +16,21 @@ const __dirname = path.dirname(__filename);
 
 const imagePath = path.join(__dirname, '..', 'imagesApi', 'logo.png');
 
+
+const getPreviousMonth = (currentMonth) => {
+  const date = new Date();
+  date.setMonth(date.getMonth() - 1); // Retrocede un mes
+  const previousMonth = date.toLocaleString('default', { month: 'long' }).toLowerCase();
+  return previousMonth;
+};
+
+const getCurrentMonth = () => {
+  return new Date().toLocaleString('default', { month: 'long' }).toLowerCase();
+};
+
+
+
+
 export const incrementarStock = async (productosComprados) => { 
   try {
     for (const productoCompra of productosComprados) {
@@ -67,15 +82,23 @@ export const decrementarStock = async (productosComprados) => {
 };
 
 export const getOrders = async (req, res) => { 
-  console.log("eee")
-    try {
-      const orders = await Orders.find()
-      res.status(200).json(orders);
-    } catch (error) {
-      res.status(500).json({ error: 'Error al obtener las ordenes' });
-      console.log(error)
-    }
-}
+  console.log("eee");
+  
+  // Obtener el mes actual y el mes previo
+  const currentMonth = getCurrentMonth();
+  const previousMonth = getPreviousMonth(currentMonth);
+  
+  try {
+    // Buscar órdenes en el mes actual o el mes previo
+    const orders = await Orders.find({ month: { $in: [currentMonth, previousMonth] } }).limit(300);
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las ordenes' });
+    console.log(error);
+  }
+};
+
+
 
 
 
@@ -157,15 +180,15 @@ export const changeOrderToConfirmedAndDiscountStock = async (req, res) => {
        return res.status(404).json({ error: 'No se encontró la orden correspondiente.' });
      }
  
-     const unifyArticles = detailOrder.orderDetail.concat(detailOrder.subletDetail);
+     //const unifyArticles = detailOrder.orderDetail.concat(detailOrder.subletDetail);
  
-     foundOrder.total = detailOrder.newAmount;
+     //foundOrder.total = detailOrder.newAmount;
  
      detailOrder.subletDetail.forEach(sublet => {
        foundOrder.subletsDetail.push(sublet);
      });
  
-     await decrementarStock(detailOrder.subletDetail);
+     //await decrementarStock(detailOrder.subletDetail);
      await foundOrder.save();
  
      res.status(200).json({ message: 'La orden se ha confirmado, el stock se ha descontado, y se han actualizado los detalles correctamente.' });

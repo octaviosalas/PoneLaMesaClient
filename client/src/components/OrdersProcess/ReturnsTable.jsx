@@ -98,13 +98,15 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                         const orderNumber = filaActual.original.orderNumber;
                         const month = filaActual.original.month;
                         const orderDetail = filaActual.original.orderDetail;
+                        const subletsDetail = filaActual.original.subletsDetail;
                         const missingArticlesData = filaActual.original.missingArticlesData;
                         const item = {
                         id: id,
                         orderNumber: orderNumber,
                         month: month,
                         orderDetail: orderDetail,
-                        missingArticlesData: missingArticlesData
+                        missingArticlesData: missingArticlesData,
+                        subletsDetail: subletsDetail
                         };
                         return (
                          <ReturnToWashing orderData={item} updateList={updateList}/>

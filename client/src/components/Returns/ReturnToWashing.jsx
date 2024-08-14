@@ -11,97 +11,131 @@ export const ReturnToWashing = ({orderData, updateList}) => {
   const [withMissedArticles, setWithMissedArticles] = useState(false)
   const [dataToSendToWash, setDataToSendToWash] = useState([])
   const [dataToSendToDeposit, setDataToSendToDeposit] = useState([])
+  const [dataToSendToSubletDevolutions, setDataToSendToSubletDevolutions] = useState([])
   const [orderHasDepositArticles, setOrderHasDepositArticles] = useState(false)
   const [estimatedTime, setEstimatedTime] = useState(0)
+  const [finalOrderDetail, setFinalOrderDetail] = useState([])
 
- 
-  const handleOpen = () => { 
-    console.log(orderData)
-    console.log("Array original del pedido: ", originalOrderDetailData)
-    onOpen()
-
-    if(orderData.missingArticlesData.length === 0) { 
-      console.log("Esta orden no tiene faltantes")
-      setWithOutMissedArticles(true)
-      setWithMissedArticles(false)
-      const dataToWash = orderData.orderDetail.filter((prod) => prod.choosenProductCategory === "local") //productos de local
-      console.log("jejeje", dataToWash)
-      unifiedLocalArticlesByQuantity(dataToWash)    
-      const findDeposit = orderData.orderDetail.some((ord) => ord.choosenProductCategory === "deposito")  //verifico si hay productos de deposito
-          if(findDeposit) { 
-              setOrderHasDepositArticles(true)
-              const getDepositArticles = orderData.orderDetail.filter((ord) => ord.choosenProductCategory === "deposito") // en caso de haber, creo la data y seteo el estado para backend
-              unifiedDepositArticlesByQuantity(getDepositArticles)  
-              console.log(orderHasDepositArticles)
-          } else { 
-              setOrderHasDepositArticles(false)
-              console.log(orderHasDepositArticles)
-          }
-
+     
+  useEffect(() => {
+    if (finalOrderDetail.length > 0) {
+      validateDepositAndLocalArticles();
+    }
+  }, [finalOrderDetail]);
+  
+  const checkIfOrderHasSublet = () => { 
+    if (orderData.subletsDetail.length > 0) { 
+      setDataToSendToSubletDevolutions(orderData.subletsDetail);
+      console.log("EL PEDIDO TIENE ARTICULOS SUBALQUILADOS", orderData.subletsDetail);
+  
+      const productsIdOnSublestsSame = orderData.subletsDetail.map(e => e.productId);
+      const productsIdOnOriginal = orderData.orderDetail.map(e => e.productId);
+  
+      const checkIt = productsIdOnSublestsSame.some(productId => productsIdOnOriginal.includes(productId));
+  
+      if (checkIt) {
+        setFinalOrderDetail(orderData.orderDetail.filter(item => !productsIdOnSublestsSame.includes(item.productId)));
+      } else {
+        setFinalOrderDetail(orderData.orderDetail);
+      }
+  
+      console.log(checkIt);
     } else { 
-      console.log("Esta orden tiene faltantes")
-      setWithMissedArticles(true)
-      setWithOutMissedArticles(false)
-
-      const getProductMissed = orderData.missingArticlesData.map((or) => or.missedProductsData).map((orig) => orig.productMissed).flat() 
-
-      const detectProductsWithMissedQuantitys = originalOrderDetailData.map((original) => { 
-        const detectMissed = getProductMissed.filter((prodMissed) => prodMissed.productId === original.productId)
-        return  { 
+      setFinalOrderDetail(orderData.orderDetail)
+    }
+  };
+  
+  const validateDepositAndLocalArticles = () => { 
+    if (orderData.missingArticlesData.length === 0) { 
+      setWithOutMissedArticles(true);
+      setWithMissedArticles(false);
+  
+      const dataToWash = finalOrderDetail.filter(prod => prod.choosenProductCategory === "local");
+      console.log("ARTICULOS PARA ENVIAR AL LAVADO", dataToWash);
+  
+      unifiedLocalArticlesByQuantity(dataToWash);    
+      const findDeposit = finalOrderDetail.some(ord => ord.choosenProductCategory === "deposito");
+      if (findDeposit) { 
+        console.log("ARTICULOS PARA ENVIAR AL DEPOSITO", dataToWash);
+        setOrderHasDepositArticles(true);
+        const getDepositArticles = finalOrderDetail.filter(ord => ord.choosenProductCategory === "deposito");
+        unifiedDepositArticlesByQuantity(getDepositArticles);
+        console.log(orderHasDepositArticles);
+      } else { 
+        console.log("NO ENCONTRE ARTICULOS PARA ENVIAR AL DEPOSITO", dataToWash);
+        setOrderHasDepositArticles(false);
+        console.log(orderHasDepositArticles);
+      }
+  
+    } else { 
+      console.log("Esta orden tiene faltantes");
+      setWithMissedArticles(true);
+      setWithOutMissedArticles(false);
+  
+      const getProductMissed = orderData.missingArticlesData
+        .map(or => or.missedProductsData)
+        .map(orig => orig.productMissed)
+        .flat();
+  
+      const detectProductsWithMissedQuantitys = originalOrderDetailData.map(original => { 
+        const detectMissed = getProductMissed.filter(prodMissed => prodMissed.productId === original.productId);
+        return { 
           originalOrderQuantity: original.quantity,
-          missedQuantity: detectMissed.map((missed) => missed.missedQuantity)[0],
-          quantityToWash: original.quantity -  detectMissed.map((missed) => missed.missedQuantity)[0],
-          productName:  original.productName,
+          missedQuantity: detectMissed.map(missed => missed.missedQuantity)[0],
+          quantityToWash: original.quantity - detectMissed.map(missed => missed.missedQuantity)[0],
+          productName: original.productName,
           productId: original.productId,
           productPrice: original.price,
           productCategory: original.choosenProductCategory
-        }
-      })
-      
-    const theFinalArrayData = detectProductsWithMissedQuantitys.map((prod) => { 
-      return { 
+        };
+      });
+  
+      const theFinalArrayData = detectProductsWithMissedQuantitys.map(prod => ({ 
         productName: prod.productName,
         productId: prod.productId,
         quantity: prod.missedQuantity !== undefined ? prod.quantityToWash : prod.originalOrderQuantity,
         productCategory: prod.productCategory,
         productPrice: prod.productPrice
-      }
-    })
-
-    const justWashProducts = theFinalArrayData.filter((ord) =>  ord.productCategory === "local")
-    const transformDataLocalArticles = justWashProducts.map((dep) => { 
-      return { 
+      }));
+  
+      const justWashProducts = theFinalArrayData.filter(ord => ord.productCategory === "local");
+      const transformDataLocalArticles = justWashProducts.map(dep => ({ 
         productName: dep.productName,
         quantity: dep.quantity,
         productId: dep.productId,
         productPrice: dep.productPrice,
-      }
-    })
-    console.log("Array para enviar al backend de LAVADO", transformDataLocalArticles)
-    setDataToSendToWash(transformDataLocalArticles)
-
-    const depositArticles = theFinalArrayData.filter((ord) => ord.productCategory === "deposito")
-    const transformDataDepositArticles = depositArticles.map((dep) => { 
-      return { 
+      }));
+      console.log("Array para enviar al backend de LAVADO", transformDataLocalArticles);
+      setDataToSendToWash(transformDataLocalArticles);
+  
+      const depositArticles = theFinalArrayData.filter(ord => ord.productCategory === "deposito");
+      const transformDataDepositArticles = depositArticles.map(dep => ({ 
         productName: dep.productName,
         quantity: dep.quantity,
         productId: dep.productId
-      }
-    })
-    console.log("Array para enviar al backend de DEPOSITO", transformDataDepositArticles)
-      setDataToSendToDeposit(transformDataDepositArticles)
-      if(transformDataDepositArticles.length > 0) { 
-        setOrderHasDepositArticles(true)
-      } else { 
-        console.log("ESTA ORDEN NO POSEE ARTICULOS PARA DEPOSITO")
-        setOrderHasDepositArticles(false)
-      }
-
+      }));
+      console.log("Array para enviar al backend de DEPOSITO", transformDataDepositArticles);
+      setDataToSendToDeposit(transformDataDepositArticles);
+      setOrderHasDepositArticles(transformDataDepositArticles.length > 0);
     }
-  }
-
+  };
   
+  const handleOpen = () => { 
+    console.log("PRESTAR ATENCION ACA", orderData);
+    console.log("PRESTAR ATENCION ACA subalquileres", orderData.subletsDetail);
+    console.log("Array original del pedido: ", originalOrderDetailData);
+    onOpen();
+  
+    checkIfOrderHasSublet();
+  };
 
+  useEffect(() => { 
+      console.log("PARA ENVIAR AL DEPOSITO ------", dataToSendToDeposit)
+      console.log("PARA ENVIAR AL LAVADO ------", dataToSendToWash)
+      console.log("PARA ENVIAR AL SUBALQUILERES DEV PROVEEDOR ------", dataToSendToSubletDevolutions)
+  }, [dataToSendToDeposit, dataToSendToWash, dataToSendToSubletDevolutions])
+
+ 
   const unifiedLocalArticlesByQuantity = async (item) => { 
     console.log("ITEMMM", item)
     try {
@@ -160,7 +194,6 @@ export const ReturnToWashing = ({orderData, updateList}) => {
     }
   }
 
-
   const sendDataToWashs =  async () => { 
     if(orderHasDepositArticles === true) { 
       console.log("enviando articulos a lavado")
@@ -184,8 +217,16 @@ export const ReturnToWashing = ({orderData, updateList}) => {
                         }, 1800)
                       }
                    }
-                }
+            }
+            if(dataToSendToSubletDevolutions.length > 0) { 
+              const {data, status} = await axios.post("http://localhost:4000/subletsToReturn/addNewArticles", dataToSendToSubletDevolutions)
+              console.log("ENVIE LOS ARTICULOS AL RETORNO DE SUBALQUILERES", dataToSendToSubletDevolutions, data, status)
+            }
     } else { 
+      if(dataToSendToSubletDevolutions.length > 0) { 
+        const {data, status} = await axios.post("http://localhost:4000/subletsToReturn/addNewArticles", dataToSendToSubletDevolutions)
+        console.log("ENVIE LOS ARTICULOS AL RETORNO DE SUBALQUILERES", dataToSendToSubletDevolutions, data, status)
+      }
         const sendNewArticlesToWashModel = await axios.post("http://localhost:4000/cleaning/addNewArticles", dataToSendToWash)
          console.log(sendNewArticlesToWashModel.data)
           if(sendNewArticlesToWashModel.status === 200) { 
@@ -202,7 +243,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
               }
            }
         }
-    }
+  }
 
   return (
     <>

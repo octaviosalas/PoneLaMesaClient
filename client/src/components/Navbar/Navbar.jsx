@@ -77,6 +77,7 @@ const NavBarComponent = () =>  {
                         <DropdownMenu aria-label="Static Actions">
                           <DropdownItem key="arm" onClick={() => goTo("proveedores")}>Ver Proveedores</DropdownItem>
                           <DropdownItem key="arm" onClick={() => goTo("subalquileres")}>Sub Alquileres</DropdownItem>
+                          <DropdownItem key="arm" onClick={() => goTo("articulosSubAlquiladosParaDevolver")}>Sub Alquileres para Devolver</DropdownItem>
                           <DropdownItem key="arm" onClick={() => goTo("gastos")}>Gastos</DropdownItem>
                           <DropdownItem key="arm" onClick={() => goTo("compras")}>Inversiones</DropdownItem>
                         </DropdownMenu>

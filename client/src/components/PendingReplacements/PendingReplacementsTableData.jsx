@@ -68,7 +68,7 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
                 const amountToPay = filaActual.original.amountToPay;
                 const item = {debtId, detail, orderCompletedData, amountToPay, clientData};
                 return (
-                    <PayReplacementFree item={item}/>
+                    <PayReplacementFree item={item} updateList={updateList}/>
                   );
             },
               }) 
@@ -79,15 +79,15 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
         label: 'Detalle',
         cellRenderer: (cell) => { 
           const filaActual = cell.row;
-          const debtId = filaActual.original.debtId;
-          const detail = filaActual.original.replacementeDetail;
-          const name = filaActual.original.clientName;
-          const id = filaActual.original.clientId;
-          const telephone = filaActual.original.telephone;
-          const clientData = {name, id, telephone}
-          const orderCompletedData = filaActual.original.orderCompletedData;
-          const amountToPay = filaActual.original.amountToPay;
-          const item = {debtId, detail, orderCompletedData, amountToPay, clientData};
+            const debtId = filaActual.original.debtId;
+            const detail = filaActual.original.replacementeDetail;
+            const name = filaActual.original.clientName;
+            const id = filaActual.original.clientId;
+            const telephone = filaActual.original.telephone;
+            const clientData = {name, id, telephone}
+            const orderCompletedData = filaActual.original.orderCompletedData;
+            const amountToPay = filaActual.original.amountToPay;
+            const item = {debtId, detail, orderCompletedData, amountToPay, clientData};
           return (
             <PendingReplacementDetail data={item} updateList={updateList}/>
             );
