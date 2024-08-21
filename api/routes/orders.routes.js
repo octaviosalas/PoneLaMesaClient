@@ -23,7 +23,9 @@ import { getOrderById,
         ordersAfterFiveDays,
         changeSomeStatus,
         getOrdersToBeConfirmed, 
-        createParcialPayment
+        createParcialPayment,
+        deleteParcialPayment,
+        editParcialPaymentAmount
         } from '../controllers/orders.controllers.js';
 
 
@@ -53,6 +55,8 @@ ordersRoutes.get('/ord/justToBeConfirmed', getOrdersToBeConfirmed);
 
 ordersRoutes.post("/updateSomeOrdersStates", changeSomeStatus)
 ordersRoutes.post("/createParcialPayment/:orderIdReference", createParcialPayment)
+ordersRoutes.delete("/deleteParcialPayment/:orderIdReference", deleteParcialPayment)
+ordersRoutes.put("/changeAmountParcialPayment/:orderIdReference", editParcialPaymentAmount)
 
 
 export default ordersRoutes;

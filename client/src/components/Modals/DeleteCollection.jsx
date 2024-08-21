@@ -70,6 +70,25 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
        
     }
 
+    const deleteParcialPaymentCollection = async () => { 
+      console.log({data: collectionData})
+     try {
+         const deleteParcialPayment = await axios.delete(`http://localhost:4000/orders/deleteParcialPayment/${collectionData.orderId}`, {data: collectionData})
+         console.log(deleteParcialPayment.data)
+        if(deleteParcialPayment.status === 200) { 
+          setSuccesDeleted(true)
+          updateCollections()
+          setTimeout(() => { 
+                setSuccesDeleted(false)
+                closeModalNow()
+             }, 1800)
+         }
+      } catch (error) {
+         console.log(error)
+      }
+       
+    }
+
       
   return (
     <div>
@@ -78,15 +97,19 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
                      <p className="flex flex-col gap-1 text-green-800 font-medium text-md">¿Estas seguro de eliminar el Cobro?</p>
 
                     {collectionData.collectionType === "Alquiler" ?
-                     <p className="flex flex-col gap-1 text-zinc-600 font-medium text-xs">Ten en cuenta, que el {collectionData.collectionType} quedara pendiente de pago</p> 
+                     <p className="flex flex-col gap-1 text-zinc-600 font-medium text-sm">Ten en cuenta, que el {collectionData.collectionType} quedara pendiente de pago</p> 
                      : null}
 
                      {collectionData.collectionType === "Seña" ?
-                      <p className="flex flex-col gap-1 text-zinc-600 font-medium text-xs">Ten en cuenta, que la {collectionData.collectionType} se eliminara del pedido</p> 
+                      <p className="flex flex-col gap-1 text-zinc-600 font-medium text-sm">Ten en cuenta, que la {collectionData.collectionType} se eliminara del pedido</p> 
                      : null}
 
                      {collectionData.collectionType === "Reposicion" ?
-                      <p className="flex flex-col gap-1 text-zinc-600 font-medium text-xs">Ten en cuenta, que la {collectionData.collectionType} quedara como deuda del cliente</p> 
+                      <p className="flex flex-col gap-1 text-zinc-600 font-medium text-sm">Ten en cuenta, que la {collectionData.collectionType} quedara como deuda del cliente</p> 
+                     : null}
+ 
+                     {collectionData.collectionType === "Pago Parcial" ?
+                       <p className="flex flex-col gap-1 text-zinc-600 font-medium text-sm">Se eliminara el {collectionData.collectionType} de esta orden</p> 
                      : null}
 
 
@@ -98,6 +121,7 @@ const DeleteCollection = ({collectionData, closeModalNow, updateCollections}) =>
                                   collectionData.collectionType === "Alquiler" ? deleteOrderCollection() : 
                                   collectionData.collectionType === "Seña" ? deleteDownPaymentCollection() :  
                                   collectionData.collectionType === "Reposicion" ? deleteReplacementCollection() : 
+                                  collectionData.collectionType === "Pago Parcial" ? deleteParcialPaymentCollection() : 
                                   null}}>
                               Eliminar
                      </Button>

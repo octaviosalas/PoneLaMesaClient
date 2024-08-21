@@ -735,3 +735,74 @@ export const createParcialPayment = async (req, res) => {
       console.error(error);
     }
 };
+
+export const deleteParcialPayment = async (req, res) => {
+  const { orderIdReference } = req.params;
+  const { id } = req.body; 
+
+  try {
+    const orderSelected = await Orders.findById(orderIdReference);
+    if (!orderSelected) {
+      return res.status(404).send("No encontré la orden");
+    }
+
+    const updatedParcialPayments = orderSelected.parcialPayment.filter(
+      (payment) => payment.collectionReferenceId.toString() !== id
+    );
+
+    orderSelected.parcialPayment = updatedParcialPayments;
+    await orderSelected.save();
+
+    const collectionSelectedToBeDeleted = await Collections.findByIdAndDelete(id);
+    if (!collectionSelectedToBeDeleted) {
+      return res.status(404).send("No se encontró el documento para eliminar");
+    }
+
+    res.status(200).send("Pago parcial eliminado");
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar las órdenes' });
+    console.error(error);
+  }
+};
+
+export const editParcialPaymentAmount = async (req, res) => {
+  const { orderIdReference } = req.params;
+  const { newPaymentAmount, collectionId } = req.body;
+
+  try {
+    const orderOfParcialPayment = await Orders.findById(orderIdReference);
+    if (!orderOfParcialPayment) {
+      return res.status(404).send("No encontré la orden");
+    }
+
+    const index = orderOfParcialPayment.parcialPayment.findIndex(
+      (ord) => ord.collectionReferenceId.toString() === collectionId
+    );
+
+    if (index === -1) {
+      return res.status(404).send("No se encontró el pago parcial");
+    } else {
+      // Actualiza el subdocumento dentro del arreglo parcialPayment
+      await Orders.updateOne(
+        { _id: orderIdReference, "parcialPayment._id": orderOfParcialPayment.parcialPayment[index]._id },
+        { $set: { "parcialPayment.$.amount": newPaymentAmount } }
+      );
+
+      // Continúa con la lógica existente para actualizar la colección
+      const collectionData = await Collections.findByIdAndUpdate(
+        collectionId, 
+        { amount: newPaymentAmount }, 
+        { new: true }
+      );
+
+      if (!collectionData) {
+        return res.status(404).send("No se encontró la colección para actualizar");
+      }
+
+      res.status(200).send("Se actualizaron correctamente los datos");
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Error al actualizar las órdenes' });
+    console.error(error);
+  }
+};

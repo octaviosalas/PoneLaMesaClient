@@ -29,7 +29,7 @@ const EditCollection = ({collectionData, closeModalNow, updateCollectionList}) =
        } catch (error) {
           console.log(error)
        }      
-      }
+    }
 
     const changeCollectionDownPaymentAmount = async () => {
       const newAmount = ({ 
@@ -75,6 +75,29 @@ const EditCollection = ({collectionData, closeModalNow, updateCollectionList}) =
         }
     }
 
+    const changeCollectionParcialPayment = async () => { 
+      console.log("aca")
+      const newAmount = ({ 
+        newPaymentAmount: Number(collectionAmount),
+        collectionId: collectionData.id,
+      })
+      try {
+         const editParcialPayment = await axios.put(`http://localhost:4000/orders/changeAmountParcialPayment/${collectionData.orderId}`, newAmount)
+         console.log(editParcialPayment.data)
+         if(editParcialPayment.status === 200) { 
+          updateCollectionList()
+          setSuccesMessage(true)
+          setTimeout(() => { 
+            setSuccesMessage(false)
+            closeModalNow()
+          }, 1800)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+  }
+
+
 
 
   return (
@@ -98,6 +121,7 @@ const EditCollection = ({collectionData, closeModalNow, updateCollectionList}) =
                             {collectionData.collectionType === "Alquiler" ? changeCollectionOrderAmount() : 
                              collectionData.collectionType === "Seña" ? changeCollectionDownPaymentAmount() : 
                              collectionData.collectionType === "Reposicion" ? changeCollectionReplacement() : 
+                             collectionData.collectionType === "Pago Parcial" ? changeCollectionParcialPayment() : 
                              ac
                              null}}>
                             Confirmar Cambios

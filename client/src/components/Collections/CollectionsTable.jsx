@@ -155,7 +155,6 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                           orderId, 
                           collectionType,
                           ...(collectionType === "Seña" ? { downPaymentId } : {}),
-                          
                           ...(collectionType === "Reposicion" ? { paymentReferenceId, clientName } : {})
                       };
               
