@@ -172,7 +172,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                     <p className="text-zinc-600 font-medium text-md"><b>Cliente:</b> {orderData.client}</p>
                     {orderData.shippingCost !== undefined ? <p className="text-zinc-600 font-medium text-md"><b>Costo de Envio:</b> {formatePrice(orderData.shippingCost)} </p> : null}
 
-                    {orderData.downPaymentData.length > 0 && orderData.paid === false ? (
+                    {orderData.downPaymentData.length > 0 && orderData.paid === false && orderData.parcialPayment.length === 0 ? (
                       <p className="text-green-800 underline font-medium text-md mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
                     ) : orderData.paid === true ? (
                       <p className="text-white bg-green-800 w-full text-center font-medium text-md mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
@@ -180,6 +180,11 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                       <p className="text-white bg-red-500 font-medium text-md mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>
                     ) : orderData.parcialPayment.length > 0 && orderData.paid !== true ? (
                        <ShowParcialPayment orderData={orderData} update={update}/>
+                    ) : orderData.downPaymentData.length > 0 && orderData.paid === false && orderData.parcialPayment.length > 0 ? (
+                       <div>
+                         <p className="text-green-800 underline font-medium text-md mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
+                         <ShowParcialPayment orderData={orderData} update={update}/>
+                       </div>
                     ) : null}
 
                    {viewDownPaymentData ?
