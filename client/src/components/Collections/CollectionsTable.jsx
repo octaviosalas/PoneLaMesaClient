@@ -67,7 +67,7 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                       return { ...column, label: 'Razon' };
                     }else if (column.key === 'amount') {
                         return { ...column, label: 'Total' };
-                    }else if (column.key === 'client') {
+                    } else if (column.key === 'client') {
                         return { ...column, label: 'Cliente' };
                     }else {
                         return column;
@@ -155,6 +155,7 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                           orderId, 
                           collectionType,
                           ...(collectionType === "Seña" ? { downPaymentId } : {}),
+                          
                           ...(collectionType === "Reposicion" ? { paymentReferenceId, clientName } : {})
                       };
               

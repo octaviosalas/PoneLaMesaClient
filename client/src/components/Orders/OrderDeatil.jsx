@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import OrderDetailInCollectionDetail from "../Collections/OrderDetailInCollectionDetail";
+import ShowParcialPayment from "./ShowParcialPayment";
 
 const OrderDetail = ({orderData, collectionDetail, update}) => {
     const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure("");
@@ -172,16 +173,14 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                     {orderData.shippingCost !== undefined ? <p className="text-zinc-600 font-medium text-md"><b>Costo de Envio:</b> {formatePrice(orderData.shippingCost)} </p> : null}
 
                     {orderData.downPaymentData.length > 0 && orderData.paid === false ? (
-                          <p className="text-green-800 underline font-medium text-md mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
-                        ) : (
-                          orderData.paid === true ? (
-                            <p className="text-white bg-green-800 w-full text-center  font-medium text-md mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
-                          ) : (
-                            orderData.paid === false && orderData.downPaymentData.length === 0 ? (
-                              <p className="text-white bg-red-500  font-medium text-md mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>
-                            ) : null
-                          )
-                        )}
+                      <p className="text-green-800 underline font-medium text-md mt-2 cursor-pointer" onClick={() => setViewDownPaymentData(prevState => !prevState)}>Este pedido fue señado</p>
+                    ) : orderData.paid === true ? (
+                      <p className="text-white bg-green-800 w-full text-center font-medium text-md mt-2 cursor-pointer">Este pedido fue abonado ✔</p>
+                    ) : orderData.paid === false && orderData.downPaymentData.length === 0 && orderData.parcialPayment.length === 0 ? (
+                      <p className="text-white bg-red-500 font-medium text-md mt-2 cursor-pointer">Este pedido se encuentra pendiente de pago</p>
+                    ) : orderData.parcialPayment.length > 0 && orderData.paid !== true ? (
+                       <ShowParcialPayment orderData={orderData} update={update}/>
+                    ) : null}
 
                    {viewDownPaymentData ?
                     <div className="flex flex-col items-start justify-start text-start">

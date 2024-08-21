@@ -8,8 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { formatePriceBackend } from "../utils/formatePriceBackend.js";
 import { getCurrentDate, getFutureDate } from "../utils/dateFunctios.js";
-import moment from 'moment'; // Asegúrate de tener moment.js instalado para manejar fechas
-import { format, subDays, parse } from 'date-fns';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -684,4 +683,55 @@ export const changeSomeStatus = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar las órdenes' });
     console.error(error);
   }
+};
+
+export const createParcialPayment = async (req, res) => {
+
+  const {amount, account, day, month, year, date, orderId, collectionType, client, orderDetail, loadedBy, voucher} = req.body
+  const {orderIdReference} = req.params
+
+    try {
+      const orderSelected = await Orders.findById(orderIdReference)
+      if(!orderSelected) { 
+        res.status(404).send("No encontre la orden")
+      } else { 
+
+        const newCollectionToBeSaved = new Collections({ 
+          amount,
+          account,
+          day,
+          month,
+          year,
+          date,
+          orderId,
+          collectionType,
+          client,
+          orderDetail,
+          loadedBy,
+          voucher: "",
+          paymentReferenceId: ""
+        }) 
+  
+        await newCollectionToBeSaved.save()
+
+
+        orderSelected.parcialPayment.push({ 
+          amount: Number(amount),
+          account: account,
+          day: day,
+          month: month,
+          year: year,
+          date: date,
+          collectionReferenceId: newCollectionToBeSaved._id
+        })
+      }
+      await orderSelected.save()
+      
+    
+      res.status(200).json({ message: "Se añado correctamente el pago parcial" });
+
+    } catch (error) {
+      res.status(500).json({ error: 'Error al actualizar las órdenes' });
+      console.error(error);
+    }
 };

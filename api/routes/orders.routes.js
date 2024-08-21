@@ -23,6 +23,7 @@ import { getOrderById,
         ordersAfterFiveDays,
         changeSomeStatus,
         getOrdersToBeConfirmed, 
+        createParcialPayment
         } from '../controllers/orders.controllers.js';
 
 
@@ -51,6 +52,7 @@ ordersRoutes.get('/ord/afterFiveDays', ordersAfterFiveDays);
 ordersRoutes.get('/ord/justToBeConfirmed', getOrdersToBeConfirmed);
 
 ordersRoutes.post("/updateSomeOrdersStates", changeSomeStatus)
+ordersRoutes.post("/createParcialPayment/:orderIdReference", createParcialPayment)
 
 
 export default ordersRoutes;

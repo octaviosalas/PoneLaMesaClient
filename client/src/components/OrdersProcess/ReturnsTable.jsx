@@ -61,7 +61,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
             if(!withOutOrders) { 
                 const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== 'orderCreator'  && propiedad !== 'clientId' 
                 &&  propiedad !== 'typeOfClient' && propiedad !== 'placeOfDelivery' && propiedad !== 'dateOfDelivery' && propiedad !== 'subletsDetail'  && propiedad !== 'orderDetail'  && propiedad !== 'date'
-                && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'clientZone' && propiedad !== 'paid' && propiedad !== 'missingArticlesData'  && propiedad !== 'downPaymentData' && propiedad !== 'shippingCost');
+                && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'clientZone' && propiedad !== 'paid' && propiedad !== 'missingArticlesData'  && propiedad !== 'downPaymentData' && propiedad !== 'shippingCost' && propiedad !== 'parcialPayment');
                 const columnObjects = propiedades.map(propiedad => ({
                     key: propiedad,
                     label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),

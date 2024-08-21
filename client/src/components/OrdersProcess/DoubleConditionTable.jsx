@@ -54,7 +54,7 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                 if(data.length !== 0) { 
                   setWithOutOrders(false)
                 const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-                    && propiedad !== 'orderDetail'&&  propiedad !== 'clientId'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'month' && propiedad !== 'year'
+                    && propiedad !== 'orderDetail'&&  propiedad !== 'clientId'  && propiedad !== 'orderCreator'   && propiedad !== 'subletsDetail' && propiedad !== 'month' && propiedad !== 'year' && propiedad !== 'parcialPayment'
                     && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== "missingArticlesData"  && propiedad !== 'downPaymentData'  && propiedad !== 'shippingCost');
                     const columnObjects = propiedades.map(propiedad => ({
                         key: propiedad,

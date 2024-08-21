@@ -7,6 +7,7 @@ import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
 import Dropzone from 'react-dropzone';
 import { PhotoIcon } from '@heroicons/react/24/solid'
+import CreateParcialPayment from "./CreateParcialPayment";
 
 const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList, withDownPayment}) => {
 
@@ -28,22 +29,39 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
   const [orderTotalItem, setOrderTotalItem] = useState("")
   const [remainingAmount, setRemainingAmount] = useState("")
   const [withOutLogin, setWithOutLogin] = useState(false)
+  const [pendingAmount, setPendingAmount] = useState(0)
 
   const handleOpen = () => { 
     onOpen()
+    console.log("asohdoiasd")
     if(usedIn === "CreateNewReturn") { 
-      console.log("en used id:, el valor de orderData", orderData)
-      console.log("en used id:, el valor de withDownPayment", withDownPayment)
-      console.log("en used id:, el valor de valueToPay", valueToPay)
       const match = valueToPay.match(/[0-9.]+/);
       const valueToPayNumber = match ? parseFloat(match[0].replace(/\./, '')) : NaN;
       console.log(valueToPayNumber); 
       setRemainingAmount(valueToPayNumber)
       getOrderIdToPostPayment()
-      console.log("EL TIPO DE VALUE TO PAY RECIBIDA", typeof valueToPay)
-      console.log("VALUE TO PAY RECIBIDA:", valueToPay[0])
+     } else {
+         if(orderData.downPaymentData.length === 0) { 
+            const getPendingAmount =  orderData.parcialPayment.reduce((acc, el) => acc + el.amount, 0)
+            const orderTotal = orderData.total
+            setPendingAmount(orderTotal - getPendingAmount)
+            console.log(orderTotal - getPendingAmount)
+         } else if (orderData.downPaymentData.length !== 0 &&  orderData.parcialPayment.length > 0) { 
+           const downPaymentValue =  orderData.downPaymentData.map((data) => data.amount)[0]
+           const parcialPaymentValue = orderData.parcialPayment.reduce((acc, el) => acc + el.amount, 0)
+           const totalToRest = downPaymentValue + parcialPaymentValue 
+           const orderTotal = orderData.total - totalToRest
+           setPendingAmount(orderTotal)
+           console.log("Monto total señado", downPaymentValue)
+           console.log("Monto total del pago parcial", parcialPaymentValue)
+           console.log("Monto total restante", totalToRest)
+           console.log("PENDIENTE DE PAGO", orderTotal)
+          }
+     
+     
      }
 
+    
   }
 
   const getOrderIdToPostPayment = () => { 
@@ -84,7 +102,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
         day: day,
         month: month,
         year: year,
-        amount: orderData.downPaymentData.length === 0 ? orderData.total : orderData.total - orderData.downPaymentData.map((down) => down.amount)[0],
+        amount: pendingAmount,
         account: account,
         loadedBy: userCtx.userName,
         voucher: payImage
@@ -127,11 +145,12 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
         setTimeout(() => { 
           setMissedData(false)
         }, 1500)
-    }
+    } 
+  }
     
     
       
-  }
+  
 
   const addNewCollectionUsedInCreateNewReturn = async () => { 
     const collecctionData = ({ 
@@ -237,7 +256,10 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
       {usedIn === "CreateNewReturn" ? 
         <Button onPress={handleOpen}  className="text-white bg-green-800 font-medium text-sm mt-2">Asentar Cobro de {valueToPay}</Button>
         :
-        <p onClick={onOpen} className="text-green-700 font-medium text-xs cursor-pointer">Asentar</p>}
+        <p onClick={handleOpen} className="text-green-700 font-medium text-xs cursor-pointer">Asentar</p>
+        }
+
+
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
@@ -246,15 +268,18 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                     <div>
                         <p className="text-zinc-600 font-bold text-md"> Asentar cobro del Pedido</p>
                     </div>
+
+
                   {usedIn !== "CreateNewReturn" ?
                      <div className="flex flex-col text-start justify-start  mt-2">
                         <p className="text-md font-medium text-black">Cliente: {orderData.client}</p>
                         <p className="text-md font-medium text-black">Cargado el {orderData.day} de {orderData.month} de {orderData.year}</p>
-                        {orderData.downPaymentData.length > 0 ? <p className="text-md font-medium text-green-800">Esta orden tiene una seña abonada</p> : null}
+                        {orderData.downPaymentData.length > 0 && orderData.paid !== true ? <p className="text-md mt-2 bg-green-500 text-white font-medium ">Esta orden tiene una seña abonada</p> : null}
+                        {orderData.parcialPayment.length > 0 && orderData.paid !== true ? <p className="text-md mt-2 bg-orange-400 text-white font-medium ">Esta orden tiene pagos parciales</p> : null}
                         {orderData.downPaymentData.length === 0 ? 
-                         <p className="text-md font-medium text-black">Monto a cobrar: {formatePrice(orderData.total)}</p> 
+                         <p className="text-md mt-2 font-medium text-black">Monto a cobrar: {formatePrice(pendingAmount)}</p> 
                          : 
-                         <p className="text-md font-medium text-black">Monto pendiente de cobro: {formatePrice(orderData.total - orderData.downPaymentData.map((down) => down.amount)[0])}</p>
+                         <p className="text-md mt-2 font-medium bg-red-600 text-white">Monto pendiente de cobro: {formatePrice(pendingAmount)}</p>
                          }
                        
                       </div>
@@ -264,6 +289,8 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                         <p className="text-md font-medium text-black">Monto a cobrar: {valueToPay}</p>
                      </div>
                     }
+
+                    
 
                     {usedIn !== "CreateNewReturn" && orderData.paid === true ? (
                       <div className="mt-4 flex items-center justify-center">
@@ -281,7 +308,7 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                           </Select>
                       </div>
                       : usedIn !== "CreateNewReturn" && orderData.paid === false ? ( 
-                        <div className="flex flex-col items-center justify-center mt-4">
+                        <div className="flex flex-col items-center justify-center mt-4">                         
                             <Select variant="faded" label="Selecciona la cuenta de Cobro" className="max-w-xs" onChange={(e) => setAccount(e.target.value)}>
                                 {availablesAccounts.map((acc) => (
                                   <SelectItem key={acc.value} value={acc.value}>
@@ -289,6 +316,9 @@ const PostPayment = ({usedIn, valueToPay, orderData, changeOrderPaid, updateList
                                   </SelectItem>
                                 ))}
                             </Select>
+                            <div className="mt-2 flex items-center justify-center">
+                               <CreateParcialPayment orderData={orderData} closeBothModal={onClose} updateList={updateList}/>
+                            </div>
                         </div>
                         
                       ) : null

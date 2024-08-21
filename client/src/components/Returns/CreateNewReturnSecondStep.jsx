@@ -20,6 +20,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const [showTable, setShowTable] = useState(false)
     const [error, setError] = useState(false)
+    const [parcialPayment, setParcialPayment] = useState(0)
 
 
     useEffect(() => { 
@@ -29,9 +30,15 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
         setOrderId(orderData.map((ord) => ord._id)[0])
         const findIfTheOrderHasDownPayment = orderData.some(ord => ord.downPaymentData.length > 0);
         const theValueOfTheDownPayment = orderData.find(ord => ord.downPaymentData.length > 0)?.downPaymentData.find(ord => ord.amount)?.amount;
+        if(orderData.map((ord) => ord.parcialPayment)[0].length > 0) { 
+            const parcialPaymentsData = orderData.map((ord) => ord.parcialPayment)[0]
+            const totalParcial = parcialPaymentsData.reduce((acc, el) => acc + el.amount, 0)
+            console.log("HAY PAGOS PARCIALESSSSS", totalParcial)
+            setParcialPayment(totalParcial)
+        }
         if(findIfTheOrderHasDownPayment === true) { 
-        setOrderHasDownPayment(true)
-        setDownPaymentAmount(theValueOfTheDownPayment)
+            setOrderHasDownPayment(true)
+            setDownPaymentAmount(theValueOfTheDownPayment)
        } else { 
         setOrderHasDownPayment(false)
        }
@@ -182,11 +189,19 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                              </div> 
                             
                             : null}
+ 
+                       {parcialPayment > 0 && orderPaid !== true ? 
+                              <div className='flex flex-col items-start justify-start'>
+                                <p className='font-bold text-green-800 text-sm underline'>Esta orden tuvo pagos parciales de :</p> 
+                                <p className='font-medium text-zinc-600 text-sm'>{formatePrice(parcialPayment)}</p>
+                             </div> 
+                            
+                            : null}
 
                             {orderHasDownPayment && orderPaid !== true ? (
                                 <div className='flex flex-col'>
                                     <h5 className='font-bold text-green-800  text-sm underline mt-2'>Monto Restante a cobrar: </h5>
-                                    <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total - downPaymentAmount))}</p> 
+                                    <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total - downPaymentAmount - parcialPayment))}</p> 
                                 </div>    
                              
                             ) : (
@@ -209,7 +224,7 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                 <div className='flex flex-col items-center justify-center'>
                 <p className='text-sm font-medium text-white bg-red-600'>Este pedido se encuentra pendiente de pago</p>
                    {orderHasDownPayment ? 
-                     <PostPayment usedIn="CreateNewReturn" withDownPayment={true} valueToPay={formatePrice(orderData.map((ord) => ord.total - downPaymentAmount))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>     
+                     <PostPayment usedIn="CreateNewReturn" withDownPayment={true} valueToPay={formatePrice(orderData.map((ord) => ord.total - downPaymentAmount - parcialPayment))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>     
                    : <PostPayment usedIn="CreateNewReturn" withDownPayment={false} valueToPay={formatePrice(orderData.map((ord) => ord.total))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>        
                    }
            
