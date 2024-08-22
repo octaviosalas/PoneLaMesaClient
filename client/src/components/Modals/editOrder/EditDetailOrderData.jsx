@@ -3,7 +3,7 @@ import { Input, Button } from '@nextui-org/react'
 import { formatePrice } from '../../../functions/gralFunctions'
 import axios from 'axios'
 
-const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBack, closeModalNow, updateChanges, shippingCost}) => {
+const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderData, orderId, comeBack, closeModalNow, updateChanges, shippingCost}) => {
 
     const [productsSelected, setProductsSelected] = useState("")
     const [filteredNames, setFilteredNames] = useState("")
@@ -24,8 +24,26 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
     const [succesMessage, setSuccesMessage] = useState(false)
     const [newTotalOrderAmount, setNewTotalOrderAmount] = useState(0)
     const [newProductsAddedToIncrementStock, setNewProductsAddedToIncrementStock] = useState([])
+    const [bonified, setBonified] = useState(false)
 
     const originalOrderDetailData = useMemo(() => newOrderDetailArray, []);
+
+    const getTypeOfClient = async () => { 
+      try {
+        const {data, status} = await axios.get(`http://localhost:4000/clients/${orderData.clientId}`)  
+        if(status === 200) { 
+          const clientType = data.typeOfClient
+          if(clientType === "Bonificado") { 
+            setBonified(true)
+          } else { 
+            setBonified(false)
+          }
+        } 
+      } catch (error) {
+        console.log(error)
+      }
+        
+    }
 
 
     const getClientsProductsData = () => { 
@@ -41,9 +59,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
 
     useEffect(() => { 
         getClientsProductsData()
-        console.log(originalOrderDetailData)
-        console.log("mira aca", newOrderDetailArray)
-        console.log("order status recibido", orderStatus)
+        getTypeOfClient()
     }, [])
 
     const handleQuantityChange = (index, newQuantity, productId) => {
@@ -108,6 +124,10 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
         }
     }
 
+    useEffect(() => { 
+      console.log("aca pa", choosenProductPrice)
+    }, [choosenProductPrice])
+
     const chooseProduct = (name, id, price, replacementPrice, stock) => { 
         console.log("recibi", id, name, price, replacementPrice, stock)
         setChoosenProductName(name)
@@ -119,6 +139,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
     }
 
     const addProductSelected = (productName, productId, quantity, price, replacementPrice, choosenProductStock, param) => {
+      console.log("aca pa 2", price)
         const newProductsAdded = []
         if(errorInArticle === false && errorInQuantity === false) { 
             if(quantity < choosenProductStock) { 
@@ -326,10 +347,21 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderId, comeBac
                               <div className='absolute  rounded-xl z-10  shadow-xl bg-white  mt-1 w-32 lg:w-56 items-start justify-start overflow-y-auto max-h-[100px]' 
                               style={{ backdropFilter: 'brightness(100%)' }}>
                                   {filteredNames.map((prod) => (
-                                      <p className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500" key={prod._id} 
-                                          onClick={() =>  chooseProduct(prod.articulo, prod._id, prod.precioUnitarioAlquiler, prod.precioUnitarioReposicion, prod.stock)} >
-                                          {prod.articulo}
-                                      </p>
+                                    <p
+                                    className="text-black text-md font-medium mt-1 cursor-pointer hover:text-zinc-500"
+                                    key={prod._id}
+                                    onClick={() =>
+                                      chooseProduct(
+                                        prod.articulo,
+                                        prod._id,
+                                        bonified ? prod.precioUnitarioBonificados : prod.precioUnitarioAlquiler,
+                                        prod.precioUnitarioReposicion,
+                                        prod.stock
+                                      )
+                                    }
+                                  >
+                                    {prod.articulo}
+                                  </p>
                                   ))}
                               </div>
                           : null

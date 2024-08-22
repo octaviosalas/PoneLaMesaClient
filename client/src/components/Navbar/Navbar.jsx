@@ -48,6 +48,7 @@ const NavBarComponent = () =>  {
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions">
                         <DropdownItem textValue="Create New Order" key="confirmed" onClick={() => goTo("AConfirmar")}>A Confirmar</DropdownItem>
+                        <DropdownItem textValue="Create New Order" key="confirmedNow" onClick={() => goTo("Confirmados")}>Confirmados</DropdownItem>
                         <DropdownItem textValue="Create New Order" key="arm" onClick={() => goTo("Armado")}>En Armado</DropdownItem>
                         <DropdownItem textValue="Create New Order" key="rep" onClick={() => goTo("EntregasLocal")}>Entregas</DropdownItem> 
                         <DropdownItem textValue="Create New Order" key="clean"  onClick={() => goTo("Devoluciones")}>Devoluciones</DropdownItem>                      

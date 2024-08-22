@@ -97,10 +97,6 @@ export const getOrders = async (req, res) => {
   }
 };
 
-
-
-
-
 export const getOrderById = async (req, res) => { 
   const {orderId} = req.params
   try {
@@ -214,6 +210,11 @@ export const changeOrderState = async (req, res) => {
         return res.status(404).json({ error: "No se encontró el estado" });
     }
 
+    if(newStatus === "Armado") { 
+      await decrementarStock(orderUpdated.orderDetail)
+      console.log("Voy a decrementar stock")
+    }
+
     res.status(200).json(orderUpdated);
     } catch (error) {
         console.error('Error:', error);
@@ -259,12 +260,14 @@ export const addPaid = async (req, res) => {
 
 
 export const deleteAndReplenishArticles = async (req, res) => { 
+
   const { orderId } = req.params;
   try {
     const order = await Orders.findById({_id: orderId});
     if (!order) {
       return res.status(404).json({ mensaje: 'Orden no encontrada' });
     }
+
     const rentedProducts = order.orderDetail;
 
     if (order.downPaymentData && order.downPaymentData.length > 0) {
@@ -272,28 +275,34 @@ export const deleteAndReplenishArticles = async (req, res) => {
       await DownPayments.findOneAndDelete({ downPaymentId: downPaymentId });
     }
 
-    
-    console.log("ACA MIRA:", rentedProducts)
-    await Promise.all(
+    if(order.orderStatus === "A Confirmar" || order.orderStatus === "Confirmado") { 
+      await Orders.findByIdAndDelete(orderId);
+      res.status(200).json({ mensaje: 'Alquiler eliminada y sin afectar el stock' });
+      console.log(`No voy a hacer nada con el stock porque la orden está en ${order.orderStatus}`);
+  } else { 
+      // Se descuenta el stock
+      await Promise.all(
         rentedProducts.map(async (productRented) => {
         const { productId, quantity } = productRented;
         const cantidad = parseInt(quantity, 10);
     
         await ProductsClients.findByIdAndUpdate(
-          {_id: productId},
+          { _id: productId },
           { $inc: { stock: +cantidad } },
           { new: true }
         );
       })
     );
-
     await Orders.findByIdAndDelete(orderId);
-
     res.status(200).json({ mensaje: 'Alquiler eliminada y stock repuesto' });
+    console.log(`Voy a devolver stock porque la orden está en ${order.orderStatus}`);
+    }
+   
   } catch (error) {
     console.error(error);
     res.status(500).json({ mensaje: 'Error al procesar la solicitud' });
   }
+
 } 
 
 export const updateOrderData = async (req, res) => { 

@@ -49,19 +49,27 @@ const ChangeState = ({status, orderData, updateList}) =>  {
                         <div>
                          {status === "Armado" ? 
                               <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">      
-                                  <SelectItem key={"A Confirmar"} value={"A Confirmar"} onClick={() => setNewOrderStatus("A Confirmar")} >A Confirmar</SelectItem>                                       
                                   <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setNewOrderStatus("Entregado")} >Entregado</SelectItem>         
                                   <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setNewOrderStatus("Reparto")} >Reparto</SelectItem>        
                                   <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setNewOrderStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
                               </Select> 
-                            : 
-                            <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
-                              <SelectItem key={"armado"} value={"Armado"} onClick={() => setNewOrderStatus("Armado")} >Armado</SelectItem>             
-                              <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setNewOrderStatus("Entregado")} >Entregado</SelectItem>    
-                              <SelectItem key={"Devuelto"} value={"Devuelto"} onClick={() => setNewOrderStatus("Devuelto")} >Devuelto</SelectItem>  
-                              <SelectItem key={"Lavado"} value={"Lavado"} onClick={() => setNewOrderStatus("Lavado")} >Lavado</SelectItem>                                           
-                            </Select>
-                           }               
+                            : status === "Confirmado" ? (
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
+                                <SelectItem key={"armado"} value={"Armado"} onClick={() => setNewOrderStatus("Armado")} >Armado</SelectItem>             
+                                <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setNewOrderStatus("Entregado")} >Entregado</SelectItem>                                             
+                              </Select>
+                            ) : status === "A Confirmar" ? ( 
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
+                                <SelectItem key={"Confirmado"} value={"Confirmado"} onClick={() => setNewOrderStatus("Confirmado")} >Confirmado</SelectItem>                                                      
+                              </Select>
+                            ) : (
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">      
+                                  <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setNewOrderStatus("Entregado")} >Entregado</SelectItem>         
+                                  <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setNewOrderStatus("Reparto")} >Reparto</SelectItem>        
+                                  <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setNewOrderStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
+                              </Select> 
+                            )
+                          }               
                         </div>
                         <div className="flex gap-6 items-center mt-6">
                           <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() => changeOrderState()}>Confirmar</Button>

@@ -17,7 +17,7 @@ const OrderNeedsSublet = ({comeBack, sendOrderToBeConfirmed}) => {
   return (
     <div className='flex flex-col items-center justify-center'>
         <div>
-           <p className='font-medium text-green-800 text-sm'>El pedido quedara en estado de Confirmacion hasta que agregues sus productos SubAlquilados</p>
+           <p className='font-medium text-green-800 text-sm'>El pedido quedara en estado "A CONFIRMAR"</p>
         </div>
         <div className='mt-6 mb-4 gap-4 flex items-center justify-center'>
            <Button className='font-medium text-white bg-green-800 text-sm w-52' onClick={() => showSuccesMessage()}>Guardar</Button>

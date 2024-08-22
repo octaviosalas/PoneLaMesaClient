@@ -43,6 +43,7 @@ const ProcessTables = ({orderStatus}) => {
         .then((res) => { 
              const allOrders = res.data
              const filterOrdersByStatus = allOrders.filter((ord) => ord.orderStatus === orderStatus)
+             console.log(orderStatus)
              const filterOrdersByToday = allOrders.filter((ord) => ord.orderStatus === orderStatus && ord.dateOfDelivery === actualDate)
              {viewJustToday ? setData(filterOrdersByToday) :  setData(filterOrdersByStatus)}
              if(filterOrdersByStatus.length !== 0) { 
@@ -291,6 +292,12 @@ const ProcessTables = ({orderStatus}) => {
                      {orderStatus === "A Confirmar" &&
                             <div className='flex items-center w-full justify-between'> 
                               <p className='font-bold cursor-pointer ml-4'>Pedidos A confirmar</p>
+                              <CreateSublet/>
+                            </div>
+                       }
+                      {orderStatus === "Confirmados" &&
+                            <div className='flex items-center w-full justify-between'> 
+                              <p className='font-bold cursor-pointer ml-4'>Pedidos confirmados</p>
                               <CreateSublet/>
                             </div>
                        }

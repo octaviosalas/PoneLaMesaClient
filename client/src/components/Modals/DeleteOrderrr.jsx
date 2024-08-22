@@ -37,7 +37,7 @@ const DeleteOrderrr = ({orderData, update, closeModal}) => {
 
   return (
     <div>
-    {((orderData.paid!== true && orderData.orderStatus === "Armado") || orderData.orderStatus === "A Confirmar") ? (
+    {((orderData.paid!== true && orderData.orderStatus === "Armado") || orderData.orderStatus === "A Confirmar" || orderData.orderStatus === "Confirmado") ? (
       <div className="flex flex-col items-center justify-center">
         <div className="flex flex-col items-center justify-center">
           <p className="flex flex-col gap-1 text-zinc-700 font-bold text-md">

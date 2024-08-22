@@ -38,6 +38,7 @@ import ClousureOfTheMonth from './components/Closures/ClousureOfTheMonth'
 import FixedExpensesTable from './components/Expenses/FixedExpenses'
 import ProtectedRoute from './components/ProtectedRoute'
 import SubletsToBeReturned from './components/Sublets/SubletsToBeReturned'
+import Confirmed from './components/OrdersProcess/Confirmed'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -167,6 +168,14 @@ function App() {
           element={
             <ProtectedRoute>
               <ToBeConfirmed />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/Confirmados" 
+          element={
+            <ProtectedRoute>
+              <Confirmed />
             </ProtectedRoute>
           } 
         />

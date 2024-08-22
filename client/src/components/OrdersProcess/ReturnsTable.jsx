@@ -21,8 +21,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
     const [withOutOrders, setWithOutOrders] = useState(false);
 
         const changeDataValues = (item) => { 
-            setData(item)
-            console.log("ejecuto changedatavalues")
+          wichTableShow()
         }
 
         const wichTableShow = () => { 

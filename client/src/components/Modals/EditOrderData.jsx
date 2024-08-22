@@ -17,11 +17,6 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
     const [allArticles, setAallArticles] = useState([])
     const navigate = useNavigate()
     
-
-
-
-      
-
       const changeOrderState = () => { 
         if(status === "Selecciona un Estado ↓") { 
           setErrorMessage(true)
@@ -90,7 +85,12 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                                   <p className="text-md font-medium text-white bg-red-600 w-full text-center cursor-pointer" onClick={() => navigate("/Devoluciones")}>Si deseas asentar la devolucion dirigite al modulo Devoluciones haciendo Click aqui</p>
                                 </div> 
                               </div> 
-                            ) : ( 
+                            ) : orderStatus === "A Confirmar" ? (
+                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
+                                <SelectItem key={"confirmado"} value={"Confirmado"} onClick={() => setStatus("Confirmado")}> Confirmado </SelectItem>               
+                                <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")}> Armado </SelectItem>               
+                              </Select>
+                            ): ( 
                               <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    
                                 <SelectItem key={"armado"} value={"Armado"} onClick={() => setStatus("Armado")} >Armado</SelectItem>             
                                 <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setStatus("Entregado")} >Entregado</SelectItem>    
@@ -141,13 +141,14 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
 
                       ) : step === 2 && modifyData !== true && modifyOrderDetailData === true ? 
                             <EditDetailOrderData
-                            closeModalNow={closeModalNow}
-                            orderStatus={orderData.status}
-                            updateChanges={updateList}
-                            newOrderDetailArray={orderData.orderDetail}
-                            shippingCost={orderData.shippingCost || 0} 
-                            orderId={orderData.id}
-                            comeBack={() => setModifyOrderDetailData(false)}
+                              orderData={orderData}
+                              closeModalNow={closeModalNow}
+                              orderStatus={orderData.status}
+                              updateChanges={updateList}
+                              newOrderDetailArray={orderData.orderDetail}
+                              shippingCost={orderData.shippingCost || 0} 
+                              orderId={orderData.id}
+                              comeBack={() => setModifyOrderDetailData(false)}
                           />                       : null}
                                       
                 </div>           
