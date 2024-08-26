@@ -21,28 +21,24 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
     const [withOutOrders, setWithOutOrders] = useState(false);
 
         const changeDataValues = (item) => { 
-          wichTableShow()
+          wichTableShow(item)
         }
 
-        const wichTableShow = () => { 
-          if(everyReturns.length > 0 )  { 
-            setData(everyReturns)
+        const wichTableShow = (item) => { 
+          if(item.length > 0) { 
             setWithOutOrders(false)
-            console.log("No hay everyReturns")
-          } else if (everyReturns.length === 0 && pendingReturns.length > 0) { 
-            setData(pendingReturns)
-            setWithOutOrders(false)
-            console.log("No hay everyReturns pero hay pendings")
-          } else if (everyReturns.length === 0 && pendingReturns.length === 0) { 
+            setData(item)
+          } else { 
             setWithOutOrders(true)
-            console.log("sep")
-            console.log("No hay everyReturns ni tampoco hay pendings, sale setWithOutOrders a false")
+            setData(item)
           }
+          
+          console.log("item", item)
         }
 
         useEffect(() => {
-          wichTableShow()
-          console.log("ejecuto useeffect")
+          wichTableShow(everyReturns)
+          console.log("ejecuto useeffect y  paso everyReturns")
         }, [todaysReturns, pendingReturns, everyReturns])
 
         
@@ -51,9 +47,6 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
           console.log(data)
         }, [data])
 
-        const goToOtherPage = (item) => { 
-          navigate(item)
-        }
 
         const getDataAndCreateTable = () => { 
             

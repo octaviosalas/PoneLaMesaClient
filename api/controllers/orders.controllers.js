@@ -167,23 +167,17 @@ export const changeOrderToConfirmedAndDiscountStock = async (req, res) => {
      const { detailOrder } = req.body;
      console.log(detailOrder);
 
-     
- 
      const foundOrder = await Orders.findById({_id: orderId});
  
      if (!foundOrder) {
        return res.status(404).json({ error: 'No se encontró la orden correspondiente.' });
      }
  
-     //const unifyArticles = detailOrder.orderDetail.concat(detailOrder.subletDetail);
- 
-     //foundOrder.total = detailOrder.newAmount;
- 
+    
      detailOrder.subletDetail.forEach(sublet => {
        foundOrder.subletsDetail.push(sublet);
      });
  
-     //await decrementarStock(detailOrder.subletDetail);
      await foundOrder.save();
  
      res.status(200).json({ message: 'La orden se ha confirmado, el stock se ha descontado, y se han actualizado los detalles correctamente.' });
