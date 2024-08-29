@@ -34,11 +34,11 @@ const Articles = () => {
           {
            allProductsClients.length !== 0 
           ? 
-          <div className='h-screen mt-24 2xl:mt-20'>
+          <div className='h-screen mt-12'>
             <ArticlesTable />
           </div>        
             :
-          <Loading/>
+          <Loading className='mt-24' />
           }
     
     </div>

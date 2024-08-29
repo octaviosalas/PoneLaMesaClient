@@ -320,14 +320,14 @@ const OrdersTable = () => {
   return (
     
    <div>
-   <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
+   <div className='flex flex-col items-center justify-center mt-12'>
     
       {load ? ( 
-        <Loading /> 
+        <div  className='mt-24'><Loading /></div>
       ) : columns.length !== 0 && data.length !== 0 && load === false && withOutOrders === false ?  ( 
           <>
-          <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
-             <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>
+          <div className='flex flex-col justify-start w-full' >
+             <div className='h-12 items-center justify-between w-full flex bg-green-200 rounded-b-none'>
                  <div className='flex justify-end gap-6'>
                        <FiltersOrdersTable 
                        getAllDataAgain={getDataAndCreateTable} 
@@ -369,7 +369,7 @@ const OrdersTable = () => {
              </div>
              <div className='w-full flex items-center gap-2 jusitfy-start mt-4'>
                <input 
-                   className="w-[35%] border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
+                   className="w-full border ml-2 border-gray-200 focus:border-gray-300 focus:ring-0 h-10 rounded-xl focus:outline-none  focus:ring-blue-500" 
                    placeholder="Buscador" 
                    onChange={(e) => setInputValue(e.target.value)}
                    value={inputValue} />
@@ -392,7 +392,7 @@ const OrdersTable = () => {
            selectionMode="multiple"
            selectedKeys={selectedKeys}
            onSelectionChange={handleSelectionChange}
-           className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+           className="w-full max-h-[750px] mt-2 text-center overflow-y-auto"
            >
          <TableHeader columns={columns} >
                    {(column) => (
@@ -422,17 +422,17 @@ const OrdersTable = () => {
          <EstadisticsOrders/>
           </>      
     ) :  data.length === 0 && filterIsOn === true ? ( 
-          <div className='flex flex-col items-center justify-center'>
+          <div className='flex flex-col items-center justify-center mt-24'>
              <p className='font-medium text-zinc-500 text-md'>No hay ordenes que cumplan con los filtros aplicados</p>
              <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => getDataAndCreateTable()}>Deshacer Filtros</p>
           </div> 
       ) :  filterIsOn !== true && data.length === 0 && withOutOrders === true ? ( 
-      <div className='flex flex-col items-center justify-center'>
+      <div className='flex flex-col items-center justify-center mt-24'>
         <p className='font-medium text-zinc-500 text-md'>No hay ordenes almacenadas</p>
         <p className='mt-2 udnerline font-medium text-black' onClick={() => getDataAndCreateTable("everyOrders")}>Volver</p>
       </div> 
     ) : data.length === 0 && withOutOrders === true ? ( 
-      <div className='flex flex-col items-center justify-center'>
+      <div className='flex flex-col items-center justify-center mt-24'>
         <p className='font-medium text-zinc-500 text-md'>No hay ordenes </p>
         <p className='mt-2 udnerline font-medium text-black' onClick={() => getDataAndCreateTable("everyOrders")}>Volver</p>
       </div>

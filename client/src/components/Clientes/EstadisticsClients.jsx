@@ -44,9 +44,9 @@ const EstadisticsClients = () => {
 
 
   return (
-    <div>
+    <div className='w-full'>
         {loadingData ? null :
-                <div className='flex justify-between rounded-lg mt-2 items-center lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] h-10' style={{backgroundColor:"#F0F0F0"}}>
+                <div className='flex justify-between rounded-lg w-full mt-2 items-center h-10' style={{backgroundColor:"#F0F0F0"}}>
                     <img src={iconEstadistics} className='h-7 w-7 ml-4'/>
                     <p className='text-xs font-medium text-zinc-600'>Cantidad Total de Clientes: {quantityClients}</p>
                     <p className='text-xs font-medium text-zinc-600'>Cantidad de Clientes Bonificados: {quantityBonifiedClients}</p>

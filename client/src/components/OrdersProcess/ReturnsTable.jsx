@@ -171,14 +171,14 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
         }, [data]) 
 
     return (
-      <div className='flex flex-col items-center justify-center 2xl:mt-12'>
+      <div className='flex w-full flex-col items-center justify-center 2xl:mt-12'>
       {loadData ? (
-              <Loading />
+              <div  className='mt-24'><Loading /></div>
               ) : (
                data.length > 0 && withOutOrders === false ? (
                   <>
-                  <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
-                     <div className='h-12 w-full flex justify-between items-center  bg-green-200 gap-10 rounded-t-lg rounded-b-none lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px]'>
+                  <div className='flex flex-col items-center justify-start w-full rounded-t-lg rounded-b-none ' >
+                     <div className='h-12 w-full flex justify-between items-center  bg-green-200 gap-10  rounded-b-none'>
                        <div className='flex justify-start w-full items-center ml-4 gap-6'>                   
                            <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === everyReturns ? 'underline' : ''}`}  onClick={() => changeDataValues(everyReturns)}>Todas las Devoluciones</p>
                            <p className={`text-sm font-bold cursor-pointer text-zinc-600 ${data === pendingReturns ? 'underline' : ''}`} onClick={() => changeDataValues(pendingReturns)}>Devoluciones Pendientes</p>
@@ -206,7 +206,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                      columnSpacing={10}
                      aria-label="Selection behavior table example with dynamic content"
                      selectionBehavior={selectionBehavior}
-                     className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+                     className="w-full mt-2 max-h-[750px] h-auto text-center  overflow-y-auto"
                    >
                      <TableHeader columns={columns}>
                        {(column) => (
@@ -241,7 +241,7 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                  <div className='flex flex-col items-center justify-center '>
                    {
                    withOutOrders ? 
-                    <div className='flex flex-col items-center justify-center'>
+                    <div className='flex flex-col items-center justify-center mt-24'>
                        <p className='text-black font-medium text-md'>No hay devoluciones</p> 
                        <p className='cursor-pointer text-zinc-600 text-sm mt-3 underline' onClick={() => changeDataValues(everyReturns)}>Volver a la pagina principal</p>
                     </div>

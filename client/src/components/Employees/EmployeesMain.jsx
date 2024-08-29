@@ -30,9 +30,9 @@ const EmployeesMain = () => {
   return (
     <div>
       <NavBarComponent/> 
-        <div className='flex items-center'>
+        <div className='flex flex-col items-center w-full h-screen mt-24'>
           {userCtx.userRol === "Dueño" ?
-          <div className='flex  items-center justify-center gap-2 w-full border'>
+          <div className='flex  items-center justify-center h-screen gap-2 w-full'>
                 <CreateNewShift/>
                 <CreateNewEmployee/>
                <ViewEmployees/>

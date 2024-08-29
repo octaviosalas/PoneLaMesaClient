@@ -88,7 +88,7 @@ const DepositList = ({depositData, updateNumbers}) => {
 
   return (
     <div className='flex flex-col items-center justify-center 2xl:mt-12'>
-       <div className='flex flex-col items-start justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none ' >
+       <div className='flex flex-col items-start justify-start w-full rounded-t-lg rounded-b-none ' >
           <div className='h-12 items-center justify-start w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none'>                     
                            <p className='font-bold ml-3 text-sm text-zinc-600 underline'>Cantidades de Articulos en Deposito</p>
                        </div>
@@ -107,7 +107,7 @@ const DepositList = ({depositData, updateNumbers}) => {
                      isHeaderSticky={true}
                      aria-label="Selection behavior table example with dynamic content"
                      selectionBehavior={selectionBehavior}
-                     className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+                     className="w-full mt-2 max-h-[750px] h-auto text-center overflow-y-auto"
                    >
                      <TableHeader columns={columns}>
                        {(column) => (

@@ -159,13 +159,10 @@ const PurchasesTable = ({purchasesData, updateList}) => {
         }
 
       return (
-        <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
+        <div className='flex flex-col items-center justify-center mt-10'>
          {columns.length !== 0 && data.length !== 0 ? (
                 <>
-                  <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none'>
-                  <div className='flex justify-start items-start text-start w-full ml-2'>
-                      <p className='text-zinc-500 font-medium text-md'>Inversion</p>
-                  </div>
+                  <div className='flex flex-col items-center justify-start w-full rounded-b-none'>
                     <div className='h-12 items-center justify-between w-full flex bg-green-200 gap-10 rounded-t-lg rounded-b-none mt-2'>
                       <FiltersPurchases 
                         applyFilters={applyFilters}
@@ -197,7 +194,7 @@ const PurchasesTable = ({purchasesData, updateList}) => {
                     columnSpacing={10}  
                     aria-label="Selection behavior table example with dynamic content"   
                     selectionBehavior={selectionBehavior} 
-                    className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+                    className="w-full mt-2 max-h-[750px] h-auto text-center overflow-y-auto"
                   >
                     <TableHeader columns={columns}>
                       {(column) => (
@@ -232,14 +229,14 @@ const PurchasesTable = ({purchasesData, updateList}) => {
                      <p  className='font-medium text-zinc-600 underline mt-2 cursor-pointer' onClick={() => { setData(purchasesData); setFilterIsOn(false); }}>Volver</p>
                   </div>
               ) : data.length === 0 && filterIsOn === false ? (
-                  <div className='flex flex-col items-center justify-center'>
+                  <div className='flex flex-col items-center justify-center mt-24'>
                      <p className='font-medium text-black text-md'>No hay Inversiones registradas en el sistema</p>
                      <div className='mt-4'>
                          <CreateNewPurchase updateList={updateList} type="withOut"/>
                       </div>                 
                   </div>
               ) : 
-              <Loading/>
+              <div className='mt-24'><Loading/></div>
               }
         </div>
       )

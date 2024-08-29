@@ -8,9 +8,9 @@ import ChooseDateClousures from './ChooseDateClousure';
 
 const ClosuresMain = () => {
   return (
-    <div className='flex items-center'>
+    <div className='h-screen flex items-center justify-center'>
       <NavBarComponent/> 
-      <div className='flex items-center gap-6'>
+      <div className='flex items-center justify-content-center gap-6'>
         <ClousureMonth/>
         <ChooseDateClousures/>
       </div>

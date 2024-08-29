@@ -138,14 +138,11 @@ const FixedExpensesTable = ({expensesData, updateList}) => {
   return (
     <div>  
         <NavBarComponent/>
-        <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
-         {loading ? <Loading/> : 
+        <div className='flex flex-col items-center justify-center mt-10'>
+         {loading ? <div className='mt-24'><Loading/></div> : 
              columns.length !== 0 && data.length !== 0 && loading === false ? ( 
                 <>
-                <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none'>
-                  <div className='flex justify-start items-start text-start w-full ml-2'>
-                     <p className='text-zinc-500 font-medium text-md'>Gastos Fijos</p>
-                  </div>
+                <div className='flex flex-col items-center justify-start w-full rounded-b-none'>
                   <div className='h-12 items-center justify-between w-full flex bg-green-200 gap-10 rounded-t-lg rounded-b-none mt-2'>
                        <div className='flex justify-start'>
                         <FilterExpenses applyMonthFilter={applyFiltersByMonth} applyFiltersByType={applyFiltersByType}  isFilterApplied={isFilterApplied}  getAllDataAgain={updateList}/>
@@ -181,7 +178,7 @@ const FixedExpensesTable = ({expensesData, updateList}) => {
                   isHeaderSticky={true}
                   aria-label="Selection behavior table example with dynamic content"   
                   selectionBehavior={selectionBehavior} 
-                  className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+                  className="w-full mt-2 max-h-[750px] h-auto text-center overflow-y-auto"
                 >
                   <TableHeader columns={columns}>
                     {(column) => (

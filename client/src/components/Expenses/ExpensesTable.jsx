@@ -151,13 +151,11 @@ const ExpensesTable = ({expensesData, updateList}) => {
 
   return (
     <div>  
-        <div className='flex flex-col items-center justify-center mt-16 2xl:mt-12'>
+        <div className='flex flex-col items-center justify-center mt-10'>
          {columns.length !== 0 && data.length !== 0 ? 
                 <>
-                  <div className='flex flex-col items-center justify-start lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] rounded-t-lg rounded-b-none'>
-                    <div className='flex justify-start items-start text-start w-full ml-2'>
-                       <p className='text-zinc-500 font-medium text-md'>Gastos</p>
-                    </div>
+                  <div className='flex flex-col items-center justify-start w-full rounded-b-none'>
+  
                     <div className='h-12 items-center justify-between w-full flex bg-green-200 gap-10 rounded-t-lg rounded-b-none mt-2'>
                          <div className='flex justify-start'>
                           <FilterExpenses applyMonthFilter={applyFiltersByMonth} applyFiltersByType={applyFiltersByType}  isFilterApplied={isFilterApplied}  getAllDataAgain={updateList}/>
@@ -194,7 +192,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
                     isHeaderSticky={true}
                     aria-label="Selection behavior table example with dynamic content"   
                     selectionBehavior={selectionBehavior} 
-                    className="w-full mt-2 lg:w-[800px] xl:w-[1200px] 2xl:w-[1500px] 3xl:w-[1650px] max-h-[350px] 2xl:max-h-[600px] h-auto text-center shadow-left-right shadow-2xl shadow-top shadow-left-right overflow-y-auto"
+                    className="w-full mt-2 max-h-[750px] h-auto text-center  overflow-y-auto"
                   >
                     <TableHeader columns={columns}>
                       {(column) => (
@@ -238,7 +236,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
                   <p className='mt-4 text-xs underline font-bold cursor-pointer' onClick={() => updateList()}>Deshacer Filtros</p>
                 </div>
               ) : data.length === 0 && columns.length === 0 && filterIsOn === false ? ( 
-                <div className='flex flex-col items-center justify-center'>
+                <div className='flex flex-col items-center justify-center mt-24'>
                   <p className='font-medium text-black text-md underline'>No tenes gastos guardados en este momento</p>
                     <div className='flex items-center gap-6 mt-6'> 
                         <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => navigate("/compras")}>Ir a crear Inversion</Button>

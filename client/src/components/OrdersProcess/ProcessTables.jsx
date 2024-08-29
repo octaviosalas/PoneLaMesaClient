@@ -279,7 +279,7 @@ const ProcessTables = ({orderStatus}) => {
       }, [columns, data])
 
    return (
-    <div className='flex flex-col items-center justify-center 2xl:mt-12'>
+    <div className='flex flex-col items-center justify-center mt-24'>
        {loadData ? (
          <Loading />
            ) : (
