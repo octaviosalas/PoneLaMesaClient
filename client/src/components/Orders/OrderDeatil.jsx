@@ -106,6 +106,9 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
     
             const result = { 
               cliente: data.client,
+              clienteId: data.clientId,
+              fechaDevolucion: data.returnDate,
+              fechaEntrega: data.dateOfDelivery,
               total: formatePrice(data.total),
               articles: articulos,
               envio: data.shippingCost,

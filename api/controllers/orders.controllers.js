@@ -8,6 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { formatePriceBackend } from "../utils/formatePriceBackend.js";
 import { getCurrentDate, getFutureDate } from "../utils/dateFunctios.js";
+import Clients from "../models/clients.js"
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -497,8 +498,14 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
 
  export const createDetailPdf = async (req, res) => {
+
   const { result } = req.body;
   console.log(result);
+
+
+  const clientId = result.clienteId
+  const clientAllData = await Clients.findById(clientId)
+  const clientPhone = clientAllData.telephone
 
   const doc = new PDFDocument();
   res.setHeader('Content-Type', 'application/pdf');
@@ -522,10 +529,21 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
   doc.font('Helvetica-Bold').fontSize(15).fillColor('black').text(`${result.cliente}`, 50, yPosition);
   yPosition += 20;
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Direccion de entrega: ${result.lugarDeEntrega}`, 50, yPosition);
+  yPosition += 20
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Telefono: ${clientPhone}`, 50, yPosition);
+  yPosition += 20
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Fecha de entrega: ${result.fechaEntrega}`, 50, yPosition);
+  yPosition += 20;
+  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Fecha de devolucion: ${result.fechaDevolucion}`, 50, yPosition);
+  yPosition += 20;
  
   yPosition += 10;
+
   doc.moveTo(50, yPosition).lineTo(pageWidth - 50, yPosition).stroke();
   yPosition += 10;
+
+  
 
   doc.font('Helvetica-Bold').fontSize(12).fillColor('black').text('Detalle de Articulos Alquilados:', 50, yPosition);
   yPosition += 30;
@@ -548,18 +566,16 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   doc.moveTo(50, yPosition).lineTo(pageWidth - 50, yPosition).stroke();
   yPosition += 10;
 
-  yPosition += 10; 
-  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Direccion de entrega: ${result.lugarDeEntrega}`, 50, yPosition);
-  yPosition += 25
+
 
   doc.font('Helvetica').fontSize(14).fillColor('black').text(`Costo de envio: ${formatePriceBackend(result.envio).toString()}`, 50, yPosition);
   yPosition += 25; 
 
 
 
-  const pagoMensaje = result.paid ? "Pedido Abonado en su totalidad" : "Pedido pendiente de pago";
+  /*const pagoMensaje = result.paid ? "Pedido Abonado en su totalidad" : "Pedido pendiente de pago";
   doc.font('Helvetica').fontSize(14).fillColor('black').text(pagoMensaje, 50, yPosition);
-  yPosition += 25; 
+  yPosition += 25; */
 
 
   if (result.seña.length > 0) {
@@ -574,7 +590,7 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
 
 
-  doc.font('Helvetica').fontSize(14).fillColor('black').text(`Total: ${result.total}`, 50, yPosition);
+  doc.font('Helvetica-Bold').fontSize(15).fillColor('black').text(`Total: ${result.total}`, 50, yPosition);
 
  
 

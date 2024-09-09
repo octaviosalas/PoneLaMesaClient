@@ -93,9 +93,10 @@ const NavBarComponent = () =>  {
                         <p variant="bordered" className="hover:text-green-600 text-black font-medium cursor-pointer hover:font-medium"> Finanzas </p>
                       </DropdownTrigger>
                       <DropdownMenu aria-label="Static Actions">
-                        <DropdownItem key="Cobros" onClick={() => goTo("Cobros")}>Cobros</DropdownItem>
-                        <DropdownItem key="Cierres" onClick={() => goTo("cierres")}>Cierres</DropdownItem>
-                        <DropdownItem key="gastosFijos" onClick={() => goTo("GastosFijos")}>Gastos Fijos</DropdownItem>                                
+                         <DropdownItem key="Cobros" onClick={() => goTo("Cobros")}>Cobros</DropdownItem> 
+                        {userCtx.userRol === "Dueño" ?  <DropdownItem key="Cierres" onClick={() => goTo("cierres")}>Cierres</DropdownItem> : null}     
+                        {userCtx.userRol === "Dueño" ?     <DropdownItem key="gastosFijos" onClick={() => goTo("GastosFijos")}>Gastos Fijos</DropdownItem>    : null}    
+                                                  
                       </DropdownMenu>
                 </Dropdown>
           </NavbarItem>

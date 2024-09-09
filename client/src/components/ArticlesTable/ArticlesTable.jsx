@@ -16,6 +16,8 @@ import getBackendData from '../../Hooks/GetBackendData';
 import CreateSublet from './CreateSublet';
 import EstadisticsArticles from './EstadisticsArticles';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../store/userContext';
+import { useContext } from 'react';
 
 const ArticlesTable = ({}) => {
 
@@ -28,6 +30,8 @@ const ArticlesTable = ({}) => {
     const [inputValue, setInputValue] = useState("")
     const { queryData } = getBackendData(`products/productsClients`);
     const [waitingData, setWaitingData] = useState(false)
+
+    const userCtx = useContext(UserContext)
 
   
     const changePage = (item) => { 
@@ -162,7 +166,7 @@ const ArticlesTable = ({}) => {
                    <p className='font-medium text-black text-sm 2xl:text-md cursor-pointer ml-4' > Articulos  </p>
               </div>
               <div className='flex gap-6 mr-2'>
-                <EstadisticsArticles/>
+                {userCtx.userRol === "Dueño" ?   <EstadisticsArticles/> : null}
                 <CreateNewArticle updateList={getProductsDataAndCreateTable}/>
                 <IncreasePriceWithPercentage  updateList={getProductsDataAndCreateTable}/>
                 <CreateSublet articles={data}/>

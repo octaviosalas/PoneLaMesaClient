@@ -15,6 +15,8 @@ import CreateSublet from "../ArticlesTable/CreateSublet"
 import EstadisticsOrders from './EstadisticsOrders';
 import ChangeState from './ChangeState';
 import ChangeSomeOrderState from './ChangeSomeOrdersState';
+import { useContext } from 'react';
+import { UserContext } from '../../store/userContext';
 
 const OrdersTable = () => {
 
@@ -32,6 +34,8 @@ const OrdersTable = () => {
     const [withOutOrders, setWithOutOrders] = useState(false);
     const [selectedKeys, setSelectedKeys] = React.useState(new Set(["2"]));
     const [selectedItems, setSelectedItems] = React.useState([]);
+
+    const userCtx = useContext(UserContext);
     
 
     const applyFiltersByMonth =  (monthSelected) => {
@@ -170,6 +174,7 @@ const OrdersTable = () => {
                           const orderSublets = filaActual.original.subletsDetail;
                           const creator = filaActual.original.orderCreator;
                           const client = filaActual.original.client;
+                          const clientId = filaActual.original.clientId;
                           const placeOfDelivery = filaActual.original.placeOfDelivery;
                           const day = filaActual.original.day;
                           const month = filaActual.original.month;
@@ -179,9 +184,10 @@ const OrdersTable = () => {
                           const paid = filaActual.original.paid;
                           const missingArticlesData = filaActual.original.missingArticlesData;
                           const shippingCost = filaActual.original?.shippingCost;
+                          const returnDate = filaActual.original.returnDate;
                           const dateOfDelivery = filaActual.original.dateOfDelivery;
                           const parcialPayment = filaActual.original.parcialPayment;
-                          const item = { id, detail, creator, orderSublets, day, month, year, total, client, downPaymentData, paid, missingArticlesData, shippingCost, dateOfDelivery, placeOfDelivery, parcialPayment};
+                          const item = { id, detail, creator, orderSublets, day, month, year, total, client, clientId, downPaymentData, paid, missingArticlesData, shippingCost, returnDate, dateOfDelivery, placeOfDelivery, parcialPayment};
                           return (
                             <OrderDetail  orderData={item} update={getDataAndCreateTable}/>
                             );
@@ -419,7 +425,7 @@ const OrdersTable = () => {
                )}
          </TableBody>
           </Table> 
-         <EstadisticsOrders/>
+        {userCtx.userRol === "Dueño" ? <EstadisticsOrders/> : null}
           </>      
     ) :  data.length === 0 && filterIsOn === true ? ( 
           <div className='flex flex-col items-center justify-center'>

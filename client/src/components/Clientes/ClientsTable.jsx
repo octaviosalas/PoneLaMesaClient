@@ -14,7 +14,8 @@ import HistoricClient from './HistoricClient';
 import EstadisticsClientsModal from './EstadisticsClientsModal';
 import EstadisticsClients from './EstadisticsClients';
 import AccountState from './AccountState';
-
+import { UserContext } from '../../store/userContext';
+import { useContext } from 'react';
 
 const ClientsTable = () => {
 
@@ -25,6 +26,8 @@ const ClientsTable = () => {
             const [tableData, setTableData] = useState([])
             const [inputValue, setInputValue] = useState("")
             const [tableChoosen, setTableChoosen] = useState([])
+
+            const userCtx = useContext(UserContext)
 
            const getClientsDataAndCreateTable = () => { 
               axios.get("http://localhost:4000/clients") 
@@ -179,8 +182,10 @@ const ClientsTable = () => {
              </div>
               <div className='h-12 items-center justify-between w-full flex bg-green-200  gap-10 rounded-t-lg rounded-b-none mt-2'>    
                   <div className='flex justify-end items-end gap-4 mr-2 w-full'>
-                    <EstadisticsClientsModal/>
-                    <CreateNewClient updateList={getClientsDataAndCreateTable}/>      
+            
+                    {userCtx.userRol === "Dueño" ? <EstadisticsClientsModal/> : null}
+                    <CreateNewClient updateList={getClientsDataAndCreateTable}/>     
+                     
                   </div>                        
               </div>
               <div className='w-full flex jusitfy-start text-center mt-4 '>

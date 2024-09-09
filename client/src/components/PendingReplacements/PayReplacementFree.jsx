@@ -1,16 +1,47 @@
 
-import React from "react";
+import React, {useState} from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import { formatePrice } from "../../functions/gralFunctions";
 import axios from 'axios';
+import {  getDate, getDay, getMonth, getYear} from "../../functions/gralFunctions";
+import { useContext } from "react";
+import { UserContext } from "../../store/userContext";
 
 
 const PayReplacementFree = ({item, updateList}) => {
+
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const [actualDate, setActualDate] = useState(getDate())
+  const [actualDay, setActualDay] = useState(getDay())
+  const [actualMonth, setActualMonth] = useState(getMonth())
+  const [actualYear, setActualYear] = useState(getYear())
+
+  const userCtx = useContext(UserContext)
+
+  const handleOpen = () => { 
+    onOpen()
+    console.log("ITEM", item)
+  }
 
   const deleteReplacement = async () => { 
     const productsToUpdateStock = ({ 
-      products: item.detail
+      products: item.detail,
+      collectionData: { 
+        orderId: item.orderCompletedData[0]._id,
+        collectionType:"Reposicion",
+        paymentReferenceId: item.debtId,
+        client: item.clientData.name,
+        orderDetail: item.orderCompletedData,
+        date: actualDate,
+        day: actualDay,
+        month: actualMonth,
+        year: actualYear,
+        amount: 0,
+        account: "",
+        loadedBy: userCtx.userName,
+        voucher: ""
+      }
+     
     })
     try {
         const response = await axios.post(`http://localhost:4000/clients/cancelDebt/${item.clientData.id}/${item.debtId}`, productsToUpdateStock)
@@ -24,7 +55,7 @@ const PayReplacementFree = ({item, updateList}) => {
   return (
     <>
   
-      <p className="text-sm font-medium text-green-800 cursor-pointer" onClick={onOpen}>Asentar </p>
+      <p className="text-sm font-medium text-green-800 cursor-pointer" onClick={handleOpen}>Asentar </p>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (

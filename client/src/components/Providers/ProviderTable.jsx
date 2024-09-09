@@ -12,6 +12,8 @@ import EstadisticsProviders from './EstadisticsProviders';
 import { useNavigate } from 'react-router-dom';
 import CreateSublet from "../ArticlesTable/CreateSublet"
 import CreateNewPurchase from "../Purchases/CreateNewPurchase"
+import { UserContext } from '../../store/userContext';
+import { useContext } from 'react';
 
 const ProviderTable = ({providers, updateProvidersList}) => {
 
@@ -23,6 +25,8 @@ const ProviderTable = ({providers, updateProvidersList}) => {
     const [inputValue, setInputValue] = useState("")
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
     const navigate = useNavigate();
+
+    const userCtx = useContext(UserContext)
 
 
         useEffect(() => { 
@@ -159,8 +163,8 @@ const ProviderTable = ({providers, updateProvidersList}) => {
                          <p className='text-sm font-bold text-zinc-600 cursor-pointer' onClick={() => move("compras")}>Inversiones</p>
 
                        </div>
-                       <div className='flex justify-end gap-6'>            
-                          <EstadisticsProviders/>    
+                       <div className='flex justify-end gap-6'>      
+                          {userCtx.userRol === "Dueño" ?  <EstadisticsProviders/>   : null}        
                           <CreateProvider updateList={updateProvidersList}/>     
                           <CreateSublet/>
                           <CreateNewPurchase type="providerTable"/>

@@ -1,4 +1,5 @@
 import Clients from "../models/clients.js"
+import Collections from "../models/collections.js";
 import { incrementarStock } from "./orders.controllers.js";
 
 export const createNewClient = async (req, res) => { 
@@ -169,6 +170,13 @@ export const deleteClientDebt = async (req, res) => {
         
         await client.save();
         await incrementarStock(req.body.products)
+        
+
+        if (req.body.collectionData) {
+          const newCollectionWithOutAmount = new Collections(req.body.collectionData);
+          await newCollectionWithOutAmount.save();
+        }
+
         
         res.status(200).json({ message: 'Debt deleted successfully' });
       } else {
