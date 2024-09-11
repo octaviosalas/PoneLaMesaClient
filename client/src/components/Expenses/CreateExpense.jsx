@@ -54,7 +54,7 @@ const CreateExpense = ({updateList, type}) => {
    }
 
    const createNewFixedExpense = async () => { 
-    if(amount > 0 && userCtx.userId !== null && typeExpenseSelected.length > 0 && dateSelected.length > 0) { 
+    if(amount > 0 && userCtx.userId !== null && typeExpenseSelected.length > 0 && dateSelected.length > 0 && dateSelected !== "") { 
       setMissedData(false)
       const expenseData = ({ 
         amount: amount,

@@ -46,7 +46,7 @@ const MiscellaneousExpenses = ({updateList}) => {
   const userCtx = useContext(UserContext)
 
   const createNewExpense = async () => { 
-    if(expenseAmount > 0 && userCtx.userId !== null && expenseName.length > 0 && dateSelected.length > 0) { 
+    if(expenseAmount > 0 && userCtx.userId !== null && expenseName.length > 0 && dateSelected.length > 0 && dateSelected !== "") { 
       setMissedData(false)
       const expenseData = ({ 
         amount: expenseAmount,

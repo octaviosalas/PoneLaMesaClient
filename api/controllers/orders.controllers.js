@@ -201,6 +201,8 @@ export const changeOrderState = async (req, res) => {
         { new: true } 
     );
 
+    await orderUpdated.save()
+
     if (!orderUpdated) {
         return res.status(404).json({ error: "No se encontró el estado" });
     }

@@ -245,7 +245,12 @@ const CreateNewOrder = ({updateList}) => {
             setTimeout(() => { 
               setMissingShippingCost(false)
             }, 2000)
-          } else { 
+          } else if(dateSelected === "") { 
+            setMissedData(true)
+            setTimeout(() => { 
+              setMissedData(false)
+            }, 2000)
+          }  else { 
             changeState(true, false)
             setMissingShippingCost(false)
             getClientsProductsData()   
