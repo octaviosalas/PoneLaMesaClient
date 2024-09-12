@@ -189,5 +189,41 @@ export const deleteClientDebt = async (req, res) => {
 }
 
 
+export const cancelPartialDebt = async (req, res) => { 
+  const { clientId, debtId } = req.params;
+  const { debtDataUpdated, dataToUpdateStock } = req.body;
 
+  console.log("NUEVA DEUDA", debtDataUpdated);
+  console.log("PARA INCREMENTAR STOCK", dataToUpdateStock);
 
+  try {
+    const client = await Clients.findById(clientId);
+
+    if (client) {
+      const debtToUpdate = client.clientDebt.find(debt => debt.debtId === debtId);
+
+      if (debtToUpdate) {
+        debtToUpdate.productsMissed = debtDataUpdated;
+
+        const totalAmount = debtDataUpdated.reduce((total, item) => 
+          total + (item.missing * item.replacementPrice), 0
+        );
+
+        debtToUpdate.amountToPay = totalAmount;
+
+        client.markModified('clientDebt');
+        await client.save();
+        
+        await incrementarStock(dataToUpdateStock);
+
+        res.status(200).json({ message: 'Debt updated successfully' });
+      } else {
+        res.status(404).json({ message: 'Debt no encontrada' });
+      }
+    } else {
+      res.status(404).json({ message: 'Client no encontrado' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'ERROR' });
+  }
+};

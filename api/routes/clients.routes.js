@@ -11,7 +11,8 @@ import  {
    createClientDebt,
    updateDebtStatus,
    getClientsByType,
-   deleteClientDebt
+   deleteClientDebt,
+   cancelPartialDebt
 } from '../controllers/clients.controllers.js' 
 
 
@@ -25,6 +26,7 @@ clientesRoutes.put('/changeData/:clientId', updateClientData);
 clientesRoutes.post("/createClientDebt/:clientId", createClientDebt)
 clientesRoutes.put("/updateDebtStatus/:clientId", updateDebtStatus)
 clientesRoutes.post("/cancelDebt/:clientId/:debtId", deleteClientDebt)
+clientesRoutes.post("/cancelPartialDebt/:clientId/:debtId", cancelPartialDebt)
 
 export default clientesRoutes;
 
