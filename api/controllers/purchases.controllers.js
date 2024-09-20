@@ -179,16 +179,18 @@ export const updatePurchaseDetail = async (req, res) => {
  
   try {
      if (req.body && req.body.completeNewDetail) {
-       const updatePurchaseData = await Purchases.findOneAndUpdate(
-         { _id: purchaseId },
-         {
-           $set: {
-             purchaseDetail: req.body.completeNewDetail,
-             total: req.body.newTotalAmount
-           },
-         },
-         { new: true }
-       );
+      const expense = await Expenses.findById({_id : purchaseId});
+      console.log("COMPRA", expense)
+      if (!expense) {
+        return res.status(404).json({ message: "Compra no encontrada" });
+      }
+      
+      // Modificar los campos manualmente
+      expense.expenseDetail = req.body.completeNewDetail;
+      expense.amount = req.body.newTotalAmount;
+      
+      // Guardar los cambios
+       await expense.save();
  
        if(req.body.toDiscountStock.length > 0) { 
          await decrementarStock(req.body.toDiscountStock);
@@ -199,7 +201,7 @@ export const updatePurchaseDetail = async (req, res) => {
        }
  
 
-       res.status(200).json({ message: "Se actualizo correctamente el detalle de la Orden", updatePurchaseData });
+       res.status(200).json({ message: "Se actualizo correctamente el detalle de la Orden" });
      } else {
        res.status(400).json({ message: 'El objeto newPurchaseDetailData no tiene la estructura esperada.' });
      }

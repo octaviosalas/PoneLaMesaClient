@@ -14,8 +14,13 @@ const CreateNewClient = ({type, updateList}) => {
   const [missedData, setMissedData] = useState(false)
 
   const createClient = () => { 
-    if(name.length === 0 || telephone.length <= 5 || dni.length <= 5 || typeOfClient.length === 0 || zone.length === 0) { 
+    if(name.length === 0 || telephone.length === 0 || dni.length === 0 || typeOfClient.length === 0 || zone.length === 0) { 
       setMissedData(true)
+      console.log(name.length)
+      console.log(telephone.length)
+      console.log(dni.length)
+      console.log(typeOfClient.length)
+      console.log(zone.length)
       setTimeout(() => { 
         setMissedData(false)
       }, 1500)
@@ -37,6 +42,7 @@ const CreateNewClient = ({type, updateList}) => {
               setSuccesMessage(false)
               onClose()
               setName("")
+              setZone("")
               setTelephone("")
               setDni("")
               setHome("")

@@ -95,8 +95,7 @@ const ExpensesGraphic = ({monthSelected, yearSelected}) => {
                   {allExpenses.map((item, index) => (
                       <ListItem key={item._id} className='flex justify-between items-center'>
                         <span>{index + 1}</span>
-                        <span>{item.typeOfExpense === "Compra" && item.typeOfExpense === "SubAlquiler" ? item.providerName : item.fixedExpenseType}</span>
-                        <span>{item.typeOfExpense}</span>
+                        {item.typeOfExpense === "Varios" ? <span>{item.typeOfExpense} ({item.miscellaneousExpenseName})</span> : <span>{item.typeOfExpense}</span>}
                         <span>{formatePrice(item.amount)}</span>
                       </ListItem>
                   ))}

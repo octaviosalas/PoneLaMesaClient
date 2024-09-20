@@ -36,7 +36,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
             console.log("toy")
             const propiedades = Object.keys(expensesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
             propiedad !== '__v'  &&  propiedad !== 'expenseDetail'  &&  propiedad !== 'date'  &&  
-            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&  propiedad !== 'providerName' &&  propiedad !== 'subletReferenceId' 
+            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&   propiedad !== 'subletReferenceId' 
             &&  propiedad !== 'fixedExpenseType'  && propiedad !== 'purchaseReferenceId'  && propiedad !== 'miscellaneousExpenseName');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
@@ -49,7 +49,9 @@ const ExpensesTable = ({expensesData, updateList}) => {
                 return { ...column, label: 'Creador' };
             } else if (column.key === 'month') {
                 return { ...column, label: 'Mes' };
-            }  else if (column.key === 'amount') {
+            } else if (column.key === 'providerName') {
+              return { ...column, label: 'Proveedor' };
+          }  else if (column.key === 'amount') {
                 return { ...column, label: 'Total' };
             }  else if (column.key === 'typeOfExpense') {
                 return { ...column, label: 'Razon' };
@@ -67,8 +69,8 @@ const ExpensesTable = ({expensesData, updateList}) => {
                 const day = filaActual.original.day;      
                 const month = filaActual.original.month;
                 const year = filaActual.original.year;
-                const detail = filaActual.original.purchaseDetail;
-                const item = {id, month,year, detail, day };
+                const detail = filaActual.original.expenseDetail;
+                const item = {id, month,year, detail, day, detail };
                 return (
                   <EditModal type="purchase" updatePurchaseList={updateList} purchaseData={item}/>
                 );

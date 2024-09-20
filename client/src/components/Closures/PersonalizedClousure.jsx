@@ -397,7 +397,7 @@ const PersonalizedClousure = () => {
                             <ExpensesDetail expensesData={justAllExpenses} first={firstDateToShow} second={secondDateToShow} type={"all"}/>
                             <ExpensesDetail expensesData={justPurchases} first={firstDateToShow} second={secondDateToShow}  type={"purchases"}/>
                             <ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
-                            <ExpensesDetail expensesData={justFixedExpenses} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
+                            <ExpensesDetail expensesData={justSublets} first={firstDateToShow} second={secondDateToShow}  type={"fixed"}/>
                             </div>
                         </div>               
                     </div>

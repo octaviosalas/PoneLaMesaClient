@@ -16,6 +16,9 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
     const [succesMessage, setSuccesMessage] = useState(false)
     const [theRealDataOfOrderDetail, setTheRealDataOfOrderDetail] = useState(purchaseData.orderDetail)
 
+    console.log("purchaseData.detail", purchaseData.detail)
+    console.log("purchaseData", purchaseData)
+
     const memoizedPropValue = useMemo(() => purchaseData.detail, []);
 
     const handleQuantityChange = (index, newQuantity) => {
@@ -94,6 +97,8 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
               toIncrementStock: sumarStock,
               completeNewDetail: newPurchaseDetail
             })
+
+            console.log(newPurchaseDetail)
 
             const updateDetail = await axios.put(`http://localhost:4000/purchases/updatePurchaseDetail/${purchaseData.id}`, newPurchaseDetailData)
             console.log(updateDetail.data)

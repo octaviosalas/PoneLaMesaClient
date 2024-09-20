@@ -17,6 +17,7 @@ const ExpensesDetail = ({expensesData, first, second, type}) => {
 
 
   const handleOpen = () => { 
+    console.log(expensesData)
     setLoading(true)
     onOpen()
     if (expensesData &&  Array.isArray(expensesData) && expensesData.length > 0) {
@@ -24,7 +25,7 @@ const ExpensesDetail = ({expensesData, first, second, type}) => {
       setLoading(false)
       const firstDetail = expensesData[0];
       const properties = Object.keys(firstDetail);
-      const filteredProperties = properties.filter(property => property !== '_id' &&  property !== "__v"  &&  property !== "expenseDetail" &&  property !== "month"   &&  property !== "year"  &&  property !== "day" &&  property !== "loadedByName" &&  property !== "providerId" &&  property !== "loadedById");
+      const filteredProperties = properties.filter(property => property !== '_id' && property !== "subletReferenceId" &&  property !== "__v"  &&  property !== "expenseDetail" &&  property !== "month"   &&  property !== "year"  &&  property !== "day" &&  property !== "loadedByName" &&  property !== "providerId" &&  property !== "loadedById" );
   
       const columnLabelsMap = {
         amount: 'Total',
@@ -117,3 +118,5 @@ const ExpensesDetail = ({expensesData, first, second, type}) => {
 
 
 export default ExpensesDetail
+
+//miscellaneousExpenseName

@@ -39,6 +39,10 @@ const MonthlyClousure = () => {
     const [actualMonth, setActualMonth] = useState(getMonth())
     const { year, month } = useParams();
 
+    useEffect(() => { 
+      console.log("miscellaneousExpenseName, miscellaneousExpenseName, miscellaneousExpenseName, miscellaneousExpenseName miscellaneousExpenseName", allExpenses)
+    }, [allExpenses])
+
 
     useEffect(() => {
       const yearFormated = Number(year)
@@ -60,7 +64,7 @@ const MonthlyClousure = () => {
             const expensesData = await getEveryExpenses(); 
             const filterExpensesByMonth = expensesData.filter((exp) => exp.month === month && exp.year === yearFormated)
             setAllExpenses(filterExpensesByMonth)
-            console.log("GASTOS MES", filterExpensesByMonth)  
+            console.log("GASTOS MEEEEEEEEEEEEEEEEEEEEEEEEEEES", filterExpensesByMonth)  
             if(filterExpensesByMonth.length === 0) { 
               setWithOutExpenses(true)
             } else { 
