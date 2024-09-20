@@ -2,7 +2,7 @@ import Purchases from "../models/purchases.js";
 import ProductsClients from "../models/productsClients.js";
 import { incrementarStock, decrementarStock } from "./orders.controllers.js";
 import Expenses from "../models/expenses.js";
-
+import Sublets from "../models/sublets.js";
 
 
 export const savePurchase = async (req, res) => {
@@ -176,6 +176,9 @@ export const updatePurchaseDetail = async (req, res) => {
   console.log("nuevo monto total", req.body.newTotalAmount)
   console.log("EL ARRAY NUEVO ENTERO", req.body.completeNewDetail)
   console.log("EL ID QUE LLEGA POR PARAMS", purchaseId)
+
+  console.log("TIPO DE TYPE", req.params.typeOfExpense)
+  console.log("REFERENCE ID", req.params.referenceId)
  
   try {
      if (req.body && req.body.completeNewDetail) {
@@ -184,13 +187,9 @@ export const updatePurchaseDetail = async (req, res) => {
       if (!expense) {
         return res.status(404).json({ message: "Compra no encontrada" });
       }
-      
-      // Modificar los campos manualmente
       expense.expenseDetail = req.body.completeNewDetail;
       expense.amount = req.body.newTotalAmount;
-      
-      // Guardar los cambios
-       await expense.save();
+      await expense.save();
  
        if(req.body.toDiscountStock.length > 0) { 
          await decrementarStock(req.body.toDiscountStock);
@@ -199,6 +198,28 @@ export const updatePurchaseDetail = async (req, res) => {
        if(req.body.toIncrementStock.length > 0) { 
          await incrementarStock(req.body.toIncrementStock);
        }
+
+       if(req.params.typeOfExpense === "Compra") { 
+        const purchaseData = await Purchases.findByIdAndUpdate(
+          req.params.referenceId,
+          {
+              total: req.body.newTotalAmount, 
+              purchaseDetail: req.body.completeNewDetail 
+          },
+          { new: true } 
+      );
+      }
+
+      if(req.params.typeOfExpense === "Sub Alquiler") { 
+        const purchaseData = await Sublets.findByIdAndUpdate(
+          req.params.referenceId,
+          {
+              amount: req.body.newTotalAmount, // Reemplaza el valor de "total" con el nuevo valor
+              productsDetail: req.body.completeNewDetail // Reemplaza el valor de "purchaseDetail"
+          },
+          { new: true } // Esto asegura que se devuelva el documento actualizado
+      );
+      }
  
 
        res.status(200).json({ message: "Se actualizo correctamente el detalle de la Orden" });

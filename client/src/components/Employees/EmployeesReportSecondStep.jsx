@@ -9,6 +9,7 @@ const EmployeesReportSecondStep = ({filteredData, closeModal, monthSelected, yea
 
     const [totalPaid, setTotalPaid] = useState(filteredData.map((data) => data.totalAmountPaidShift).reduce((acc, el) => acc + el, 0))
     const [everyHours, setEveryHours] = useState(filteredData.map((data) => data.hours).reduce((acc, el) => acc + el, 0))
+    const [everyMinutes, setEveryMinutes] = useState(filteredData.map((data) => data.minutes).reduce((acc, el) => acc + el, 0))
     const [columns, setColumns] = useState([]);
     const [showTable, setShowTable] = React.useState(false);
     const [selectionBehavior, setSelectionBehavior] = React.useState("toggle");
@@ -25,46 +26,55 @@ const EmployeesReportSecondStep = ({filteredData, closeModal, monthSelected, yea
           return { 
             day: filt.day,
             workedAhours: filt.hours,
+            minutesWorked: filt.minutes, // Agregamos los minutos
             activities: filt.activities,
             id: filt._id
-          }
-        })
-        setTableData(transformData)
+          };
+        });
+    
+        setTableData(transformData);
+    
         const firstDetail = transformData[0];
         const properties = Object.keys(firstDetail);
         const filteredProperties = properties.filter(property => property !== 'activities' && property !== "id");
-      
+    
         const columnLabelsMap = {
           day: 'Dia',
           workedAhours: 'Horas Realizadas',
           activities: 'Actividades',
+          minutesWorked: "Minutos"
         };
-      
+    
         const tableColumns = filteredProperties.map(property => ({
           key: property,
           label: columnLabelsMap[property] ? columnLabelsMap[property] : property.charAt(0).toUpperCase() + property.slice(1),
         }));
-
+    
         tableColumns.push({
           key: 'Actividades',
           label: 'Actividades',
           cellRenderer: (cell) => { 
             const filaActual = cell.row;
             const activities = filaActual.original.activities;
-            const item = {activities};
+            const item = { activities };
             return (
-               <ViwShiftActivitiesModal activities={item}/>
-              );
-        },
-       }) 
-      
+              <ViwShiftActivitiesModal activities={item} />
+            );
+          },
+        });
+    
         setColumns(tableColumns);
-        console.log(tableColumns);
-        setShowTable(true)
+        setShowTable(true);
       } else { 
-        setError(true)
+        setError(true);
       }
     }, [filteredData]);
+
+    const totalMinutes = everyMinutes;
+    const additionalHours = Math.floor(totalMinutes / 60); // Horas adicionales
+    const remainingMinutes = totalMinutes % 60; // Minutos restantes después de sumar horas
+
+    const totalHours = everyHours + additionalHours;
 
 
   return (
@@ -81,8 +91,12 @@ const EmployeesReportSecondStep = ({filteredData, closeModal, monthSelected, yea
                               <p className='font-medium text-xl text-black'>{monthSelected}</p>
                           </div>
                           <div className='flex flex-col items-center justify-enter'>
-                              <p className='text-zinc-500 text-xs font-medium'>horas Trabajadas</p>
-                              <p className='font-medium text-xl text-black'>{everyHours}</p>
+                              <p className='text-zinc-500 text-xs font-medium'>Horas</p>
+                              <p className='font-medium text-xl text-black'>{totalHours}</p>
+                          </div>
+                          <div className='flex flex-col items-center justify-enter'>
+                              <p className='text-zinc-500 text-xs font-medium'>Minutos</p>
+                              <p className='font-medium text-xl text-black'>{remainingMinutes}</p>
                           </div>
                           <div className='flex flex-col items-center justify-enter'>
                               <p className='text-zinc-500 text-xs font-medium'>Turnos Realizados</p>
@@ -90,7 +104,7 @@ const EmployeesReportSecondStep = ({filteredData, closeModal, monthSelected, yea
                           </div>
                           <div className='flex flex-col items-center justify-enter'>
                               <p className='text-zinc-500 text-xs font-medium'>Monto a Pagar</p>
-                              <p className='font-medium text-xl text-black'>{formatePrice(totalPaid)}</p>
+                              <p className='font-medium text-xl text-black'>{formatePrice(hourAmount * totalHours)}</p>
                           </div>
                           
                       </div>
@@ -119,17 +133,21 @@ const EmployeesReportSecondStep = ({filteredData, closeModal, monthSelected, yea
                               {(item) => (
                  <TableRow key={item.id}>
                     {columns.map(column => (
-                     <TableCell key={column.key}  className='text-left' >
-                         {column.cellRenderer ? (
-                        column.cellRenderer({ row: { original: item } })
-                        ) : (
-                         (column.key === "total") ? (
-                          formatePrice(item[column.key])
-                            ) : (
-                          item[column.key]
-                         )
-                        )}
-                    </TableCell>
+           <TableCell key={column.key} className='text-left'>
+           {column.cellRenderer ? (
+             column.cellRenderer({ row: { original: item } })
+           ) : (
+             column.key === "workedAhours" ? (
+               `${item.workedAhours || 0} horas, ${item.minutesWorked || 0} minutos`
+             ) : (
+               column.key === "total" ? (
+                 formatePrice(item[column.key])
+               ) : (
+                 item[column.key]
+               )
+             )
+           )}
+         </TableCell>
                     ))}
                 </TableRow>
                 )}

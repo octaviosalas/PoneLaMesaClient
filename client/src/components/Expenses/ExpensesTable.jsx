@@ -36,7 +36,7 @@ const ExpensesTable = ({expensesData, updateList}) => {
             console.log("toy")
             const propiedades = Object.keys(expensesData[0]).filter(propiedad =>  propiedad !== '_id' &&  
             propiedad !== '__v'  &&  propiedad !== 'expenseDetail'  &&  propiedad !== 'date'  &&  
-            propiedad !== 'year' &&  propiedad !== 'day'  &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&   propiedad !== 'subletReferenceId' 
+            propiedad !== 'year'   &&  propiedad !== 'providerId'   &&  propiedad !== 'loadedById' &&   propiedad !== 'subletReferenceId' 
             &&  propiedad !== 'fixedExpenseType'  && propiedad !== 'purchaseReferenceId'  && propiedad !== 'miscellaneousExpenseName');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
@@ -53,7 +53,9 @@ const ExpensesTable = ({expensesData, updateList}) => {
               return { ...column, label: 'Proveedor' };
           }  else if (column.key === 'amount') {
                 return { ...column, label: 'Total' };
-            }  else if (column.key === 'typeOfExpense') {
+            } else if (column.key === 'day') {
+              return { ...column, label: 'Dia' };
+          }  else if (column.key === 'typeOfExpense') {
                 return { ...column, label: 'Razon' };
             } else {
                 return column;
@@ -70,7 +72,10 @@ const ExpensesTable = ({expensesData, updateList}) => {
                 const month = filaActual.original.month;
                 const year = filaActual.original.year;
                 const detail = filaActual.original.expenseDetail;
-                const item = {id, month,year, detail, day, detail };
+                const typeOfExpense = filaActual.original.typeOfExpense;
+                const purchaseReferenceId = filaActual.original.purchaseReferenceId
+                const subletReferenceId = filaActual.original.subletReferenceId
+                const item = {id, month,year, detail, day, detail, typeOfExpense, purchaseReferenceId, subletReferenceId };
                 return (
                   <EditModal type="purchase" updatePurchaseList={updateList} purchaseData={item}/>
                 );

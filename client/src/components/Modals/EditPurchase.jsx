@@ -84,12 +84,8 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
                 disminuirStock.push(dif); 
              }
             });
-            //console.log("ARRAY ORIGINAL DE COMPRA DETAIL", memoizedPropValue)
-            //console.log("NUEVO ARRAY ENTERO DE COMPRA DETAIL", newPurchaseDetail)
-            //console.log("SUMAR STOCK POR DIFERENCIA POSITIVA", sumarStock)
-            //console.log("DESCONTAR STOCK POR DIFERENCIA NEGATIVA", disminuirStock)
+
             const newTotalPurchaseAmount = newPurchaseDetail.reduce((acc, el) => acc + +el.value, 0);
-            //console.log(newTotalPurchaseAmount)
 
             const newPurchaseDetailData = ({ 
               newTotalAmount: newTotalPurchaseAmount,
@@ -100,7 +96,15 @@ const EditPurchase = ({purchaseData, closeModalNow, updateChanges}) => {
 
             console.log(newPurchaseDetail)
 
-            const updateDetail = await axios.put(`http://localhost:4000/purchases/updatePurchaseDetail/${purchaseData.id}`, newPurchaseDetailData)
+            let url = `http://localhost:4000/purchases/updatePurchaseDetail/${purchaseData.id}/${purchaseData.typeOfExpense}`;
+
+            if (purchaseData.typeOfExpense === "Compra") {
+                url += `/${purchaseData.purchaseReferenceId}`;
+            } else if (purchaseData.typeOfExpense === "Sub Alquiler") {
+                url += `/${purchaseData.subletReferenceId}`;
+            }
+            
+            const updateDetail = await axios.put(url, newPurchaseDetailData);        
             console.log(updateDetail.data)
             if(updateDetail.status === 200) { 
                 setSuccesMessage(true)

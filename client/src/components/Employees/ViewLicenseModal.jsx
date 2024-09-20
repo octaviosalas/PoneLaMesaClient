@@ -114,7 +114,7 @@ const ViewLicenseModal = ({item, updateList}) => {
        image: newLicenseImage
     })
     try {
-       const response = axios.post(`http://localhost:4000/employees/editLicense/${item.id}`, newImageData)
+       const response = await axios.post(`http://localhost:4000/employees/editLicense/${item.id}`, newImageData)
       
         setNewLicenseImage("")
         setModifiedLicense(false)
@@ -122,6 +122,7 @@ const ViewLicenseModal = ({item, updateList}) => {
         setAddNewLicense(false)
         onClose()
         updateList()
+        
       
       } catch (error) {
           console.log(error)
