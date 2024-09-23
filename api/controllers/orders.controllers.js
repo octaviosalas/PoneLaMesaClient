@@ -640,7 +640,7 @@ export const nextFiveDaysOrdersWithDelivery = async (req, res) => {
         }
     });
 
-    const filterResult = result.filter((res) => res.orderStatus === "Armado")
+    const filterResult = result.filter((res) => res.orderStatus === "Armado" || res.orderStatus === "Confirmado")
 
     res.status(200).json(filterResult)
 } catch (error) {
@@ -649,27 +649,35 @@ export const nextFiveDaysOrdersWithDelivery = async (req, res) => {
  };
 
 
- export const ordersAfterFiveDays = async (req, res) => {
-  try {
-    const futureDate = getFutureDate(5); // Obtener la fecha 5 días después de hoy
 
-    const futureDateObj = new Date(futureDate);
+ const getNextMonday = () => {
+  const today = new Date();
+  const dayOfWeek = today.getDay(); // 0 es domingo, 1 es lunes, ..., 6 es sábado
+  const daysUntilNextMonday = (dayOfWeek === 0) ? 1 : (8 - dayOfWeek); // Si hoy es domingo, el próximo lunes es en 1 día, si no, es hasta el siguiente lunes
+  const nextMonday = new Date(today);
+  nextMonday.setDate(today.getDate() + daysUntilNextMonday);
+  return nextMonday;
+};
+
+
+
+export const ordersAfterFiveDays = async (req, res) => {
+  try {
+    const futureDate = getNextMonday();
+    const futureDateStr = futureDate.toISOString().split('T')[0];
 
     const result = await Orders.find({
       dateOfDelivery: {
-        $gte: futureDateObj.toISOString().split('T')[0]
+        $gte: futureDateStr
       }
     });
 
-    const filterResult = result.filter((res) => res.orderStatus === "Armado");
-
-    res.status(200).json(filterResult);
+    res.status(200).json(result);
   } catch (error) {
     console.error('Error obteniendo los documentos:', error);
     res.status(500).json({ message: 'Error al obtener las órdenes' });
   }
 };
-
 
 
 export const getOrdersToBeConfirmed = async (req, res) => { 
