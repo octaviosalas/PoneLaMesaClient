@@ -504,9 +504,15 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   const { result } = req.body;
   console.log(result);
 
+  console.log("TOTAL", result.total)
+  console.log("TYPEOF TOTAL",typeof result.total)
+  console.log("result.seña[0].total", result.seña[0].total)
+  console.log("TYPEOF result.seña[0].total", typeof result.seña[0].total)
+
 
   const clientId = result.clienteId
   const clientAllData = await Clients.findById(clientId)
+  console.log("CLIENTALLDATA", clientAllData)
   const clientPhone = clientAllData.telephone
 
   const doc = new PDFDocument();
@@ -574,17 +580,20 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   yPosition += 25; 
 
 
-
-  /*const pagoMensaje = result.paid ? "Pedido Abonado en su totalidad" : "Pedido pendiente de pago";
-  doc.font('Helvetica').fontSize(14).fillColor('black').text(pagoMensaje, 50, yPosition);
-  yPosition += 25; */
-
-
   if (result.seña.length > 0) {
     result.seña.forEach(señaItem => {
-      doc.font('Helvetica').fontSize(14).fillColor('black').text(`Seña: ${señaItem.amount}`, 50, yPosition);
+      doc.font('Helvetica').fontSize(14).fillColor('black').text(`Seña: ${formatePriceBackend(señaItem.amount)}`, 50, yPosition);
       yPosition += 25; 
     });
+
+    result.seña.forEach(señaItem => {
+      doc.font('Helvetica').fontSize(14).fillColor('black').text(`Saldo: ${formatePriceBackend(Number(result.total) - señaItem.amount)}`, 50, yPosition);
+      yPosition += 25; 
+    });
+    
+
+    
+   
   } else {
     doc.font('Helvetica').fontSize(14).fillColor('black').text('Seña: Sin seña', 50, yPosition);
     yPosition += 25; 
@@ -592,7 +601,7 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
 
 
-  doc.font('Helvetica-Bold').fontSize(15).fillColor('black').text(`Total: ${result.total}`, 50, yPosition);
+  doc.font('Helvetica-Bold').fontSize(15).fillColor('black').text(`Total: ${formatePriceBackend(result.total)}`, 50, yPosition);
 
  
 
