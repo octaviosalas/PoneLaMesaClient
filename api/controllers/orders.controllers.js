@@ -504,10 +504,7 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   const { result } = req.body;
   console.log(result);
 
-  console.log("TOTAL", result.total)
-  console.log("TYPEOF TOTAL",typeof result.total)
-  console.log("result.seña[0].total", result.seña[0].total)
-  console.log("TYPEOF result.seña[0].total", typeof result.seña[0].total)
+
 
 
   const clientId = result.clienteId
