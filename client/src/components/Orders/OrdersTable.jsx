@@ -48,7 +48,7 @@ const OrdersTable = () => {
         const fechaDesde = new Date(firstDate);
         const fechaHasta = new Date(secondDate);
         const filteringByDate = filteredData.filter(orden => {
-           const fechaOrden = new Date(orden.date);
+           const fechaOrden = new Date(orden.dateOfDelivery);
            return fechaOrden >= fechaDesde && fechaOrden <= fechaHasta;
         });
         setData(filteringByDate);
