@@ -84,6 +84,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
 
     const handleOpenCollectionsDetail = () => { 
       getOrderOfCollections()
+      console.log(collectionDetail)
       onOpen()
     }
 
@@ -118,6 +119,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
             }
 
           console.log("Esto recibe el backend", result)
+          console.log("clientId", result.clienteId)
           try {
               const response = await axios.post("http://localhost:4000/orders/createDetailPdf", {result}, {
                   responseType: 'blob',
@@ -189,6 +191,8 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                         <ShowParcialPayment orderData={orderData} update={update}/>
                       </div>
                     ) : null}
+
+
 
                    {viewDownPaymentData ?
                     <div className="flex flex-col items-start justify-start text-start">
@@ -275,6 +279,21 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                      <p className="text-md font-medium text-zinc-600"><b>Cuenta: </b> {collectionDetail.account}</p> : 
                      <p className="text-md font-medium text-zinc-600"><b>Cuenta:  </b> {collectionDetail.account}</p>
                    }
+                   {collectionDetail.productsReplacementDetail ? 
+                   <div className="flex flex-col justify-start items-start">
+                    <div className="mt-6">
+                       <p className="font-medium text-green-800 text-md underline">Articulos correspondientes a la reposicion: </p>
+                    </div>
+                    <div className="flex flex-col mt-1">
+                      {collectionDetail.productsReplacementDetail.map((prod) => ( 
+                        <div className="flex items-center justify-center gap-6">
+                          <p><b>Articulo: </b> {prod.productName}</p>
+                          <p><b>Cantidad: </b>{prod.quantity}</p>
+                        </div>
+                      ))}
+                    </div>
+                    </div>
+                   : null}
               </div>      
                }
               <ModalFooter className="flex items-center justify-center mt-2">

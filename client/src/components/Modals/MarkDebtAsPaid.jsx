@@ -26,6 +26,7 @@ const MarkDebtAsPaid = ({debtId, clientData, completeDebtData, debtAmount, updat
     console.log("datos cleinte", clientData)
     console.log("monto deuda", debtAmount)
     console.log("datos enteros", completeDebtData)
+    console.log("BACKEND", completeDebtData.detail)
     const getOrderIdOfTheDebt = completeDebtData.orderCompletedData.map((d) => d._id)[0]
     const getOrderCompleted = completeDebtData.orderCompletedData
     setCompleteOrderOfTheDebt(getOrderCompleted)
@@ -59,6 +60,7 @@ const MarkDebtAsPaid = ({debtId, clientData, completeDebtData, debtAmount, updat
                   <div>
                     <PostPaymentReplacement 
                       updateClientData={updateClientData}
+                      completeDebtData={completeDebtData}
                       comeBack={comeBack} 
                       orderId={orderId}
                       debtId={debtId} 

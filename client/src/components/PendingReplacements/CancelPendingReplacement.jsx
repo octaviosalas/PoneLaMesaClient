@@ -83,7 +83,8 @@ const CancelPendingReplacement = ({data, updateList}) => {
          debtDataUpdated: originalDetail,
          dataToUpdateStock: quantities
        })
-       try {
+       console.log(dataToSend)
+      /* try {
         const response = await axios.post(`http://localhost:4000/clients/cancelPartialDebt/${data.clientData.id}/${data.debtId}`, dataToSend)
         console.log(response.data)
         if(response.status === 200) { 
@@ -93,7 +94,7 @@ const CancelPendingReplacement = ({data, updateList}) => {
         }
        } catch (error) {
         console.log(error)
-       }
+       } */
     }
 
 

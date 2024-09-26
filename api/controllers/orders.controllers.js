@@ -508,6 +508,8 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
 
 
   const clientId = result.clienteId
+  console.log(result)
+  
   const clientAllData = await Clients.findById(clientId)
   console.log("CLIENTALLDATA", clientAllData)
   const clientPhone = clientAllData.telephone

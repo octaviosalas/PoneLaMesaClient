@@ -104,6 +104,8 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
     }
 
     const sendMissedArticlesWithPaid = async () => { 
+        console.log(missingArticlesDetail)
+       
         try {
             const data = missingArticlesDetail.map((art) => { 
                 return { 
@@ -113,6 +115,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                     valueToPay: art.replacementPrice * art.missing
                 }
            })
+
             const missedProductsData = ({ 
                 productMissed: data,
                 amount: valueToPay,
@@ -131,6 +134,12 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                 
                 if(statusUpdateResponse.status === 200) { 
                     if(account.length !== 0 ) { 
+                        const toShow =  missingArticlesDetail.map((art) => { 
+                            return { 
+                                productName: art.productName,
+                                quantity: art.missing
+                            }
+                        })
                         const collecctionData = ({ 
                             orderId: orderId,
                             collectionType: "Reposicion",
@@ -143,7 +152,8 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
                             amount: valueToPay,
                             account: account,
                             loadedBy: userCtx.userName,
-                            voucher: payImage
+                            voucher: payImage,
+                            productsReplacementDetail: toShow
                           })
                         const createNewCollection = axios.post("http://localhost:4000/collections/addNewCollection", collecctionData)
                         console.log(createNewCollection.data)
@@ -166,7 +176,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
             
         } catch (error) {
             
-        }
+        } 
     }
 
     const handleDropImage = (files) => {
@@ -195,7 +205,7 @@ const RegisterMissingItemsThirdStep = ({orderData, missingArticlesDetail, valueT
     <div className='flex flex-col items-center justify-center'>
          <h5 className='font-medium text-zinc-600 text-md'>¿El cliente ya abono los faltantes?</h5>
         <div className='flex flex-col items-start text-start justify-start'>
-            <p className='font-medium mt-2 text-green-800 text-xs'>* Si confirmas el cobro, los faltantes quedaran abonados.</p>
+            <p className='font-medium mt-2 text-green-800 text-xs'>* Si confirmas el cobro, los faltantes quedaran abonados *</p>
             <p className='font-medium mt-2 text-green-800 text-xs'>* Si confirmas sin el cobro, los faltantes quedaran a deuda del cliente.</p>
             <p className='font-medium mt-2 text-green-800 text-xs'>* La deuda a pagar del cliente {client} sera de {formatePrice(valueToPay)}</p>
         </div>

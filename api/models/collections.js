@@ -43,6 +43,15 @@ const collectionsSchema = mongoose.Schema({
     downPaymentId: {
         type: String,
         required: function() { return this.collectionType === 'seña'; }
+    },
+    productsReplacementDetail: {
+        type: Array,
+        default: [], 
+        validate: {
+            validator: function(value) {
+                return this.collectionType !== 'Reposicion' || Array.isArray(value);
+            },
+        }
     }
 });
 

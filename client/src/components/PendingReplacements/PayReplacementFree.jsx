@@ -10,7 +10,7 @@ import { UserContext } from "../../store/userContext";
 
 const PayReplacementFree = ({item, updateList}) => {
 
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+  const {isOpen, onOpen, onOpenChange, onClose} = useDisclosure();
   const [actualDate, setActualDate] = useState(getDate())
   const [actualDay, setActualDay] = useState(getDay())
   const [actualMonth, setActualMonth] = useState(getMonth())
@@ -39,6 +39,7 @@ const PayReplacementFree = ({item, updateList}) => {
         amount: 0,
         account: "",
         loadedBy: userCtx.userName,
+        productsReplacementDetail: item.detail,
         voucher: ""
       }
      
@@ -47,6 +48,7 @@ const PayReplacementFree = ({item, updateList}) => {
         const response = await axios.post(`http://localhost:4000/clients/cancelDebt/${item.clientData.id}/${item.debtId}`, productsToUpdateStock)
         console.log(response.data)
         updateList()
+        onClose()
     } catch (error) {
         console.log(error)
     }

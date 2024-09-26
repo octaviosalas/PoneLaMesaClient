@@ -159,6 +159,8 @@ export const deleteClientDebt = async (req, res) => {
 
   const {clientId, debtId} = req.params;
 
+  console.log(req.body.productsReplacementDetail)
+
 
 
   try {

@@ -9,7 +9,7 @@ import { PhotoIcon } from '@heroicons/react/24/solid'
 import axios from "axios";
 
 
-const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderDetail, debtAmount, debtId, updateClientData, closeModal}) => {
+const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderDetail, debtAmount, debtId, updateClientData, closeModal, completeDebtData}) => {
 
     const [payImage, setPayImage] = useState("")
     const userCtx = useContext(UserContext)
@@ -24,6 +24,7 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
     const [withOutLogin, setWithOutLogin] = useState(false)
 
 
+   console.log("PostPaymentReplacement",  completeDebtData.detail)
 
     const availablesAccounts = [
         {
@@ -80,10 +81,13 @@ const PostPaymentReplacement = ({comeBack, orderId, clientName, clientId, orderD
                  amount: debtAmount,
                  account: account,
                  loadedBy: userCtx.userName,
-                 voucher: payImage
+                 voucher: payImage,
+                 productsReplacementDetail: completeDebtData.detail
                })
+
+               console.log("ESTO ENVIO", collecctionData)
   
-             const addNewCollection = await axios.post("http://localhost:4000/collections/addNewCollection/", collecctionData)
+            const addNewCollection = await axios.post("http://localhost:4000/collections/addNewCollection/", collecctionData)
              console.log(addNewCollection.data);
   
              if (addNewCollection.status === 200) { 

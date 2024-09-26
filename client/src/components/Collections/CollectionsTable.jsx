@@ -36,7 +36,7 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
       const getDataAndCreateTable = () => { 
             if(data.length !== 0) { 
             const propiedades = Object.keys(collections[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v'  
-                && propiedad !== 'orderDetail' &&  propiedad !== 'clientId' && propiedad !== 'loadedBy' && propiedad !== 'voucher'  && propiedad !== 'orderId' && propiedad !== 'orderCreator' && propiedad !== 'year'
+                && propiedad !== 'orderDetail' &&  propiedad !== 'clientId' && propiedad !== 'loadedBy' && propiedad !== 'voucher'  && propiedad !== 'orderId' && propiedad !== 'orderCreator' && propiedad !== 'year' && propiedad !== "productsReplacementDetail"
                 && propiedad !== 'day' && propiedad !== 'paid' && propiedad !== 'paymentReferenceId' && propiedad !== 'downPaymentId');
             const columnObjects = propiedades.map(propiedad => ({
                 key: propiedad,
@@ -87,8 +87,11 @@ const CollectionsTable = ({collections, updateCollectionList}) => {
                     const month = filaActual.original.month
                     const year = filaActual.original.year
                     const orderId = filaActual.original.orderId
-                    const item = { id, account,loadedBy,amount,day,month,year,orderId,         
-                    };
+                    const collectionType = filaActual.original.collectionType
+                    const item = { id, account, loadedBy, amount, day, month, year, orderId, collectionType };
+                    if (collectionType === 'Reposicion') {
+                        item.productsReplacementDetail = filaActual.original.productsReplacementDetail;
+                    }
                     return (
                        <OrderDetail collectionDetail={item}/>
                     );
