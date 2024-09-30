@@ -81,7 +81,7 @@ export const decrementarStock = async (productosComprados) => {
   }
 };
 
-export const getOrders = async (req, res) => { 
+/*export const getOrders = async (req, res) => { 
   console.log("eee");
   
   // Obtener el mes actual y el mes previo
@@ -92,6 +92,44 @@ export const getOrders = async (req, res) => {
     // Buscar órdenes en el mes actual o el mes previo
     const orders = await Orders.find({ month: { $in: [currentMonth, previousMonth] } }).limit(300);
     res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las ordenes' });
+    console.log(error);
+  }
+}; */
+
+export const getOrders = async (req, res) => { 
+  console.log("eee");
+
+  // Obtener el mes actual y el mes previo
+  const currentMonth = getCurrentMonth();
+  const previousMonth = getPreviousMonth(currentMonth);
+
+  try {
+    // Buscar todas las órdenes del mes actual y ordenarlas desde la más reciente (número de orden más alto)
+    const currentMonthOrders = await Orders.find({ month: currentMonth }).sort({ orderNumber: -1 });
+
+    let orders = [];
+
+    // Si el número de órdenes del mes actual es menor a 300, añadir órdenes del mes anterior
+    if (currentMonthOrders.length < 300) {
+      // Calcular cuántas órdenes faltan para llegar a 300
+      const remaining = 300 - currentMonthOrders.length;
+      
+      // Buscar órdenes del mes anterior hasta completar el límite de 300 y ordenarlas
+      const previousMonthOrders = await Orders.find({ month: previousMonth })
+        .sort({ orderNumber: -1 }) // Ordenar también del más alto al más bajo
+        .limit(remaining);
+
+      // Combinar órdenes del mes actual y las que faltan del mes anterior
+      orders = [...currentMonthOrders, ...previousMonthOrders];
+    } else {
+      // Si ya hay 300 o más órdenes del mes actual, solo devolver esas
+      orders = currentMonthOrders.slice(0, 300);
+    }
+
+    // Devolver las órdenes combinadas o las del mes actual hasta el máximo de 300
+    res.status(200).json(orders.reverse());
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener las ordenes' });
     console.log(error);

@@ -42,7 +42,7 @@ const ProcessTables = ({orderStatus}) => {
         axios.get("http://localhost:4000/orders")
         .then((res) => { 
              const allOrders = res.data
-             const filterOrdersByStatus = allOrders.filter((ord) => ord.orderStatus === orderStatus)
+             const filterOrdersByStatus = allOrders.filter((ord) => ord.orderStatus === orderStatus).reverse()
              console.log(orderStatus)
              const filterOrdersByToday = allOrders.filter((ord) => ord.orderStatus === orderStatus && ord.dateOfDelivery === actualDate)
              {viewJustToday ? setData(filterOrdersByToday) :  setData(filterOrdersByStatus)}
