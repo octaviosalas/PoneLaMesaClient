@@ -99,9 +99,7 @@ export const decrementarStock = async (productosComprados) => {
 }; */
 
 export const getOrders = async (req, res) => { 
-  console.log("eee");
 
-  // Obtener el mes actual y el mes previo
   const currentMonth = getCurrentMonth();
   const previousMonth = getPreviousMonth(currentMonth);
 
