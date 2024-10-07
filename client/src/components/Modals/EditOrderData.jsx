@@ -100,11 +100,17 @@ const EditOrderData = ({orderData, orderStatus, updateList, closeModalNow}) => {
                            
                            }               
                         </div>
+                        {orderStatus !== "Entregado" ?
                         <div className="flex gap-6 items-center mt-6">
                           <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() => changeOrderState()}>Confirmar</Button>
                           <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() => closeModalNow()}>Cancelar</Button>
                           <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() =>  setStep(0)}>Volver</Button>
+                        </div> : 
+                         <div className="flex gap-6 items-center mt-6">
+                          <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() => closeModalNow()}>Cancelar</Button>
+                          <Button className="font-medium text-white text-xs bg-green-800 w-52"onClick={() =>  setStep(0)}>Volver</Button>
                         </div>
+                        }
 
                       {successMessage ?
                         <div className="font-medium text-sm text-zinc-600 cursor-pointer mt-6">

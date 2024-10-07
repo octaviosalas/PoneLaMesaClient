@@ -26,7 +26,7 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
 
     useEffect(() => { 
         setData(replacementes)
-        console.log("Hubo un cambio en los replacementes que recibe PendingReplacementsTableData")
+       
       }, [replacementes])
 
       const goToOtherPage = (item) => { 
@@ -141,11 +141,18 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
             }, [data])
 
             const filteredData = data.filter((item) => {
-            return Object.values(item).some((value) => {
+                console.log(item)
+                return Object.values(item).some((value) => {
+                  console.log(value)
                 if (value === null) return false;
                 return value.toString().toLowerCase().includes(inputValue.toLowerCase());
             });
             });
+
+
+
+            
+
 
 
 

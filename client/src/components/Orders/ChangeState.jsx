@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
 import axios from "axios";
 import {Select, SelectItem} from "@nextui-org/react";
+import { useNavigate } from "react-router-dom";
 
 const ChangeState = ({status, orderData, updateList}) =>  {
 
@@ -10,6 +11,7 @@ const ChangeState = ({status, orderData, updateList}) =>  {
   const [newOrderStatus, setNewOrderStatus] = useState("Selecciona un Estado ↓")
   const [errorMessage, setErrorMessage] = useState(false)
   const [size, setSize] = useState("3xl")
+  const navigate = useNavigate()
 
   const changeOrderState = () => { 
     if(newOrderStatus === "Selecciona un Estado ↓") { 
@@ -63,19 +65,25 @@ const ChangeState = ({status, orderData, updateList}) =>  {
                                 <SelectItem key={"Confirmado"} value={"Confirmado"} onClick={() => setNewOrderStatus("Confirmado")} >Confirmado</SelectItem>                                                      
                               </Select>
                             ) : (
-                              <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">      
-                                  <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setNewOrderStatus("Entregado")} >Entregado</SelectItem>         
-                                  <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setNewOrderStatus("Reparto")} >Reparto</SelectItem>        
-                                  <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setNewOrderStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
-                              </Select> 
+                              <div className="flex mt-2">
+                              <p className="text-md font-medium text-white bg-red-600 w-full text-center cursor-pointer" onClick={() => navigate("/Devoluciones")}>
+                                Si deseas asentar la devolucion dirigite al modulo Devoluciones haciendo Click aqui</p>
+                            </div> 
                             )
                           }               
                         </div>
+
+                       {status !== "Entregado" ?
                         <div className="flex gap-6 items-center mt-6">
                           <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() => changeOrderState()}>Confirmar</Button>
                           <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() => closeModalNow()}>Cancelar</Button>
                           <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() =>  onClose()}>Volver</Button>
+                        </div> : 
+                        <div className="flex gap-6 items-center mt-6">
+                          <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() => closeModalNow()}>Cancelar</Button>
+                          <Button className="font-medium text-white text-xs bg-green-800 w-52" onClick={() =>  onClose()}>Volver</Button>
                         </div>
+                        }
 
                       {successMessage ?
                         <div className="font-medium text-sm text-zinc-600 cursor-pointer mt-6">

@@ -28,7 +28,7 @@ const CreateNewOrder = ({updateList}) => {
   const [missedProducts, setMissedProducts] = useState(false)
   const [succesMessage, setSuccesMessage] = useState(false)
   const [orderNumber, setOrderNumber] = useState("")
-  const [orderStatus, setOrderStatus] = useState("Armado")
+  const [orderStatus, setOrderStatus] = useState("Confirmado")
   const [typeOfClient, setTypeOfClient] = useState("")
   const [placeOfDelivery, setPlaceOfDelivery] = useState("")
   const [dateOfDelivery, setDateOfDelivery] = useState("")
