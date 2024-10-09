@@ -611,7 +611,11 @@ export const updateMissingArticlesLikePaid = async (req, res) => {
   doc.moveTo(50, yPosition).lineTo(pageWidth - 50, yPosition).stroke();
   yPosition += 10;
 
-
+  if(result.descuento === true) { 
+    doc.font('Helvetica').fontSize(14).fillColor('black').text(`Descuento Aplicado`, 50, yPosition);
+    yPosition += 30;
+  }
+  
 
   doc.font('Helvetica').fontSize(14).fillColor('black').text(`Costo de envio: ${formatePriceBackend(result.envio).toString()}`, 50, yPosition);
   yPosition += 25; 

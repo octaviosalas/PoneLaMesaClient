@@ -17,7 +17,10 @@ const LocalDeliveries = () => {
      try {
        const response = await axios.get("http://localhost:4000/orders")
        const orders = response.data
-       const filterOrders = orders.filter((ord) => ord.dateOfDelivery === actualDate && ord.placeOfDelivery === "Local"  && ord.orderStatus === "Armado") 
+       const filterOrders = orders.filter((ord) => 
+        (ord.dateOfDelivery === actualDate && ord.placeOfDelivery === "Local") &&
+        (ord.orderStatus === "Armado" || ord.orderStatus === "Confirmado")
+      );
        setLocalDeliveryOrders(filterOrders)
        console.log("Table Data", filterOrders)
      } catch (error) {
@@ -41,7 +44,10 @@ const LocalDeliveries = () => {
     try {
       const response = await axios.get("http://localhost:4000/orders")
       const orders = response.data
-      const filterOrders = orders.filter((ord) => ord.dateOfDelivery === actualDate && ord.orderStatus === "Armado" && ord.placeOfDelivery !== "Local") 
+      const filterOrders = orders.filter((ord) => 
+        (ord.dateOfDelivery === actualDate && ord.placeOfDelivery !== "Local") &&
+        (ord.orderStatus === "Armado" || ord.orderStatus === "Confirmado")
+      );
       setOrdersToRepartToday(filterOrders)
       console.log("Ordenes filtradas: ", filterOrders)
     } catch (error) {

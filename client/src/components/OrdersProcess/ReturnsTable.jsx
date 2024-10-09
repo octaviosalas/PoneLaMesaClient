@@ -125,8 +125,10 @@ const ReturnsTable = ({todaysReturns, pendingReturns, everyReturns, returnsToFet
                     const total = filaActual.original.total;
                     const downPaymentData = filaActual.original.downPaymentData;
                     const paid = filaActual.original.paid;
-                    
-                    const item = { id,  detail, orderSublets, creator, day,  month, year, total, client, clientId, downPaymentData, missingArticlesData, paid};
+                    const parcialPayment = filaActual.original.parcialPayment;
+                    const discount = filaActual.original.discount;
+                    const item = { id,  detail, orderSublets, creator, day,  month, year, total, client, clientId, downPaymentData, 
+                      missingArticlesData, parcialPayment, paid, discount};
                     return (
                     <OrderDetail orderData={item}/>
                     );

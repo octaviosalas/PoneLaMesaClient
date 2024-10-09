@@ -26,6 +26,7 @@ const PayReplacementFree = ({item, updateList}) => {
   const deleteReplacement = async () => { 
     const productsToUpdateStock = ({ 
       products: item.detail,
+      cancel: false,
       collectionData: { 
         orderId: item.orderCompletedData[0]._id,
         collectionType:"Reposicion",

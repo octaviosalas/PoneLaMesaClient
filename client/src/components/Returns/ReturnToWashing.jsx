@@ -195,6 +195,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
   }
 
   const sendDataToWashs =  async () => { 
+    console.log(dataToSendToWash)
     if(orderHasDepositArticles === true) { 
       console.log("enviando articulos a lavado")
         const sendNewArticlesToWashModel = await axios.post("http://localhost:4000/cleaning/addNewArticles", dataToSendToWash)
@@ -219,6 +220,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
                    }
             }
             if(dataToSendToSubletDevolutions.length > 0) { 
+              console.log("RETORNO DE SUBALQUILERES", dataToSendToSubletDevolutions)
               const {data, status} = await axios.post("http://localhost:4000/subletsToReturn/addNewArticles", dataToSendToSubletDevolutions)
               console.log("ENVIE LOS ARTICULOS AL RETORNO DE SUBALQUILERES", dataToSendToSubletDevolutions, data, status)
             }
@@ -228,6 +230,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
         console.log("ENVIE LOS ARTICULOS AL RETORNO DE SUBALQUILERES", dataToSendToSubletDevolutions, data, status)
       }
         const sendNewArticlesToWashModel = await axios.post("http://localhost:4000/cleaning/addNewArticles", dataToSendToWash)
+        console.log("ENVIO ESTO AL MODULO LAVADO!", dataToSendToWash)
          console.log(sendNewArticlesToWashModel.data)
           if(sendNewArticlesToWashModel.status === 200) { 
             const newStatus = "Lavado"
@@ -242,7 +245,7 @@ export const ReturnToWashing = ({orderData, updateList}) => {
                  }, 1800)
               }
            }
-        }
+        } 
   }
 
   return (
@@ -256,8 +259,21 @@ export const ReturnToWashing = ({orderData, updateList}) => {
               <ModalBody>
                 <div className="flex flex-col items-center justify-center mt-4">
                   <p className="text-sm font-medium text-green-800">¿Estas seguro de pasar la orden a Lavado?</p>
-                  {withMissedArticles ? <p className="text-xs font-medium text-zinc-600 mt-2">Los articulos se pasaran a lavado descontando los faltantes del pedido</p> :
-                   <p className="text-xs font-medium text-zinc-600 mt-2">Esta orden no posee faltantes</p>}
+                  {withMissedArticles ? 
+                  <p className="text-xs font-medium text-zinc-600 mt-2">Los articulos se pasaran a lavado descontando los faltantes del pedido</p> 
+                  :
+                   <p className="text-xs font-medium text-zinc-600 mt-2">Esta orden no posee faltantes</p>
+                   }
+
+                  <div className="mt-4 ">
+                    {dataToSendToWash.map((data) => ( 
+                        <div className="flex gap-2 items-start justify-start text-start w-full">
+                          <p><b>Articulo: </b>{data.productName}</p>
+                          <p><b>Cantidad: </b> {data.quantity}</p>
+                        </div>
+                    ))}
+                  </div>
+
                 </div>
               </ModalBody>
               <ModalFooter className="mb-2 flex gap-4 items-center justify-center">

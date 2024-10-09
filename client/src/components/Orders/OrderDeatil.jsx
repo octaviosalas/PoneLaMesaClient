@@ -93,9 +93,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
     }
 
   
-  const createNewPdf = async (data) => { 
-         console.log("Data que recibo para imprimir orden!", data)
-         console.log(data)       
+  const createNewPdf = async (data) => {       
             const articulos = data.detail.map((detail) => { 
               return { 
                 articulo: detail.productName,
@@ -115,11 +113,12 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
               envio: data.shippingCost,
               seña: data.downPaymentData,
               pago: data.paid,
-              lugarDeEntrega: data.placeOfDelivery
+              lugarDeEntrega: data.placeOfDelivery,
+              descuento: data.discount
             }
 
-          console.log("Esto recibe el backend", result)
-          console.log("clientId", result.clienteId)
+            console.log(result)
+    
           try {
               const response = await axios.post("http://localhost:4000/orders/createDetailPdf", {result}, {
                   responseType: 'blob',
@@ -267,6 +266,7 @@ const OrderDetail = ({orderData, collectionDetail, update}) => {
                    </Table>    
                     <div className="flex flex-col items-end justify-end">
                         <p className="text-sm text-zinc-600 font-bold">Valor total del Pedido: {formatePrice(orderData.total)} </p>
+                        {orderData.discount === true ? <p className="text-start bg-red-600 text-white font-medium text-sm">Descuento aplicado</p> : null}
                         {orderData.orderSublets.length > 0 ? <p className="text-xs text-green-800 font-medium"> (La suma total Incluye los SubAlquileres)</p> : null}
                     </div>        
               </ModalBody>

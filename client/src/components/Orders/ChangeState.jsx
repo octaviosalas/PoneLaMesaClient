@@ -52,8 +52,6 @@ const ChangeState = ({status, orderData, updateList}) =>  {
                          {status === "Armado" ? 
                               <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">      
                                   <SelectItem key={"Entregado"} value={"Entregado"} onClick={() => setNewOrderStatus("Entregado")} >Entregado</SelectItem>         
-                                  <SelectItem key={"Reparto"} value={"Reparto"} onClick={() => setNewOrderStatus("Reparto")} >Reparto</SelectItem>        
-                                  <SelectItem key={"Retiro en Local"} value={"Retiro en Local"} onClick={() => setNewOrderStatus("Retiro en Local")} >Retiro en Local</SelectItem>                                       
                               </Select> 
                             : status === "Confirmado" ? (
                               <Select variant={"faded"} label="Selecciona un nuevo Estado" className="w-72">    

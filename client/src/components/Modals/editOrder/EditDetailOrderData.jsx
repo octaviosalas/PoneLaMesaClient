@@ -302,7 +302,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderData, order
   return (
 
     <>
-     {orderStatus === "A Confirmar" || orderStatus === "Armado" || orderStatus === "Entregado"? 
+     {orderStatus === "A Confirmar" || orderStatus === "Armado"  || orderStatus === "Confirmado" || orderStatus === "Entregado"? 
       <div className="flex flex-col justify-center items-center">
               {newOrderDetailWithChanges.map((ord, index) => (
                   <div key={index} className="flex flex-col">

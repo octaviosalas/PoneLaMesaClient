@@ -4,7 +4,7 @@ import { incrementStockJustInOneProduct } from "./orders.controllers.js";
 export const addNewArticlesToWash = async (req, res) => {
     try {
         const products = req.body;
-        console.log(products)
+        console.log("me llego esto para pasar a lavado!", products)
 
         for (const product of products) {
             const filter = { productId: product.productId };

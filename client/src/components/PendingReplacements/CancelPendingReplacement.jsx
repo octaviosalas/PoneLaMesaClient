@@ -28,10 +28,18 @@ const CancelPendingReplacement = ({data, updateList}) => {
 
     const deleteReplacement = async () => { 
         setLoad(true)
-        const productsToUpdateStock = ({ 
-          products: data.detail
+        const productsEdited = data.detail.map((prod) => { 
+          return { 
+            productId: prod.productId,
+            quantity: prod.missing
+          }
         })
-        try {
+        const productsToUpdateStock = ({ 
+          products: productsEdited,
+          cancel: true
+        })
+        console.log(productsToUpdateStock)
+       try {
             const response = await axios.post(`http://localhost:4000/clients/cancelDebt/${data.clientData.id}/${data.debtId}`, productsToUpdateStock)
             console.log(response.data)
             if(response.status === 200) { 
@@ -41,7 +49,7 @@ const CancelPendingReplacement = ({data, updateList}) => {
             }
         } catch (error) {
             console.log(error)
-        }
+        } 
     }
 
     const handleChangeValues = (productId, value) => {
@@ -80,8 +88,9 @@ const CancelPendingReplacement = ({data, updateList}) => {
 
     const applyParcialCancelation = async () => { 
        const dataToSend = ({ 
-         debtDataUpdated: originalDetail,
-         dataToUpdateStock: quantities
+         debtDataUpdated: originalDetail, //la nueva repo
+         dataToUpdateStock: quantities, //a sumar stock
+         cancel: true
        })
        console.log(dataToSend)
        try {
@@ -119,11 +128,12 @@ const CancelPendingReplacement = ({data, updateList}) => {
               <div className='flex gap-6 items-center justify-center mt-4 mb-2'>
                 <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => deleteReplacement()}>Cancelar total</Button>
                 <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => setCancelParcial(prevState => !prevState)}>Cancelar parcialmente</Button>
-                <Button className='bg-green-800 text-white font-medium text-sm'>Salir</Button>
+                <Button className='bg-green-800 text-white font-medium text-sm' onClick={() => onClose()}>Salir</Button>
               </div>  
 
               {cancelParcial ? 
               <div className='flex flex-col items-center justify-center w-full'>
+                <p className='bg-red-600 text-medium text-md text-white text-center w-full'>Indica cuantos articulos devolver al stock</p>
                  {originalDetail.map((or) => ( 
                   <div className='flex items-center gap-6' key={or.productId}>
                         <p className='font-medium'>{or.productName}</p>

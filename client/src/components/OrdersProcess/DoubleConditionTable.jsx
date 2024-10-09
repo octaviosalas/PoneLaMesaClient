@@ -105,7 +105,10 @@ const DoubleConditionTable = ({tableData, typeOfOrders, everyReparts, everyRemov
                         const downPaymentData = filaActual.original.downPaymentData;
                         const paid = filaActual.original.paid;
                         const missingArticlesData = filaActual.original.missingArticlesData;
-                        const item = { id, orderSublets, detail, creator, day,year, total, client, downPaymentData, paid, missingArticlesData};
+                        const parcialPayment = filaActual.original.parcialPayment;
+                        const discount = filaActual.original.discount;
+
+                        const item = { id, orderSublets, detail, creator, parcialPayment, day,year, total, client, downPaymentData, paid, missingArticlesData, discount};
                         return (
                         <OrderDetail orderData={item}/>
                         );

@@ -129,7 +129,7 @@ const OrdersTable = () => {
                 setData(allOrders)
                 if(allOrders.length !== 0) { 
                     const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-                    && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'  && propiedad !== 'shippingCost'   && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' && propiedad !== 'clientId' && propiedad !== 'date' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid'  && propiedad !== 'downPaymentData' && propiedad !== 'clientZone' && propiedad !== 'parcialPayment');
+                    && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'   && propiedad !== 'discount' && propiedad !== 'shippingCost'   && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' && propiedad !== 'clientId' && propiedad !== 'date' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid'  && propiedad !== 'downPaymentData' && propiedad !== 'clientZone' && propiedad !== 'parcialPayment');
                     const columnObjects = propiedades.map(propiedad => ({
                         key: propiedad,
                         label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -187,7 +187,8 @@ const OrdersTable = () => {
                           const returnDate = filaActual.original.returnDate;
                           const dateOfDelivery = filaActual.original.dateOfDelivery;
                           const parcialPayment = filaActual.original.parcialPayment;
-                          const item = { id, detail, creator, orderSublets, day, month, year, total, client, clientId, downPaymentData, paid, missingArticlesData, shippingCost, returnDate, dateOfDelivery, placeOfDelivery, parcialPayment};
+                          const discount = filaActual.original.discount;
+                          const item = { id, detail, creator, orderSublets, day, month, year, total, client, clientId, downPaymentData, paid, missingArticlesData, discount, shippingCost, returnDate, dateOfDelivery, placeOfDelivery, parcialPayment};
                           return (
                             <OrderDetail  orderData={item} update={getDataAndCreateTable}/>
                             );

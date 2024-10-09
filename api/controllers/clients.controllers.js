@@ -158,10 +158,7 @@ export async function addZone() {
 export const deleteClientDebt = async (req, res) => { 
 
   const {clientId, debtId} = req.params;
-
-  console.log(req.body.productsReplacementDetail)
-
-
+  console.log("true o false", req.body.cancel)
 
   try {
       const client = await Clients.findById(clientId)
@@ -171,12 +168,16 @@ export const deleteClientDebt = async (req, res) => {
         client.clientDebt = client.clientDebt.filter((cc) => cc.debtId !== debtId);
         
         await client.save();
-        await incrementarStock(req.body.products)
+       
         
 
         if (req.body.collectionData) {
           const newCollectionWithOutAmount = new Collections(req.body.collectionData);
           await newCollectionWithOutAmount.save();
+        }
+
+        if(req.body.cancel === true) { 
+          await incrementarStock(req.body.products)
         }
 
         

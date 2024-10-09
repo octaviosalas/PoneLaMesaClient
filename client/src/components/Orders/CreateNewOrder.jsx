@@ -413,10 +413,13 @@ const CreateNewOrder = ({updateList}) => {
             month: monthSelected,
             year: yearSelected,
             day: daySelected,
+            discount: hasDiscount ? true : false,
             paid: false,
             clientZone: choosenClientZone,
            ...(Number(shippingCost) >= 0 ? { shippingCost: Number(shippingCost) } : {})
           });
+
+          console.log(orderData.discount)
       
           axios.post("http://localhost:4000/orders/create", orderData)
            .then((res) => { 

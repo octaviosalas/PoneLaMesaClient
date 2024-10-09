@@ -18,7 +18,7 @@ const AllCollectionsFilteredTable = ({everyCollections}) => {
           const properties = Object.keys(firstDetail);
           console.log(properties)
           console.log(firstDetail)
-          const filteredProperties = properties.filter(property => property !== '_id' && property !== 'orderDetail' && property !== 'day' && property !== 'month' && property !== 'year' && property !== 'voucher' 
+          const filteredProperties = properties.filter(property => property !== '_id' && property !== 'orderDetail' && property !== 'paymentReferenceId' && property !== "productsReplacementDetail" && property !== 'day' && property !== 'month' && property !== 'year' && property !== 'voucher' 
           && property !== 'orderId' && property !== 'loadedBy' && property !== '__v');
       
           const columnLabelsMap = {
@@ -26,6 +26,7 @@ const AllCollectionsFilteredTable = ({everyCollections}) => {
             amount: 'Monto',
             collectionType: 'Razon',
             client: 'Cliente',
+            date: 'Fecha',
           };
       
           const tableColumns = filteredProperties.map(property => ({

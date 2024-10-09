@@ -36,25 +36,37 @@ const CollectionsDetail = ({byAccount, byType, allCollections, first, second}) =
         setViewAll(true)
     }
 
+    const handleOpen = () => { 
+      onOpen()
+      console.log("byaccount", byAccount)
+      console.log("byType", byType)
+      console.log("allCollections", allCollections)
+
+    }
+
 
   return (
     <div>
-       <p className="text-sm font-medium text-green-800 cursor-pointer" onClick={onOpen}>Ver Detalle</p>
+       <p className="text-sm font-medium text-green-800 cursor-pointer" onClick={handleOpen}>Ver Detalle</p>
             <Modal isOpen={isOpen} onOpenChange={onOpenChange} size={size}>
                 <ModalContent>
                 {(onClose) => (
                     <>
                   <ModalHeader className="flex flex-col gap-1">Cobros Filtrados del {first} al {second}</ModalHeader>                                               
                     <ModalBody className="flex items-center justify-center">
+
                          <div className="w-full bg-green-800 text-white font-medium text-md h-8 flex items-center text-center" onClick={() => viewAllCollections()}>
                              <p className="ml-2">Ver todos los cobros</p>
                          </div>
+
                          <div className="w-full bg-green-800 text-white font-medium text-md h-8 flex items-center text-center" onClick={() => viewByAccountCollections()}>
                              <p className="ml-2">Ver cobros en Cuentas</p>
                          </div>
+
                          <div className="w-full bg-green-800 text-white font-medium text-md h-8 flex items-center text-center"  onClick={() => viewByTypeCollections()}>
                              <p className="ml-2">Ver cobros por tipo</p>
                          </div>                      
+                         
                     </ModalBody>
 
                      {viewByAccounts ? 

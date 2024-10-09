@@ -17,6 +17,7 @@ const EveryOrdersDetails = ({ordersData, first, second, type}) => {
   const [loading, setLoading] = useState(false)
 
   const handleOpen = () => { 
+    console.log(ordersData)
     setLoading(true)
     onOpen()
     if (ordersData &&  Array.isArray(ordersData) && ordersData.length > 0) {
@@ -25,7 +26,7 @@ const EveryOrdersDetails = ({ordersData, first, second, type}) => {
       const firstDetail = ordersData[0];
       const properties = Object.keys(firstDetail);
       const filteredProperties = properties.filter(property => property !== '_id' &&  property !== "__v"  &&  property !== "orderDetail"  &&  property !== "subletsDetail"  &&  property !== "downPaymentData"  
-      &&  property !== "missingArticlesData"  &&  property !== "orderCreator" &&  property !== "placeOfDelivery" &&  property !== "dateOfDelivery" &&  property !== "clientId"   &&  property !== "month"   &&  property !== "year"  &&  property !== "day" &&  property !== "paid" &&  property !== "returnDate" &&  property !== "returnPlace" &&  property !== "typeOfClient");
+      &&  property !== "missingArticlesData"  &&  property !== "parcialPayment"  &&  property !== "clientZone"  &&  property !== "shippingCost" &&  property !== "orderCreator" &&  property !== "placeOfDelivery" &&  property !== "dateOfDelivery" &&  property !== "clientId"   &&  property !== "month"   &&  property !== "year"  &&  property !== "day" &&  property !== "paid" &&  property !== "returnDate" &&  property !== "returnPlace" &&  property !== "typeOfClient");
   
       const columnLabelsMap = {
         orderStatus: 'Estado',
@@ -56,10 +57,13 @@ const EveryOrdersDetails = ({ordersData, first, second, type}) => {
         <ModalContent>
           {(onClose) => (
             <>
+
              {type == "all" ? <ModalHeader className="flex flex-col gap-1">Pedidos cargados del {first} al {second}</ModalHeader> : null}
              {type == "noPaid" ? <ModalHeader className="flex flex-col gap-1">Pedidos Pendientes de Cobro del {first} al {second}</ModalHeader> : null}
              {type == "paid" ? <ModalHeader className="flex flex-col gap-1">Pedidos Cobrados del {first} al {second}</ModalHeader> : null}
+
               <ModalBody className="flex items-center justify-center">
+
               {withOutData === false && loading === false ? ( 
                     <Table aria-label="Example table with dynamic content" className="w-[600px] 2xl:w-[750px] flex items-center justify-center mt-2 max-h-[400px] overflow-y-auto">
                         <TableHeader columns={columns}>
@@ -77,7 +81,7 @@ const EveryOrdersDetails = ({ordersData, first, second, type}) => {
                             {column.cellRenderer ? (
                               column.cellRenderer({ row: { original: item } })
                             ) : (
-                              column.key === "amount" || column.key === "value" ? (
+                              column.key === "total" || column.key === "value" ? (
                                 formatePrice(item[column.key])
                               ) : (
                                 item[column.key]

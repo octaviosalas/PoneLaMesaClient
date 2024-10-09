@@ -113,25 +113,30 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
   <>
      <div className='flex flex-col justify-start items-start w-full'>
          <div>
-                  <div className='flex items-center gap-2'>
-                        <h5 className='font-bold text-green-800 text-sm'>Cliente:</h5>
+                  <div className='flex items-center justify-between'> 
+                    <div className='flex flex-col'>
+                        <h5 className='font-bold text-green-800 text-md'>Cliente:</h5>
                         <p className='text-sm font-medium text-zinc-600'>{orderData.map((ord) => ord.client)}</p>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                        <h5 className='font-bold text-green-800 text-sm'>Fecha de Entrega:</h5>
+                    </div>
+                    <div className='flex flex-col'>
+                        <h5 className='font-bold text-green-800 text-md'>Fecha de Entrega:</h5>
                         <p className='text-sm font-medium text-zinc-600'>{orderData.map((ord) => ord.dateOfDelivery)}</p>
-                  </div>
-                  <div className='flex items-center gap-2'>
-                        <h5 className='font-bold text-green-800 text-sm'>Lugar de Entrega:</h5>
+                    </div>
+                    <div className='flex flex-col'>
+                        <h5 className='font-bold text-green-800 text-md'>Lugar de Entrega:</h5>
                         <p className='text-sm font-medium text-zinc-600'>{orderData.map((ord) => ord.placeOfDelivery)}</p>
+                   </div>
+                  
+                       
                   </div>
-                  <div className='flex items-center gap-2'>
-                        <h5 className='font-bold text-green-800 text-sm'>Estado actual del Pedido:</h5>
-                        <p className='text-sm font-medium text-zinc-600'>{orderData.map((ord) => ord.orderStatus)}</p>
-                  </div>
+        
+         
 
-                    <div className='mt-2'>
-                      <h5 className='font-bold text-green-800'>Detalle de la orden:</h5>
+                    <div className='mt-6'>
+                        <div className='flex items-center justify-between'>
+                           <h5 className='font-medium text-green-800'>Detalle de la orden:</h5>
+                           <p className='text-sm font-medium text-green-800'> Monto total del pedido: {formatePrice(orderData.map((ord) => ord.total))}</p> 
+                        </div>
                       {showTable ?
                                 <Table                          
                                     columnAutoWidth={true} 
@@ -183,33 +188,32 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
 
                     <div className='flex flex-col items-start justify-start mt-4'>
                             {orderHasDownPayment && orderPaid !== true ? 
-                              <div className='flex flex-col items-start justify-start'>
-                                <p className='font-bold text-green-800 text-sm underline'>Esta orden fue señada con:</p> 
-                                <p className='font-medium text-zinc-600 text-sm'>{formatePrice(downPaymentAmount)}</p>
+                              <div className='flex gap-2 items-start justify-start mt-2'>
+                                <p className='font-medium text-white text-md  bg-orange-500'>Esta orden fue señada con:</p> 
+                                <p className='font-medium text-black text-md'>{formatePrice(downPaymentAmount)}</p>
                              </div> 
                             
                             : null}
  
                        {parcialPayment > 0 && orderPaid !== true ? 
-                              <div className='flex flex-col items-start justify-start'>
-                                <p className='font-bold text-green-800 text-sm underline'>Esta orden tuvo pagos parciales de :</p> 
-                                <p className='font-medium text-zinc-600 text-sm'>{formatePrice(parcialPayment)}</p>
+                              <div className='flex gap-2 items-start justify-start mt-2'>
+                                <p className='font-medium text-white text-md  bg-orange-500'>Esta orden tuvo pagos parciales</p> 
+                                <p className='font-medium text-black text-md'>{formatePrice(parcialPayment)}</p>
                              </div> 
                             
                             : null}
 
-                            {orderHasDownPayment && orderPaid !== true ? (
-                                <div className='flex flex-col'>
-                                    <h5 className='font-bold text-green-800  text-sm underline mt-2'>Monto Restante a cobrar: </h5>
-                                    <p className='text-sm font-medium text-zinc-600'>{formatePrice(orderData.map((ord) => ord.total - downPaymentAmount - parcialPayment))}</p> 
+                            {orderHasDownPayment || parcialPayment > 0 && orderPaid !== true ? (
+                                <div className='flex gap-2  items-start justify-start mt-2'>
+                                <p className='font-medium text-white text-md  bg-orange-500'>Monto restante a cobrar</p> 
+                                <p className="text-md font-medium text-black">{formatePrice(orderData.map((ord) => ord.total - downPaymentAmount - parcialPayment))}</p> 
                                 </div>    
                              
                             ) : (
-                                orderHasDownPayment !== true && orderPaid !== true ? (
+                                orderHasDownPayment !== true && orderPaid !== true && parcialPayment <= 0 ? (
                                     <div className='flex items-center justify-center gap-1'>
-                                       <h5 className='font-bold text-green-800  text-sm underline'>Monto total del pedido: </h5>
-                                       <p className='text-sm font-medium text-zinc-600'> {formatePrice(orderData.map((ord) => ord.total))}</p> 
-                                </div>    
+                                       
+                                    </div>    
                             ) : null
                             )}
 
@@ -222,10 +226,21 @@ const CreateNewReturnSecondStep = ({orderData, orderDataStatus, updateList, come
                    <VaucherModal orderId={orderId}/>
                     :
                 <div className='flex flex-col items-center justify-center'>
-                <p className='text-sm font-medium text-white bg-red-600'>Este pedido se encuentra pendiente de pago</p>
-                   {orderHasDownPayment ? 
+
+                   {orderHasDownPayment && parcialPayment === 0 ? (
+
                      <PostPayment usedIn="CreateNewReturn" withDownPayment={true} valueToPay={formatePrice(orderData.map((ord) => ord.total - downPaymentAmount - parcialPayment))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>     
-                   : <PostPayment usedIn="CreateNewReturn" withDownPayment={false} valueToPay={formatePrice(orderData.map((ord) => ord.total))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>        
+                
+                    ) : !orderHasDownPayment && parcialPayment > 0 ? ( 
+                    
+                        <PostPayment usedIn="CreateNewReturn" withDownPayment={true} valueToPay={formatePrice(orderData.map((ord) => ord.total  - parcialPayment))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>     
+                 
+                    ) : !orderHasDownPayment && parcialPayment === 0 ? ( 
+
+                     <PostPayment usedIn="CreateNewReturn" withDownPayment={false} valueToPay={formatePrice(orderData.map((ord) => ord.total))} orderData={orderData} changeOrderPaid={changeOrderPaid}/>        
+                   
+                    ) : null
+
                    }
            
                 </div>

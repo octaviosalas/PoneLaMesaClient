@@ -78,6 +78,9 @@ const ordersSchema = mongoose.Schema({
     clientZone: { 
         type: String
     },
+    discount: { 
+        type: Boolean
+    },
     parcialPayment: { 
         type: Array
     }

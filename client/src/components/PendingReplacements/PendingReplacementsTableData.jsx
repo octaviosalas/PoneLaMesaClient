@@ -26,7 +26,6 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
 
     useEffect(() => { 
         setData(replacementes)
-       
       }, [replacementes])
 
       const goToOtherPage = (item) => { 
@@ -35,7 +34,8 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
 
       const createTableData = () => { 
 
-        if(data.length !== 0) { 
+        if(replacementes.length !== 0) { 
+          console.log(replacementes)
           const propiedades = Object.keys(replacementes[0]).filter(propiedad => propiedad !== 'replacementeDetail' && propiedad !== 'debtId'  && propiedad !== "orderCompletedData" && propiedad !== "clientId");
           const columnObjects = propiedades.map(propiedad => ({
               key: propiedad,
@@ -141,9 +141,7 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
             }, [data])
 
             const filteredData = data.filter((item) => {
-                console.log(item)
                 return Object.values(item).some((value) => {
-                  console.log(value)
                 if (value === null) return false;
                 return value.toString().toLowerCase().includes(inputValue.toLowerCase());
             });
@@ -192,7 +190,7 @@ const PendingReplacementsTableData = ({replacementes, updateList}) => {
                </TableHeader>
                <TableBody items={filteredData}>
                  {(item) => (
-                   <TableRow key={item.amountToPay}>
+                   <TableRow key={item.debtId}>
                      {columns.map((column) => (
                        <TableCell key={column.key}  className='text-left' >
                          {column.cellRenderer ? (
