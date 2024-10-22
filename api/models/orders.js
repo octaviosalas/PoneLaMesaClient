@@ -81,6 +81,9 @@ const ordersSchema = mongoose.Schema({
     discount: { 
         type: Boolean
     },
+    discountValue: { 
+        type: Number
+    },
     parcialPayment: { 
         type: Array
     }

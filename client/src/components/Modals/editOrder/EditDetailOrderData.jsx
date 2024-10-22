@@ -146,6 +146,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderData, order
               let choosenProductTotalPrice;
                 if(param === "withPrice") {
                   choosenProductTotalPrice = price * quantity;
+                  console.log("CHOOSEN PRODUCT TOTAL PRICE !!!!!", choosenProductTotalPrice)
                   console.log("withPrice")
                 } else {
                   choosenProductTotalPrice = 0
@@ -155,6 +156,26 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderData, order
               const checkIfProductIsNew = newOrderDetailWithChanges.some((prod) => prod.productId === newProduct.productId)
               console.log(checkIfProductIsNew)
               if(checkIfProductIsNew === false) { 
+
+                if(orderData.discount === true) { 
+
+                  const valueToDiscount =  choosenProductTotalPrice * (orderData.discountValue / 100)
+                  const priceWithDiscount = choosenProductTotalPrice - valueToDiscount
+                  const newProduct = { productName, productId, quantity, price, replacementPrice, priceWithDiscount};
+                  
+                  console.log("Pasando precio con descuento!!!!", newProduct)
+                  
+
+                  setNewProductsAddedToIncrementStock(prevState => [...prevState, newProduct]);
+                  setNewOrderDetailWithChanges([...newOrderDetailWithChanges, newProduct]);
+                  setChoosenProductId("")
+                  setChoosenProductName("")
+                  setChoosenProductQuantity("")
+                  setChoosenProductPriceReplacement("")
+                  setChoosenProductPrice("")
+                  setChoosenProductStock(0)
+                  console.log("New Product Added", newProductsAdded)
+                }
                 setNewProductsAddedToIncrementStock(prevState => [...prevState, newProduct]);
                 setNewOrderDetailWithChanges([...newOrderDetailWithChanges, newProduct]);
                 setChoosenProductId("")
@@ -263,10 +284,15 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderData, order
             const newTotalOrderAmount = newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) + shippingCost
 
             console.log(formatePrice(newTotalOrderAmount))
+            console.log(formatePrice(newTotalOrderAmount  * (1 - orderData.discountValue / 100) ))
              
+            /* 
+             newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) 
+                      * (1 - orderData.discountValue / 100) 
+            */
 
              const newPurchaseDetailData = ({ 
-              newTotalAmount: newTotalOrderAmount,
+              newTotalAmount: orderData.discount ? newTotalOrderAmount  * (1 - orderData.discountValue / 100) : newTotalOrderAmount,
               toDiscountStock: disminuirStock,
               toIncrementStock: sumarStock,
               newProductToDisscountStock: newProductsAddedToIncrementStock,
@@ -288,7 +314,7 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderData, order
                   updateChanges("everyOrders")
                   setSuccessAddMessage(false)
                 }, 2000)
-            }
+            } 
 
             } catch (error) {
               console.log(error) 
@@ -304,6 +330,9 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderData, order
     <>
      {orderStatus === "A Confirmar" || orderStatus === "Armado"  || orderStatus === "Confirmado" || orderStatus === "Entregado"? 
       <div className="flex flex-col justify-center items-center">
+             
+             {orderData.discount === true ? <p>{orderData.discountValue}</p> : null}
+        
               {newOrderDetailWithChanges.map((ord, index) => (
                   <div key={index} className="flex flex-col">
                   <div className="flex items-center justify-start w-72 gap-4 mt-2">
@@ -326,14 +355,22 @@ const EditDetailOrderData = ({newOrderDetailArray, orderStatus, orderData, order
               <div className="flex items-center justify-center mt-2">
               {newOrderDetailWithChanges.length > 0 ? (
                   <p className="font-bold text-zinc-600">       
-                      Total: {formatePrice(
-                      newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0)
-                      )}
+                     Total: {formatePrice(
+                      newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) 
+                      * (1 - orderData.discountValue / 100) 
+                    )}
                   </p>
                   ) : (
-                  <p className='text-zinc-600 font-medium text-sm'>Total: {formatePrice(newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0))}</p>
+                  <p className='text-zinc-600 font-medium text-sm'>
+                   Total: {formatePrice(
+                      newOrderDetailWithChanges.reduce((acc, el) => acc + el.choosenProductTotalPrice, 0) 
+                      * (orderData.discountValue / 100) 
+                    )}
+                    </p>
                   )}
               </div>
+
+             
 
               {addNewProductToOrder ? 
                   <div className="flex flex-col items-center justify-center">

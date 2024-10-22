@@ -17,7 +17,7 @@ const AreYouSure = ({subletData, dataOrder, closeModal, updateListOfSublets, upd
   const addSubletToTheOrder = async () => {
     setLoad(true);
     try {
-      const newStatus = "Armado";
+      const newStatus = "A Confirmar";
       const statusUpdateResponse = await axios.put(`http://localhost:4000/orders/changeOrderState/${dataOrder.id}`, { newStatus });
       console.log(statusUpdateResponse.data);
   

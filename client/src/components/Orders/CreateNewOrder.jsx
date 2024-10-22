@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem} from "@nextui-org/react";
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Input, Select, SelectItem, Spinner} from "@nextui-org/react";
 import axios from "axios";
 import { useContext } from "react";
 import { UserContext } from "../../store/userContext";
@@ -65,12 +65,14 @@ const CreateNewOrder = ({updateList}) => {
   const [showTable, setShowTable] = useState(false)
   const [size, setSize] = useState("5xl")
   const [discount, setDiscount] = useState(0)
+  const [discountValue, setDiscountValue] = useState(0)
   const [hasDiscount, setHasDiscount] = useState(false)
   const [multiplyTo, setMultiplyTo] = useState(1)
   const [dateSelected, setDateSelected] = useState('');
   const [daySelected, setDaySelected] = useState('');
   const [monthSelected, setMonthSelected] = useState('');
   const [yearSelected, setYearSelected] = useState('');
+  const [loadingCreation, setLoadingCreation] = useState(false)
 
   const monthNames = [
     "enero", "febrero", "marzo", "abril", "mayo", "junio",
@@ -147,6 +149,7 @@ const CreateNewOrder = ({updateList}) => {
         setPlaceOfDelivery("")
         setDiscount(0)
         setHasDiscount(false)
+        setHasDiscount(0)
       }
 
       const getClientsData = () => { 
@@ -383,8 +386,10 @@ const CreateNewOrder = ({updateList}) => {
       }
 
       const sendNewOrder = (statusOfTheOrder) => { 
+        setLoadingCreation(true)
         if(productsSelected.length === 0) { 
           setMissedProducts(true)
+          setLoadingCreation(false)
           setTimeout(() => {
             setMissedProducts(false)
           }, 1500);
@@ -414,6 +419,7 @@ const CreateNewOrder = ({updateList}) => {
             year: yearSelected,
             day: daySelected,
             discount: hasDiscount ? true : false,
+            discountValue: discountValue,
             paid: false,
             clientZone: choosenClientZone,
            ...(Number(shippingCost) >= 0 ? { shippingCost: Number(shippingCost) } : {})
@@ -430,12 +436,13 @@ const CreateNewOrder = ({updateList}) => {
               setTimeout(() => { 
                 closeModal();
                 knowWichNumerOfOrder();
-           
+                setLoadingCreation(false)
                 setShippingCost(0);
               }, 2000);
             })
            .catch((err) => { 
               console.log(err);
+              setLoadingCreation(false)
             });
         }
       }
@@ -488,7 +495,9 @@ const CreateNewOrder = ({updateList}) => {
 
    
       const chooseDiscount = (value) => { 
+        console.log("SET DISCOUNT VALUE", value)
         setHasDiscount(true)
+        setDiscountValue(value)
         setDiscount(value)
      }
 
@@ -789,7 +798,8 @@ const CreateNewOrder = ({updateList}) => {
                   </div>
                 </div>
                 <div>
-                  <ModalFooter className="flex items-center justify-center mt-6">
+                {!loadingCreation ? 
+                 <ModalFooter className="flex items-center justify-center mt-6">
                      {succesMessage !== true ?
                      <div className="flex items-center gap-6">
                         <Button className="font-medium text-white bg-green-800  w-52" variant="light" onPress={() => sendNewOrder(orderStatus)}>
@@ -818,7 +828,7 @@ const CreateNewOrder = ({updateList}) => {
                      : 
                      <p className="text-sm font-bold text-green-800 mt-4">Orden creada Con exito ✔</p>
                       }
-                  </ModalFooter> 
+                  </ModalFooter> : <Spinner/>}
                 </div>
                   
               </div>         
@@ -828,7 +838,7 @@ const CreateNewOrder = ({updateList}) => {
 
               {thirdStep ? 
               <div className="flex text-center items-center justify-center w-full ">
-                    <OrderNeedsSublet comeBack={comeBackToSecondStep} sendOrderToBeConfirmed={sendNewOrder}/>
+                    <OrderNeedsSublet comeBack={comeBackToSecondStep} sendOrderToBeConfirmed={sendNewOrder} loadingCreation={loadingCreation}/>
               </div>
               :
               null}

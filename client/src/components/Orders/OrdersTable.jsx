@@ -129,7 +129,7 @@ const OrdersTable = () => {
                 setData(allOrders)
                 if(allOrders.length !== 0) { 
                     const propiedades = Object.keys(data[0]).filter(propiedad =>  propiedad !== '_id' && propiedad !== '__v' && propiedad !== '__v' 
-                    && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'   && propiedad !== 'discount' && propiedad !== 'shippingCost'   && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' && propiedad !== 'clientId' && propiedad !== 'date' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid'  && propiedad !== 'downPaymentData' && propiedad !== 'clientZone' && propiedad !== 'parcialPayment');
+                    && propiedad !== 'orderDetail'  && propiedad !== 'orderCreator'   && propiedad !== 'discount' && propiedad !== 'shippingCost'   && propiedad !== 'subletsDetail' && propiedad !== 'missingArticlesData' && propiedad !== 'clientId' && propiedad !== 'date' && propiedad !== 'year' && propiedad !== 'day' && propiedad !== 'paid'  && propiedad !== 'downPaymentData'  && propiedad !== 'discountValue' && propiedad !== 'clientZone' && propiedad !== 'parcialPayment');
                     const columnObjects = propiedades.map(propiedad => ({
                         key: propiedad,
                         label: propiedad.charAt(0).toUpperCase() + propiedad.slice(1),
@@ -214,7 +214,9 @@ const OrdersTable = () => {
                               const returnPlace = filaActual.original.returnPlace;
                               const orderDetail = filaActual.original.orderDetail;
                               const shippingCost = filaActual.original?.shippingCost;
-                              const item = {id, status, client,order, month, date, dateOfDelivery,returnDate,orderDetail, returnPlace, placeOfDelivery, clientId, shippingCost};
+                              const discount = filaActual.original?.discount;
+                              const discountValue = filaActual.original?.discountValue;
+                              const item = {id, status, client,order, month, date, dateOfDelivery,returnDate,orderDetail, returnPlace, placeOfDelivery, clientId, shippingCost, discount, discountValue};
                               return (
                                 <EditModal type="orders" orderData={item} updateList={getDataAndCreateTable}/>
                               );
